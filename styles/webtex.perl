@@ -227,6 +227,7 @@ sub convert_to_webtex {
 	    &webeq_failed($out_tag); $out_tag = '';
 	} else {
 	    open(TAG, "<$out_tag");
+		binmode TAG;
 	    $app_tag = join('',<TAG>);
 	    close(TAG);
 	    # replace webeq fall-back image by LaTeX2HTML's own, or none at all

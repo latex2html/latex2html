@@ -12,6 +12,7 @@ sub get_image_size { # clean
     my $type = lc($1);
     $type = $IMAGE_TYPE unless $type =~ /(gif|png|jpe?g)/;
     if (open(IMAGE, "<$imagefile")) {
+        binmode IMAGE;
         my ($buffer,$magic,$dummy,$width,$height) = ('','','',0,0);
 	binmode(IMAGE); # not harmful un UNIX
 #       if ($IMAGE_TYPE =~ /gif/) {

@@ -212,6 +212,7 @@ sub TE_replace_file_marks {
 sub TE_check_file_contents {
     local ($ifile) = @_;
     open(TEINC, "<$ifile");
+	binmode TEINC;
     my($macrosOK,$macrosNUM,$numlines,$invalid) = (0,0,0,0);
     my $TE_special_macros_rx = join('|',@TE_special_macros);
     my $TE_defined_accents_rx = join('|',@TE_defined_accents);

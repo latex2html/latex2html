@@ -1106,6 +1106,7 @@ sub catfile {
             unless($ignore);
         return undef;
     }
+    binmode CATFILE;
     local($/) = undef; # slurp in whole file
     my $contents = <CATFILE>;
     close(CATFILE);
@@ -1368,6 +1369,7 @@ sub load_style_file_translations {
     $auto_styles =~ s/\|$//;
 
     if(open(STYLES, "<$TMP_${dd}styles")) {
+        binmode STYLES;
         while(<STYLES>) {
             if(s/^\s*(\S+)\s*(.*)$/$style = $1; $options = $2;/eo) {
                 &do_require_package($style);
@@ -1794,6 +1796,7 @@ sub slurp_input_and_partition_and_pre_process {
     unless(open(SINPUT,"<$file")) {
         die "\nError: Cannot read '$file': $!\n";
     }
+    binmode SINPUT;
     local(@file_string);
     print STDOUT "$file" if ($VERBOSITY >1);
     while (<SINPUT>) {
@@ -1878,6 +1881,7 @@ sub do_write_string_out {
     &wrap_shorthand_environments;
     print STDOUT "\n *** End-of-partition ***" if ($VERBOSITY > 1);
     if(open(OUT, ">$TMP_$dd$PARTITION_PREFIX$count")) {
+        binmode OUT;
         print OUT $_;
         close(OUT);
     } else {
@@ -1898,6 +1902,7 @@ sub slurp_input  {
     local($file) = @_;
     local(%string);
     if(open(INPUT,"<$file")) {
+        binmode INPUT;
         local(@file_string);
         while (<INPUT>) {
 	    push(@file_string, $_ );
@@ -2355,6 +2360,7 @@ sub translate {
 	    
 	    open(OUTPUT, ">$CURRENT_FILE")
 		|| die "Cannot write '$CURRENT_FILE': $!\n";
+        binmode OUTPUT;
 	    if ($XBIT_HACK) { # use Apache's XBit hack
 		chmod 0744, $CURRENT_FILE;
 		&check_htaccess;
@@ -3808,6 +3814,7 @@ sub preprocess_images {
 	print "\nWriting image.pre file ...\n";
 	open(ENV,">.$dd${PREFIX}images.pre")
             || die "\nCannot write '${PREFIX}images.pre': $!\n";
+	binmode ENV;
 	print ENV &make_latex($latex_body);
 	print ENV "\n";
 	close ENV;
@@ -3827,6 +3834,7 @@ sub preprocess_images {
 	# save pre-processor commands in a file:  preproc
 	open(CMDS,">.$dd${PREFIX}preproc")
             || die "\nCannot write '${PREFIX}preproc': $!\n";
+	binmode CMDS;
 	print CMDS $preprocessor_cmds ;
 	close CMDS;
 
@@ -3837,6 +3845,7 @@ sub make_image_file {
 	print "\nWriting image file ...\n";
 	open(ENV,">.$dd${PREFIX}images.tex")
             || die "\nCannot write '${PREFIX}images.tex': $!\n";
+    binmode ENV;
 	print ENV &make_latex($latex_body);
 	print ENV "\n";
 	close ENV;
@@ -7528,8 +7537,10 @@ sub style_sheet {
         print "\nError: Cannot write '$FILE.css': $!\n";
         return;
     }
+    binmode STYLESHEET;
     if ( -f $EXTERNAL_STYLESHEET ) {
         if(open(EXT_STYLES, "<$EXTERNAL_STYLESHEET")) {
+            binmode EXT_STYLES;
             while (<EXT_STYLES>) { print STYLESHEET $_; }
             close(EXT_STYLES);
         } else {
@@ -7860,7 +7871,7 @@ sub post_process {
 	    &slurp_input($this_file);
 	    open(OUTFILE, ">$this_file")
                 || die "\nError: Cannot write file '$this_file': $!\n";
-
+	    binmode OUTFILE;
 	    if (($INDEX) && ($SHORT_INDEX) && ($SEGMENT eq 1)) {
 		&make_index_segment($title,$file); }
 
@@ -8225,6 +8236,7 @@ sub replace_init_file_mark {
 	return();
     }
     if(open(INIT, "<$init_file")) {
+        binmode INIT;
         foreach $info_line (<INIT>) {
 	    $info_line =~ s/[<>"&]/'&'.$html_special_entities{$&}.';'/eg;
 	    $init_contents .= $info_line;
@@ -8987,6 +8999,7 @@ sub make_footnotes {
 sub post_process_footnotes {
     &slurp_input($footfile);
     open(OUT, ">$footfile") || die "Cannot write file '$footfile': $!\n";
+    binmode OUT;
     &replace_markers;
     &post_post_process if (defined &post_post_process);
     &adjust_encoding;
@@ -9008,6 +9021,7 @@ sub make_file {
         print "\nError: Cannot write '$filename': $!\n";
         return;
     }
+    binmode FILE;
     print FILE $_;
     close(FILE);
 }
@@ -9512,6 +9526,7 @@ sub usage {
     my $script = $SCRIPT || $0;
     open(PIPE, "$perldoc -t $script |")
         || die "Fatal: can't open pipe: $!";
+    binmode PIPE;
     while (<PIPE>) {
         if (/^\s*$/) {
             next;
@@ -10638,6 +10653,7 @@ sub save_image_map { # clean
         print "\nError: Cannot write '$urlimg': $!\n";
         return;
     }
+    binmode IMAGE_MAP;
     ### HWS  Pass server map unchanged from user
     print IMAGE_MAP "<HTML>\n<BODY>\n<A HREF=\"$map\">\n";
     print IMAGE_MAP "<IMG\n SRC=\"$url\" ISMAP $ausemp $altst> </A>";
@@ -10655,6 +10671,8 @@ sub rename_html {
     ($to_prefix, $suffix) = split(/\./, $to);
     if ($EXTN =~ /$suffix$/) {
 	if (open(FROM, "<$from") && open(HTMP, ">HTML_tmp")) {
+        binmode FROM;
+        binmode HTMP;
 	    while (<FROM>) {
 		s/$from_prefix\.$IMAGE_TYPE/$to_prefix.$IMAGE_TYPE/g;
 		print HTMP;
@@ -10679,6 +10697,7 @@ sub save_captions_in_file {
 	&replace_markers;
 	&add_dir_to_href if ($DESTDIR);
 	if(open(CAPTIONS, ">${PREFIX}$type.pl")) {
+        binmode CAPTIONS;
 	    print CAPTIONS $_;
 	    close (CAPTIONS);
         } else {
@@ -17104,6 +17123,7 @@ sub check_htaccess {
     if (-f $access_file) {
 	print STDOUT " ... found";
 	open(HTACCESS, "<$access_file");
+    binmode HTACCESS;
 	while (<HTACCESS>) {
 	    if (/^\s*XBitHack\s*on\s*$/) {
 		print STDOUT " with XBitHack on";

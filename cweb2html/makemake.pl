@@ -27,8 +27,10 @@ sub main {
 	die "Cannot rename to $source.bak, $!\n";
     open(OUT,">$source") ||
 	die "Cannot open $source, $!\n";
+	binmode OUT;
 
     open(IN,"<$source.bak");
+	binmode IN;
     while (<IN>) {
 	$string{'STRING'} .= $_;
     }
