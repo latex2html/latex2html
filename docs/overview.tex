@@ -1,0 +1,635 @@
+\begin{htmlonly}
+\documentclass[dvips,a4paper]{article}
+\usepackage{html,htmllist,makeidx}
+\input{manhtml.tex}
+%
+\input{overview.ptr}	% Input counters and section
+\end{htmlonly}
+\startdocument
+%
+%\section{Overview\label{sec:ovw}\index{overview}}
+\label{sec:ovw}\index{overview}
+\noindent 
+This manual describes the \latextohtml{} translator which is
+used to create Web pages from document source written for
+the \LaTeX{} typesetting system, or simply containing \LaTeX{} commands.
+
+\godown{quest0}\medskip
+\noindent
+To use \latextohtml{} to translate a file~\Meta{file}\texttt{.tex}
+containing \LaTeX{} commands, simply type:
+\begin{quote}
+\texttt{latex2html} \Meta{file}\texttt{.tex} 
+\end{quote}
+\noindent
+This will create a new directory called \Meta{file} which will contain 
+the generated \texttt{HTML} files, some log files and possibly some images.
+
+\medskip\godown{quest1}\label{quest0}\smallskip
+\noindent
+Basically the translator reads the source document and creates a linked
+set of \texttt{HTML} pages, displaying the information it contains.
+The \LaTeX{} commands and environments that are found are interpreted
+either as ``markup'' instructions, or as macros expanding into more text 
+or markup commands. 
+Where such markup corresponds to the intended use for markup tags
+in the \texttt{HTML} language, a direct translation is made.
+If there is no natural way to present the information using simple text
+embellished with \texttt{HTML} markup tags, then an image is generated, 
+using \LaTeX{} itself to interpret the portion of code.
+
+Of course this is a drastically over-simplified description of what
+\latextohtml{} actually does. Many questions spring readily to mind.
+The answers to these and the options available to handle
+particular situations are discussed elsewhere in this manual.
+
+\godown{quest2}\label{quest1}%
+\begin{itemize}
+\item \latexhtml
+{\emph{What does ``natural way to present the information'' really mean? }}
+{{\large What does ``natural way to present the information'' really mean? }}
+\end{itemize}
+\noindent
+Text and paragraphing clearly should appear as such, whether printed
+or on-screen. Different font sizes and styles such as ``bold-face''
+or ``italic'' are generally rendered accordingly.
+However, whereas \LaTeX{} has access to appropriate fonts for specialised
+purposes such as mathematical symbols, these cannot be guaranteed to be
+available with all Web-browsers. So for information requiring such things,
+\latextohtml{} will generally resort to making an image,
+using \LaTeX{} itself to typeset the material required for that image. 
+
+\hyperref{The next page}{Section~}{}{features:ovw} contains a brief overview
+of how \LaTeX's standard environments are handled within \latextohtml.
+It also mentions some of the extra features that are available. \html{\\}%
+In general \latextohtml{} attempts to use textual constructions to represent
+the required information. Generation of an image is done only when there is
+no adequate textual construction with the required version of \texttt{HTML},
+or when specifically requested to do so.
+Various extensions, to cope with the different \texttt{HTML} versions and
+extra features, are discussed \hyperref{elsewhere}{in Section~}{}{sec:fea}.
+That describes what to expect on the \texttt{HTML} pages, with little
+or no changes required to the \LaTeX{} source.
+
+Just as \LaTeX{} has various packages which can be used to present specific
+types of information in appropriate ways, 
+so is \latextohtml{} capable of handling the commands from many of these packages. 
+See \hyperref{this table}{Table~}{}{styles} for a listing of those 
+packages which currently have special support.
+
+\godown{quest3}\label{quest2}%
+\begin{itemize}
+\item \latexhtml
+{\emph{Some features of \texttt{HTML} have no direct counterpart in
+a \LaTeX{} typeset document.\\Can such features be used with \latextohtml? }}
+{{\large Some features of \texttt{HTML} have no direct counterpart in
+a \LaTeX{} typeset document.\\Can such features be used with \latextohtml? }}
+\end{itemize}
+\noindent
+Any effect currently available with any version of the \texttt{HTML} 
+standard can be specified for a document processed by \latextohtml.
+New \LaTeX{} commands are defined in the \fn{html.sty} package;
+the features that these commands allow are the subject of
+\hyperref{a whole section of}{Section~}{ in}{sec:hyp} this manual.
+Some of the new commands provide improved strategies for effects 
+already existing in \LaTeX; e.g. 
+\htmlref{cross-references}{hyperref} and \htmlref{citations}{hypercite}.
+To use these effectively requires only small changes to the \LaTeX{} source.
+
+Other commands define new environments which are completely
+ignored when processed by \LaTeX. 
+Indeed the \htmlref{full scope}{HTMLtag} of \HTMLiii{} is available, 
+using \LaTeX-like macros to help structure the source, 
+reduce the tedium of repetitious use of tags, and ensure that
+all appropriate tags are correctly closed.
+
+
+\godown{quest4}\label{quest3}%
+\begin{itemize}
+\item \latexhtml
+{\emph{What determines the amount of information that goes onto
+a single \texttt{HTML} page?\\How are different pages linked? }}
+{{\large What determines the amount of information that goes onto
+a single \texttt{HTML} page?\\How are different pages linked? }}
+\end{itemize}
+\noindent
+The \texttt{HTML} pages can contain whole chapters, sections,
+(sub)subsections or (sub)paragraphs. This is fully customisable
+using the command-line options discussed in detail in
+\hyperref{a separate section}{Section~}{}{options} of this manual.
+
+
+\godown{quest5}\label{quest4}%
+\begin{itemize}
+\item \latexhtml
+{\emph{Does the original document have to be a valid \LaTeX{} document,
+typesetting without errors? If not, does it help if it is? }}
+{{\large Does the original document have to be a valid \LaTeX{} document,
+typesetting without errors? If not, does it help if it is? }}
+\end{itemize}
+\noindent
+In fact any document can be fed to the \latextohtml{} processor,
+but it is designed specifically to recognise and sensibly translate
+the intentions expressed by \LaTeX{} markup commands. Although sensible
+results can be obtained even when the \LaTeX{} source is not valid,
+the most reliable translations are obtained when it is. 
+Relevant issues are discussed 
+\hyperref{in a later section}{in Section~}{}{devel}.
+
+
+\godown{quest6}\label{quest5}%
+\begin{itemize}
+\item \latexhtml
+{\emph{When developing a document which contains special \texttt{HTML}
+features, is it best to regularly test it in \LaTeX{} or with \latextohtml{}? }}
+{{\large When developing a document which contains special \texttt{HTML}
+features, is it best to regularly test it in \LaTeX{} or with \latextohtml{}? }}
+\end{itemize}
+\noindent
+The answer to such a question changes as the developer gains
+more experience with the available tools.
+Some aspects to be considered are discussed 
+\hyperref{in a later section}{in Section~}{}{devel} of this manual.
+
+
+\medskip\htmlrule\goback{overview}\label{quest6}\medskip
+\noindent
+Information relevant to obtaining the latest version of \latextohtml, 
+installation within the local environment, and where to look for
+help when things do not go as expected, can be found in 
+\hyperref{the support section}{Section~}{}{sec:sup}.
+
+
+%%% END XTRACTFAQ (START is within outer document)
+
+\bigskip\noindent
+What follows next is a brief summary of the features supported
+within \latextohtml{}.\html{\dots}
+
+
+\subsection{List of Features\label{features:ovw}\index{features!listing}}
+%\section{List of Features\label{features:ovw}\index{features!listing}}
+%
+Following is a listing of the main features of the translator;
+more specific details on these is given elsewhere in this manual.
+
+\smallskip\noindent
+The \latextohtml{} translator \dots
+%
+\index{components!specify depth}
+\begin{itemize}
+\item 
+breaks up a document into one or more components as specified
+by the user\footnote{The user can specify the \emph{depth} at which 
+the document should not be broken up any further.};
+
+\index{navigation panel!optional}\index{navigation panel!customisable}%
+\item 
+provides optional, customisable iconic navigation
+panels on every page which contain links to other parts of the
+document, or other documents;
+
+\index{equations!inlined}\index{equations!alignment}%
+\index{equations!right-justified}\index{equations!numbered}%
+\index{arbitrary environments}%
+\item 
+handles inlined equations ( \(\sum_{i=1}^{n} x_{i} = \int_{0}^{1} f \)), 
+handles equation alignment ($A_{B_{C+D}}$), 
+right-justified numbered equations (see \hyperref{example}{equation~}{}{eq:demo}), 
+tables (see \hyperref{example}{Table~}{}{tab}), 
+figures (see \hyperref{example}{Figure~}{}{fig:example}),
+and \emph{any arbitrary environment}.
+Either the complete environment or sub-parts thereof\html{\dots}
+are passed to \LaTeX{}  for conversion to images, which are then either included
+in the document or are made available through hypertext links.
+
+\index{figures}\index{tables}\index{thumbnail}%
+\index{figures!arbitrarily scaled}\index{tables!arbitrarily scaled}%
+\index{figures!oriented}\index{tables!oriented}%
+\item 
+figures or tables can be arbitrarily scaled and oriented, 
+and shown either as inlined images or ``thumbnail'' sketches\html{\dots}
+or their contents displayed within a table constructed
+using the \HTMLtag{TABLE} tags of \HTMLiii.
+
+\index{environment!theorem-like}%
+\index{theorems!theorem-like environments}%
+\index{counter!automatic}%
+\index{counter!dependency}%
+\item
+theorem-like environments are supported, along with
+automatic numbering and counter dependencies.
+
+\index{browser@browser\label{IIIbrowser}!supports images}%
+\index{browser!character-based}%
+\item 
+can produce output suitable for browsers that support inlined images 
+or character-based browsers (as specified by the user).
+In particular the \TeX{} or \LaTeX{} code for mathematical expressions
+and formulas will be displayed in character-based browsers,
+such as \env{lynx}.
+
+\index{color!coloured text}%
+\index{color!coloured background}%
+\index{image!backdrop}\index{backdrop!tiled with an image}%
+\item 
+coloured text and/or background is fully supported, as is the
+ability to use an image to create a tiled backdrop.
+
+\index{extensions@extensions\label{IIIexts}!new commands}%
+\index{extensions!new environments}%
+\index{extensions!new theorems}\index{extensions!in style-files}%
+\item 
+handles definitions of new commands, environments and counters
+even when these are defined in external files for input\footnote{%
+This allows the definition of \texttt{HTML} macros in \LaTeX{} !};
+
+\index{footnotes}\index{table of contents}\index{list of figures}%
+\index{list of tables}\index{bibliography}\index{index}%
+\item 
+handles footnotes\footnote{Like this!}, 
+tables of contents, lists of figures and tables, 
+bibliographies and can generate an index.
+By including hyperlinks between index entries, 
+simple navigation aids can be built into the index, for easy browsing.
+
+%\index{references@references\label{IIIrefs}!hyper-links}%
+\index{references@references!hyper-links}%
+\index{references!between documents}%
+\item 
+automatically translates cross-references and citations into hyper-links,
+and extends the \LaTeX{}  cross-referencing mechanism to work
+not just within a document but \emph{between documents} 
+which may reside in remote locations;
+
+\index{character set@character set\label{IIIcharset}}%
+\index{character set!ISO-8879@ISO--8879 (ISO--Latin--1)}%
+\index{character set!ISO-10646@ISO--10646 (Unicode)}%
+\index{special!characters|see{\htmlref{character set}{IIIcharset}}}%
+\index{accents}%%
+\item 
+translates \LaTeX{}  accent and special character 
+commands (e.g. \. {A} \O {\"o} \pounds \copyright \P) to
+the equivalent ISO--Latin--1 or Unicode character set,
+else an image can be created;
+
+\index{hypertext links}\index{hypertext links!multi-media resources}%
+\index{hypertext links!Internet services}%
+\index{hypertext links!news/sound/video}%
+\item 
+recognises hypertext links (to multi-media resources or
+arbitrary Internet services such as 
+\textsl{sound}, \textsl{video}, \textsl{ftp}, \textsl{http}, \textsl{news}) and
+links which invoke arbitrary program scripts---all expressed as \LaTeX{}  
+commands;
+
+\index{conditional text}%
+\item 
+recognises \emph{conditional text}  which is intended only for
+the hypertext version, or only for the paper (\texttt{.dvi}) version;\par
+%
+\index{HTML@\texttt{HTML}!raw@raw \texttt{HTML} commands}%
+\index{HTML@\texttt{HTML}!interactive forms}%
+\item 
+can include raw \texttt{HTML} in a \LaTeX{}  document 
+(e.g. in order to specify interactive forms);
+
+\index{LaTeX commands@\LaTeX{} commands}\label{hypcites}%
+\index{Common LaTeX@Common \LaTeX{} Commands!latex blue@\LaTeX{} blue book}%
+\index{LaTeX blue book@\LaTeX{} blue book}%
+\item 
+can deal sensibly with 
+\strikeout{at least the \textit{Common }\LaTeX{} \textit{Commands}
+summarised at the back of\\}%
+virtually all of the concepts and commands described in
+the \LaTeX{} \htmlcite{blue book}{lamp:latex}, 
+where there is a meaningful interpretation appropriate to
+an \texttt{HTML} document.
+Also many other \LaTeX{} constructions are handled, including many described in the 
+\LaTeX{} \hypercite{\textit{Companion}}{\textit{Companion}}{}{goossens:latex}
+and \LaTeX{} \hypercite{\textit{Graphics Companion} (e.g. \Xy-pic)}%
+{\textit{Graphics Companion}}{\Xy-pic}{goossens:latexGraphics};
+
+%\index{images@images\label{IIIimages}!equations}%
+\index{images@images!equations}%
+\index{GIF|see{\htmlref{images}{IIIimages}}}%
+\index{images!tables}%
+\index{tables!as images}\index{tables!as HTML@as \texttt{HTML} mark-up}%
+\index{HTML@\texttt{HTML}!Version 2.1}%
+\index{HTML@\texttt{HTML}!Version 3.0}%
+\item 
+can be configured to translate equations either
+as GIF images or as \texttt{HTML} 3.0 mark-up
+(as browsers become available which are suitable for the task),
+or by making images of subparts of equations, as required.
+
+\index{references!symbolic}\index{references!document segments}%
+\index{document!illustrative examples}%
+\item 
+links symbolic references across document segments which have been
+independently processed;%
+
+\index{LaTeX commands@\LaTeX{} commands!embedded}%
+\index{LaTeX commands@\LaTeX{} commands!not syntactically legal}%
+\item 
+will try to translate any document with embedded \LaTeX{} commands, 
+irrespective of whether it is complete or syntactically legal.
+
+\end{itemize}
+
+
+\subsection{Exemplary Documents\label{exemplary}}
+%\section{Exemplary Documents\label{exemplary}}
+Here is a selection of documents illustrating different contexts in 
+which \latextohtml{} has been used. This list is by no means exhaustive,
+but all links were valid as of June 1997.
+
+\medskip\noindent
+An earlier listing of converted documents can be found at:
+\url{http://cbl.leeds.ac.uk/~nikos/tex2html/doc/latex2html/node6.html#sample}.
+However some of the links are no longer valid.
+
+\begin{description}
+%
+\item [\latextohtml{} documentation and usage]~%
+\begin{itemize}
+\item 
+The \latextohtml{} Translator, User Manual\\
+\url{http://www-texdev.ics.mq.edu.au/l2h/docs/manual/}\\
+\onlinedoc
+\html{\smallskip}%
+
+\item 
+Mathematics with \latextohtml{}\\
+\url{http://www-texdev.ics.mq.edu.au/l2h/mathdocs/amsmath2/}
+\html{\smallskip}%
+
+\item 
+\latextohtml, Style Sheets, \texttt{XML}\\
+\url{http://www.ramge.de/ax/latex2html/latex2html.html}
+\html{\smallskip}%
+
+\item
+\textit{All about }\latextohtml, by \htmladdnormallinkfoot{Nikos Drakos}%
+{http://cbl.leeds.ac.uk/\~{}nikos/tex2html/doc/latex2html/latex2html.html}
+\html{\smallskip}%
+
+\item 
+What is \latextohtml{}? (with \Xy-pic diagrams)\\
+\url{http://www.maths.mq.edu.au/texdev/Xypic/L2Htalk/}
+\html{\smallskip}%
+
+\item 
+German specials in \TeX\\
+\url{http://www.maths.mq.edu.au/texdev/tests/harn/node1.html}
+\html{\smallskip}%
+
+\item
+Crayola Colours\\
+\url{http://www.maths.mq.edu.au/~ross/latex/crayola/crayola.html}
+\html{\smallskip}%
+
+
+%
+
+\end{itemize}
+
+\htmlrule[50\% center]
+
+
+\item[Software Manuals, Computing Resources]~%
+\begin{itemize}
+%
+\item 
+\Xy-pic User's Guide, accessible from the 
+\htmladdnormallinkfoot{\Xy-pic Home Page}{http://www.brics.dk/\~{}krisrose/Xy-pic.html}
+or \htmladdnormallinkfoot{``down-under''}{http://www.maths.mq.edu.au/texdev/xyguide-html/}
+\html{\smallskip}%
+
+\item 
+LiPS --- \htmladdnormallinkfoot{A System for Distributed Processing on Workstations}
+{http://cdc-server.cdc.informatik.tu-darmstadt.de/}\\
+\htmladdnormallink{Manual}{http://cdc-server.cdc.informatik.tu-darmstadt.de%
+/home/zohar/LiPS/documentation/objects/doc/html/Manual2.1/lipsdist/}, 
+\htmladdnormallink{Lecture Notes}{http://cdc-server.cdc.informatik.tu-darmstadt.de%
+/home/zohar/LiPS/documentation/objects/doc/html/Talks/LectureSS97/LectureSS97/}
+and various theses
+\html{\smallskip}%
+
+\item
+LINUX Documentation Project\\
+\url{http://linuxwww.db.erau.edu/ldp/linux.html/}\\
+\htmladdnormallink{Getting Started}%
+{http://linuxwww.db.erau.edu/ldp/LDP/gs/gs.html}, 
+\htmladdnormallink{The LINUX Kernel}%
+{http://linuxwww.db.erau.edu/ldp/LDP/tlk/}, 
+\htmladdnormallink{Network Administrator's Guide}%
+{http://linuxwww.db.erau.edu/ldp/LDP/nag/nag.html}\\
+\htmladdnormallink{Programmer's Guide}%
+{http://linuxwww.db.erau.edu/LPG/}, 
+\htmladdnormallink{System Administrator's Guide}%
+{http://linuxwww.db.erau.edu/ldp/LDP/sag/index.html}
+\html{\smallskip}%
+
+\item
+ECLiPSE --- \htmladdnormallinkfoot{The ECRC Constraint Logic Parallel System}%
+{http://www.ecrc.de/eclipse/eclipse.html}\\
+\htmladdnormallink{User Manual}%
+{http://www.ecrc.de/eclipse/html/umsroot/umsroot.html}, 
+\htmladdnormallink{Extensions User Manual}%
+{http://www.ecrc.de/eclipse/html/umsroot/umsroot.html}
+\html{\smallskip}%
+
+\item
+MPQC --- \htmladdnormallinkfoot{Massively Parallel Quantum Chemistry Program}
+{http://midway.ca.sandia.gov/\~{}cljanss/mpqc.html}\\
+\htmladdnormallink{User Guide}%
+{http://midway.ca.sandia.gov/\~{}cljanss/mpqc/mpqcuser/}, 
+\htmladdnormallinkfoot{Scientific Computing library}%
+{http://midway.ca.sandia.gov/\~{}cljanss/mpqc/prog/prog.html}
+\html{\smallskip}%
+
+\item
+Xgraphics\\
+\url{http://www-theorie.physik.uni-wuerzburg.de/~lueders/Xgraphics/}
+\html{\smallskip}%
+
+\item
+\textit{Glish} 2.6, User Manual\\
+\url{http://aips2.nrao.edu/aips++/docs/html/aips++.html}
+\html{\smallskip}%
+
+\item
+UTCC --- \htmladdnormallinkfoot{University of Tennessee, Computing Center}%
+{http://www.utcc.utk.edu/utcc/docs/}\\
+\htmladdnormallink{Facilities and Services}%
+{http://www.utcc.utk.edu/utcc/docs/u010003/u010003.html}, 
+\htmladdnormallink{GNU Emacs}
+{http://www.utcc.utk.edu/utcc/docs/u010599/u010599.html},
+\htmladdnormallink{Help Sheet}
+{http://www.utcc.utk.edu/utcc/docs/u010627/u010627.html},
+\htmladdnormallink{Intro to Unix}
+{http://www.utcc.utk.edu/utcc/docs/u010634/u010634.html},
+\htmladdnormallink{\texttt{vi} editor}
+{http://www.utcc.utk.edu/utcc/docs/u010648/u010648.html}\\
+\htmladdnormallink{Software Support}
+{http://www.utcc.utk.edu/utcc/docs/u010673/u010673.html}
+\html{\smallskip}%
+
+
+\end{itemize}
+
+
+\htmlrule[50\% center]
+
+
+\item [Journals, Conference Proceedings, Newsletters]~%
+\begin{itemize}
+%
+\item ``CERN Computer Newsletter''\\
+\url{http://consult.cern.ch/cnls/} issues 214--224.
+\html{\smallskip}%
+
+\item ``National Symposium in Mathematics''\\
+\url{http://www.maths.mq.edu.au/texdev/MathSymp/}
+\html{\smallskip}
+
+\item
+American Mathematical Society (\AmS)\quad(\url{http://www.ams.org/journals/})\\
+Articles in the following electronic journals use a variant of \latextohtml{}:\\
+\htmladdnormallink{\textit{Bulletin of the }\AmS}{http://www.ams.org/bull/}, 
+\htmladdnormallink{\textit{Conformal Geometry and Dynamics}}{http://www.ams.org/ecgd/}\\ 
+\htmladdnormallink{\textit{Electronic Research Announcements}}{http://www.ams.org/era/}
+
+\smallskip
+Other \AmS\ journals are available only to subscribers:\\
+\htmladdnormallink{\textit{Journal of the }\AmS}{http://www.ams.org/jams/}, 
+\htmladdnormallink{\textit{Mathematics of Computation}}{http://www.ams.org/mcom/},
+\htmladdnormallink{\textit{Representation Theory}}{http://www.ams.org/ert/}\\
+\htmladdnormallink{\textit{Proceedings of the }\AmS}{http://www.ams.org/proc/}, 
+\htmladdnormallink{\textit{Transactions of the }\AmS}{http://www.ams.org/tran/}
+
+%
+
+\end{itemize}
+
+
+\htmlrule[50\% center]
+
+\item[Encyclop\ae{}dic Reference Material]~%
+\begin{itemize}
+\item
+\htmladdnormallinkfoot{\textit{Eric's Treasure Troves of Science}:}%
+{http://www.astro.virginia.edu/\~{}eww6n\#TreasureTroves} 
+\htmladdnormallink{Astronomy}%
+{http://www.astro.virginia.edu/\~{}eww6n/astro/astro.html}, 
+\htmladdnormallink{Chemistry}%
+{http://www.astro.virginia.edu/\~{}eww6n/chem/chem.html}, 
+\htmladdnormallink{Math}%
+{http://www.astro.virginia.edu/\~{}eww6n/math/math.html}\\ 
+\htmladdnormallink{Music}%
+{http://www.astro.virginia.edu/\~{}eww6n/music/music.html}, 
+\htmladdnormallink{Physics}%
+{http://www.astro.virginia.edu/\~{}eww6n/physics/physics.html}, 
+\htmladdnormallink{Rocket History}%
+{http://www.astro.virginia.edu/\~{}eww6n/rockets/rockets.html}, 
+\htmladdnormallink{Scientific Books}%
+{http://www.astro.virginia.edu/\~{}eww6n/books/books.html}, 
+\htmladdnormallink{Scientific Biographies}%
+{http://www.astro.virginia.edu/\~{}eww6n/bios/bios.html}
+\html{\smallskip}
+
+\item
+Resources for Economists on the Internet\\
+\url{http://wueconb.wustl.edu/EconFAQ/}
+\html{\smallskip}
+
+\item
+\textit{Les math{\`e}mes de Lacan} by Jacques Siboni\\
+\url{http:www.shef.ac.uk/~psysc/thesaur3/index.html}
+\html{\smallskip}
+
+\end{itemize}
+
+\htmlrule[50\% center]
+
+
+\item[Course Materials]~%
+\begin{itemize}
+\item
+Mathematics Courses at \htmladdnormallinkfoot{Macquarie University}%
+{http://www.maths.mq.edu.au/\~{}ross/index.html\#courses}\\
+\htmladdnormallink{MATH130}%
+{http://www.maths.mq.edu.au/texdev/MATHS/MATH130/study_guide99/}, 
+\htmladdnormallink{MATH132}%
+{http://www.maths.mq.edu.au/texdev/MATHS/MATH132/study_guide99/}, 
+\htmladdnormallink{MATH233}%
+{http://www.maths.mq.edu.au/texdev/MATHS/MATH233/study_guide/}, 
+\htmladdnormallink{MATH300}%
+{http://www.maths.mq.edu.au/texdev/MATHS/MATH300/study_guide/}
+\htmladdnormallink{MATH337}%
+{http://www.maths.mq.edu.au/texdev/MATHS/MATH337/study_guide99/}, 
+\html{\smallskip}
+
+\item 
+\htmladdnormallinkfoot{Engineering Science 100}%
+{http://fas.sfu.ca/ensc/people/Faculty/jones/personal/ensc100/}%
+, Simon Fraser University.
+\html{\smallskip}%
+
+\end{itemize}
+
+\htmlrule[50\% center]
+
+
+
+\item[Other Interesting Sites]~%
+\begin{itemize}
+%
+\item {\large rel\char64 X} \quad
+(\url{http://www.ramge.de/ax/ax.html})
+\html{\smallskip}%
+
+\item \Wortmann's thesis and Geological papers use anti-aliased images;\\ 
+\htmladdnormallinkfoot{\textit{Die untere und mittlere Kreide}}
+{http://bonk.ethz.ch/papers/diss/main-node78.html}, 
+\htmladdnormallinkfoot{\textit{The Barium Problem}}
+{http://bonk.ethz.ch/papers/lecture-notes-97/ln97-node10.html}.
+\html{\smallskip}%
+
+\item 
+Stanford Computer Graphics Laboratory, 
+\htmladdnormallinkfoot{Publications}{http:/www-graphics.stanford.edu/papers/}\\
+\htmladdnormallink{Web Visualization in Hyperbolic Space}
+{http:/www-graphics.stanford.edu/papers/webviz/}, 
+\htmladdnormallink{Topology of the MBONE}
+{http:/www-graphics.stanford.edu/papers/mbone/}, 
+\htmladdnormallink{Complex Models from Range Images}
+{http:/www-graphics.stanford.edu/papers/volrange/},
+\htmladdnormallink{Optical Triangulation}
+{http:/www-graphics.stanford.edu/papers/spacetime/},
+\htmladdnormallink{Metamorphosis}
+{http:/www-graphics.stanford.edu/papers/morph/}
+
+
+\item
+The RGO Worldwide Guide to Public Videoconference Centers\\
+\url{http://www.ast.cam.ac.uk/~ralf/vcguide/}
+\html{\smallskip}%
+
+\end{itemize}
+
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
+
+

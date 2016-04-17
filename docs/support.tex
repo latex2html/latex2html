@@ -1,0 +1,851 @@
+\begin{htmlonly}
+\documentclass[dvips,a4paper]{article}
+\usepackage{html,htmllist,makeidx}
+\input{manhtml.tex}
+%
+\input{support.ptr}             % Input counters and section
+\end{htmlonly}
+%\internal{}%
+%\internal{M}%
+%\internal{H}%
+%\internal{F}%
+\startdocument
+%
+%\section{Installation and Further Support\label{sec:sup}\index{install}}%
+\label{sec:sup}\index{installation|(}
+\subsection{Requirements}%
+%\section{Requirements}%
+\index{requirements|(}\html{\\}%
+The translator makes use of several utilities all of which 
+are freely available on most platforms. 
+
+You can choose between two ways to do the installation of the required
+tools: either go the convenient way and install binary distributions
+(no compilation required, just install out of the box), or get and
+compile a source code distribution.
+You will stick to the latter in case you have a special kind of
+operating system or want to make customisations prior to compilation
+such as applying source level patches.
+Windows users will probably want to read the section about
+\htmlref{installation on Windows}{windowsinst}.
+
+In case you find one of the URLs below broken, use the search
+engine on the TUG home page \CTANtug{} in order to locate the tool.
+Other Web-searching facilities such as Altavista or \appl{FTP search}%
+\htmladdnormallinkfoot{\html{ }}{http://ftpsearch.ntnu.no/ftpsearch}
+will also do the job.
+
+\medskip\noindent
+For the best use of \latextohtml{} you want to get the latest
+versions of all the utilities that it uses. (It will still work
+with earlier versions, but some  special effects may not be possible. 
+The specific requirements are discussed below.)
+%
+\begin{itemize}
+\item \Perl{} version 5.002, or later (check with \verb/perl -v/);
+\item \LaTeX, meaning \LaTeXe{} dated \texttt{<1995/06/01>}, or later;
+\item \fn{dvips} or \fn{dvipsk}, at version 5.58 or later;
+\item \appl{Ghostscript} at version 4.02 or later;
+\item \fn{netpbm} library of graphics utilities, version \textsc{1-mar-94}\\
+  (check with \fn{pnmcrop} \Cs{version}).
+\end{itemize}
+
+\medskip\htmlrule
+\medskip\noindent
+More specific requirements for using \latextohtml{} 
+depend on the kind of translation you would like to perform, as follows:
+%
+\begin{enumerate}
+\item 
+\index{requirements!minimal}%
+\textbf{\LaTeX{}  commands but without equations, figures, tables, etc.} \hfill
+\begin{itemize}
+\item 
+\htmladdnormallink{Perl}{http://www.perl.com/}
+\begin{small}
+\textbf{Note:} \latextohtml{}\textbf{ requires \Perl{ 5} to operate}.
+\end{small}\html{\smallskip}
+
+\textbf{Warning~1: }%
+You really \emph{do} need \Perl{ 5}.\\
+Versions of \latextohtml{} up to \textsc{v96.1}h work 
+both with \Perl{ 4} at patch level 36 and \Perl{ 5}\,,
+though some of the packages may only work with \Perl{ 5}\,.\html{\\}
+
+
+\textbf{Warning~2: }\index{requirements!Unix shell}%
+Various aspects of \Perl{}, which are used by \latextohtml{}, assume 
+certain system commands to be provided by the operating system shell.
+If \fn{csh} or \fn{tcsh} is used to invoke \latextohtml{}
+then everything should work properly.\\
+\Perl{ 5} eliminates this requirement on the shell.
+
+\index{requirements!DataBase Management system}%
+\item 
+\appl{DBM} or \appl{NDBM}, the Unix DataBase Management system,
+or \appl{GDBM}, the GNU database manager.
+
+\textbf{Note: }Some systems lack any DBM support.
+\Perl{ 5} comes with its own database system SDBM, but it is sometimes
+not part of some Perl distributions.
+
+The installation script \fn{install-test} will check that for you.
+If no database system is found, you will have to install Perl
+properly.
+\end{itemize}
+
+\index{requirements!for full graphics}%
+\index{tables!as images}\index{images!tables}%
+\index{images!figures}\index{images!equations}%
+\item 
+\textbf{\LaTeX{}  commands with equations, figures, tables, etc.} \\
+As above plus \dots
+%
+\begin{itemize}
+\item \fn{latex} (version 2e recommended but 2.09 will work --- with
+reduced ability to support styles and packages);
+%
+\index{dvips@\texttt{dvips} version}
+\item 
+\htmladdnormallink{\fn{dvips}}
+{ftp://ftp.tex.ac.uk/pub/archive/dviware/dvips}
+(version~5.516 or later) or \fn{dvipsk}\\
+  Version 5.62 or higher enhances the performance of image creation
+  with a \emph{significant} speed-up. See latex2html.config for this
+  after you are done with the installation.
+  Do not use the 'dvips -E' feature unless you have 5.62, else you
+  will get broken images.
+%
+\index{Ghostscript@\textsl{Ghostscript} version}
+\item 
+\fn{gs} \appl{Ghostscript} (version 4.03 or later);
+  with the ppmraw device driver, or even better pnmraw.
+  Upgrade to 5.10 or later if you want to go sure about seldom problems
+  with 4.03 to avoid (yet unclarified).
+%
+\index{image conversion!Postscript@\PS\ to GIF}%
+\index{GIF!image conversion}%
+\item 
+The \htmladdnormallink{\fn{netpbm}}{ftp://ftp.x.org/R5contrib/}
+library of graphics utilities; \fn{netpbm} dated 1 March 1994
+is required, else part of the image creation process will fail.\\
+Check with: \fn{pnmcrop} \Cs{version}.
+
+Several of the filters in those libraries are used during the \PS\ to
+GIF conversion. 
+\index{image conversion!Postscript@\PS\ to PNG}%
+\index{PNG!image conversion}%
+\item 
+If you want PNG images, you need \fn{pnmtopng} (current version is 2.31).
+It is not part of \fn{netpbm} and requires \fn{libpng-0.89c.tar.gz} and
+\fn{libz} (1.0.4) (or later versions).
+\fn{pnmtopng} supports transparency and interlace mode.\\
+\appl{Netscape Navigator} as well as \appl{MS IE} do support inlined
+PNG images.
+\end{itemize}
+
+
+\index{requirements!for segmentation feature}%
+\index{segmentation!needs latex2e@needs \LaTeXe}%
+\item 
+\textbf{\htmlref{Segmentation}{Segmentation} of large documents}\\
+If you wish to use this feature, you will have to upgrade your
+\LaTeX{} to \LaTeXe\,. 
+Some other hyperlinking features also require \LaTeXe\,.
+
+\index{requirements!for transparent images}%
+\index{images!transparent}%
+\item 
+\textbf{\htmladdnormallinkfoot{Transparent inlined images}%
+{http://melmac.corp.harris.com/transparent\_images.html}}\\
+If you dislike the white background color of the
+generated inlined images then you should get either 
+the \fn{netpbm} library (instead of the older \fn{pbmplus}) 
+or install the \htmladdnormallinkfoot{\fn{giftrans}}{\giftransURL}
+%{ftp://ftp.uni-stuttgart.de/pub/comm/infosystems/www/tools/imaging/giftrans/giftrans-1.11.1.tar.gz}
+filter by Andreas Ley \Email{ley@rz.uni-karlsruhe.de}. 
+\latextohtml{} now supports the shareware program \fn{giftool}
+(by Home Pages, Inc., version 1.0), too.
+It can also create interlaced GIFs.
+%
+\end{enumerate} 
+
+\index{requirements!without images}%
+
+\noindent
+If \appl{Ghostscript} or the \fn{netpbm} library are
+not available, it is still possible to use the translator with the
+\Cs{no\_images} option. 
+
+\index{requirements!for special features}\index{special!features}%
+\index{html.sty@\texttt{html.sty} style-file!needed for special features}%
+\html{\\}%
+
+If you intend to use any of the \htmlref{special features}{sec:hyp}
+of the translator \latex{(see page~\pageref{sec:hyp})}
+then you have to include the \fn{html.sty} file 
+in any \LaTeX{}  documents that use them. 
+
+\index{browser!supports images}%
+\index{Mosaic@\textsl{Mosaic}|see{\htmlref{browser}{IIIbrowser}}}%
+\index{NCSA Mosaic@\textsl{NCSA Mosaic}|see{\htmlref{browser}{IIIbrowser}}}%
+\index{Netscape@\textsl{Netscape Navigator}|see{\htmlref{browser}{IIIbrowser}}}%
+\index{browser!\textsl{NCSA Mosaic}}%
+\index{browser!\textsl{Netscape Navigator}}%
+\html{\\}%
+
+Since by default the translator makes use of inlined images in the final 
+\texttt{HTML} output, it would be better to have a viewer 
+which supports the \HTMLtag{IMG} tag,
+such as \htmladdnormallink{\textsl{NCSA Mosaic}}{\MosaicDocs}%
+%{http://www.ncsa.uiuc.edu/SDG/Software/Mosaic/Docs/help-about.html}
+or \htmladdnormallink{\textsl{Netscape Navigator}}{\NetscapeHome}.
+Any browser which claims to be compatible with \HTMLiii{} should meet
+this requirement.
+
+\index{browser!character-based}%
+\index{browser!character-based}\index{browser!lynx@\textsl{lynx}}%
+\html{\\}%
+
+If only a character-based browser, such as \appl{lynx}, is available, 
+or if you want the generated documents to be more portable, 
+then the translator can be used with the \Cs{ascii\_mode} 
+\hyperref{option}{option (see Section~}{)}{cs_asciimode}. 
+
+\index{requirements|)}
+
+\subsection{Installation on Windows}
+\label{windowsinst}\index{installation!on~Windows~95/98/NT}
+
+\index{source code!for Windows NT platform}%
+For Windows $95$, $98$, and NT you will either need a newer
+\latex2html{} Release $99.1$ or higher, or if you like to try an
+older release get the Windows $97.1$ port by \Popineau\ from
+\url{ftp://ftp.ese-metz.fr/pub/TeX/win32} or the $98.2$ DOS version
+\fn{l2h98\_2dos.tar.gz} by \Taupin{} from \CVSsite.
+Meanwhile, all the operating system dependent issues are integrated
+into the main release, thanks to the cool work of \Rouchal.
+
+To install the tools required to run the translator, perform the steps
+below. Thanks to Jens Berger (\texttt{jberger@mail.zedat.fu-berlin.de})
+for providing this list!
+\begin{itemize}
+\item install \fn{WinZip} from \WinZipURL;
+\item install \TeX/\LaTeXe{} and \fn{dvips};\\
+   E.g. the \fn{MikTeX} $1.20$ distribution from \MikTeXURL.
+\item install \fn{Perl};\\
+   E.g. \fn{ActivePerl} $509$ or higher from \ActiveStateURL.
+   Windows $95$ users will also need \fn{DCOM}, it is listed on
+   that download page, too.
+\item install \fn{GhostScript};\\
+    E.g. \fn{Aladdin GhostScript} $5.50$ from \GhostScriptURL.
+\item install the \fn{NetPBM} tools library from \NetpbmWinURL.
+\item unpack \latextohtml{}, e.g. under \verb|C:\TEXMF\LATEX2HTML|;
+\item check that the path to \fn{GSWIN32C.EXE} is added to the
+  \texttt{PATH} variable in your \texttt{AUTOEXEC.BAT};
+\item with \latextohtml{} $99.1$ or higher, edit \texttt{l2hconf.pin},
+  then run \texttt{CONFIG.BAT} to install the translator;\\
+  with older releases, edit \texttt{LATEX2HTML.CONFIG} and run
+  \begin{verbatim}
+  cd c:\texmf\latex2html
+  perl install-test
+  \end{verbatim}
+  from within a DOS box.
+\item you might want to write a small \texttt{.BAT} file in your
+  \latextohtml{} directory:
+  \begin{verbatim}
+  perl c:\texmf\latex2html\latex2html %1 %2 %3 >> l2h.log
+  \end{verbatim}
+  \texttt{\%1} is the name of the \texttt{.TEX} file,
+  \texttt{\%2} and \texttt{\%3} are optional arguments to the
+  translator such as \Cs{"-split 3"}.\\
+  Note that if you want more than two arguments you will need
+  to supply more parameters to the \texttt{.BAT} file.
+\item run it with a test document \texttt{test.tex}:
+  \begin{verbatim}
+   l2h test
+  \end{verbatim}
+  Maybe you will need to run \LaTeX{} before this, too!
+\end{itemize}
+
+
+\subsection[center]{Getting \protect\latextohtml}
+%\section[center]{Getting \protect\latextohtml}
+\tableofchildlinks*
+\htmlrule
+\index{source code}%
+\index{source code!from CTAN}%
+\index{CTAN}%
+One way \latextohtml may be obtained is through one of the three
+\htmladdnormallink{Comprehensive \TeX{} Archive Network (CTAN)}%
+{\CTANtug{}} sites.
+They are located at
+\begin{htmllist}\htmlitemmark{GreenBall}
+\item [US ]
+United States:
+\htmladdnormallinkfoot{\CTANtug{}}{\CTANtug{\CTANA}}\,,
+\item [UK ]
+United Kingdom:
+\htmladdnormallinkfoot{\path{http://www.tex.ac.uk/}}%
+{http://www.tex.ac.uk/\CTANA}
+\item [DE ]
+Germany:
+\htmladdnormallinkfoot{\path{ftp://ftp.dante.de/}}%
+{ftp://ftp.dante.de/\CTANA}\,.
+\end{htmllist}
+In the directory \htmladdnormallink{\CTANA/}{\CTANtug{\CTANA}} 
+should be the latest version, as a compressed archive.
+
+\smallskip\noindent
+There are also many mirrors.
+To find the nearest to you, get a listing via the command:
+\begin{quote}
+\texttt{finger ctan@www.tug.org}
+\end{quote}
+
+\noindent
+The site at \CVSsite\ is a convenient alternative for European users.
+This is connected to the \htmlref{developer's repository}{cvsrepos},
+so should always have the most recent release.
+
+\index{source code!home site}%
+\smallskip\noindent
+Alternatively, a compressed \fn{tar} file of the source and related files 
+may be obtained via \appl{anonymous ftp} to \sourceA\,.
+
+\smallskip\noindent
+Two other \appl{ftp}-sites are:
+\begin{itemize}
+\item \sourceB{}
+\item \sourceC{}
+\end{itemize}
+
+\index{source code!using Archie@using \textsl{Archie}}%
+\index{source code!using FTP search@using \textsl{FTP search}}%
+\smallskip\noindent
+Other \appl{ftp}-sites nearer to you can be found using \appl{Archie} at 
+\url{http://hoohoo.ncsa.uiuc.edu/archie.html} or 
+\url{http://www.pvv.unit.no/archie/} (faster) 
+or more recent Web-searching tools such as \appl{FTP search}
+in \htmladdnormallink{Norway}{http://ftpsearch.ntnu.no/ftpsearch}.
+\begin{quote}
+\textbf{Warning: }%
+Some \appl{ftp}-sites may not carry the latest version.
+\end{quote}
+
+\index{source code!patches}%
+\smallskip\noindent
+Updates and patches are posted on the \latextohtml{} server at \patches\,.
+
+\bigskip
+\index{source code!developer's repository}\label{cvsrepos}%
+\noindent
+Finally there is the \latextohtml{} developers' CVS repository, at \CVSrepos\,.\\
+The files to be found here are the most up-to-date with current developments,
+but they cannot be guaranteed to be fully reliable. New features may be
+still under development and not yet sufficiently tested for release.
+A daily updated compressed archive of the developers' work may be
+downloaded from \CVSlatest\,.
+
+\begin{quote}
+\textbf{Warning: }Use the files from this site at your own risk.
+\end{quote}%
+
+\htmlrule\index{source code!compressed}%
+\medskip\noindent
+Having obtained a compressed \fn{tar} version, save it into a file 
+\fn{latex2html-98.1.tar.gz} say,
+then extract its contents with 
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\begin{verbatim}
+% gzip -d latex2html-98.1.tar.gz
+% tar xvf latex2html-98.1.tar
+\end{verbatim} 
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+\index{source code!listing}%
+
+\noindent
+You should then have the following:
+\begin{itemize}
+\item \fn{README} file;
+\cbversion{98.1}\begin{changebar}%
+\item \fn{Changes} index with latest changes;
+\item \strikeout{\fn{Changes.detailed}} (no longer supplied);
+\end{changebar}
+\item \fn{latex2html} \Perl{} script;
+\item \fn{texexpand} \Perl{} script\footnote{Initially written 
+by \RobertThau, completely rewritten by \Rouchal\ and \Lippmann.};
+\item \fn{latex2html.config} configuration file;
+\item \fn{install-test} \Perl{} script, for installation and testing;
+\item \fn{dot.latex2html-init} sample initialisation file;
+%
+\item \fn{texinputs/} subdirectory, containing various \LaTeX{} style-files;
+\item \fn{versions/} subdirectory, containing code for specific
+\texttt{HTML} versions;
+\item \fn{makemap} \Perl{} script;
+\item \fn{example/} subdirectory, containing the segmentation example,
+described in detail in 
+\hyperref{a later section}{Section~}{}{Segmentation};
+\item \fn{.dvipsrc} file;%
+\begin{htmlonly}
+\item \strikeout{\fn{pstogif} \Perl{} script} (no longer supplied);
+\end{htmlonly}
+\item \fn{pstoimg} \Perl{} script for image conversion (replaces \fn{pstogif});
+\item \fn{configure-pstoimg} \Perl{} script for installation;
+\item \fn{local.pm} \Perl{} input file;
+\item \fn{icons.gif/} subdirectory, containing icons in GIF format;
+\item \fn{icons.png/} subdirectory, containing icons in PNG format;
+\item \fn{makeseg} \Perl{} script and examples to handle segmented
+documents via a generated Makefile, see \verb/makeseg.tex/;
+\cbversion{98.1}\begin{changebar}
+\item \fn{docs/foilhtml/} contains \LaTeX{} package and \Perl{} implementation by \Veytsman,
+to support \FoilTeX{} to \fn{HTML} translation;
+\item \fn{IndicTeX-HTML/} package that contains \Perl{} and
+ \LaTeX{} code for translating Indic\TeX{} documents (see README file);
+\end{changebar}
+\item \fn{docs/} subdirectory, containing the files needed to create 
+a version of this manual;
+\item \fn{styles/} subdirectory, containing \Perl{} code for handling
+some style-files;
+\item \fn{tests/} contains some test documents for \latextohtml.
+\end{itemize}
+
+\htmlrule
+\tableofchildlinks
+
+\subsection{Installing \protect\latextohtml}%
+%\section{Installing \protect\latextohtml}%
+\index{installation!latex2html}\html{\\}%
+To install \latextohtml{} you \textbf{MUST} do the following:
+%
+\begin{enumerate}
+\item 
+\textbf{Specify where \Perl{} is on your system}. \\
+In each of the files \fn{latex2html}, \fn{texexpand}, \fn{pstoimg},
+\fn{install-test} and \fn{makemap},
+modify the first line saying where \Perl{} is on your system.
+
+\index{installation!without Perl@without \Perl{} shell scripts}
+
+\noindent
+Some system administrators do not allow \Perl{} programs to run as shell scripts. 
+This means that you may not be able to run any of the above programs. 
+\emph{In this case change the first line in each of these programs from }
+\html{\smallskip}
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\verb|#!/usr/local/bin/perl | 
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+\html{\smallskip}\emph{to}:
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\begin{verbatim}
+# *-*-perl-*-*
+    eval 'exec perl -S  $0 "$@"'
+    if $running_under_some_shell; 
+\end{verbatim}
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+
+\index{installation!system installation}%
+\index{installation!LaTeX packages}%
+\item
+Copy the files to the destination directory.\\
+Copy the contents of the \fn{texinputs/} directory to a place where they
+will be found by \LaTeX, or set up your \fn{TEXINPUTS} variable to point
+to that directory.
+
+\index{installation!check path-names}%
+\index{installation!graphics utilities}%
+\item 
+\textbf{Run \fn{install-test}\,.} \\
+This \Perl{} script will make some changes in the \fn{latex2html} file
+and then check whether the path-names to any external utilities
+required by \fn{latex2html} are correct.
+It will not actually install the external utilities. 
+\fn{install-test} asks you whether to configure for GIF or
+\fn{PNG} image generation.
+Finally it creates the file \fn{local.pm} which houses pathnames for the
+external utilities determined earlier.
+
+\smallskip\noindent
+You might need to make \fn{install-test} executable before using it.\\
+Use \verb/chmod +x install-test/ to do this.
+
+\smallskip\noindent
+You may also need to make the files \fn{pstogif}, 
+\fn{texexpand}, \fn{configure-pstoimg} and \fn{latex2html} executable 
+if \fn{install-test} fails to do it for you.
+
+\index{installation!system installation}%
+\item
+If you like so, copy or move the \fn{latex2html} executable script to
+some location outside the \fn{\$LATEX2HTMLDIR} directory.
+
+\index{installation!change configuration}%
+\index{installation!change defaults}
+\item 
+You might want to edit \fn{latex2html.config} to reflect your needs.
+Read the instructions about \fn{\$ICONSERVER} carefully to make sure your
+\fn{HTML} documents will be displayed right via the Web server.\\
+While you're at it you may want to change some of the default
+options in this file.\\
+If you do a system installation for many users, only cope with general
+aspects; let the user override these with \verb|$HOME/.latex2html-init|.
+%
+\end{enumerate}
+
+
+Note that you \emph{must} run \fn{install-test} now;
+formerly you could manage without.
+If you want to reconfigure \latextohtml{} for GIF/PNG image
+generation, or because some of the external tools changed the location,
+simply rerun \fn{configure-pstoimg}.
+
+
+\medskip\htmlrule[50\% center]
+\noindent
+This is usually enough for the main installation, but you may also 
+want to do some of the following, to ensure that advanced features 
+of \latextohtml{} work correctly on your system:
+\begin{itemize}
+\index{html.sty@\texttt{html.sty} style-file!location}%
+\index{installation!environment variable}%
+\item 
+\textbf{To use the new \LaTeX{}  commands 
+which are defined in \fn{html.sty}:}\\
+Make sure that \LaTeX{}  knows where the \fn{html.sty} file is, 
+either by putting it in the same place as the other style-files on your system, 
+or by changing your \fn{TEXINPUTS} shell environment variable,
+or by copying \fn{html.sty} into the same directory as your \LaTeX{}  source file.
+
+The environment variable \fn{TEXINPUTS} is not to be confused with 
+the \latextohtml{} installation variable \fn{\$TEXINPUTS} described next.
+\par
+
+\index{installation!input-path variable}%
+\item
+There is an installation variable in \fn{latex2html.config}
+called \fn{\$TEXINPUTS}, 
+which tells \latextohtml{} where to look for \LaTeX{} style-files to process.  
+It can also affect the input-path of \LaTeX{} when called by \latextohtml,
+unless the command \fn{latex} is really a script 
+which overwrites the \fn{\$TEXINPUTS} variable 
+prior to calling the real \fn{latex}.
+This variable is overridden by the environment variable of the same name 
+if it is set.
+
+\index{installation!fonts-path variable}%
+\item
+The installation variable \fn{\$PK\_GENERATION} specifies which
+fonts are used in the generation of mathematical equations.  A value
+of ``\texttt{0}'' causes the same fonts to be used as those for the default
+printer.  Because they were designed for a printer of much greater
+resolution than the screen, equations will generally appear to be
+of a lower quality than is otherwise possible.  To cause \latextohtml{} to
+dynamically generate fonts that are designed specifically for the
+screen, you should specify a value of ``\texttt{1}'' for this variable.
+If you do, then check to see whether your version of \texttt{dvips}
+supports the command-line option \Cs{mode}\,.  If it does,
+then also set the installation variable \fn{\$DVIPS\_MODE} to
+a low resolution entry from \fn{modes.mf}, such as \fn{toshiba}.
+
+It may also be necessary to edit the \fn{MakeTeXPK} script, 
+to recognise this mode at the appropriate resolution.
+
+If you have \PS\ fonts available for use with \LaTeX{} and \fn{dvips}
+then you can probably ignore the above complications and simply
+set \fn{\$PK\_GENERATION} to ``\texttt{0}'' 
+and \fn{\$DVIPS\_MODE} to \texttt{\char34\char34} (the empty string).
+You must also make sure that \fn{gs} has the locations of the
+fonts recorded in its \fn{gs\_fonts.ps} file. This should already be the case
+where \appl{GS-Preview} is installed as the viewer for \texttt{.dvi}-files,
+using the \PS\ fonts.
+
+If \fn{dvips} does \emph{not} support the \Cs{mode} switch,
+then leave \fn{\$DVIPS\_MODE} undefined, and verify that the
+\fn{.dvipsrc} file points to the correct screen device and its
+resolution.
+
+\index{installation!filename-prefix}\label{autoprefix}%
+\item
+The installation variable \fn{\$AUTO\_PREFIX} 
+allows the filename-prefix to be automatically set 
+to the base filename-prefix of the document being translated.  
+This can be especially useful for multiple-segment documents.
+
+%%JCL obsolete with Perl5
+%%\index{installation!Linux@\textsl{Linux} systems}%
+%%\item 
+%%On certain \appl{Linux} systems it is necessary to uncomment
+%%the line ``\texttt{use GDBM\_File}'' in the \fn{latex2html}
+%%and \fn{install-test} scripts, to define the interface to the
+%%data\-base-management routines.
+
+\index{installation!makemap script@\texttt{makemap} script}%
+\index{CERN!image-map server}\index{NCSA!image-map server}%
+\item 
+The \fn{makemap} script also has a configuration variable \fn{\$SERVER}, 
+which must be set to either \texttt{CERN} or \texttt{NCSA}, 
+depending on the type of Web-server you are using.
+
+
+\index{installation!initialization files}%
+\index{initialization file!per user}%
+\label{initfile}%
+\item \textbf{To set up different initialization files:}\\
+For a ``per user'' initialization file, 
+copy the file \fn{dot.latex2html-init} in the home directory
+of any user that wants it, modify it according to her preferences and
+rename it as \ \fn{.latex2html-init}. At runtime, both the 
+\fn{latex2html.config} file and \fn{\$HOME/.latex2html-init} file will be
+loaded, but the latter will take precedence.
+
+\index{initialization file!per directory}%
+
+You can also set up a ``per directory'' initialization file by 
+copying a version of \ \fn{.latex2html-init} in each directory you
+would like it to be effective. An initialization file
+\path{/X/Y/Z/.latex2html-init} will take precedence over all other
+initialization files if \path{/X/Y/Z} is the ``current directory'' when
+\latextohtml{} is invoked.
+
+\index{initialization file!incompatible with early versions}% 
+\begin{quotation}\noindent 
+\textbf{Warning: }%
+This initialization file is incompatible with
+any version of \latextohtml\ prior to \textsc{v96.1}\,.  
+Users must either update this file in their home directory, 
+or delete it altogether.
+\end{quotation}
+
+\index{installation!icons subdirectory@\texttt{icons/} subdirectory}%
+\item \label{icondir}%
+\textbf{To make your own local copies of the \latextohtml{} icons:} \\
+Please copy the \fn{icons/} subdirectory to a 
+place under your WWW tree
+where they can be served by your server.
+Then modify the value of the \fn{\$ICONSERVER} variable in 
+\fn{latex2html.config} accordingly.
+\index{installation!local icons}%
+Alternatively, a local copy of the icons can be included within
+the subdirectory containing your completed \texttt{HTML} documents.
+This is most easily done using the \Cs{local\_icons} command-line switch,
+or by setting \fn{\$LOCAL\_ICONS} to ``\texttt{1}'' in \fn{latex2html.config}
+or within an initialization file, as described \htmlref{above}{initfile}.
+
+\index{Livermore, California }%
+\begin{quotation}\noindent
+\textbf{Warnings: }%
+If you cannot do that, bear in mind that these icons will have
+to travel from Livermore, California!!!
+Also note that several more icons were added in \textsc{v96.1}
+that were not present in earlier versions of \latextohtml.
+\end{quotation}
+
+\index{installation!create manual}%
+\index{documentation!test of installation}%
+\item
+\textbf{To make your own local copy of the \latextohtml{}
+documentation:} \\
+This will also be a good test of your installation. 
+% To do it run \latextohtml{} on the file \fn{docs/manual.tex}.
+% You will get better results if you run \LaTeX{} first on the 
+% same file in order to create some auxiliary files.
+%
+\index{documentation!dvi version@\texttt{.dvi} version}%
+\noindent
+Firstly, to obtain the \texttt{.dvi} version for printing,
+from within the \fn{docs/} directory it is sufficient to type:
+
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\texttt{ make manual.dvi}
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+
+\noindent
+This initiates the following sequence of commands:
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\begin{verbatim}
+latex manual.tex
+makeindex -s l2hidx.ist manual.idx
+makeindex -s l2hglo.ist -o manual.gls manual.glo
+latex manual.tex
+latex manual.tex
+\end{verbatim}
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+\index{documentation!using makeindex@using \texttt{makeindex}}%
+\index{documentation!index and glossary}%
+...in which the two configuration files \fn{l2hidx.ist} and \fn{l2hglo.ist} 
+for the \fn{makeindex} program, are used to create the index and glossary respectively.
+The 2nd run of \fn{latex} is needed to assimilate references, etc.
+and include the index and glossary.\html{\\}%
+\index{documentation!without makeindex@without \texttt{makeindex}}%
+\html{\\}
+(In case \fn{makeindex} is not available, a copy of its outputs \fn{manual.ind} 
+and \fn{manual.gls} are included in the \fn{docs/} subdirectory, 
+along with \fn{manual.aux}\,.)\html{\\}
+The 3rd run of \fn{latex} is needed to adjust page-numbering for the Index 
+and Glossary within the Table-of-Contents.
+
+\noindent
+Next, the \texttt{HTML} version is obtained by typing:
+
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\texttt{make manual.html}
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+
+\noindent
+This initiates a series of calls to \latextohtml{} on the separate
+segments of the manual; 
+the full manual is thus created as a ``segmented document''
+(see \hyperref{a later section}{Section~}{}{Segmentation}).
+The whole process may take quite some time, 
+as each segment needs to be processed at least twice, 
+to collect the cross-references from other segments.
+
+\medskip
+\index{documentation!requirements}\html{\\}%
+\noindent
+The files necessary for correct typesetting of the manual to be
+found within the \fn{docs/} subdirectory. 
+They are as follows:
+\begin{itemize}
+%
+\index{html.sty@\texttt{html.sty} style-file}%
+\index{documentation!style-files}%
+\item
+style-files:
+ \fn{l2hman.sty}, \fn{html.sty}, \fn{htmllist.sty}, \fn{justify.sty},\\
+  \fn{changebar.sty} and \fn{url.sty}
+%
+\index{documentation!input files}%
+\item
+inputs:
+ \strikeout{\fn{changes.tex},} \fn{credits.tex}, \fn{features.tex}, \fn{hypextra.tex},\\
+ \fn{licence.tex}, \fn{manhtml.tex}, \fn{manual.tex}, \fn{overview.tex},\\
+ \fn{problems.tex}, \fn{support.tex} and \fn{userman.tex}
+%
+\index{documentation!graphics}%
+\item
+sub-directory:
+ \fn{psfiles/} containing \PS\ graphics
+ used in the printed version of this manual
+%
+\index{documentation!images}%
+\item
+images of small curved arrows: \fn{up.gif}, \fn{dn.gif}
+%
+\index{documentation!filename data}%
+\item
+filename data:
+ \fn{l2hfiles.dat}
+%
+\index{documentation!auxiliaries}%
+\item
+auxiliaries:
+ \fn{manual.aux}, \fn{manual.ind}, \fn{manual.gls}
+%
+\end{itemize}
+
+The last three can be derived from the others, but are included for convenience.
+\par
+
+\index{documentation!Changes section}%
+\item 
+
+\textbf{To get a printed version of the `Changes' section: }\\
+Due to the burgeoning size of the \fn{Changes} file with successive
+revisions of \latextohtml, the `Changes' section is no longer
+supported for the manual.
+Please refer to text file \fn{Changes} instead which is part of the
+distribution.
+
+
+\index{discussion group}\index{bugs!bug reports}%
+\item 
+\textbf{To join the community of \latextohtml{} users:} \\
+More information on a mailing list, discussion archives, bug reporting
+forms and more is available at 
+\url{http://cbl.leeds.ac.uk/nikos/tex2html/doc/latex2html/latex2html.html}
+
+
+\cbversion{99.1}\begin{changebar}
+\index{\TeX{} Users Group (TUG)}\index{TUG!TUG: \TeX{} Users Group}%
+\item 
+\latextohtml{} is actively supported by the international 
+\TeX{} Users Group (\TUGurl). All users are encouraged to join \TUGurl,
+to keep up-to-date with the latest development in \TeX{}, \LaTeX,
+\latextohtml{} and related programs.
+Consult the TUG Web pages at \url{http://www.tug.org/}.
+\end{changebar}
+
+\end{itemize}
+
+
+\subsection[center]{Getting Support and More Information\label{support}}%
+%\section[center]{Getting Support and More Information\label{support}}%
+\index{support}%
+\index{support!mailing list}\index{mailing list!Argonne National Labs}
+
+\cbversion{99.1}\begin{changebar}
+A \htmladdnormallink{\latextohtml{} mailing list}%
+{mailto:latex2html-request@tug.org}
+is managed by the international \TeX{} User Group (\TUGurl).
+ 
+This mailing used was originally established at the Argonne National Labs,
+where it was based for several years.
+(Thanks to \IanFoster{} and \BobOlson, and others.)
+Since February 1999, it has been run by \TUGurl, thanks to
+\ArtOgawa{} and \RossMoore.
+\end{changebar}
+
+\smallskip\noindent
+To join send a message to: \Email{latex2html-request@tug.org }
+\index{mailing list!subscribe}\\
+with the contents:~~\texttt{ subscribe }\latex{.}
+
+
+\smallskip\noindent
+To be removed from the list send a message to: 
+\Email{latex2html-request@tug.org }
+\index{mailing list!unsubscribe}\\
+with the contents:~~\texttt{ unsubscribe }\latex{.}
+
+
+\bigskip\noindent
+The mailing list also has a 
+\htmladdnormallinkfoot{searchable online archive}{\ListURL}.
+It is recommended to start with this, 
+to become familiar with the topics actually discussed,
+and to search for articles related to your own interests.
+
+\cbversion{99.1}\begin{changebar}
+An \htmladdnormallinkfoot {older archive}
+{\url{http://cbl.leeds.ac.uk/nikos/tex2html/doc/mail/mail.html}}
+may still be accessible, but is no longer actively maintained.
+\end{changebar}
+
+\bigskip
+Enjoy!
+

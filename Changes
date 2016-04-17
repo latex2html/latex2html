@@ -1,0 +1,2050 @@
+
+# LaTeX2HTML by Nikos Drakos <nikos@cbl.leeds.ac.uk>
+# **************************************************
+# Change Log ***************************************
+# **************************************************
+#
+# Please use the following style: Add your (unique) initials to the list below.
+# Use your initials whereever you make commented changes.
+# To get in correlation with the more verbous explanations you make in the
+# change log, or if you want to stress meaningful changes, use an additional
+# short (about 3 letters) identifier, unique together with your initials,
+# eg. jcl-pag. This also helps others to find your changes.
+# If any change affects former changes, this *must* be stated in the log,
+# together with a reference to the previous log entrie(s).
+#
+#  nd = Nikos Drakos <nikos@cbl.leeds.ac.uk>
+#  ab = Axel Belinfante <Axel.Belinfante@cs.utwente.nl>
+#  ac = Andrew Cole <ajcole@cbl.leeds.ac.uk>
+#  wb = William Perry <wmperry@edu.indiana.ucs.mango>
+#  bh = Bob Hendley <R.J.Hendley@uk.ac.bham.cs>
+# rst = Robert S. Thau <rst@edu.mit.ai>
+#  dm = David Martland <David.Martland@uk.ac.brunel>
+# rjw = Roderick Williams <rodw@cbl.leeds.ac.uk>
+#  jr = Jussi Rahola <Jussi.Rahola@csc.fi>
+#  ec = Eric Carroll <eric@ca.utoronto.utcc.enfm>
+#  tl = <little@com.dec.enet.nuts2u>
+#  fz = Franz Vojik <vojik@de.tu-muenchen.informatik>
+# spqr= Sebastian Rahtz <spqr@ftp.tex.ac.uk>
+#  up = Ulrich Pfeifer <pfeifer@de.uni-dortmund.informatik.ls6>
+#  aa = Alberto Accomazzi <alberto@cfa.harvard.edu>
+#  wr = Wolfgang Riedel <wolfgang.riedel@de.tu-chemnitz.hrz>
+#  alo= Alex Lopez-Ortiz <alopez-o@ca.uwaterloo.barrow>
+#  mb = Michael Francis Brantley <brantley@EDU.Princeton>
+#  mcb= Michael C. Grant <mcgrant@edu.stanford.rascals>
+#  jz = Jelle van Zeijl <jvzeijl@isou17.estec.esa.nl>
+#  bs = <boris@cs.rochester.edu>
+# jhf = James Freeman <freeman@Cornell-Iowa.edu>
+# hpr = Hal Peterson <hrp@com.cray.sdiv>
+#  kc = Ken Cox <kenc@com.viewlogic>
+#  gp = George Phillips <phillips@ca.ubc.cs>
+#  tw = Thomas Wieland <thomas_w@de.uni-bayreuth.mat.btm2x7>
+#  dh = Dirk Husemann <Dirk.Husemann@informatik.uni-erlangen.de>
+#  bt = Brian  Toonen <toonen@mcs.anl.gov>
+#  gg = Graham Gough <graham@cs.man.ac.uk>
+#  kz = Kenny Zalewski <zalewk@rpi.edu>
+#  tm = Tim MacKenzie (t.mackenzie@trl.oz.au)
+#  mk = Martijn Koster (m.koster@nexor.co.uk)
+#  ew = Evan Welsh <welsh@uk.ac.ed.epcc>
+#  re = Robert Estes <estes@ece.ucdavis.edu>
+#  rw = Richard Walker <richard@cs.anu.edu.au>
+#  sl = Stefan Lohrum <lohrum@inf.fu-berlin.de>
+#  kl = Kris Laporte <kl@sunbim.be>
+#  gg = Gordon Greene <greeng3@rpi.edu>
+#  pb = Pascal Brisset <brissetp@poly.polytechnique.fr>
+#  po = Pieter Olivier <olivierp@fwi.uva.nl>
+#  eb = Ethan Bradford <ethanb@ptolemy.astro.washington.edu>
+#  ev = Eric Verbeek <wsineric@win.tue.nl>
+#  tt = Tom Tromey <tromey@busco.lanl.gov>
+#  ms = Mike Stok <Mike.Stok@meiko.concord.ma.us>
+#  sk = Stefan Kaes <kaes@lssun001.DresdnerBank.de>
+# psm = Peter Magnusson <psm@sics.se>
+#  mb = Martin Boyer <gamin@ireq-robot.hydro.qc.ca>
+#segal= Mark Segal <segal@spud.asd.sgi.com>
+# jmn = Mark Noworolski <jmn@eecs.berkeley.edu>
+# meh = Marcus Hennecke <marcush@crc.ricoh.com>
+# hws = Herbert W Swan <hswan@perc.Arco.com>
+# jkr = Jens Krinke <krinke@ips.cs.tu-bs.de>
+# sid = Sidik Isani <isani@cfht.hawaii.edu>
+# rml = Rob Malouf <malouf@csli.stanford.edu>
+# jtc = Ted Cox <jtcox@gumby.syr.edu>
+# pns = Paulo Ney de Souza <desouza@math.berkeley.edu>
+# tkm = Tom Miller <tkm@eos.ncsu.edu>
+# mg  = Michel Goossens <Michel.Goossens@cern.ch>
+# ays = Andreas Schott <schott@rzg.mpg.de>
+# jfr = J. Freeman <jfreeman@ms.com>
+# mer = Michael Ernst <mernst@cs.rice.edu>
+# rrm = Ross Moore <ross@maths.mq.edu.au>
+# jcl = Jens Lippmann <lippmann@rbg.informatik.tu-darmstadt.de>
+# dtp = D. Taupin <taupin@lps.u-psud.fr>
+# mwk = Martin Wilck <martin@kassandra.tropos.de>
+# mcm = Barry McMullin <McMullin@EENG.DCU.IE>
+# tak = Takashi Tomokiyo <tomokiyo@trc.rwcp.or.jp>
+# mro = Marek Rouchal <marek@saftsack.fs.uni-bayreuth.de>
+#  bv = Boris Veytsman <boris@plmsc.psu.edu>
+#  kr = Keith Refson <Keith.Refson@earth.ox.ac.uk>
+#  uw = Uli Wortmann <uli12@bonk.ethz.ch>
+#
+#
+#------------------- Test Suite Manifest ----------------------------------
+#
+# A listing of current test suites.
+# These suites should be run before any new version is released.
+# For a detailed description consult the suite's header.
+# Feel free to devise further test suites, but *comment* them (see
+# jcl-pag.tex header on how to comment).
+#
+# docs/manual.tex	The l2h manual.
+# example/report.tex	An example with segment document parts.
+# tests/pages.tex	Tests image generation of l2h.
+# tests/rrm-col.tex	See log.
+# tests/jcl-pag.tex	See log.
+# tests/jcl-env.tex	See log.
+# tests/jcl-verb.tex	See log.
+#
+#--------------------------------------------------------------------------
+#
+#		CHANGE LOG FOR THE LATEX2HTML RELEASE
+#
+# What is recorded here are changes to any file of the LaTeX2HTML release
+# *meaningful to the user*, such as new options or files, important bug
+# fixes etc.
+# A more detailed log history can be found within the particular files, near
+# the top.
+#
+#--------- v2015 apply patches from Debian
+#
+#		- add-abnt.patch
+#		- add-floatflt-ins.patch
+#		- add-url.patch
+#		- eurosym.patch
+#		- fix-gs-stderr.patch
+#		- fix-image-types.patch
+#		- fix-mathend-mark.patch
+#		- fix-pdfoutput.patch
+#		- fix-romanian.patch
+#		- fix-spaces-in-filenames.patch
+#		- fix-typos.patch
+#		- html-version-4.patch
+#		- l2hconf-fix-shebang.patch
+#		- latex2html-fix-authoraddress.patch
+#		- latex2html-fix-defined.patch
+#		- makefiles-fixes.patch
+#		- manpages.patch
+#		- manual-fix-address.patch
+#		- match-multiline.patch
+#		- override-dvips-dot-in-filename-problem.patch
+#		- pstoimg-dont-use-rgb-txt.patch
+#		- pstoimg-fix-borders.patch
+#		- pstoimg-fix-file-pattern.patch
+#		- pstoimg-match-gray.patch
+#
+#--------- v98.1 (compiled by jcl)
+#
+#	Changes in the top-level directory:
+#
+#	rrm	latex2html.config
+#	jcl	- New section header strings in &english_titles (corresponding
+#		  entries also in german.perl, french.perl):
+#		   $ref_title - this text heads the References section
+#		   $pre_title - for preface
+#		   $child_name - this text heads the table of child links
+#		   $prf_name - for proofs
+#		- added variables for tex and initex  for use with the -ldump
+#		  feature
+#		  The -ldump switch will help to speed up image generation
+#		  with *subsequent* runs on your document.
+#		- added command line option -unsegment and $UNSEGMENT
+#		  Use latex2html -unsegment, or texexpand -unsegment, or set
+#		  $UNSEGMENT to 1 in latex2html.config
+#		  (see texexpand changes)
+#		- added defaults for bolder images of gray background
+#		- provide optional value for $TMP --- location of a  tmp  directory
+#		- provide default for $GENERIC_WORDS to be omitted from filenames
+#		  when using the  -long_titles  switch
+#		  (see also german.perl, french.perl)
+#
+#	rrm	latex2html
+#	(uw)	- patch for -no_subdir bug, reported by Thomas Anders dta@dsapp2.hmi.de
+#	(jcl)	- &cleanup deletes ${PREFIX}images.dvi
+#		- fixed bug whereby \item s were combined --- lack of unique brace id
+#		- fixed missing-space bug that killed math-images
+#		- implemented scheme to allow alternative address formats
+#		- address-data default is ISO conformant
+#		- added translation of \institute as part of the title page settings
+#		- change to -link so that  -link +<num>  puts mini-TOC on leaf pages
+#		  and  -link <num>  puts no mini-TOC on these lowest-level pages;
+#		  Alternatively, set $MAX_LINK_DEPTH to be negative for these mini-TOCs
+#		- new switch  -ldump  to use ldump.sty when making images,
+#		  this speeds up processing on the 2nd and subsequent runs;
+#		- fully implemented dependency of counters;
+#		- implemented \expandafter and \noexpand with special care concerning
+#		  case-changing macros;
+#		- fixed bug whereby `0' in math was getting lost;
+#		- allow alternative source for icons, using $ALTERNATIVE_ICONS
+#		- implemented on-the-fly \renewcommand
+#		- \renewcommand meta-commands are now wrapped, so that they are
+#		  re-processed *before* there replacement text is processed.
+#		  Otherwise bad LaTeX code can get into images.tex
+#		  (Thanks to  Michael Hall for an example of this.)
+#		- \newcommand both warns *and* replaces existing macros
+#		- more care over \limits  macro
+#		- fixed a bug whereby some macro-expansions didn't work correctly
+#		- fixed printing of \the<counter> macros, with dependent counters
+#		- NEW: implementation of document-classes and styles
+#		  allows file for classes and options and option-class pairs
+#		- implemented $INFO-page options
+#		- fixed error with minipage footnote numbering
+#		- implemented \numberwithin (from AMS-packages)
+#		- fixed error in DTD declaration
+#		- implemented \nobreakspace  and  \nonbreakingspace  (AMS-packages)
+#		- Added support for Override.pm to latex2html
+#		- added command line option -unsegment and $UNSEGMENT
+#		  Use latex2html -unsegment, or texexpand -unsegment, or set $UNSEGMENT
+#		  to 1 in latex2html.config (see texexpand Changes)
+#		- **major**
+#		  introduced a font/size state-stack concept to handle nesting
+#		  of tags altering size and font-face within text-level data.
+#		  It also affects macros which create block-level tags.
+#		  The @open-tags list has to be cleared, tags inserted,
+#		  then @open-tags recovered for the new paragraph, say.
+#		- font/size-changing commands are declared as `deferred'
+#		  so as to be processed in sequence with environments
+#		  \par \bigskip \medskip etc. are similarly `deferred'
+#		- the switch  -tmp 0  uses /tmp as a tmp-directory
+#		- special characters can be `escaped' in macros that construct
+#		  {rawhtml} environments
+#		- \newcommand \newenvironment \def definitions are more efficient
+#		  macro substitution is *much* faster, using an array mechanism
+#		- support for HTML 4.0, including style-sheets
+#		- faster processing on user-defined macro replacements
+#		- faster processing of .aux files
+#		- improvments to ensure validity of the HTML code, wrt DTDs
+#		- many LaTeX macros use an extra indirection, so that it
+#		  becomes much easier to cope with tag-balancing and styles;
+#		  this also shortens the code somewhat.
+#		- the declared environments are similarly handled indirectly.
+#		- processing of the .aux file and user-defined macros handle
+#		  smaller chunks of text, rather than the whole document;
+#		  for the .aux file, each line is handled separately
+#		  for macro-replacement, a \par command serves as a delimiter
+#		  (since it is illegal within most (La)TeX macros).
+#		- other parts of the processing are done using arrays, to lessen
+#		  the length of strings that might otherwise be copied.
+#		- when $USING_STYLES is set, a CSS style-sheet is generated,
+#		  indicating the style used in each environment, and providing
+#		  a unique ID to such environments. This CSS style-sheet can be
+#		  subsequently edited, if desired.
+#		- \label and \index commands in section-headings work better,
+#		  (the anchor is placed before the heading tag)
+#		  also a forward-search is now conducted for these.
+#		- handling of charsets and input encodings is much improved.
+#		- moved some variables to establish defaults before .config or -init
+#		  files are read.
+#		- introduced variables  $image_pre  and  $IMAGE_PREFIX  to control names
+#		  used for the intermediate files created by  dvips  and  pstoimg
+#		- implemented \textsc fully --- now 8-bit characters are case-folded too
+#		- create images anti-aliased against a gray background. Characters are
+#		  bolder, without (almost) white edges against gray.
+#		  new variables $LOAD_LATEX_COLOR  and $LATEX_COLOR control this.
+#		- new switch  -numbered_footnotes  setting  $NUMBERED_FOOTNOTES
+#		- \begin/endgroup  and $b/egroup commands write directly into images.tex
+#		- defined &do_cmd_footnote* since \footnote*{...} is a common in TeX
+#		- defined &do_cmd_MF  for the Metafont logo
+#		- support for pre-processors when making images of non-latin script
+#		  code for generating images is placed into file:  images.pre
+#		  pre-processor commands are placed into file:  preproc
+#		  preproc  is run as a script, producing:  images.tex
+#		  image generation then proceeds as normal.
+#		- pseudo-environments for font/styles are given better support
+#		  and TeX's \font command is implemented
+#		  e.g. {\bf  ... }   {\wncyr .... }
+#		  the control-sequence is found and the grouping is treated as an
+#		  environment, rather than waiting to handle it as a command.
+#		- theorem commands and styles are implemented;
+#		  covers the {theorem} and {amsthm} packages.
+#		- footnotes have hyperlink back into the main text.
+#		- footnotes can have images in the footnote marker `word'
+#		- section numbering is rationalised to be more in-step with LaTeX
+#		  the HTML numbering is unchanged, via  @curr_sec_id
+#		  in-text macros, like \value \setcounter \thesection get their
+#		  number from $global{'section'} etc.
+#		  \section advances both counters, but \section* only the HTML one.
+#		- changed the $NO_ACCENT_IMAGES variable instance to $ACCENT_IMAGES
+#		- added %numbered_section hash for initialising $global counters
+#		  in  &initialise_sections
+#		- some name changes of auxiliary files usage of temporary directories
+#		  to get it running on DOS (thanks to Daniel Taupin)
+#		- implemented \theoremstyle , \theorembodyfont , etc.
+#		- added to the TeX code in images.tex for finer control with accents
+#		- inserted  binmode(IMAGE)  when scanning bitmaps for size
+#		  (thanks, Daniel Taupin)
+#		- changes to the way captions are found and handled
+#		- new switch: -iso_language  to get the correct DTD with mixed-languages
+#		- minipage environments can capture a caption, when inside figure/table
+#		- implemented \eqref (from AMS-TeX)
+#		- implemented \topcaption \bottomcaption \middlecaption commands
+#		- implemented use of 2 temp directories:
+#		  $TEMPDIR for image-processing, usually subdir of /tmp
+#		  TMP subdir of working directory, for the (formerly) TMP_ files
+#		- sectioning commands in expansions of \newcommand work properly now
+#		  (thanks to Azat Badretdinov for finding the cause)
+#		- improved the handling of simple math generally
+#		- changed name \HTML to \HTMLcode ; \HTML remains as an alias
+#		- minor changes in images.tex to avoid some `cropping bars' remaining
+#		- itemize works properly, with explicit \item[...]
+#		  bullets implemented as images, for other \item s
+#		- \tag is recognised in equation environments, with all math modes
+#		- \authorURL make the \author information into a hyperlink
+#		- \email adds to the title-page info
+#		- made \large and \small use <FONT SIZE....> tags
+#		- added declarations for  \smaller and \larger
+#		- change to  &do_cmd_mbox  so that it doesn't try to make an image
+#		  of the code that may already have an image_marker
+#		  This allows \mbox{$...$} to be used with macro-replacements
+#		- improvements to &make_long_title to cope with accents, etc.
+#		- implemented  -no_fork switch for  $NOFORK  variable
+#		- replaced system `cat` command with a platform-independent version
+#		- implemented \usecounter use within {list} environments
+#		- long-titles are restricted to 27 characters +(.html) = 32 chars
+#		- suppressed warning messages for `array` and `theorem` packages
+#		- use $BODYTEXT with the footnotes page (thanks Andreas Otte)
+#		- figure/table captions aren't also included in images
+#
+# NEW		Override.pm
+#		This file is intended to hold OS-specific definitions that
+#		the latex2html or other scripts may require during runtime.
+#		Thanks go to Marcus Hennecke, Axel Ramge, Uli Wortmann and
+#		many others who helped with their suggestions.
+#		This is a step towards an operating system independent
+#		LaTeX2HTML which is currently under work.
+#
+#	jcl	configure-pstoimg
+#		- safer renaming of substitute files to .bak (lost files reported)
+#		- dies with message unless initialized via install-test
+#
+#	jcl	install-test
+#	rrm	- some revisions for 98.1, see log of that file
+#
+#	rrm	pstoimg, pstoimg_nopipes
+#	uw	- adjusted to use the  Override.pm  module with Perl5
+#	jcl	- removed the PaperSize bug
+#		- handles absolute file names and temp dirs correctly
+#
+#	jcl	texexpand
+#	rrm	- small fix to &interprete, \input|include now doesn't loose the
+#	uw	  comment if merging fails
+#		- added command line option -unsegment and $UNSEGMENT
+#		  Use latex2html -unsegment, or texexpand -unsegment, or set
+#		  $UNSEGMENT to 1 in latex2html.config.
+#		  This will force a segmented document to expand its segment
+#		  files, so that it may be processed as a whole with LaTeX2HTML.
+#		  Use this feature to test a segmented document or whenever a
+#		  document needs to be fully expanded.
+#		- Added support for Override.pm to texepand.
+#		- generalised pattern for matching verbatim-like environments
+#
+#	NEW packages:
+#
+#	IndicTeX-HTML/
+#	rrm	provided IndicTeX-HTML, a collection of Perl and LaTeX styles
+#		to translate IndicTeX documents (see README)
+#
+#	foilhtml/
+#	bv	provided FoilHTML, a package for translating FoilTeX documents
+#		(see readme.v12)
+#
+#	Changes in the styles/ directory:
+#
+#	rrm	alltt.perl
+#		reimplemented the {alltt} to use <TT> rather than <PRE> now
+#		style changes can be handled properly, with valid tag nesting
+#
+# NEW	rrm	amsart.perl, amsbook.perl
+#		New files --- support AMS document class
+#
+#	rrm	amsfonts.perl
+#		pass \mathbb commands to LaTeX
+#
+#	rrm	amsmath.perl, amstex.perl
+#		various changes (see log history in that files)
+#
+#	rrm	babel.perl
+#		 -  parametrised the loading-mechanism:
+#			a single line now suffices for each new language
+#		 -  added such lines for `french' and `francais' (NB. Michel Goossens)
+#		--   fixed error in file-loading
+#
+# NEW	rrm	article.perl, book.perl, letter.perl, report.perl, slides.perl
+#		Document-class emulation file
+#		-- adjusts the \the<counter> macros for sectioning commands
+#		-- suppresses warnings for standard class-options
+#
+# NEW	kr	chemsym.perl
+#		There may be some problems with accents, whose TeX macro names
+#		correspond to chemical symbols, as defined here --- there is no
+#		compensation provided within this implementation.
+#
+#	rrm	latex2html.config, francais.perl, french.perl
+#	jcl	german.perl, germanb.perl
+#		- with -long_titles, use $GENERIC_WORDS list to shorten the title.
+#		- brought &german/french_titles up to date with &english_titles
+#
+#	rrm	graphics.perl, graphicx.perl
+#		 -  modified \graphicspath to parse a list of directories (Axel Ramge)
+#		 -  rewritten the &do_cmd_graphicspath subroutine
+#		    works correctly and allows multiple use, outside the preamble
+#		 -  handle \DeclareGraphicsRule  and  \DeclareGraphicsExtension
+#		 -  \graphicspath  works correctly in the preamble now
+#
+#	rrm	heqn.perl
+#		recognise \htmlborder and \htmlimage also in processed environments
+#
+#	rrm	html.perl
+#		\htmlmeta defined, for inserting <META...> tags
+#
+# NEW	rrm	inputenc.perl
+#		Implements the  inputenc  package, allowing the character encoding
+#		to be specified from within the document.
+#		Supports latin1, latin2, latin3, latin4, latin5, latin6, Unicode.
+#		This uses files latin1.pl to latin6.pl and unicode.pl
+#		in the versions/ directory.
+#
+#	rrm	makeidx.perl
+#		 --  fixed problem with sub-item keys printing multiply
+#		 --  \index commands within section-heads now work correctly
+#
+# NEW	rrm	more_amsmath.perl
+#		That part of  amstex.perl and amsmath.perl that needs the `math'
+#		extension has been split-off into  more_amsmath.perl .
+#		This is loaded automatically with switches:
+#		 -no_math -html_version ...,math
+#
+#	rrm	natbib.perl
+#		Updated for compatibility with natbib.sty v6.6
+#		 - all \cite... commands have a *-version and 2 optional arguments
+#		 - Harvard emulation is now automatic
+#		 - implemented \citep*
+#		 - fixed \harvardurl to work properly and without html.sty
+#		   thanks to James A. Bednar <jbednar@cs.utexas.edu> for noticing
+#
+# NEW	rrm	seminar.perl
+#		implements seminar.sty by:
+#		making \newslide into a sectioning-command, with its own numbering
+#		other commands are recognised and largely ignored
+#		text of `notes' are gobbled
+#
+#	rrm	supertabular.perl
+#		implemented the \tablehead \tabletail etc. commands
+#
+#	rrm	xy.perl
+#		- allow for optional argument to  \newxycolor  and  \newgraphescape
+#		- recognise \htmlborder and \htmlimage also in processed environments
+#
+#	Changes in the versions/ directory:
+#
+#	jcl	html2_1.pl, html2_2.pl, html3_0.pl, html3_1.pl, html3_2.pl
+#		renamed html*.*.pl files, for DOS
+#
+#	rrm	html2_2.pl (equal to table.pl)
+#		{tabular} environments could pick up caption from previous {table}
+#
+#	rrm	html3_1.pl (equal to math.pl)
+#		with $NO_SIMPLE_MATH, force images of \...matrix environments
+#		- fixed bug which affected the code for image-making
+#		- fixed bug not handling \lefteqn in {eqnarray}s
+#		- allow Netscape's VALIGN="BASELINE" for {eqnarray} rows
+#		- correctly writes {eqnarray*}, not {eqnarraystar} to images.tex
+#		- recognises \le (as well as \leq) without warning (thanks Michel)
+#		- automatic recognition of the differential `d' after \int
+#		- significant additions to math-parsing
+#		  additions:
+#		  \mathop,\mathrel,\mathbin, etc. recognised;
+#		  sup/subscripts handled a little differently;
+#		  array-like environments need to have delimiters protected,
+#		  when they occur as sub-environments of other array-like envs;
+#		  get equation-number from \\theequation  not  &do_cmd_....
+#		  equation-numbers can have variable delimiters, not just (..);
+#		  some AMS commands implemented always
+#		  \text trated as \mbox --- not best, only temporary
+#		- fixed spacing/line-break problems
+#		- implemented \text properly, within math
+#		- fixed `missing 0' error with sup/subscripts
+#		- adapted for $USING_STYLES ; e.g. with HTML 4.0
+#		- adapted to allow use of Unicode entities for math-symbols
+#		- allow some fractions to be given as named entities; e.g. frac12
+#		- font styles/faces are now supported with properly nested tags
+#		- support for \strut and \vrule and \hrule
+#		- use the MATH and BOLDMATH classes when $USING_STYLES
+#		- always make images of some math operators
+#		- always make image of variable-sized operators
+#		- catch fractions via  \frac  \tfrac  \dfrac
+#		- use a specified WIDTH="10%" for equation-numbering cells
+#		- made all numbering environments have WIDTH="100%"
+#		- introduced variables  $math_start_rx  and  $math_end_rx .
+#		  (looking ahead to the possibility of allowing $ to be non-math.)
+#		- fixed problem with superscripts: ' (\prime) missing from images
+#		- \mathbf , \mathcal etc. seem to be correct now
+#		- fixed bug causing some fractions to be in \textstyle, not displayed
+#		- fixed some string tests that incorrectly treated 0 as ''
+#		- recognise \htmlimage and \htmlborder in processed environments also
+#		... and various other changes (see log history of that file)
+#
+#	rrm	html3_2.pl
+#		- Implemented {tabular*} environment, to be same as {tabular}
+#		  i.e. does not recognise a fixed width
+#		- the \extracolsep macro is recognised, but ignored
+#		- sub-environments of {tabular}s are processed first;
+#		  this allows {tabular}s to be nested
+#		- \multicolumn now implemented
+#		- cells containing `0' now show it, rather than being empty
+#		- {eqnarray} math-style bug fixed
+#		- allow Netscape's VALIGN="BASELINE" for {eqnarray} rows
+#		- removed unnecessary <BIG> tags, when {eqnarray} cell is an image
+#		- reworked the handling of @-expressions in tabular specs.
+#		- remove &simple_math_env acting twice on the same math --- Ugh!
+#		- implemented the extra tabular declarations from  array.sty
+#		- ignore and \PreserveBackslash commands
+#		  these extensions are **untested**
+#		- adapted the alignment environments to work as instances of
+#		  &declared_env   which respects the font/size state-stack.
+#		- adapted some environment-like commands to work with style-sheets
+#		- fixed migrating captions error; thanks to Keith Andrews
+#		- use a specified WIDTH="10%" for equation-numbering cells
+#		- made all numbering environments have WIDTH="100%"
+#		- improvements to {eqnarray} environments:
+#		  each field is handled separately, equation-numbering works
+#		  eqn-numbering aligned OK now;
+#		- VALIGN on rows in {tabular} is not used, unless $NETSCAPE_HTML
+#		- introduced \mathon and \mathoff for use in tabular-specs
+#		- implemented \tablehead  and \tabletail (from supertabular.sty)
+#		- implemented the @{...} and !{...} column-specs as separate columns
+#		  without slots for filling from the table-data.
+#		- \tag and \notag now work correctly in normal math-mode
+#		- fixed some string tests that incorrectly treated 0 as ''
+#		- recognise \htmlimage and \htmlborder in processed environments also
+#		- make sure math within do_math_env is properly delimited
+#		- p{<width>} in a {tabular}'s col-spec causes VALIGN="TOP"
+#
+# NEW	rrm	html4_0.pl
+#		Implements output specific for HTML 4.0
+#		This requires LaTeX2HTML v97.2 (alpha) or later version.
+#		The variable  $USING_STYLES  is set, to enable automatic creation
+#		of a CSS style-sheet.
+#		To use a UTF-7 or UTF-8 Unicode charset, the  unicode extension
+#		needs to be loaded also; else the Latin-1 charset is used.
+#
+# NEW	rrm	lang.pl
+#		contains the language codes, from i18n.pl
+#
+#	Changes in the versions/ directory:
+#
+#	rrm	html.sty
+#		- uses Robin Fairbairns' code for ignored environments,
+#		  replacing the previous  comment.sty  stuff.
+#		- extensions to the \tableofchildlinks command
+#		- extensions to the \htmlinfo command
+#		- allow the dummy {tex2html_nowrap} environment in LaTeX
+#		  use it to make its contents be evaluated in environment order
+#		- implemented an optional argument to \begin for style-sheet info.
+#		- modified use of an optional argument with sectioning-commands
+#
+# NEW	rrm	ldump.sty
+#		ldump.sty  ---  LaTeX package which allows format dumps to be used.
+#		use the new  -ldump  switch to make use of this feature/package.
+#
+#
+#
+#--------- v97.1 (compiled mostly by rrm  and also jcl)
+#       incorporating the changes of v96.2 (not officially released) by mro
+#
+#
+# The \textsc{v97.1} release has significant improvements in:
+#
+#	image-generation
+#	rrm	is much faster, requires less memory
+#		and inline images are aligned more accurately; 
+#
+#	image quality	---  thanks to Uli Wortmann
+#	rrm	is greatly improved by the use of anti-aliasing effects 
+#		for on-screen clarity, in particular with mathematics, 
+#		text and line-drawings; 
+#
+#	memory-requirements
+#	rrm	are much reduced, particularly with image-generation;
+#
+#	mathematics
+#	rrm	can now be handled using a separate parsing procedure;
+#		images of sub-parts of expressions can be created, 
+#		rather than using a single image for the whole formula;
+#
+#	macro definitions
+#	rrm	having a more complicated structure than previously allowed,
+#		can now be successfully expanded;
+#
+#	counters and numbering
+#	rrm	are no longer entirely dependent on the \texttt{.aux}
+#		file generated by \LaTeX;
+#
+#	decisions about which environments
+#	mro	to include or exclude can now be made; see v96.2 .
+#
+#	HTML effects 
+#	rrm	for which there is no direct \LaTeX{} counterpart
+#		can be requested in a variety of new ways;
+#
+#	HTML code
+#	rrm	produced by the translator is much neater and more easily 
+#		readable, containing more comments and fewer redundant breaks 
+#		and \HTMLtag{P} tags.
+#
+#	error-detection
+#	rrm	of simple \LaTeX{} errors, such as missing or unmatched braces, 
+#		is now performed --- a warning message shows a line or two
+#		of the source code where the error has apparently occurred;
+#
+#
+#
+#--------- v96.2 (compiled by jcl)
+#       mro - Rewrote texexpand. Contains more logic and mimics the
+#             behaviour of LaTeX more closely. Supports DO_INCLUDE to
+#             force style file translation and filename extensions in
+#             (DO|DONT)_INCLUDE.
+#       mro - Rewrote pstogif and renamed it to pstoimg, as it now also
+#             produces PNG graphics. Added an automatic configuration
+#             script (configure-pstoimg). Supplied a patch for dvips-5.58f
+#             to enable production of EPSF format in multiple files.
+#       mro - Added configuration variable and command line switch
+#             LOCAL_ICONS: when set, the navigation icons are copied to
+#             the document directory.
+#
+#--------- v96.1 Rev h (compiled by jcl)
+#    30-Sep-96
+#       tak - Fixed bug in optional argument of do_cmd_htmladdimg() in html.perl
+#	      and embed_image(): ALT tag now properly gets transmitted to html.
+#       hws - uses %new_command and %new_environment instead of /$meta_cmd_rx/
+#             in process_ext_file()
+#           - Recover figure and table caption numbers when captions contain
+#             a ~ [in extract_captions()]
+#           - environments are not further processed when coming from .aux
+#             file in process_undefined_environments()
+#           - introduced translation for \ensuremath to force math expressions
+#             to be translated into HTML instead of computing an image.
+#       rrm - introduced latex-only command \etalchar...
+#           - cite labels fetched from .aux file if available, in do_cmd_bibitem()
+#	    - added call to translate_environments() in do_env_enumerate(),
+#	      do_env_itemize(), do_env_description(), do_env_list().
+#	    - small fix in accent_safe_for_ij()
+#	    - Non-inlined images now embedded in <BR>, not <P> tags.
+#	    - introduced tex2html_nowrap environment.
+#	      LaTeX commands wrapped with this environment go directly into images.tex.
+#	    - introduced make_hbox(), make_vbox() for inlined images
+#	    - check if $adjust is positive in top_justify()
+#	    - changed text_cleanup() to prevent  -- => -  being applied twice,
+#	      with headings, captions, etc.; thus  --- correctly becomes  --  not  -
+#	    - list items not strongified if $compact, in do_env_description()
+#	    - introduced make_nowrapper(), make_inline_wrapper()
+#	    - \bigskip now produces <P><P>
+#	    - arguments of \message and \typeout now prompted during translation
+#	    - slight change to process_cmds_in_tex()
+#	    - introduced process_commands_nowrap_in_tex() and
+#	      process_commands_inline_in_tex() to work with tex2html_nowrap resp.
+#	      tex2html_wrap_inline environments.
+#	      Changed list of ignored commands, built a list of nowrap commands.
+#	    - raw arg cmds now also recognized if delimited by @ (eg. a\l@b).
+#       rrm-nac
+#             allow new commands \W for non-alphanumerics, not already defined.
+#       rrm-col
+#             - introduced $NESTING_LEVEL for counting group ({,} currently) nesting
+#             - hook for colors used at each section start, in translate()
+#       jcl - Removed bug in replace_cite_references(), a not executed
+#             replacement command concerning make_named_href(...).
+#           - The use of $global{'warnings'}, held in a DBM entry, led to
+#             subsequent DBM errors when the warnings accumulated to more
+#             than approx. 900 chars.
+#             The DBM data base is not used for 'warnings' any more:
+#             The warnings are now written to the file 'WARNINGS' in the
+#             directory where all output files reside. The file contents
+#             is displayed and the file removed at the end of the
+#             translation process.
+#           - A \clearpage command precedes the \end{document} of images.tex
+#             to force the last page to appear in the DVI file. The case
+#             in which this behaviour is needed is when a style file discards
+#             the \end{document} command or redefines it (eg. cweb.sty).
+#	    - replaced $(PNMTILE) with $(PBMMAKE) in latex2html.config
+#	      and install-test, changed right_justify() according to the
+#	      suggestion by meh. Removed obsolete blank.pbm.
+#	    - $(GIFTRANS) is preferred to the netpbm binaries if it's available.
+#	      This encreases speed of gif translation significantly if one
+#	      wants to use the (faster) netpbm instead of pbmplus.
+#	    - Changed deal_with_texinputs() to set TEXINPUTS the following way:
+#	      1. . to let TeX find things from work dir (invocation of l2h)
+#	         or dest dir (for images.tex)
+#	      2. .. to find things from work dir for images.tex (questionable)
+#	      3. absolute path to source file
+#	      4. dest dir, and, 5. $TEXINPUTS  (suggested by rrm).
+#	    - Re-arranged latex2html.config to make it more comprehensive:
+#	      - shuffled entries without changing their meaning
+#	      - slight improvements to documentation
+#	      - introduced color variables
+#	      - introduced down url/down title/contents url/index url defaults
+#	    - Tidied l2h's synopsis both in usage() and the nroff section.
+#	    - Introduced l2h options -auto_prefix, -prev_url, -prev_title
+#	    - Introduced global variable $PREAMBLE. It is set to 1 if the text
+#	      before \begin{document} or \startdocument is processed, and 0
+#	      if the text after it is processed. It is *undef* before
+#	      any text is translated.
+#	    - In html.perl, URL in htmladdimg not reverted to raw TeX.
+#	      Klaus Steinberger <http://www.bl.physik.tu-muenchen.de/~k2/k2.html>
+#	      supposed this.
+#	      This is conform with \htmladdnormallink now.
+#	    - Introduced $LINKPOINT (see also latex2html.config), which is used
+#	      to generate a directory index link if the document is finished.
+#	    - Cosmetic changes: removed spaces, indented expressions etc.
+#	    - grep doesn't understand -e on Solaris, fixed install-test
+#       jcl-env
+#             Content of environment (\begin{..}...\end{..}) will now be
+#             encapsulated in l2h open/close brackets internally.
+#             This will lead to the same behaviour as in TeX: Changes
+#             within the environment (esp. to font style) are really local
+#             and reverted when passing the end of the environment.
+#       jcl-pag
+#             An incomplete LaTeX command (eg. \theoremstyle{..}) that is
+#             passed to LaTeX through images.tex leads to an absent page in
+#             the resulting DVI file, causing all following pages and its
+#             images to be a page earlier than expected.
+#             To prevent this, invisible glue is added to each page entry.
+#	      Then, in turn to prevent a page break between glue and overly
+#	      long contents, the \textheight is set to 50cm. This also
+#	      prevents page breaks within the contents (eg. a supertable).
+#	      However, *very* long pages are cut by dvips itself. Anyway, we
+#	      are rid of the 'images out of sync' problem. I'm aware of the
+#	      log entries of Nikos, but couldn't reproduce the restrictions
+#	      he stated.
+#             To make bug fixes easier an excerpt of the original text is
+#             added to its translation text in commented form, if $DEBUG.
+#--------- v96.1 Rev g (compiled by hws)
+#    12-Jun-96
+#       jcl - Supplied verbatim.perl style file for displaying an external file
+#             verbatim.
+#	    - LaTeX called from l2h now reads the "images.tex" from
+#	      the current directory before searching TEXINPUTS.
+#	    - Changed &do_cmd_contentsline to be compatible with LaTeX 2.09
+#	      (and 2e).
+#	jcl-verb
+#	      Extensive changes in the &pre_process routine to handle things
+#	      \verb strings in comments, and commands like \verbatimfile.
+#       hws - Fixed problem which ocurred when a section label began with
+#	      a number.  Allow double and single quotes to appear within
+#	      section headings in segmented documents.  Corrected a bug
+#	      in &save_array_in_file which caused an incorrect labels.pl
+#	      to be written.  Added a \bodytext{text} command, which inserts
+#	      "text" into the <BODY> ... </BODY> preamble of the current
+#	      HTML document page.  Depending on the browser, this may allow
+#	      a specification of background and text colours.  Added
+#             an additional "alt=text" parameter to the \htmlimage command to
+#             override the default ALT HTML tag for figures and tables.
+#             For LaTeX2e users, added an optional argument to the
+#             \htmladdimg command for the ALT tag.  Upgraded floatfig.perl
+#             to floatflt.perl to utilize the floatflt package of
+#             Mats Dahlgren <mats@physchem.kth.se>.
+#	mwk - Made html2e.sty more compatible with the natbib package
+#             of Patrick W. Daly.  Provided natbib.perl and nharvard.perl.
+#	rrm - Made GIFs used by htmllist.perl transparent and further changes
+#	      to makeidx.perl.  The file prefix now applies to images.tex,
+#	      so that images for separate segments are kept separate.
+#	      Hooks were added for packages to modify various links, and to
+#	      to perform operations at the beginning of a document.  Added
+#	      sub make_named_href.  Improved citation mechanism for
+#	      segmented documents.  Implemented mechanism for recognizing
+#	      package options.  The command \usepackage[option]{package}
+#	      is now searched in the following order **after** package.perl
+#	      is loaded:
+#
+#		A. file named: <package>_<option>.perl 
+#		   in the local directory, given by  ..  
+#		   (i.e. where the LaTeX sources reside)
+#
+#		B. file named: <package>_<option>.perl 
+#		   in the styles/ directory or directories
+#	
+#		C. a subroutine named  do_<package>_<option>
+#
+#	rrm - Recognize named colors in crayola.perl and color.perl.
+#
+#       mcm - Percent-signs within section headings now processed correctly.
+#             Subsection and subsubsection numbers are now properly retrieved.
+#
+#--------- v96.1 Rev f (compiled by rrm)
+#    31-May-96
+#	hws - correlated  debug/nondebug  behaviors by fix in  texexpand .
+#	      and correctly remove multiple %%'s.
+#       jcl - allow  \documentstyle and /or \documentclass  from \input files.
+#       jcl - additions to german.perl
+#	rrm - reinstated unconditional use of  &make_image_file .
+#	rrm - made $dir local in  sub load_style_file_translations 
+#	      to avoid (unlikely) conflict with other uses of  $dir .
+#	rrm - fixed incorrect variable name in  sub top_justify .
+#	meh - improved  copy_file  routine.
+#	meh - reordered the  img_tag  subroutine so long alternatives come
+#	      first.
+#
+#	rrm - Improvements to Indexing, when using the  makeidx  package:
+#	    - hyperlinks and labels can be specified inside \index{...},
+#	    - styled text allowed, default style = bold
+#	    - alternative compactified style for index-entry hyperlinks,
+#	      new config-variable $SHORT_INDEX  to request this style;
+#	      set in .config file or by  commandline option  -short_index .
+#	    - Also adds a Legend to the Index, with segmented documents,
+#	      implemented by  sub make_preindex  constructing a  $preindex
+#             using information stored in %index_segment by sub
+#             make_index_segment .
+#	    - The child-links display for each segment is now tagged with
+#	      <A NAME="CHILD_LINKS">, accessible from this Legend.
+#	    - all aspects of Indexing work correctly with document segmentation.
+#	    - reduced number of *.pl files created by segments:  *index.pl  now
+#	      saves  %sub_index, %index_labels, %index_segment, %printable_key 
+#             arrays.
+#
+#	rrm - added some version-control to  changebar.perl  using a 
+#             control-sequence \cbversion . A LaTeX expansion is defined in
+#             docs/l2hman.sty .
+#
+#	rrm - fixed  html2e.sty  and  html.perl  to put correct numbering of all
+#	      sectioning levels into the .ptr files, when using segmentation.
+#	    - Commencing a new  \section  now resets LaTeX's counters at lower 
+#             levels; e.g. the {subsubsection} and all {...paragraph} counters, 
+#             as well.
+#
+#	rrm - new package  justify.sty  and  justify.perl  for implementing 
+#             LaTeX's {flushleft}, {center} and {flushright} environments, as 
+#             well as TeX's  \leftline, \centerline and  \rightline commands.
+#	      This markup is supported by Netscape, and conforms to HTML 3.2
+#             proposals.
+#
+#
+#--------- v96.1 Rev e  (compiled by hws)
+#    08-Apr-96
+#       hws - URLs in command-line options (e.g. -up_url) may now contain
+#             one or more ~'s.  LaTeX .lof and .lot files are now scanned to
+#             obtain figure and table numbers.  (This information is not
+#             contained in the .aux file for \include'd document segments.)
+#             The \@input{} command is now recognized.
+#       dtp - HTML files now have a newline for every <LI> item, so as
+#             to make them easier to edit manually.
+#       rrm - Document segments no longer need to reside in the same directory,
+#             as long as they have a common parent directory.
+#             The only information that is now saved in the XXX.pl parameter
+#             files is that which was introduced in that segment's own source
+#             file (as opposed to another source file via the \internal
+#             command.)  Fixed a bug in html2e.sty which reserved a new TeX 
+#             \write channel for every program segment.  LaTeX is no longer 
+#             called if the -no_images flag is specified.  Change bars, 
+#             citations, and indices are now handled more correctly across 
+#             program segments.
+#      jcl  - Multiple ~'s may now appear in the $LATEX2HTMLSTYLES
+#             installation variable to denote instances of the user's home 
+#             directory.  Each .perl file is now guaranteed to be read only
+#             once, even if it is specified in the source more than once.
+#
+#--------- v96.1 Rev d  (compiled by hws)
+#    10-Mar-96
+#       meh - Made the Perl code conform to strict syntactical conventions,
+#             eliminating compilation warnings.
+#       hws - Replaced the &cleanup routine with a faster one.
+#             Made the eqnarray* environment order-independent, so that
+#             it can be recycled with the -reuse option.
+#
+#--------- v96.1 Rev c  (compiled by hws)
+#    28-Feb-96
+#       hws - Improves document segmentation by permitting LaTeX sections
+#             to appear after the \segment command.  (Also the index and
+#             information page may now be associated with the top-level
+#             segment, not just the bottom-level.) Output .pl files only
+#             when necessary for segmentation. (However, images.pl and
+#             labels.pl are still always generated.)
+#             \begin{latexonly} commands are now ignored if commented.
+#             Uses &navigation_panel if &top_navigation_panel is undefined.
+#             Ditto for &bottom_navigation_panel.  Upgraded 
+#             .dot-latex2html-init. Make duplicate GIFs hard links of
+#             each other so that they do not have to be recreated on a
+#             reuse run.
+#       meh - Translates subscripts and superscripts in inline equations
+#             using <SUB> and <SUP> markups if the HTML_VERSION is 3.1 or 
+#             higher.
+#
+#--------- v96.1 Rev b  (compiled by hws)
+#    20-Feb-96
+#       meh - Removed ;SPM*; constructs from simple inline equations.
+#       hws - Restored the -no_images / -images_only mechanism.
+#
+#--------- v96.1 Rev a  (compiled by hws)
+#    15-Feb-96
+#       hws - Fixed bug in texexpand pertaining to verbatim environments
+#             in included files.  Allow ~'s in htmllist icons.
+#
+#--------- v96.1  (compiled by hws)
+#    05-Feb-96
+#       tkm - Fixed bug which prevented &make_transparent from non-figure
+#          environments when $TRANSPARENT_FIGURES is set to zero.
+#	hws - Fixed bug in htmllist.perl:  ~'s in $ICONSERVER were
+#	   being converted to blanks.  Made latex2html die more
+#	   gracefully upon interrupt.  Specified that environments
+#	   floatingfigure and wrapfigure are to be passed to TeX.
+#	   Fixed bug in pstogif which caused ppmquant never to be called!
+#	   Moved all command line defaults to latex2html.config.
+#	   Added a -debug command line switch.  Support the alltt package.
+#	   Removed command line switch "dont_include".  (Not needed.)
+#	   Updated the manual (again) and included changebar.sty.
+#	   Added the ability to segment documents.  This required the
+#	   addition of five new command-line switches.  Image recycling
+#	   now works even if a filename prefix is used.  Added ability
+#	   to pass starred versions of commands to TeX, and added 
+#	   \includegraphics and \includegraphics* to graphic[s,x].perl.
+#	   Support unbreakable spaces.  Guard against HTML tags appearing
+#	   in up and down titles.  Moved raw TeX support to texdefs.perl,
+#	   and made it optional.  Added better control over LaTeX font size.
+#	mg  - Converted manual to standard LaTeX2e.  Added epsfig.perl,
+#	   color.perl.  Removed duplicate entries in graphics.perl.
+#	meh - Made command parsing more like LaTeX's.  Added commands
+#	   \makeatletter and \makeatother.  Fixed bug which caused HTML
+#	   3.0 table conversion to sometimes omit the caption.
+#	   Provide support for HTML 2.1, with ISO 10646 Unicodes.
+#	   Support itallic correction.
+#	ays - Added forgotten ${PREFIX} for footnode.html.  Added missing 
+#          $abs_title instead of Abstract.  Created french_titles and moved
+#          french do_cmd_today to french.perl.  Created links to
+#	   germanb.perl and francais.perl for the sake of the babel
+#	   package.  Allowed other extensions than .tex for top-level-file.
+#	jfr - Fix a bug in getting current working directory.
+#	mer - Added calls to &pre_pre_process and &post_post_process
+#	   for specialized user-defined applications.  Typeset only
+#	   the alphabetic portion of simple math expressions in itallic.
+#	   Added installation variable $AUTO_PREFIX.
+#
+#--------- v96.1-beta  (compiled by hws)
+#    15-Jan-96
+#	hws - Fixed \htmladdimg, broken by a patch in v95.3. \labels,
+#	   equations and images in section headings now work (Really!)
+#	   Additional inline math equations can now be set in HTML.  The
+#	   "scale=" option of \htmlimage is fixed.
+#	rml - The comment removal regular expression in text_cleanup 
+#	   missed comments that occur on the first line of an included file.
+#	   HTML 3.0 tabular not inside table inherited previous caption (fixed).
+#	   I also added a call to replace_user_refereces, to allow style
+#	   files to add new types of crossreferences.
+#	jkr - Now LaTeX2HTML uses two panels, one for the top and one for
+#	   the bottom of the document.  Made the translation of \today more
+#	   similar to LaTeX's.  Patched the verbatim-counter patch of
+#	   #EI#.  Removed the expansion of '\\' to '\\ ' in \verbatim.
+#	   Added support for the TeX \char command.
+#	meh - Fixed treatment of @{} expressions in HTML 3.0 tables.
+#	   Fixed treatment of \circ in math mode.  Made german.perl
+#	   compatible with HTML math 3.0 changes.  Added width and
+#	   height attributes to navigation panel icons.  Replaced
+#	   all occurences of tex2htmlindex with textohtmlindex.
+#	   Added a check that compares the actual image files to
+#	   remove duplicate images.
+#	dkw - Added a new command \latexhtml{LaTeX}{html} to process
+#	   something in LaTeX one way, and in HTML another way.
+#	hws - Added a "flip=" option in \htmlimage.  Caused \htmlref, etc.
+#	   to use an external reference if an internal one is not found.
+#	   Added support for \ensuremath and floating/wrapped figures.
+#	   Ignore input after first /end{document} not shielded by
+#	   verbatim or \verb.  Overhauled method of image sharing and
+#	   recycling.   Made -reuse switch accept a reuse_option.
+#	   Added installation variables $TEXINPUTS and $DVIPS_MODE.
+#	   Made the .tex filename suffix optional.  Provided support
+#	   for \special's outside of defined environments.  Supplied
+#	   additional optional style files, htmllist and heqn.  Updated the
+#	   manual.  Ignore "| and "- constructs in german.perl.  Support
+#	   the LaTeX2e babel package.  Fixed bug in &read_mydb which
+#	   appended redundant newlines to macro expansions.  User-defined
+#	   commands and environments can now have an optional argument.
+#	   Provided stubs tor \suppressfloats and \enlargethispage.
+#	   Added support for the LaTeX2e graphics package.  Added command
+#	   line switch -prefix.  Changed TeX mode to \nonstopmode if
+#	   $DEBUG is set.  Made treatment of \document(style|class)
+#	   consistent.  Added \providecommand.  Provided the makemap
+#	   utility to construct active image maps.
+#	jtc - Added comment about the possible need to insert 
+#	   "use GDBM_File" for Linux platforms.
+#	pns - Improved error reporting in install-test.  Corrected errors
+#	   in &iso_latin1_character_map and &iso_latin1_character_map_inv.
+#	tkm - Remove optional space argument to \\ in 3.0 tables.
+#	   Even the inter-item spacing in list environments.
+#	   Made description tags be bold (as in LaTeX).
+#	alo - Corrected bugs in &write_string_out, &special_env,
+#	   and &make_new_cmd_rx.  Fixed bug in macro tokenization,
+#	   which sometimes caused macros not to be expanded in math mode.
+#	sid - Corrected an error in the making of transparent images.
+#	   Added more error checking in install-test.
+#
+#--------- v95.3  (compiled by jmn)
+#   15-Nov-95 meh really - added tables (HTML 3.0) support. And support
+#	   for math format too - not enabled by default. Wow!
+#	   Made pstogif/latex2html detect blank images and remove IMG tags 
+#	   pointing to them.
+#	   Added two switches: up_url and up_title - to spec the parent document
+#	jmn - updated pstogif to use the ppmraw driver in ghostscript -
+#	   currently, DEPTH value is silently ignored - default gif output is
+#	   the same as it was before (except now it works on my decstation).
+#	   Also added in badfree perl5 patches from the ftp site. removed 
+#	   references to pstoppm.ps in install-test
+#	hws - Added an optional argument align=<arg> to \htmlimage for 
+#	   the alignment of table and figure gif files. Added dbmclose calls.
+#	   Improved support for active image maps.
+# 	krn - numerous minor fixes including language support, comment 
+#	   stripping, removal of extraneous spaces, and LATEX2HTMLSTYLES as a 
+#	   path list
+#	sid - Patch to generate fonts at appropriate scales for screen 
+#	   viewing. Note that this uses a .dvipsrc file in the latex2html 
+#	   directory. This is probably a bad idea, but some dvips versions
+#	   unfortunately don't handle the -mode option.
+#
+#--------- v95.1
+#   20-Jan-95 nd - Fixed spurious syntax error in latex2html.config
+#--------- v95
+#   13-Jan-95 mb - Added ppmquant filter in pstogif to make sure the GIF
+#        images contain less than 256 colors
+#      nd - Removed redundant call to finger in address_data
+#      nd - Fixed pattern matching problem during \def processing
+#      nd - Stopped using the -path option in "type $what" in install-test
+#--------- v0.7a5
+#   11-Jan-95 nd - Fixed problem with HTML encodings of ISO-LATIN1 characters
+#        creeping into converted images of figures and tables by defining
+#        an inverse mapping from such characters back to the original Latex 
+#        encodings
+#   10-Jan-95 nd - Added new global variable $PAPERSIZE in latex2html.config
+#        to make it easier to change the default behavior when converting
+#        large images
+#      nd - Fixed problem with passing results from child to parent processes
+#        through DBM files by closing and reopening the DBM files on crossing
+#        process boundaries
+#      nd - Fixed the hierarchical index building to deal with duplicate
+#        index keys. Also fixed it to close the description list (<DL>) properly
+#      nd - Fixed problem in process_command which instead of collapsing 
+#        spaces following a command it was introducing them
+#    9-Jan-95 nd - Fixed problem with duplicated input files caused by 
+#        the parent process not waiting for each child finish
+#      nd - Fixed looping problem with \input files caused by forked processes
+#        messing up the parent's input stream. The fix was to save the position
+#        in the input stream and then return to it after the child has exited.
+#      mb - Support for internationalization. A global variable
+#        can now be set in latex2html.config to change the titles of generated
+#        sections (eg "Table of Contents",  etc)
+#     segal- Ingenious code to fix equation baseline alignment. This adds 
+#        instructions in the images.tex file so that information about 
+#        equation size is printed in the log file. This information is used
+#        to determine whether to add extra white space at the bottom of the 
+#        equation and then changing the alignment mode...
+#      nd - Incorporated the equation alignment code with the off-line
+#        image generation mechanism. This required another DBM database and
+#        also LaTeX to be run even when using the -no_images option in order
+#        to get at the log file (which determines equation alignment)
+#    6-Jan-95 nd - Now will not create images.tex|pl or labels.pl unless there
+#        data to go in them. Also persistent DMB files are hidden in .XXX files
+#      ms - Now use getpwuid instead of whoami to get the user's name
+#      nd - Fixed problem with special characters (<>&) in -address argument
+#           - BUT it causes a problem for those who want to incude html
+#             in their signatures so it's back to the old behavior
+#      sk - Added shortcut commands \html and \latex for conditional text
+#      psm  - Added support for hierarchical indices
+#      nd - Stopped replacing dashes (-- and ---) with a single hyphen
+#      nd - Changed waitpid($pid0) to waitpid($pid,1) in sub write_out_string.
+#        This cures the problem of repeated text from \input files
+#    5-Jan-95 nd - Changed make_begin_end_env_rx not to eat spaces at the
+#        of the regexp *unless* we have a newline at the end (otherwise
+#        have trouble with inlined equations)
+#      nd - Hacked tokenize to deal with multiple newcommands on the same line
+#      nd - Changed do_cmd_sc not to capitalize latex2html markers!
+#      tt - Now use `sh -c "type $X` instead of `which $X`
+#      mb - Fixed texexpand to include files XXX.tex specified using \input{XXX}
+#          if XXX.tex in the TEXINPUTS path 
+#      mb - Fixed to resolve figure and table numbers when captions contain 
+#          accented characters
+#      mb - Fixed for dotless i's and accents
+#      mb - Added support for "named" bibtex style
+#    4-Jan-95 nd - Fixed strange bug in ignore_commands code generator by 
+#        removing some white space from command arguments
+#--------- v0.7a4
+#   21-Dec-94
+#--------- v0.7a3
+#   16-Dec-94 nd - Removed the "o" in /$sections_no_delim_rx / in sub translate
+#        because of problem with Perl 5.
+#      nd - Replaced all occurrences of \<n> in substitutions with $<n> for 
+#        Perl 5 compatibility
+#      nd - Replaced all occurrences of @_[0] with $_[0]
+#      nd - Fixed bug in do_cmd_cite 
+#      nd - Replaced all occurrences of $$ with $$\
+#   14-Dec-94 nd - Added more information in the README file
+#      nd - Fixed problem with multiple bibliographies by incrementing $bbl_nr
+#        at the end of do_env_thebibliography. Also, multiple bibliographies 
+#        are treated as separate sections
+#      tt - Fixed invocation of $GS to stop printing annoying messages
+#   13-Dec-94 nd - Added a new variable $NETSCAPE_HTML in latex2html.config.
+#        If set some Netscape-specific HTML may be generated. At the moment,
+#        if it is set then the borders around inlined images will be removed.
+#      nd - Fixed problem in german.sty caused by changes in the main script
+#      nd - Changed process_command to collapse spaces following a command 
+#        into a single space rather than remove them completely
+#      ev - Modified pstoppm.ps to use papersize aguments in gs. This is
+#        supposed to fix the problem of large inlined images but we are
+#        not quite there yet...
+#      nd - Modified pstogif to accept papersize argument and latex2html to
+#        call it with one but only if we are using pstoppm.ps
+#      nd - Changed make_begin_end_env_rx to eat spaces following a begin|end 
+#        regular expression. Otherwise introduces <P>'s in concecutive
+#        environments. Verbatim environments seem unaffected.
+#   12-Dec-94 nd - Fixed it to use optional arguments in caption commands
+#      nd - If latex2html is called with -split 0 then the footnotes are shown
+#        at the end rather than in a separate node
+#      nd - If $DEBUG is set then the images.tex file is not processed
+#        in batchmode (ie will see the messages from LaTeX on STDOUT)
+#      nd - Changed so that if called with -split 0 it will not use the filename
+#        when constructing TOC HREFs (it caused some browsers to reload)
+#--------- v0.7a2
+#    2-Dec-94 nd - Stopped enabling multi-line pattern matching ($*) throughout
+#        the translation. This causes problems with the /$get_next_pair_pr_rx/ 
+#        regular expressions which will match *any* line beginning with a 
+#        bracket pair (ie a command argument). Instead multi-line pattern 
+#        matching is enabled selectively when needed (eg for deleting blank 
+#        lines)   
+#      nd - Added tests for availability of DBM in install-test 
+#      nd - Changed regular expressions which match next argument to skip 
+#        over any comment characters   
+#--------- v0.7a1
+#    1-Dec-94 nd - No changes - just pushing the release date into December :-)
+#--------- v0.7a
+#   29-Nov-94 nd - Added new option -no_reuse
+#      nd - Fixed problem in sub expand_code which caused latex2html to hung
+#   28-Nov-94 nd - Fixed problem with capitalizing command names after an
+#        \sc command
+#      nd - NO longer necessary to get Giftrans if NETPBM is available
+#      nd - Changed to trap errors and define a local version 
+#        if getcwd.pl is not in the Perl library 
+#      nd - The \hyphenation command and its argument are now ignored
+#   24-Nov-94 nd - When untarring the distribution a new directory which 
+#        contains the version number in its name is created
+#      eb - Modified inlined images so that the background color is grey as
+#        well as transparent (for browsers like the alpha Mosaic for Windows)
+#      nd - Fixed so that citation labels in do_cmd_bibitem 
+#        are processed by translate_command
+#      nd - Added config variable $TRANSPARENT_IMAGES in latex2html.config
+#        If set to 0 then "figure" environments will not be transparent
+#      nd - Modified install-test to prom`pt users to modify $GIFTOPPM 
+#        if they are using the NETPBM library
+#   24-Nov-94 eb - Added option -no_subdir so that the generated HTML files are
+#        placed in the current directory. 
+#      nd - Changed so that -address "" is  valid    
+#   23-Nov 94 nd - Support for "off-line" image conversion with two new options
+#        -no_images and -images_only. Some of the information necessary for the off-line
+#        conversion is kept in DBM files. 
+#   23-Nov-94 nd - Escaped the @ in "nikos@cbl" because of Perl 5 incompatibility
+#   18-Nov-94 nd - Removed manual.ps from the distribution
+#   15-Nov-94 nd - Added an anchor in the "References" heading
+#--------- v0.6.5
+#   10-Nov-94 nd - Added \clearpage back in the text of each image in images.tex
+#        Without it more than one figures may appear on the same page (it clears
+#        the accumulated floating bodies)
+#      nd - Added do_cmd_caption for tables than may be ignored...
+#    7-Nov-94 nd - Stopped adding $arg .= "\\\\"; in sub process_commands_in_tex
+#      nd - Changed texexpand to print \input{XXX} even when XXX is to be 
+#         excluded
+#      nd - Stopped adding \textheight 250cm in preamble because it seems to
+#         work only with included bitmaps. In other cases cannot get
+#         ghostview to process the whole (long) page before getting the ppm... 
+#    4-Nov-94 nd - Changed do_cmd_footnote, do_cmd_ditch_preceding and 
+#         make_index_entry to use $ref_before instead of $before
+#      nd - Stopped putting $contents in the ALT attribute of IMGs 
+#         becuase it causes problems when reading back cached images
+#         from images.pl
+#      nd - Changed ignore_numeric_arguments 
+#      nd - Stopped making "section" the outermost level in do_cmd_appendix
+#    3-Nov-94 po and nd - Added new option map=<image map URL> in the 
+#         \htmlimage command which can turn an included ps image 
+#         into an image map - UNTESTED
+#      nd - Added a signal handler to call cleanup if interrupted
+#      nd - Changed make_href to use %7E instead of &126; in URLs
+#    2-Nov-94 nd - Changed special_env not to match the "_" char in equations
+#      pb - Changed replace_strange_accents to deal with \^\i (icirc)
+#      ab - Changed preamble to set textheight to 250cm to solve problem of
+#          long images
+#      ab - Removed \clearpage from the text for generated images which causes
+#          images to "move"
+#      nd - Changed pre_process to remove comments but not the % character
+#          which may be meaningful inside figure environments. It is removed
+#          text_cleanup
+#    1-Nov-94 nd - Changed "finger" to use the -m option and added
+#          an extra test to make sure we are looking at the name of
+#          current user
+#      nd - Added support for \newline, \dots
+#      kl - Added support for tabbing environments - UNTESTED
+#      kl - Added new option  -ps_images, "which
+#         if used together with -external_images produces PostScript external
+#         images rather than external GIF's.
+#      gg - Change to place the original latex content of an inlined image
+#         in the ALT property of IMG
+#   31-Oct-94 nd - Fixed bugs in expand_code
+#   28-Oct-94 nd - Changed so that the verbatim hash table does not use the
+#          DBM database becuase it crashes with entries longer than ~900 
+#          characters. Now when forking a child, verbatim is saved and restored 
+#          using files explicitly.
+#      
+#   13-Oct-94 nd - Major overhaul of pre processing to reduce the amount of
+#          RAM required. Each of the \input files is pre processed a as
+#          separate child process which is forked off independently.
+#          The main latex2html process waits for each child to finish.
+#          Any global variables changed by each child process are
+#          seen by the parent process through DBM files. All the parent 
+#          has to do is reopen the DBM files holding some hash tables
+#          (mainly LaTeX macros and verbatim environments).
+#          LaTeX2HTML now *REQUIRES* NDBM (New DataBase Management which
+#          can support multiple databases)
+#    
+#          Potential *problem*: "long" verbatim or rawhtml environments may
+#          dissapear depending on the limitations of the NDBM installation.
+#          On our system this happens at around 1000 characters. To avoid it
+#          split such environments into smaller chunks... The error message 
+#          should look like
+#          dbm store returned -1, errno 28, key "15" at 
+#          /usr/cblelca/nikos/bin/latex2html line 511, <INPUT> line 2199.
+#      nd - Changed the rx for getting the name of the user in sub address_data
+#   12-Oct-94 nd - Changed slurp_input to use the unix "cat" command
+#          instead of doing it explicitly (naughty but faster and smaller)
+#      nd - Many changes to reduce the amount of memory required during
+#          slurping/bracket-matching/macro-substitution. Mainly these operations
+#          are now performed on separate chunks of the input stream. A chunk
+#          holds the contents of each file specified by an \input command.
+#   11-Oct-94 nd - Changed do_cmd_section_helper and do_cmd_title to 
+#          use extract_pure_text instead of text_cleanup to remove markup 
+#          from headings
+#   10-Oct-94 nd - sub normalize now replaces occurrences of '@' with 'tex' 
+#          in command names 
+#      nd - Changed ignore_numeric_argument to cover more cases
+#      nd - Added some more page layout control commands 
+#      nd - Fixed minor bug in replace_next_char
+#      nd - Added \d (numbers) in delimiters list (DEJA VU!)
+#    7-Oct-94 nd - Fixed citations so that optional argument appears at the end
+#      nd - Added LVerbatim in verbatim_rx for Raman (Naughty!)
+#      nd - Fixed problem which caused \verb to fail when it was followed by a
+#          a number
+#      sl - Fixed generation of illegal HTML when $TOP_NAVIGATION =0;
+#      nd - Extended the range of equations that need not be passed to latex
+#          to include alphanumeric characters (in sub special_env)
+#    6-Oct-94 ab - Added support for multiple bibliographies
+#    4-Oct-94 gg - More support fot LaTeX2e
+#   30-Sep-94 nd - Added support for \LaTeX and \TeX! Removed them from the
+#          arguments of &process_commands_in_tex
+#   27-Sep-94 nd - Changed add_link to put links from the navigation panel 
+#          of the top node to the address specified by the variables 
+#          $EXTERNAL_UP_LINK and $EXTERNAL_UP_TITLE
+#      nd - Removed spaces from definitions of some commands in html.sty
+#      rw - Fixed problem in wrap_math_environment where displayed 
+#          equations ($$eqn$$) cause subsequent normal equations ($eqn$) 
+#          to also appear as displayed
+#      rw - Added support for some LaTeX2e commands
+#      nd - Fixed the translation of the \cite command to recognize optional 
+#          arguments
+#      nd - Changed address_data to try and match "Name:" when trying to 
+#          figure out the username for $ADDRESS ("Name:" is used by tcsh)
+#      nd - Changed special_env to look for numbers as well as "\," in 
+#          equations which dont need to be converted to images
+#   23-Sep-94 nd - Fixed translation of displaymath (\[ \]) not to eat parts
+#          of the formula
+#      nd - Changed sub normalize not to eat the characters that follow an \& 
+#      nd - Changed the manual not to use braces when \protect'ing commands 
+#      nd - Added translation for \linebreak
+#      re - Added support for the \and command
+#   22-Sep-94 nd - Changed make_head_and_body not to put <meta> tags in the HEAD
+#      nd - Changed the dot.latex2html-init file to use the new $ADDRESS format
+#          (this change was made in v0.6.4)
+#--------- v0.6.4
+#   30-Aug-94 nd  - Changed install-test to check just for -t rather than
+#           for "-t index" in giftrans
+#      nd - Commented out the usage message in pstoppm3.ps
+#      bt - Various fixes dealing with counters and figure captions
+#      nd - Changed two occurrences of $file to $FILE in sub driver
+#--------- v0.6.3
+#   29-Aug-94 nd  - Changed the protection on the *previous* set of iconic
+#           buttons in  the distribution. 
+#--------- v0.6.2
+#   26-Aug-94 nd  - Changed so that .aux and .bbl files are really copied
+#           in the html directory as $$_images.{aux|bbl} so that references
+#           in images appear correctly
+#        - Changed so that environments given as arguments to 
+#           process_commands_in_tex do not have their contents translated
+#        - Changed translate_environments so that counter commands 
+#           which do not appear inside any environments are caught 
+#           just before exit
+#      bt - Fixed problem in dealing with \part commands while processing
+#           auxiliary (.aux) files
+#      nd - Fixed regular expression in latex2html.config to include 
+#           index|contents so that the ALT attribute in the navigation panel 
+#           is correct
+#      nd - Added config. variable $FIGURE_SCALE_FACTOR and renamed 
+#           $IMAGE_SCALE_FACTOR to $MATH_SCALE_FACTOR
+#   25-Aug-94 nd  - Changed the invisible character from &#1; to &#160; as
+#           described in http://www.uni-passau.de/~ramsch/iso8859-1.html
+#      nd - Now prints pointer to "Troubleshooting" if images fail to convert
+#   24-Aug-94 nd  - Fixed bug introduced by displaymath fix (23-Aug-94)
+#      ew - Fixed translate_environments to handle multi-section environments 
+#          (environments spanning more than one sections) where the end of the
+#          environment is not important to latex2html    
+#   23-Aug-94 mk  - Fixed so that the address appears inside the body 
+#         (otherwise it generates illegal HTML)
+#   23-Aug-94 nd  - Fixed bug in the way that $$ (displaymath) are processed
+#   18-Aug-94 nd  - Fixed bug in replace_cross_references which caused
+#         pageref not to work
+#--------- v0.6.1
+#   17-Aug-94 kz  - Added "/" in join statement of img_tag just in case 
+#         someone omits it from the $ICONSERVER variable
+#      nd - Added pstoppm3.ps in distribution. This is necessary for gs 3.0
+#         or later. The install-test script has been modified to automatically
+#         change PSTOPPM in latex2html.config to point to the correct version 
+#         after checking which version gs is available
+#         - Deleted a large portion of the man page inside latex2html
+#         - Changed texexpand to ignore spaces around names of included files
+#         - Changed $DVIPS to be invoked with the -M option which stops it
+#         using Metafont
+#         - Changed do_cmd_cite not to quote the #$cite_key because it 
+#         was causing problems when removing citation markers
+#         - Changed do_cmd_texwritefile not to keep removing {}'s after picking
+#         the figure|section|table number. This fixes problems of disappearing 
+#         numbers in figure and table captions
+#         - Fixed encode to remove id's from the image caching key so that 
+#         image reuse works better
+#         - Fixed do_cmd_footnotemark to pick \footnotetext
+#         - Changed footnote file name from <FILE>.foot.html to footnode.html
+#   16-Aug-94 nd  - Fixed bug in process_commands_in_tex which caused 
+#         commands with many arguments not to be processed correctly (eg
+#         parbox)
+#--------- v0.6a3
+#   16-Aug-94 nd  - Changed install-test to test if giftrans takes the -t 
+#         argument. 
+#         - Changed $img_out to $img in make_transparent
+#         - Changed so it adds "<! DOCTYPE ..." and "<!-- Converted ..."
+#         information at the top of each node
+#       tm and nd - Changed $item_description_rx to deal with one level 
+#         of nesting in \item[ [one level] ] commands. More than one levels
+#         will be processed correctly if enclosed in {}'s eg
+#         \item[{ [one [two]]}]
+#       nd - Changed the naming convention of generated HTML files. The top
+#         is as before but the rest are of the form "nodeN.html" where N is 
+#         a number. This makes generated documents more portable.
+#   15-Aug-94 nd  - Changed meta_information not to use the contents
+#         of the "About this document..." section in the meta information
+#         tags. Instead only the section title is used
+#       nd - Changed the test on whether to read .aux from /figure|table/ to 
+#         /\\caption/
+#       kz - Now ignores the numeric argument in (top|even|odd)sidemargin 
+#       kz - Does not call giftrans unless $GIFTRANS is bound
+#       kz - Stopped adding ALT="" in embed_image. It is good to see [IMAGE] 
+#         in lynx
+#--------- v0.6a2
+#   10-AUG-94 jhf - Fixed mispellings of pathnames in pstogif
+#--------- v0.6a1
+#   10-AUG-94 jhf - Fixed several logic bugs in install-test
+#       nd - Changed the code that loads ./.latex2html-init not to load
+#         the file if ./ = ~/
+#---------- v0.6a
+#    9-AUG-94 nd  - Changed \html@next to \htmlnext in html.sty so the 
+#        \makeatletter and \makeatother commands could be removed (they 
+#        were cuasing other style files - changebar.sty - to crash) 
+#       nd - Stopped using <TT> when converting "verbatim" - <PRE> is enough
+#       nd - Added support for loading a configuration file ./.latex2html-init 
+#        after ~/.latex2html-init if one is found. 
+#    5-AUG-94 nd  - The install-test script now makes executable the 
+#         appropriate scripts
+#    4-AUG-94 nd  - Fixed problem with counters used in environments passed 
+#         to LaTeX missing or being added too late in images.tex. Was done by
+#         scanning for $counters_rx in the $before string while processing
+#         environments
+#       bt - Fixed problem with section numbering (-show_section_numbers 
+#         when sections have the same titles. Also added support for 
+#         recognizing book parts
+#       nd - Removed all .xbm's from the icons directory
+#       nd - Created changebar.perl file which recognizes the commands
+#       \chgbarbegin and \chgbarend.
+#       These insert changebar icons around new text in a document.
+#       nd - Fixed strange name clash bug in process_command where 
+#         $ref_contents was restored to an old value just before exiting
+#         - the change was to add a ref_ prefix to the local variable 
+#         $before (the suberoutine was called with &process_command(???,*before)
+#--------- v0.5.9
+#    3-AUG-94 nd  - Fixed major bug in processing nested environments which
+#         eg caused the outer environment to modify the contents of
+#         inner environments. Fix is to go into the recursive call on 
+#         $contents before processing $contents in the current environment.
+#         Also found that recursive call to modify $after was superfluous...
+#       nd - Changed &nbsp; back to &#1; - Mosaic don't like it.
+#--------- v0.5.8
+#    3-AUG-94 nd  - Changed translate_commands and translate_environments to
+#         free more local variables before going into recursive calls.
+#         Also changed some of their subordinate subroutines to receive
+#         their parameters by reference rather than by value.
+#       nd - Changed &#1; to &nbsp;
+#    2-AUG-94 nd  - Changed 3 reg expressions in revert_to_raw_tex to use
+#         the "o" option for efficiency. Changed reg expressions in 
+#         wrap_shorthand_environments in the same way
+#       nd - Changed texexpand to check for "sty|tex|cls" when figuring out
+#         the basename of each style file
+#       nd - Changed calls to process_environment to modify variables in the
+#         caller rather than pass them around.
+#       nd - Modified $contents parameter to process_command to be passed by
+#         reference rather than by value
+#       nd - Changed several subroutines to "undef" their local arguments
+#         on exit. Not sure if this helps a lot... 
+#       nd - Changed to stop processing \input and \include commands
+#         separately as soon as translation begins. This was
+#         causing problems with \input commands inside figure environments.
+#         Now they add themselves to $latex_body at the appropriate place.
+#       nd - Changed html.perl to use embed_image instead of deal_with_image
+#       nd - Stopped "linking" the .aux file in the HTML directory. It is not
+#         needed since the captions are processed separately (and the 
+#         original was getting corrupted).     
+#    1-AUG-94 nd  - Implemented a new command \htmlimage which takes one
+#         argument containing options used during the ps->gif converion.
+#         [scale=<scale factor>] [external] [thumbnail=<reduction factor>
+#         The "scale" option allows control over the size of the final image.
+#         The "external" option will cause the image not to be inlined 
+#         (images are inlined by default). External images will be accessible
+#         from a hypertext link. 
+#         The "thumbnail" option will cause a small inlined image to be 
+#         placed in the caption. The size of the thumbnail depends on the
+#         reduction factor. "thumbnail" implies "external"...      
+#         Example:
+#         \htmlimage{scale=1.5,external,thumbnail=0.2}
+#         will cause a small thumbnail image 1/5 of the original size to be
+#         placed in the final document, pointing to an external image 1.5
+#         times bigger than the original. (The "external" option is not 
+#         necessary in this example.
+#       nd - Added a global variable $DEBUG. If set in the configuration
+#         files then intermediate files are left for later inspection.
+#         Caution: Intermediate files can be *enormous*.
+#       nd - Stopped eating \n's at the end of environments - it causes problem
+#         latex source of the form "$eqn$\nabc". 
+#       nd - Changed it so that all GIFs are made transparent (ie the color
+#         white is transparent). This includes thumbnails. Warning: 
+#         Some pictures may need to keep the white color!
+#-------- v0.5.7      
+#   29-JUL-94 nd  - Implemented a new version of the pstogif script in 
+#         Perl. It takes -scale and -depth command line arguments. This will
+#         be used to scale equations etc. and convert color images without
+#         loss of quality.
+#       nd - Changed the image generation mechanism to use the new pstogif
+#         script. Equations are now on average *six* times smaller than before!
+#         (Calculated using a physics paper with 88 equations).
+#       nd - Changed the handling of "figure" and "equation" so that 
+#         the captions appear in HTML rather than in the inlined image.
+#         This makes it unnecessary to scale up high quality images just to
+#         be able to read the captions. Also hypertext links inside the 
+#         captions now work. Also, figure and table numbers will work
+#         correctly *if* there is an up to date .aux file (generated by
+#         LaTeX) *and* the caption does not contain any characters
+#         converted into images (eg equations).
+#       nd - Can now control the scaling of each image generated by an
+#         unknown environment using a new command \htmlimage (see 1-AUG).
+#         Also, a new global variable $IMAGE_SCALE_FACTOR controls
+#         the size of all other image generating commands and
+#         environments (eg the size of equations).
+#       nd - Fixed problem with \html@next in html.sty which caused latex to
+#         crash when reading html.sty with \input{html.sty}      
+#   27-JUL-94 nd  - Removed link to itself inside the Contents page
+#       nd - Changed it so that it prints error messages 
+#            if system calls go wrong
+#       nd - Texexpand now automatically excludes any files ending in 
+#          .sty and .cls
+#       nd -  Changed texexpand so that the arguments of documentclass 
+#          and usepackage are processed correctly without being lost.
+#          Also modified do_include to return success or failure. If there 
+#          is a failure then the corresponding style file is added back 
+#          in the options lists.
+#       nd - Changed <B>'s to <STRONG> and <I>'s to <EM>'s. Now let's hope
+#          all the browsers know them!
+#       nd - Removed pstoxbm from distribution, removed -allbitmaps from 
+#          options and $BIG_IMAGES_AS_GIFS from the config files
+#   26-JUL-94 nd  - Added support for do_cmd_latexonly. 
+#   26-JUL-94 nd  - Option -split 0 now removes the (inactive) navigation panel
+#       nd - Changed some internal commands from latex2html_* and tex2html_* to
+#          latextohtml_* and textohtml_* so that numbers can act as delimiters
+#          to command names as expected (and added [0-9] to the delimiter list)
+#          *Removed* [0-9] from the delimiters list because it cannot distiguish
+#          between delimiters and legitimate commands/envs with numbers in their
+#          names
+#       hpr - Changed install-test to recognize dvipsk as dvips
+#       nd - Replaced nslookup and e-mail guessing code with simple finger
+#       nd - Fixed warnings in install-test about DVIPS compatibility
+#       nd - Fixed all HREFs to surround their arguments with ""'s 
+#       kc - Replaced uses of $ENV{'PWD'} which is not maintained by
+#          all the shells with &getpwd (from getpwd.pl)
+#       gp - Replaced <HR> with <BR><HR> so that it looks better with lynx
+#       tw - Fixed substitute_meta_cmds not to write all macros in the same
+#          line in the file images.tex
+#       dh - Changed texexpand to understand "~" in TEXINPUTS
+#       bs - Fixed texexpand to ignore comments in inlcuded files
+#       nd - Fixed raw_arg_cmd_rx so it gets set after loading the .perl files
+#       nd - Changed $begin_env_rx to strip off spaces only until the end of 
+#          of a line (needed for verbatim environments) - suggested by ???
+#       nd - Now adds the title of the document in the "About this document" 
+#          section - this is useful for indexing eg with ALIWEB
+#       nd - Fixed \& to be translated as &amp;
+#----------- v0.5.6
+#   25-JUL-94 jhf - Changed latex2html.config to provide textual equivalents
+#      (ALT) for the navigation buttons
+#   25-JUL-94 nd  - Fixed problem with unresolved references in inlined 
+#      images by copying the .aux and .bbl files in the new HTML directory
+#   22-JUL-94 nd  - Put call to &address_data before the loading of
+#      ~/.latex2html-init so that @address_data is initialised when
+#      setting $ADDRESS
+#   21-JUL-94 nd  - Removed the line
+#      $_ = &process_command($sections_rx, $_) if /$sections_rx/;
+#      (4-AUG-94 Correction: The change involved $counters_rx NOT $sections_rx)
+#      which means that counter commands will *NOT* be effective inside
+#      environments passed to latex. This is to avoid executing too early
+#      counter commands occurring *inside* environments that are passed
+#      to latex. To avoid the problem introduced by this change must enclose 
+#      it in an "ordered" environment which has no effect in latex but
+#      causes it's contents to be translated immediately by latex2html.
+#      (Fixed. See 4-AUG-94)
+#   15-JUL-94 nd  - Removed "~" from  latex_specials_rx so that it is caught
+#      in %normalize and processed by a generated subroutine do_cmd_tilde
+#   14-JUL-94 nd  - Changed sub make_latex to add a global declaration that 
+#      makes all text inside inlined images \large and \bf. This makes it
+#      unnecessary to use 110 110 ppmsetdensity in the psto{gif!xbm}
+#      converters which may distort included images. BUT have removed it
+#      because it is now possible to control the density explicitly (27/JUL)
+#   14-JUL-94 nd  - Simplified sub deal_with_texinputs so that it adds
+#      the current directories without overwriting the default TeX
+#      input directories by adding a trailing ':' - thanks bs.
+#      This means that there is *** no longer a need to specify full
+#      pathnames for included ps files ***.
+#   11-JUL-94 nd  - Replaced the \\s* with \\n* in the environment regular
+#      expression so that it eats just newlines rather than spaces.
+#      This fixes a problem with spaces following equations being eaten
+#      without causing extra lines to be introduced when we have consecutive
+#      environments.
+#    5-JUL-94 nd  - Fixed wrap_math_environment to treat $$ as displayed math.
+#    4-JUL-94 nd  - Previous fix (9-JUN) introduced new bug. It was replacing
+#      \_ with _ globally which affected environments passed to latex (tables).
+#      Changed process_command to stop doing this and embedded the 
+#      identification of \<special_latex_char> in 
+#      sub normalize instead of in process_command.
+#    1-JUL-94 nd  - Changed wrap_shorthand_environments to replace \[ and \]
+#      with \begin{displaymath} etc. Also changed right_justify to 
+#      justify displaymath. (There is still a problem with justifying eqnarray*)
+#   20-JUN-94 nd  - Changed get_ref_mark to examine symbolic_labels as well and 
+#      changed process_ref not to test $symbolic_labels{$label} before saving
+#      $use_label. This fixed problem with hyperref text being replaced with
+#      cross ref. icon. 
+#    9-JUN-94 nd  - Fixed bug in process_command to replace \_ with _ before
+#      starting to process commands
+#   21-MAY-94 mcb - Changed extract_image to remove stars ("*") from filenames
+#   12-MAY-94 nd - Added sub meta_information in latex2html.config which is used
+#      to add meta information in the HEAD of generated documents. This
+#      information is compatible with that required by indexing scripts
+#      such as site-index.pl at http://www.ai.mit.edu/tools/site-index.html) 
+#      which generate IAFA style templates for ALIWEB. 
+#      By default the meta information includes the contents of the 
+#      "About this document" section which can be customised with the 
+#      -info command line option or the $INFO setup variable.
+#   11-MAY-94 nd - Changed texexpand not to print "Checking ..." debug information. Changed do_cmd_title to ignore optional argument.
+#    5-MAY-94 nd - Changed latex2html.config so that the invisible character &#1; 
+#      is used instead of the invisible bitmaps in anchors.
+#   29-APR-94 nd - Changed process_ref and replace_[external]_cross_references to
+#      index the "hot" text text in \hyperref commands under $label as before
+#      but also under $id. This avoids the problem of each \hyperref
+#      writing over the "hot" text of the previous one...
+#   28-APR-94 nd - Changed -ascii-mode to imply -external-images 
+#   22-APR-94 nd - Added \s* at the end of the regular expressions that match 
+#      environments to eat trailing spaces.
+#      nd - Changed the normalised form of \/ from "slash" to "esc_slash" 
+#      because it was clashing with \slash.
+#   20-APR-94 nd - Added support for \i which just prints "i" 
+#      (without the dot in latex).
+#   20-APR-94 nd - Fixed erroneous call without an argument to escape_rx_chars from
+#       get_next_pair_or_char_pr. This was causing accented characters to appear 
+#       twice.
+#   15-APR-94 nd - Added a new command htmladdnormallinkfoot in html.sty and
+#      modified html.perl accordingly. This forces the URL to appear as a footnote
+#      in the paper version of a document instead of being ignored.
+#      *The default behavior of htmladdnormallink has changed*
+#    6-APR-94 mb - Changed a pattern /^@/ to /^\@/ which caused perl on a DEC
+#      Alpha (OSF v1.3) to crash.
+#   23-MAR-94 nd - Changed get_next to remove spaces and newlines
+#      from the beginning and and end of the arguments it picks up
+#   17-MAR-94 nd - Changed do_cmd_footnotemark to remove optional arguments,
+#      and ALSO to look for optional arguments in the regular expression
+#      for footnotetext.
+#   14-MAR-94 nd - Changed list helper to recognize optional arguments
+#      in \item commands
+#   14-MAR-94 nd - Changed do_env_minipage to ignore its numeric argument
+#   11-MAR-94 nd - Changed navigation_panel to insert newlines between buttons
+#      so that the HTML source looks prettier but removed them because they
+#      were being translated to <P>'s.
+#   11-MAR-94 nd - Changed pre-process to chop of newlines at the start of verbatim
+#      environments - They generate 2 lines when combined with <TT>
+#   11-MAR-94 nd - Fixed so \slash produces a "/" instead of being ignored
+#----------- v0.5.5
+#   28-FEB-94 nd - Changed get_next_pair_or_char_pr to escape command arguments
+#      picked from the text before using them in patterns
+#   25-FEB-94 nd - Changed dot.latex2html-init to append styles to 
+#      $DONT_INCLUDE instead of overwritting it. This caused looping problems
+#      when loading style files with commented \input commands (eg german.sty)
+#   25-FEB-94 nd - Added translation for \hrule
+#DELETED - Must escape new command|env names specifically...  
+#   20-FEB-94 nd - Changed sub tokenize to escape text for use in reg. expressions
+#   17-FEB-94 nd - Fixed normalize to deal with commands of the form
+#      \<special_latex_char>text eg \_level. 
+#   16-FEB-94 nd - Changed the way perl executes latex2html (#!/usr/local/bin/perl)
+#   11-FEB-94 nd - Mapped large, Large, LARGE etc to H5, H4, H3, etc.
+#      Pitfalls: They *must* be delimited and a carriage return in the HTML
+#      viewer is unavoidable.
+#----------- v0.5.4
+#   11-FEB-94 nd - Changed pre_process to include the substitution of
+#      special html characters and mark_string to solve the problem were
+#      the text inside the body of a newcommand was reverting to raw text.
+#   28-JAN-94 nd - Added "]" to the list of delimiters (Oops!)
+#   28-JAN-94 alo- Added flag -f when calling dvips in install-test (some
+#      dvips's dont return usage when called with no args)
+#   28-JAN-94 nd - Removed "\\setlength{\\textheight}{10in}" because it was
+#      causing parameter overflow in some systems
+#   28-JAN-94 nd - Strip leading +'s which appear in domain names returned by 
+#      some NIS servers
+#   27-JAN-94 nd - Modified texexpand to strip spaces out of $styles
+#----------- v0.5.3
+#   26-JAN-94 nd - The space eating \\s* in the rx for matching environments in
+#      sub make_begin_end_env_rx has been removed. It was making $$'s stick to 
+#      the next piece of text. Because there is no regression testing to speak
+#      of, there may be problems (see 18-JAN-94). 
+#   26-JAN-94 nd - Changed pre-process not to eat the inital spaces
+#      in a verbatim environment
+#   25-JAN-94 nd - Changed install-test to use $DVIPS instead of 'dvips'
+#----------- v0.5.2
+#   25-JAN-94 nd - Changed the markers for html special characters (&,<,>,etc) 
+#      so that they are delimited by ;'s. This was required before updating
+#      styles/german.perl and styles/makeidx.perl
+#----------- v0.5.1
+#   24-JAN-94 nd - Changed mark_string to call pre_process. This
+#      allows the handling of verbatim environments which are given
+#      as arguments to command macros.
+#      nd - Changed pre_process to save the "unescaped" \verb delimiter
+#----------- v0.5
+#   21-JAN-94 nd - Fixed nasty problem in the generated code for commands
+#      that are passed to Latex. The regular expression for picking 
+#      optional arguments has been replaced with get_next_optional_argument
+#----------- v0.4.5
+#   20-JAN-94 nd - Overhauled the way in which navigation icons are embedded 
+#      in the main text. Instead of adding them at any time, icon markers
+#      are used instead. After cleaning the text of the navigation panel 
+#      (text_cleanup) the real icons which may contain special characters
+#      such as ~ are exhcanged with the markers.
+#      nd - Hacked the mechanism for replacing html specials (<,>,& etc)
+#      to mark them rather than replace them outright. Otherwise 
+#      occasionally the "&" in &lt; etc is replaced (eg when <> are at the
+#      beginning of a line). Also, *changed slurp_input* to
+#      look for html special characters twice (otherwise there is a problem 
+#      with consecutive html specials e.g. 
+#      '   "<H...' strings where both " and < are special.
+#      Also modified html_special_rx and defined %html_special_inv to cope 
+#      with the html specials markers.
+#   20-JAN-94 wr - Added translations for (small|med|big)skip
+#   19-JAN-94 aa - Made changes to retrieve correct host and domain information
+#     via a call to nslookup.
+#     aa  - Added a search for latex2html-init to include the @INC
+#     directories.
+#   18-JAN-94 nd - Implemented user-configurable navigation panel. The main
+#      script provides images of buttons bound to section links and global 
+#      variables bound to section titles. The subroutine navigation_panel
+#      can be customized in order to create a personal navigation panel 
+#      by mixing the buttons and titles provided. The number of words
+#      to display in each title can also be customized. The  buttons were 
+#      grabbed from real motif buttons. 
+#   18-JAN-94 nd - Navigation icon replacement (in main text) now also takes
+#      place after text_cleanup
+#      nd - Changed the environment regular expressions to match trailing
+#      spaces. This stops the insertion of paragraphs between consecutive 
+#      environments.
+#----------- v0.4.4
+#   17-JAN-94 nd - Verbatim markers are now replaced after doing text_cleanup
+#----------- v0.4.3
+#   14-JAN-94 nd - Fixed bug introduced at 12-JAN when text_cleanup was moved
+#      earlier. Now text_cleanup is called separately to clean titles 
+#----------- v0.4.2
+#   12-JAN-94 nd - Changed the way in which sectioning information is stored 
+#      in order to fix problem with -split N and the way the "Next Page" 
+#      link is calculated. Now there are two hash tables %section_info and
+#      %toc_section_info. The first one only holds sections which are split
+#      into separate files, while the second holds all the sections and is 
+#      used in the calculation of the contents page.
+#      nd - Moved the final &text_cleanup before adding the navigation panel
+#      which may contain special latex characters such as "~"
+#      nd - Defined a translation for the "comment" environment defined in html.sty
+#---------- v0.4.1
+#   11-JAN-94 nd - Changed so that \stepcounter is included in the order_sensitive
+#      commands in order to generate new pictures for each one
+#      nd - Major change in order in which environments contents are processed 
+#      *before* the rest of the input file (previously the $after variable was
+#      processed earlier, resulting in order sensitive images being incorrectly 
+#      numbered).
+#   11-JAN-94 up - Made the @ character normal before the preamble is added to 
+#      the generated file images.tex and then made it special again.
+#   10-JAN-94 nd - Added ';' to the list of delimiters. Added newfont in ignored commands
+#      Added do_env_minipage to ignore optional arg and return its contents
+#      Changed do_cmd_index to call make_index_entry
+#   10-JAN-94 spqr - Added \n before closing } in generated \samepage lines  
+#    4-JAN-94 nd - Changed version number in latex2html.config from 0.3.1 to 0.4
+#   21-DEC-93 nd - Fixed serious bug in parsing \item{XX} commands in list_helper
+#      nd - Changed the format of the generated filenames from section*.X.Y.html to
+       section*_X_Y.html so that VMS systems can accept them
+#   20-DEC-93 nd - Fixed pre_process to escape special chars picked from the text
+#---------- v0.4
+#      nd - Changed documentation to warn about dvips
+#      nd - Fixed typo in french.perl
+#    9-DEC-93 nd - Fixed problem with comments in verbatim environments in texexpand
+#---------- v0.4a
+#      nd - Added option -init_file
+#      nd - Fixed bug in replace_cross_references when processing pagerefs
+#    8-DEC-93 nd - Modified translate_environments not to process environments
+#      inside a latexonly environment
+#    7-DEC-93 nd - Modified texexpand to ignore comments!
+#      Also modified so that \input and \include do not have to be in the 
+#      beginning of a line. Text before or after such commands is preserved.
+#    nd - Changed the option -nonavigation to -no_navigation
+#    nd - Moved to code for handling html.sty in styles/html.perl and 
+#      added the code for \hyperref in it
+#    2-DEC-93 nd - Fixed bug in determining the outermost level
+#    1-DEC-93 nd - Put ab's code on handling makeidx.sty commands in styles/makeidx.perl
+#    1-DEC-93 nd - Texexpand now copies the whole input file in the $DESTDIR
+#      directory. This is necessary beacuse it needs to see the whole thing
+#      in order to extract the style files used. Doing it using pipes was limiting
+#      it to the size of the pipe buffer (thanks to rjw) 
+#   30-NOV-93 nd - Moved the removal of comments after the extraction of
+#      verbatim environments
+#   nd - If $ENV{$TEXINPUTS} is defined then the directory with the source 
+#      latex file is pushed into it. If it is undefined then symbolic links 
+#      are created in the HTML directory pointing to each .sty file in 
+#      source directory. This is to allow style files to be found when running 
+#      latex in the HTML directory 
+#   26-NOV-93 nd - Many changes to translate latex accents and special characters to
+#      the equivalent ISO-LATIN-1 characters where possible. 
+#      The following are still NOT supported. 
+#      \=, \u, \v, \H, \t, \d, and \b
+#   fz+nd  Added a filter to replace accent commands defined in different
+#      style files such as german.sty or french.sty.     
+#   24-NOV-93 nd - Created the file styles/german.perl which contains 
+#      the sub german_translation which replaces accents defined in 
+#      german.sty with ISO-LATIN-1 equivalents. Also created styles/french.perl
+#   nd - When expanding commands and new definitions will now pick the next
+#      n characters for each of the n arguments if they are not delimited
+#      by braces. Must generalize this when picking $next_pair_rx for any command
+#   nd - Fixed very serious problem with $next_pair_rx $next_pair_pr_rx
+#      (made them match only the beginning of a line ...) and created 
+#      $any_next_pair_rx and $any_next_pair_pr_rx which will skip initial chars
+#   nd - Moved the Change Log in a separate file called "Changes"
+#   23-NOV-93 nd - Changed texexpand to take an extra command line
+#      argument -save_styles <file> which instructs it to save in <file> the names
+#      of any style files or other included files. <file> is then examined, 
+#      and for each <file> it tries to load perl code in ./<file>.perl or
+#      $LATEX2HTMLSTYLES/<file>.perl that can deal with <file>[.sty].
+#   nd - The value of $LATEX2HTMLDIR is now bound to the environment variable 
+#      of the same name. This is used by texexpand when loading perl code
+#      that corresponds to particular style files.
+#   nd - Changed texexpand to look for <file> as well as <file>.tex
+#      Stopped assigning source directory to TEXINPUTS. This was 
+#      causing problems when TEXINPUTS did not already have the correct paths
+#      (style files not found when passing commands etc. to latex).
+#   fz - Modified texexpand to look in subdirectories when expanding
+#   nd - Now gives warning if file.tex is newer than file.aux|bbl|etc
+#   22-NOV-93 nd - Changed $HIDE_SECTION_NUMBERS to $SHOW_SECTION_NUMBERS
+#   18-NOV-93 nd - Changed $_ in process_ext_file to global to produce side-effect
+#      (was causing bibliographies to disappear)
+#   17-NOV-93 nd - Now every section title is enclosed in a name anchor (based on
+#      $curr_sec_id). This fixes the problem of the table of contents in single
+#      page documents created with -split 0
+#   17-NOV-93 nd - New options -auto_navigation (suggested by tl), 
+#      -index_in_navigation, -contents_in_navigation, -next_page_in_navigation
+#      -previous_page_in_navigation
+#   16-NOV-93 nd - Created new icons for next_page, previous_page, index and contents
+#   16-NOV-93 nd - Created a $LATEX2HTMLDIR/install-test file which sets the
+#      $LATEX2HTMLDIR variable in the main script and tests the availability of 
+#      external programs. To install, must change latex2html.config and (run
+#      install-test or change $LATEX2HTMLDIR in this file manually)
+#   16-NOV-93 nd - Created a $LATEX2HTMLDIR/latex2html.config file which is 
+#      loaded before each user's personal init files
+#   15-NOV-93 nd - Fixed problem with \item not being delimited
+#--------- v0.3.12
+#   12-NOV-93 nd - Can now specify that numeric arguments should be ignored e.g.
+#      \parindent 12pt (using parindent # &ignore_numeric_argument)
+#   12-NOV-93 nd - Added '=' in the list of $delimiters
+#   11-NOV-93 nd - Changed post_process to include the header
+#--------- v0.3.11
+#   11-NOV-93 nd - Changed the way globbing is done. Some had problems with <$$*>
+#   11-NOV-93 nd - Changed the image reuse mechanism yet again. Have removed
+#     the id from the hash table key and I stopped saving order sensitive
+#     environments like equations, captioned figures and tables etc. 
+#--------- v0.3.10
+#   10-NOV-93 nd - Added blank.pbm to the distribution.
+#   10-NOV-93 nd - Added sub right_justify which prepends a tiled blank XBM
+#     to an equation or eqnarray XBM to give the effect of right justification.
+#     It uses the global variable $LINE_WIDTH and the pbmplus routines
+#     xbmtopbm (to convert to pbm), pnmfile (to ask for its dimensions),
+#     pnmtile (to replicate a blank PBM of 1 pixel), pnmcat 
+#     (to prepend the replicated blank bitmap) and pbmtoxbm 
+#     (to convert the result to XBM).
+#   10-NOV-93 nd - Option -top_navigation to put navigation panel at the top
+#   10-NOV-93 nd - Changed pstogif and pstoxbm not to use 100 100 ppmsetdensity 
+#     when calling $GS. This makes included ps files which contain bitmaps cleaner
+#--------- v0.3.9
+#   9-NOV-93  nd - Option -bottom_navigation to put navigation panel at the end
+#   9-NOV-93  nd - Now prints version number etc. on invocation
+#   9-NOV-93  nd - Fixed problem with blank lines surrounding rawhtml environments
+#   9-NOV-93  nd - Fixed conversion of \$ \& \% etc. by rearranging $delimiters
+#   9-NOV-93  nd - Fixed problem with handling "hand-made" bibliographies. Also
+#     fixed serious problem with picking optional arguments in sub do_cmd_bibitem
+#--------- v0.3.8
+#  29-OCT-93  nd - Added some support for optional labels (user defined bullets) in
+#     itemize and enumerate environments. Problem is that user defined bullets 
+#     should NOT be mixed with default ones (e.g. in an enumerate environment the 
+#     automatic numbering is lost if any such labels are used).
+#--------- v0.3.7
+#  28-OCT-93  nd - Now remove markers *after* adding child node titles. 
+#     These titles may contain inlined images.
+#  28-OCT-93  nd - Now call translate_environments when processing section titles
+#  28-OCT-93  nd - Changed the way that section titles are encoded (encode_title) 
+#     so that titles can be recognized in <file>.aux. Also commands not recognized
+#     in an aux file are not recorded. This solves the problem of titles with 
+#     font changes not getting the correct numbers. *** This process relies on each
+#     section title being unique ***.    
+#  27-OCT-93  nd - Added ' to $delimiters and to $cmd_delims
+#  26-OCT-93  nd - Modified sub process_ref to take optional argument which controls
+#     the printed cross ref mark (0 -> default, 1 -> internal label, 'XXX' -> 'XXX')
+#---------  v0.3.6
+#  25-OCT-93  nd - Now ignores the \/ command
+#  25-OCT-93  nd - Added support for a latexonly and an htmlonly environment. 
+#  25-OCT-93  nd - No navigation panel on the top page.
+#  21-OCT-93  nd - Added support for the \begin|end{rawhtml} environment. Can type
+#     raw HTML (intended to be used to specify forms). Latex ignores it.
+#  21-OCT-93  ec - Now gives warning when it is not possible to convert an image
+#  19-OCT-93  nd - Fixed spelling error in name of subroutine do_cmd_htmladdimg
+#  18-OCT-93  nd - Added \clearpage inside each page passed to latex in order
+#     to synchronize the positions of floating figure and table environments.
+#  18-OCT-93  nd - Added the environment id as part of encoded key in the table 
+#     of generated images. This means that the same tex code will generate two 
+#     separate images. This is ok for environments like equations which will have
+#     unique equation numbers but it is an overkill for things like $X_i$.
+#     It also means that the addition of a new envirnoment will change the unique
+#     id's and images will not be reused.
+#---------  v0.3.5
+#  14-OCT-93  nd - Added option to print the section numbers calculated by LaTex
+#     which is true by default. When true the references to sections are shown
+#     using these numbers instead of $cross_ref_visible_mark
+#  14-OCT-93  nd - Fixed Problem with \label commands inside captions
+#  13-OCT-93  nd - Theorems are now passed on to latex in order to keep their 
+#     counters in step with other counters. 
+#     Stopped removing \caption commands from figure and table environments.
+#     Generalised the mechanism for reading in the $FILE.bbl and can use it to read
+#     any other $FILE.<ext>. At the moment it is used to read the $FILE.aux which
+#     contains the correct symbolic values for the labels. Defined new 
+#     do_cmd_<aux_cmd> subroutines to handle the contents of $FILE.aux.    
+#  12-OCT-93  nd - Changed the way *-forms of sectioning commands are recognized
+#     and processed (they must not update the sectioning counters)
+#  11-OCT-93  nd - Fixed problem with encoding of keys in cached image table.
+#   8-OCT-93  nd - Major reengineering to get numeric labels in cross-references,
+#      to figures, equations and tables. Now latex is called
+#      only once to process all the counter commands, special commands and
+#      unknown environments. Dvips is also called once to generate a separate 
+#      file for each image. The resulting .aux file contains the correct
+#      numeric labels for equations, figures and tables. 
+#      The subroutines dump_counters, increment_counters, reset_counters_within,
+#      get_full_counter, get_counter, set_within_counter have been deleted.
+#      Have stopped trying to translate counter commands. Instead they are appended
+#      to the variable $latex_body which contains unknown commands and environments
+#      that will be possed to latex.
+#      POTENTIAL PROBLEMS:
+#         - ALL explicit counter manipulation commands are appended to 
+#           $latex_body as each section is processed and they are not 
+#           evaluated in the expected order (e.g. it may cause a problem when 
+#           interleaving explicit equation counter setting commands with 
+#           equation environments)
+#         - When an environment generates more than one pages of postscript then
+#           ALL THE IMAGES GET OUT OF SYNC. In this case a warning is given.
+#---------  v0.3.4
+#   5-OCT-93  nd - Fixed bug in dump_counters that stopped equation counters being
+#      dumped before passing environments to Latex
+#---------- v0.3.3
+#  30-SEP-93  nd - Changed $delimiters and $single_cmd_rx to handle commands which 
+#      are also delimiters
+#  30-SEP-93  jr - Added '-' to delimiters
+#  30-SEP-93  nd - Fixed serious problem with ignored commands and environments.
+#      Moved ignored commands into hash table %ignore and changed &ignore_commands,
+#      &process_environment, &process_command to use it.
+#---------- v0.3.2  (also known as 0.3.1 patch 1)
+#  29-SEP-93  nd - Stopped using the list @process_in_latex_cmds and the
+#      associated procedure make_process_in_latex_cmds
+#  29-SEP-93  nd - \\ now translates to <BR> instead of <P>
+#  29-SEP-93  nd - Added '!' to the set of delimiters.
+#  29-SEP-93  nd - Changed $raw_arg_cmd_rx to check for delimiters and changed 
+#     wrap_raw_arg_cmds to use it.
+#  29-SEP-93  nd - Changed value of ALIGN attribute from TOP to BOTTOM.
+#  16-SEP-93  nd - Fixed bug in do_include-lines (input|include commands now 
+#     revert to raw tex before added to the preamble
+#  13-SEP-93  nd - Added :,~, in the list of delimiters
+#   7-SEP-93  nd - Added option -reuse and corresponding variable $REUSE
+#   2-SEP-93  nd - Added $tmp in local variables of get_next (was causing test on
+#     whether an env was defined or not in get_body_newcommand to fail.
+#---------- v0.3.1
+#   1-SEP-93 rst - Added set of patches to deal with nested environments which have
+#     the same name. This was necessary in order to address the problem of commands
+#     that should be processed in latex whose arguments contain environments.
+#     Such arguments should be left raw. The solution is to enclose such commands
+#     in tex2thml_wrap wrappers.
+#   1-SEP-93 rst - Added patch to fix the recognition of \specials 
+#   1-SEP-93  nd - Fixed bug in get_first_words - now counts words instead of chars
+#---------- v0.3
+#  26-AUG-93  nd - Added test for not adding new counter definitions in the preamble
+#     if already there. Also added test to catch counters with name "0" in 
+#     dump_counters (need more looking into why this happens)
+#  26-AUG-93  nd - Added test to check if file already exists when generating a 
+#      name for a new image. If positive, the pid is used to "uniquify" it.
+#  26-AUG-93  nd - Incorporated latest set of patches from rst: (i) expand macros in
+#     bibliographies, (ii) recognize $a$$b$ as two distinct invocations of 
+#     non-display math mode and (iii) a new version of texexpand
+#  26-AUG-93  nd - Added ALT="" attribute to the IMG tag to make Lynx users happier
+#  25-AUG-93  nd - Fixed serious bug in the test for undefined environments
+#                  (have replaced sub undefined_env with defined_env)
+#  25-AUG-93  nd - Added mechanism for reusing existing images generated by
+#     the translator during previous runs.  The associations between text already 
+#     passed to latex and any generated images is saved in the file "images.pl". 
+#     On invoking latex2html the user is asked whether old images should be reused
+#     as well as being asked whether to delete the old directory.
+#  25-AUG-93  nd - Added delimiters (<>) around all the marker strings
+#     (e.g. $verbatim_mark, $toc_mark etc). This stops them being concatenated
+#     to commands which they may follow (tests/verbatim.tex)
+#  24-AUG-93  nd - Added html.sty in the distribution
+#  24-AUG-93  nd - Added support for referring to symbolic labels defined in
+#     one document from any other document. The external links to another document
+#     will point to the correct physical files even after the original document
+#     has been broken into different physical parts or moved [1]. This is 
+#     possible even when the document being referenced lives on a remote server.
+#     To do this two new commands have been defined:
+#     \externallabels{<URL to directory of external document>}
+#                    {<remote document LABELS.PL file>}
+#     \externalref{<label in remote document>}
+#     The command \externallabels can be used to import external labels 
+#     into the current document.
+#     The command \externalref can be used to refer to labels in external 
+#     documents, in the same way that the \ref command refers to internal labels.
+#     The file LABELS.PL associates symbolic labels with physical files and is now
+#     generated automatically for each translated document. (Idea came from 
+#     discussions with rjw. See tests/external-labels.tex.
+#     [1] (to get re-alignment  it is necessary to run latex2html on the
+#     original document and any others that refer to it).      
+#  23-AUG-93  nd - Added support for new latex command latextohtml which can 
+#                  be used to pass arbitrary perl code to the translator 
+#  23-AUG-93  nd - Added some support for operations on counters. Very ugly code
+#     and it is still not right. The order that commands are processed depends 
+#     on their depth. This causes problems with counter commands which must 
+#     be processed in strict order. Also as commands are processed after 
+#     environments, counter commands cannot influence environments. 
+#     See tests/counters.tex     
+#  23-AUG-93  nd - Added support for correct numbering of equations
+#  23-AUG-93  nd - Fixed problem with the numbering of theorem environments
+#  23-AUG-93  nd - Fixed regular expression in make_name that chewed up section 
+#                  names containing "10"
+#  20-AUG-93  nd - Changed the name of PPMTOXBM to PBMTOXBM
+#  20-AUG-93  nd - The names of commands like \LaTeX and \pounds stays in the text
+#                  as [LaTeX] etc. when the ascii_mode is used
+#  20-AUG-93  nd - Fixed bug that caused links to figures and tables to disappear
+#                  when the -nolatex option was used
+#  20-AUG-93  nd - Added option -ascii_mode to switch all the icons to their
+#     ascii equivalents so that the output can be used on character based browsers
+#  19-AUG-93  nd - Added the pstogif script in the distribution
+#  19-AUG-93  nd - Added option -external_images that does not inline images but
+#                  provides links to where they are stored
+#  19-AUG-93 rst - Fixed bug in get_body_def 
+#  19-AUG-93 rst - Modified to work with new version of texexpand. Added an
+#     option -dont_include to specify style files that should not be included.
+#  19-AUG-93 rst - Added a new version of texexpand to the distribution.
+#     This handles the inclusion of style files which need to processed by the 
+#     translator (patch7).
+#  19-AUG-93 rst - Added option to change the format of the generated images
+#     for figures, tables and tabular environments to GIF rather than XBM.
+#     This saves a lot of disk space as GIFs are more compact. Smaller 
+#     images for equations and special symbols are still XMBs as they look
+#     better on color backround screens (patch6)
+#  19-AUG-93 rst - Fixed bugs in the handling of optional labels on 
+#                  bibitems (patch5)
+#  19-AUG-93 rst - Added support for nested math mode expressions and general
+#                  list environments (patch4 - document from Hell!)
+#  19-AUG-93 rst - This patch educates latex2html about simple raw TeX command 
+#     \special and simple instances of \def (where "simple" is defined roughly 
+#     as "they could have used \newcommand, but didn't". For the messier cases, 
+#     the definition is scooped up and moved to the preamble.  This allows 
+#     latex2html to handle the simple, but nonstandard, postscript figure inclusion
+#     macros as well as an awful lot of other stuff done with gratuitous 
+#     \defs (patch3)
+#  19-AUG-93 rst - Fixed bug in the substitution of macro definitions (patch2)
+#  19-AUG-93 rst - Cleaned up erroneously generated output from unrecognized 
+#                  commands in the preamble (patch1)
+#  19-AUG-93  nd - Changed do_cmd_title and do_cmd_section_helper to remove newlines
+#     from the title and section names when they are used for navigation
+#  19-AUG-93  nd - Individual footnotes in the footnotes file are separated by
+#     about a page of empty space for easier identification (suggested by dm)
+#  18-AUG-93  nd -  Fixed problem about the -nonavigation option deleting the header
+#                   information (including the title).
+#  18-AUG-93  nd - Now writes out the tag <HEAD> instead of <HEADER> (oops!)
+#  18-AUG-93  nd - Added command \thanks
+#  16-AUG-93  nd - Changed the $process_in_latex_cmd_rx to $raw_args_cmd_rx to
+#     include sectioning commands. This was done to catch the titles of 
+#     sections before they are processed in order to remove label references
+#     (not from the title in the text but from the title that is used as a 
+#     handle for the section in the table of contents etc).
+#  10-AUG-93  nd - Removed the space character at the beginning of $verbatim_mark
+#     and $verb_mark (was causing problems with \verb at the begining of a doc)
+#   5-AUG-93  nd - Changed $CHILDLINE to use ____ instead of ----- 's
+#---------- v0.2
+#   3-AUG-93  nd - Stopped trying to expand the paths to the arguments of psfig
+#                  as it done through $TEXINPUT
+#   3-AUG-93  nd - All the navigation icon variables are now set in the
+#                  initialization file
+#   2-AUG-93  nd - The initialization file is now require'd using the full path
+#   2-AUG-93  nd - Modified the pstoxbm script to use environment variables
+#     set in the .latex2html-init file. Modified the dot.latex2html-init file
+#   2-AUG-93  nd - Added delimiters(;) after the translation of special HTML chars
+#     Modified the way HTML specials are translated in slurp_input
+#   2-AUG-93  nd - Added flag to switch off navigation links (suggested by wb)
+#   2-AUG-93  nd - References filtered through translate_environment
+#                  (bug reported by bh)
+#   2-AUG-93  nd - Fixed problem with recognizing the *-forms of environments
+#                  (bug reported by rst)
+#   2-AUG-93  nd - Added code to handle the $$-form of display math 
+#                  (bug reported by rst)
+#   2-AUG-93  nd - Prints message at the end if references are not found 
+#   2-AUG-93  nd - Added a separator between the body of text in a page and the 
+#                  child links controlled by $CHILDLINE (suggested by ac)
+#   2-AUG-93  nd - Can specify the syntax of commands to be ignored in the 
+#                  initialisation file
+#  31-JUL-93  nd - Added hundreds of semicolons to make it compatible with older
+#                  versions of Perl (but failed !)
+#  30-JUL-93  nd - Changed the order of the navigation keywords to be the same
+#                  as that of the navigation icons (suggested by ac)
+#  30-JUL-93  nd - Changed verbatim command arguments to be translated to fixed
+#                  width fonts (<TT>)
+#  30-JUL-93  nd - Added section 'Hyperlinks with LaTeX commands' to the man page 
+#---------- v0.1.1
+#  29-JUL-93  nd - Changed make_new_env_rx and make_begin_env_rx to consume extra
+#     spaces and newlines after a \begin{<env>} command. Such newlines 
+#     were being added to environments that cause errors if they  contain 
+#     blank lines (e.g. math)
+#  29-JUL-93  nd - Fixed design flaw (reported by ab)
+#     Problem: Arguments of commands that were passed to latex were translated.
+#     Fixed it by registering such commands in regular expression 
+#     $process_in_latex_cmd_rx and then processing such commands as soon as we enter
+#     translate_commands. Modified translate_commands and process_command to 
+#     this accomodate. Also fixed bugs in the code of do_cmd_<X>  where 
+#     X=psfig|fbox|framebox|parbox
+#  29-JUL-93  nd - Changed the format of inlined images coming back from latex
+#                  from GIF to XBM (suggested by ab)
+#  26-JUL-93  nd  - Created
+

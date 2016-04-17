@@ -1,0 +1,38 @@
+\documentclass{article}
+\usepackage[dvips,dvipsnames]{color}
+\usepackage{colordvi}
+\usepackage{html}
+\bodytext{	 TEXT    = white
+		 BGCOLOR = black
+}
+\color[X11]{Steel}
+\pagecolor[named]{SkyBlue}
+\subdef{rgb .2 .4 .1}
+
+\begin{document}
+
+\RedOrange{Reddish Orange \globalColor{...reverting to normal.}}
+{\textYellow Yellow}
+\RedOrange{Reddish Orange \globalColor{...reverting to normal.}}
+\textColor{.2 .3 .4 .1} coloured
+\Color{.2 .3 .4 .1}{coloured}
+
+\textRhodamine
+Here is some coloured text.
+
+What happens to \colorbox{red}{this box}?
+
+What happens to \fcolorbox{red}{green}{this box}?
+
+
+\color[cmyk]{.3,.3,.3,.2} light gray
+\color[gray]{.3} gray
+\color[rgb]{.3,.3,.3} gray
+
+\textcolor{red}{...and some red text...}
+\Plum{And some more text.}
+
+\end{document}
+
+
+

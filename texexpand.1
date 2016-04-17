@@ -1,0 +1,388 @@
+.rn '' }`
+.de Sh
+.br
+.if t .Sp
+.ne 5
+.PP
+\fB\\$1\fR
+.PP
+..
+.de Sp
+.if t .sp .5v
+.if n .sp
+..
+.de Ip
+.br
+.ie \\n(.$>=3 .ne \\$3
+.el .ne 3
+.IP "\\$1" \\$2
+..
+.de Vb
+.ft CW
+.nf
+.ne \\$1
+..
+.de Ve
+.ft R
+
+.fi
+..
+.ie n \{\
+.ds -- \(*W-
+.ds PI pi
+.if (\n(.H=4u)&(1m=24u) .ds -- \(*W\h'-12u'\(*W\h'-12u'-\" diablo 10 pitch
+.if (\n(.H=4u)&(1m=20u) .ds -- \(*W\h'-12u'\(*W\h'-8u'-\" diablo 12 pitch
+.ds L" ""
+.ds R" ""
+.ds M" """
+.ds S" """
+.ds N" """""
+.ds T" """""
+.ds L' '
+.ds R' '
+.ds M' '
+.ds S' '
+.ds N' '
+.ds T' '
+'br\}
+.el\{\
+.ds -- \(em\|
+.tr \*(Tr
+.ds L" ``
+.ds R" ''
+.ds M" ``
+.ds S" ''
+.ds N" ``
+.ds T" ''
+.ds L' `
+.ds R' '
+.ds M' `
+.ds S' '
+.ds N' `
+.ds T' '
+.ds PI \(*p
+'br\}
+.\"	If the F register is turned on, we'll generate
+.\"	index entries out stderr for the following things:
+.\"		TH	Title 
+.\"		SH	Header
+.\"		Sh	Subsection 
+.\"		Ip	Item
+.\"		X<>	Xref  (embedded
+.\"	Of course, you have to process the output yourself
+.\"	in some meaninful fashion.
+.if \nF \{
+.de IX
+.tm Index:\\$1\t\\n%\t"\\$2"
+..
+.nr % 0
+.rr F
+.\}
+.TH TEXEXPAND 1 "perl 5.005, patch 03" "29/Jan/2000" "User Contributed Perl Documentation"
+.UC
+.if n .hy 0
+.if n .na
+.ds C+ C\v'-.1v'\h'-1p'\s-2+\h'-1p'+\s0\v'.1v'\h'-1p'
+.de CQ          \" put $1 in typewriter font
+.ft CW
+'if n "\c
+'if t \\&\\$1\c
+'if n \\&\\$1\c
+'if n \&"
+\\&\\$2 \\$3 \\$4 \\$5 \\$6 \\$7
+'.ft R
+..
+.\" @(#)ms.acc 1.5 88/02/08 SMI; from UCB 4.2
+.	\" AM - accent mark definitions
+.bd B 3
+.	\" fudge factors for nroff and troff
+.if n \{\
+.	ds #H 0
+.	ds #V .8m
+.	ds #F .3m
+.	ds #[ \f1
+.	ds #] \fP
+.\}
+.if t \{\
+.	ds #H ((1u-(\\\\n(.fu%2u))*.13m)
+.	ds #V .6m
+.	ds #F 0
+.	ds #[ \&
+.	ds #] \&
+.\}
+.	\" simple accents for nroff and troff
+.if n \{\
+.	ds ' \&
+.	ds ` \&
+.	ds ^ \&
+.	ds , \&
+.	ds ~ ~
+.	ds ? ?
+.	ds ! !
+.	ds /
+.	ds q
+.\}
+.if t \{\
+.	ds ' \\k:\h'-(\\n(.wu*8/10-\*(#H)'\'\h"|\\n:u"
+.	ds ` \\k:\h'-(\\n(.wu*8/10-\*(#H)'\`\h'|\\n:u'
+.	ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'^\h'|\\n:u'
+.	ds , \\k:\h'-(\\n(.wu*8/10)',\h'|\\n:u'
+.	ds ~ \\k:\h'-(\\n(.wu-\*(#H-.1m)'~\h'|\\n:u'
+.	ds ? \s-2c\h'-\w'c'u*7/10'\u\h'\*(#H'\zi\d\s+2\h'\w'c'u*8/10'
+.	ds ! \s-2\(or\s+2\h'-\w'\(or'u'\v'-.8m'.\v'.8m'
+.	ds / \\k:\h'-(\\n(.wu*8/10-\*(#H)'\z\(sl\h'|\\n:u'
+.	ds q o\h'-\w'o'u*8/10'\s-4\v'.4m'\z\(*i\v'-.4m'\s+4\h'\w'o'u*8/10'
+.\}
+.	\" troff and (daisy-wheel) nroff accents
+.ds : \\k:\h'-(\\n(.wu*8/10-\*(#H+.1m+\*(#F)'\v'-\*(#V'\z.\h'.2m+\*(#F'.\h'|\\n:u'\v'\*(#V'
+.ds 8 \h'\*(#H'\(*b\h'-\*(#H'
+.ds v \\k:\h'-(\\n(.wu*9/10-\*(#H)'\v'-\*(#V'\*(#[\s-4v\s0\v'\*(#V'\h'|\\n:u'\*(#]
+.ds _ \\k:\h'-(\\n(.wu*9/10-\*(#H+(\*(#F*2/3))'\v'-.4m'\z\(hy\v'.4m'\h'|\\n:u'
+.ds . \\k:\h'-(\\n(.wu*8/10)'\v'\*(#V*4/10'\z.\v'-\*(#V*4/10'\h'|\\n:u'
+.ds 3 \*(#[\v'.2m'\s-2\&3\s0\v'-.2m'\*(#]
+.ds o \\k:\h'-(\\n(.wu+\w'\(de'u-\*(#H)/2u'\v'-.3n'\*(#[\z\(de\v'.3n'\h'|\\n:u'\*(#]
+.ds d- \h'\*(#H'\(pd\h'-\w'~'u'\v'-.25m'\f2\(hy\fP\v'.25m'\h'-\*(#H'
+.ds D- D\\k:\h'-\w'D'u'\v'-.11m'\z\(hy\v'.11m'\h'|\\n:u'
+.ds th \*(#[\v'.3m'\s+1I\s-1\v'-.3m'\h'-(\w'I'u*2/3)'\s-1o\s+1\*(#]
+.ds Th \*(#[\s+2I\s-2\h'-\w'I'u*3/5'\v'-.3m'o\v'.3m'\*(#]
+.ds ae a\h'-(\w'a'u*4/10)'e
+.ds Ae A\h'-(\w'A'u*4/10)'E
+.ds oe o\h'-(\w'o'u*4/10)'e
+.ds Oe O\h'-(\w'O'u*4/10)'E
+.	\" corrections for vroff
+.if v .ds ~ \\k:\h'-(\\n(.wu*9/10-\*(#H)'\s-2\u~\d\s+2\h'|\\n:u'
+.if v .ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'\v'-.4m'^\v'.4m'\h'|\\n:u'
+.	\" for low resolution devices (crt and lpr)
+.if \n(.H>23 .if \n(.V>19 \
+\{\
+.	ds : e
+.	ds 8 ss
+.	ds v \h'-1'\o'\(aa\(ga'
+.	ds _ \h'-1'^
+.	ds . \h'-1'.
+.	ds 3 3
+.	ds o a
+.	ds d- d\h'-1'\(ga
+.	ds D- D\h'-1'\(hy
+.	ds th \o'bp'
+.	ds Th \o'LP'
+.	ds ae ae
+.	ds Ae AE
+.	ds oe oe
+.	ds Oe OE
+.\}
+.rm #[ #] #H #V #F C
+.SH "NAME"
+texexpand \- expand  \einput and \einclude statements in a TeX file
+.SH "DESCRIPTION"
+General translation mechanism:
+.PP
+The main program latex2html calls texexpand with the document name
+in order to expand some of its \einput and \einclude statements, here
+also called \*(L'merging\*(R', and to write a list of sensitized style, class,
+input, or include file names.
+When texexpand has finished, all is contained in one file, TMP_foo.
+(assumed foo.tex is the name of the document to translate).
+.PP
+In this version, texexpand cares for following environments
+that may span include files / section boundaries:
+a) \ebegin{comment}
+b) \f(CW%begin\fR{comment}
+c) \ebegin{any}  introduced with \eexcludecomment
+d) \f(CW%begin\fR{any}
+e) \ebegin{verbatim}
+f) \ebegin{latexonly}
+g) \f(CW%begin\fR{latexonly}
+.PP
+e) \- g) prevent texexpand from expanding input files, but the environment
+content goes fully into the output file.
+.PP
+Together with each merging of \einput etc. there are so-called %%%texexpand
+markers accompanying the boundary.
+.PP
+When latex2html reads in the output file, it uses these markers to write
+each part to a separate file, and process them further.
+.Sh "Detailed technical notes:"
+1. \f(CW%begin\fR{latexonly} and \f(CW%end\fR{latexonly} have to be on a separate line.
+Anything between these tags (including the tags) is discarded.
+.PP
+2. \ebegin{latexonly} and \eend{latexonly} have to be on a separate line.
+Anything between these tags (including the tags) is not expanded.
+.PP
+3. [%\e]begin{"to exclude"} and [%\e]end{"to exclude"} have to be on a
+separate line.
+Anything between these tags (including the tags) is discarded.
+.PP
+4. \ebegin{verbatim/verbatim*} and \eend{verbatim/verbatim*} have to be
+on a separate line.
+Anything between these tags (including the tags) is not expanded.
+.PP
+5. The scope of any such tags may extend over several files.
+The opening tag for latexonly may occur on a different include level
+than the closing tag.
+The opening tag for verbatim/"to exclude\*(R" must occur within the same
+file than the closing tag.
+.PP
+6. Warnings are printed when the document has been parsed and open
+tags remain.
+.PP
+7. When in a \*(L"to exclude"/verbatim environment, texexpand won't recognize
+\s-1ANY\s0 command except the corresponding closing tag.
+There cannot be any nested constructions.
+This behaviour is identical to that of LaTeX.
+.PP
+8. \ebegin{latexonly},\eend{latexonly} may be nested, whereas
+\f(CW%begin\fR{latexonly},%end{latexonly} may not be nested.
+.PP
+9. A \*(L"%\*(R" tag cannot close a \*(L"\e\*(R" tag, and vice versa.
+.PP
+10. Every \e\fIdocument\fR\|(class|style), \eusepackage, \einput and \einclude command
+has to be on a separate line.
+.PP
+11. Everything behind a `%\*(R' that isn't preceded by a `\e\*(R' is regarded as
+a comment, i.e. it is printed but not interpreted.
+.PP
+12. If any command listed in 10. is preceded by an occurence of `\everb\*(R' or
+`\elatex\*(R' then it is \s-1NOT\s0 interpreted. This crashes on lines like this:
+blah blah \everb+foo foo+ \einput{bar} % bar won't be loaded!
+.PP
+13. Packages provided via \eusepackage are handled the same way as
+`options\*(R' in \e\fIdocument\fR\|(class|style), i.e. they are included when
+\-auto_exclude is off, the package isn't in \f(CW@dont_include\fR *\s-1OR\s0* the
+package is in \f(CW@do_include\fR (new). They are added to the style file 
+together with their options if the file itself hasn't been merged.
+\edocumentclass[options]{class} searches for every option.clo,
+\edocumentstyle[options]{style} searches for every option.sty.
+\eusepackage[options]{packages} searches for every package.sty.
+.PP
+14. Each texinputs directory is searched for input files/styles. If it
+ends in `//\*(R', the whole subdirectory tree is searched.
+.PP
+15. \einput / \einclude merge the given file (if found under the given
+name or with .tex extension) if its basename is in \f(CW@do_include\fR or if it
+isn't in \f(CW@dont_include\fR or if the given filename doesn't end in 
+\&.sty/.clo/.cls when \-auto_exclude is set.
+.Sh "Notes"
+Recognizes \edocumentclass, \edocumentstyle, \eusepackage, \eRequirePackage,
+\ebegin{verbatim}...\eend{verbatim}, \f(CW%begin\fR{latexonly}...%end{latexonly},
+\ebegin{latexonly}...\eend{latexonly}, \einput, \einclude, \everb, \elatex
+\eendinput, \eend{document}
+\eincludecomment, \eexcludecomment
+\ebegin{"to exclude"}, \eend{"to exclude"}
+\f(CW%begin\fR{"to exclude"}, \f(CW%end\fR{"to exclude"}
+.SH "The gory Details"
+Include and parse a file.
+This routine is recursive, see also &process_input_include_file,
+&process_document_header, and &process_package_cmd.
+.PP
+Two global flags control the states of texexpand.
+ o \f(CW$active\fR is true if we should interprete the lines to expand
+files, check for packages, etc.
+ o \f(CW$mute\fR is true if we should prevent the lines from going into the out file.
+.PP
+We have three general states of texexpand:
+ 1) interprete the lines and pass them to the out file
+This is the normal case. Corresponding: \f(CW$active\fR true, \f(CW$mute\fR false
+.PP
+.Vb 3
+\& 2) interprete minimal and suppress them
+\&This is when parsing inside a comment environment, which
+\&also would retain its body from LaTeX. => $active false, $mute true
+.Ve
+.Vb 4
+\& 3) interprete minimal and pass the lines to the out file
+\&This is inside a verbatim or latexonly environment.
+\&The line of course must be at least interpreted to determine the closing tag.
+\&=> $active false, $mute false
+.Ve
+Any environment may extend over several include files.
+Any environement except verbatim and latexonly may have its
+opening or closing tag on different input levels.
+The comment and verbatim environments cannot be nested, as
+is with LaTeX.
+We must at least parse verbatim/comment environments in
+latexonly environments, to catch fake latexonly tags.
+.PP
+The work scheme:
+Five functions influence texexpand's behavior.
+o &process_file opens the given file and parses the non-comment part in
+order to set \f(CW$active\fR and \f(CW$mute\fR (see above).
+It calls &interprete to interprete the non-comment content and either
+continues with the next line of its file or terminates if &interprete
+detected the \eend{document} or an \eendinput.
+.PP
+o &interprete handles some LaTeX tags with respect to the three states
+controlled by \f(CW$active\fR and \f(CW$mute\fR.
+Regarding to \einput|include, \e\fIdocument\fR\|(class|style), and
+\e(use|Require)package the functions &process_input_include_file,
+&process_document_header, and &process_package_cmd are called respectively.
+.PP
+o These three functions check if the file name or option files are enabled
+or disabled for merging (via TEXE_DO_INCLUDE or TEXE_DONT_INCLUDE).
+Any file that is to include will be \*(L'merged\*(R' into the current file, i.e.
+the function &process_file is called at this place in time (recursively).
+This will stop interpretation at the current line in file, start with the
+new file to process and continues with the next line as soon as the new
+file is interpreted to its end.
+.PP
+The call tree (noweb+xy.sty would be handy here):
+.PP
+.Vb 13
+\&    main
+\&      |
+\&      v
+\& +->process_file
+\& |    |
+\& |    v
+\& |  interprete (with respect to the current line, one of that three)
+\& |    |                           |                        |
+\& |    v                           v                        v
+\& |  process_input_include_file  process_document_header  process_package_cmd
+\& |    |                           |                        |
+\& |    v                           v                        v
+\& +----+---------------------------+------------------------+
+.Ve
+Bugs:
+o Since the latexonly environment is not parsed, its contents
+might introduce environments which are not recognized.
+.PP
+o The closing tag for latexonly is not found if hidden inside
+an input file.
+.PP
+o One environment tag per line, yet!
+.PP
+o If I would have to design test cases for this beast I would
+immediately desintegrate into a logic cloud.
+.PP
+Notes:
+.PP
+o Ok, I designed test cases for it.
+Please refer to test \*(L'expand\*(R' of the regression test suite
+in the developers\*(R' module of the l2h repository.
+.PP
+o \-unsegment feature:
+In this (rare) case, the user wants to translate a segmented document
+not in segments but in a whole (for testing, say).
+We enable this by recognizing the \esegment command in &interprete,
+causing the segment file to be treated like \einput but loosing the first
+lines prior to \estartdocument (incl.), as controlled via \f(CW$segmentfile\fR.
+On how to segment a document you are best guided by section
+``Document Segmentation'\*(R' of the LaTeX2HTML manual.
+.SH "CAVEATS"
+This utility is automatically configured and built to work on the
+local setup. If this setup changes (e.g. some of the external commands
+are moved), the script has be be reconfigured.
+.SH "Authors"
+.PP
+.Vb 8
+\& Based on texexpand by Robert Thau, MIT AI lab, including modifications by
+\& Franz Vojik <vojik@de.tu-muenchen.informatik>
+\& Nikos Drakos <nikos@cbl.leeds.ac.uk>
+\& Sebastian Rahtz <spqr@uk.ac.tex.ftp>
+\& Maximilian Ott <max@com.nec.nj.ccrl>
+\& Martin Boyer
+\& Herbert Swan
+\& Jens Lippmann
+.Ve
+
+.rn }` ''

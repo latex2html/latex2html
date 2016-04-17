@@ -1,0 +1,12 @@
+This is version 1.1 of my hthtml-package, an extended interface for
+LaTeX2HTML. 
+
+As part of LaTeX2HTML, you do not need to do anything to set it up,
+it's all done.
+
+To have a brief manual, run the Makefile in docs/hthtml.
+
+Jens Krinke
+j.krinke@tu-bs.de
+----------------------------------------------------------------------
+$Id: readme.hthtml,v 1.1 1996/12/21 19:55:35 JCL Exp $

@@ -1,0 +1,39 @@
+LaTeX2HTML BUGS File
+--------------------
+
+This file contains instructions on how to deal with bugs in LaTeX2HTML
+and important known bugs that should not be re-submitted.
+
+If you encounter any problem, please try to check yourself whether your
+setup is ok by verifying your configuration, reading the FAQ and the
+troubleshooting section of the manual *before* contacting the address
+below. You'll learn a lot and we won't be flooded by emails. Thank you.
+
+If however you are pretty sure that you've found a bug - indeed this
+is not a very rare situation :-) - then send an email to 
+
+                      latex2html@tug.org
+
+Please be patient if you don't receive a reply within 24h, someone will
+eventually answer your call.
+
+Of course patches, i.e. bugfixes you've found yourself (best as context
+diffs) are highly appreciated, but a concise report will help us too in
+improving the code.
+
+Attach your  cfgcache.pm  file (containing the most important information
+about your local setup) if you think it may help in finding the problem.
+You might also send example LaTeX code; please strip it down to minimum
+size that still shows the error. Otherwise put it on the web and send the
+URL so we can retrieve it ourselves (be careful with confidential
+information!).
+
+Please send bug reports, comments, questions and suggestions to the
+discussion list: latex2html@tug.org . We would appreciate receiving
+any ideas for changes or improvements that you regard as appropriate.
+
+
+Known bugs in this release:
+---------------------------
+
+

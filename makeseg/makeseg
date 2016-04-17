@@ -1,0 +1,1969 @@
+#!/usr/local/bin/perl  
+
+# Check options and load configuration files
+&init;
+
+########################################################################
+####                   Site configuration                            ###
+########################################################################
+# Set the following variables according to the requirements of your site
+# Alternatively, copy the lines up to "End of configuration options"
+# to your $HOME/.makesegments.cnf or $PWD/.makesegments.cnf for  
+# overriding system-wide defaults
+
+# These settings are OVERRIDDEN by corresponding command line options!
+#
+# This part of the program is run after any configuration file,
+# config file settings therefore override anything set here
+
+# Location to look for L2H-supported LaTeX styles
+$LATEX2HTMLSTYLES="/usr/local/lib/texmf/latex2html/styles" 
+    unless $LATEX2HTMLSTYLES;
+
+# Location for TeX style files etc.
+# $TEXINPUTS is read from the environment if not explicitly supplied
+$TEXINPUTS=$ENV{'TEXINPUTS'} unless $TEXINPUTS;
+$TEXINPUTS=".:/usr/local/lib/texmf/tex//" unless $TEXINPUTS;
+
+# Location for BibTeX Bibliography databases
+# $BIBINPUTS is read from the environment if not explicitly supplied
+$BIBINPUTS=$ENV{'BIBINPUTS'} unless $BIBINPUTS;
+$BIBINPUTS=".:/usr/local/lib/texmf/bibtex/bib/" unless $BIBINPUTS;
+
+# Location for BibTeX Bibliography styles (in addition to $TEXINPUTS)
+# $BSTINPUTS is read from the environment if not explicitly supplied
+$BSTINPUTS=$ENV{'BSTINPUTS'} unless $BSTINPUTS;
+$BSTINPUTS="/usr/local/lib/texmf/bibtex/bst/" unless $BSTINPUTS;
+
+# The lowest sectioning command at which to create segments
+# corresponds to -l option
+$LEVEL="section" unless $LEVEL;
+
+# set this to 1 if you want no Makefile by default
+# corresponds to -n option
+$NOMAKE=0 unless $NOMAKE;
+
+# Set this to one if LaTeX style files should be searched for by default
+# corresponds to -s option
+$CHECK_LATEX_STYLES=0 unless $CHECK_LATEX_STYLES;
+
+# Zeroeth-segment name (type makesegments -h for explanation)
+# corresponds to -z option
+$SEGSTART="a0" unless $SEGSTART;
+
+# Set this to one to supress inlining input files
+# corresponds to -i option
+$IGNOREINPUTS=0 unless defined $IGNOREINPUTS;
+
+# Set this to one to suppress copying required input files
+# corresponds to -d option
+$DONTCOPY=0 unless defined $DONTCOPY;
+
+# Set this to one to softlink input files instead of copying them
+# corresponds to -u option
+$USELINKS=0 unless defined $USELINKS;
+
+# SPECIALS=1 means that special sections (table of contents,
+#  bibliography, index...) are put into special segments
+# corresponds to -e option
+$SPECIALS=0 unless defined $SPECIALS;
+
+# Hash SPECIALNAMES defines standard filenames for 
+# The special segments. (For tableofcontents, toc.tex resp. toc.html)
+# Undefined entries (those commented out below)
+# will not create a special segment.
+%SPECIALNAMES=(
+    "tableofcontents" => "toc",
+    "printindex" => "ind",
+#    "listoffigures" => "lof",
+#    "listoftables" => "lot",
+#    "bibliography" => "bbl",
+#    "thebibliography" => "tbl",
+	       );
+
+# URL titles for special segments. Customize if you need titles in other
+# languages.
+%SPECIALTITLES=(
+    "tableofcontents" => "Contents",
+    "listoffigures" => "Figures",
+    "listoftables" => "Tables",
+    "bibliography" => "References",
+    "thebibliography" => "References",
+    "printindex" => "Index");
+
+#####################################
+## Options for Makefile generation ##
+#####################################
+
+# set $TEXENV to TEXINPUTS=.:(my_tex_path) PKFONTS=.:(my_PK_font_path) ...
+# if you need to set these environment vars before starting latex
+# You may also say $TEXENV="TEXINPUTS=$TEXINPUTS..." if you've set $TEXINPUTS
+$TEXENV="" unless $TEXENV;
+
+# accordingly, set $DVIPSENV for dvips
+$DVIPSENV="" unless $DVIPSENV;
+
+# Insert special paths (and options) for executables, if required
+$LATEX="$TEXENV latex" unless $LATEX;
+$BIBTEX="bibtex -verbose" unless $BIBTEX;
+$MAKEINDEX="makeindex" unless $MAKEINDEX;
+$DVIPS="$DVIPSENV dvips" unless $DVIPS;
+$L2H="latex2html" unless $L2H;
+$MAKE="make" unless $MAKE;
+$TOUCH="touch" unless $TOUCH;
+
+# LaTeX2HTML command line options for all files
+$MAKE_COMMON="-index_in_navigation -contents_in_navigation"
+    unless $MAKE_COMMON;
+
+# LaTeX2HTML command line options for child segments
+$MAKE_CHILDREN="-info \"\"" unless $MAKE_CHILDREN;
+
+# LaTeX2HTML command line options for master file
+$MAKE_TOP="" unless $MAKE_TOP;
+
+########################################
+### EXPERTS ONLY:
+########################################
+
+# Define additional LaTeX commands to be recognized
+
+%USER_CMDS=();
+
+# syntax:
+# %USER_CMDS=("cmd1_name" => [cmd1_arguments],
+#             "cmd2_name" => [cmd2_arguments],
+#             ...)
+#
+# cmdX_arguments is a list of the arguments in correct order,
+# $m for mandatory, $o for optional arguments.
+#
+# Give an empty list if no arguments are required.
+#
+# Example:
+# %USER_CMDS=("parbox" => [$o,$m,$m], "newline" => [])
+# to make makesegments recognize parbox commands.
+# 
+# Supply an additional entry for the starred command if it takes
+# different arguments (but beware the same do... routine will be called!)
+# 
+# See the syntax of %misc_cmds below for further examples.
+
+# You may add Perl code to support your commands by defining
+# a subroutine "do_command".
+# Example: Write all parboxes to a file "parboxes":
+#
+# sub do_parbox {
+#    parboxnum++;
+#    open (PARBOX,">>parboxes");
+#    print PARBOX "parbox No. $parboxnum, $command".join('',@args)."\n";
+#    print PARBOX "position: $opt[0], width=$mand[0]\n";
+#    print PARBOX "text: $mand[1]\n";
+#    close PARBOX;
+# };
+#
+# The optional arguments can be retrieved from array @opt,
+# mandatory ones from @mand (parens and whitespace stripped).
+# Complete argument list is @arg (with parens).
+# $star is "*" if the command was encountered in a starred version. 
+#
+# You MUST add "parbox" to %USER_CMDS to activate your routine!
+#
+
+# See below for examples.
+
+1; # This should be the last line of your configuration script
+
+########################################################################
+####             End of configuration options                        ###
+####           Do not modify below this line !                       ###
+########################################################################
+
+# Make sure that command line options override config-file settings    
+# (users might omit unless defined ... in their config files)
+$O_LEVEL && ($LEVEL=$O_LEVEL);
+$O_DIR && ($DIR=$O_DIR);
+$O_OUTFILE && ($OUTFILE=$O_OUTFILE);
+$O_SEGSTART && ($SEGSTART=$O_SEGSTART);
+$O_CHECK_LATEX_STYLES && ($CHECK_LATEX_STYLES=$O_CHECK_LATEX_STYLES);
+$O_NOMAKE && ($NOMAKE=$O_NOMAKE);
+$O_IGNOREINPUTS && ($IGNOREINPUTS=$O_IGNOREINPUTS);
+$O_DONTCOPY && ($DONTCOPY=$O_DONTCOPY);
+$O_USELINKS && ($USELINKS=$O_USELINKS);
+$O_SPECIALS && ($SPECIALS=$O_SPECIALS);
+
+# Specify the allowed segmentation levels
+%levels=("document" => 0,
+	 "part" => 1,
+	 "chapter" => 2,
+	 "section" => 3,
+	 "subsection" => 4,
+	 "subsubsection" => 5);
+
+%nosegment_cmds=(
+    "tableofcontents" => [],
+    "listoffigures" => [],
+    "listoftables" => [],
+    "bibliography" => [$m],
+    "printindex" => []);
+
+%label_cmds=("label" => [$m]);
+%ref_cmds=("ref" => [$m],
+	   "pageref" => [$m]);
+%index_cmds=("index" => [$m]);
+%misc_cmds=(
+	    "usepackage" => [$o,$m],
+	    "internal" => [$o,$m],
+	    "endinput" => [],
+# \no mandatory arg specified for \input 
+# (people may use tex-style \input myfile)
+	    "input" => [],
+	    "include" => [$m],
+	    "title" => [$m],
+# newcommand ... are included only because their arguments should be
+# read by parse_simple_block rather than parse_latex_block
+	    "newcommand" => [$m,$o,$m],
+	    "renewcommand" => [$m,$o,$m],
+	    "newenvironment" => [$m,$o,$m,$m],
+	    "renewenvironment" => [$m,$o,$m,$m],
+	    "documentclass" => [$o,$m],
+	    "documentstyle" => [$o,$m],
+	    "bibliographystyle" => [$m],
+	    "begin" => [$m],
+	    "end" => [$m],
+	    "segment" => [$m,$m,$m],
+	    "includegraphics" => [$o,$m],
+	    "includegraphics*" => [$o,$o,$m],
+	    "epsfig" => [$m],
+	    "html" => [$m],
+	    "hyperref" => [$m,$m,$m,$m],
+	    "htmlref" => [$m,$m],
+	    %USER_CMDS);
+
+%nosegment_envs=(
+    "thebibliography" => []);
+
+@bibfiles=();
+@files_to_copy=();
+
+# die if no input file specified
+!$FILE && die "$usage_string\n\nmakesegments: No filename specified!\n";
+
+# add .tex to filename if it isn't already there
+!($FILE =~ /[.]tex$/) && do { $FILE=$FILE.".tex" };
+# strip unnecessary /./ and ./ from filename
+$FILE =~ s|/[.]/|/|g;
+$FILE =~ s|^[.]/||;
+
+!defined($levels{$LEVEL}) && 
+    die "\nmakesegments: level $LEVEL not allowed!\nValid levels are: ".
+    join(', ',(sort {$levels{$a} <=> $levels{$b}} (keys %levels)))."\n\n";
+
+!defined($DIR) && do { 
+    $DIR="segmented"; 
+    print STDERR "No directory specified: trying ./$DIR\n" ;
+};
+
+# strip unnecessary /./ from dirname. assume current if no dir specified.
+$DIR =~ s|/[.]/|/|g;
+$DIR =~ s|^[.]/||;
+
+if (!defined ($OUTFILE)) {
+    if ($DIR =~ /^[.]$/) {
+	($OUTFILE=$FILE) =~ s/[.]tex$/_seg.tex/;
+# do not copy include files into the current directory
+	$DONTCOPY=1;
+    } else { ($OUTFILE=$FILE) =~ s|.*/|| };
+    print STDERR "No output file specified: trying $DIR/$OUTFILE\n";
+};
+    
+($OUTFILE =~ m|/|) && die "\nmakesegments: must use a simple filename with the -o option\n";
+
+!($OUTFILE =~ /[.]tex$/) && do { $OUTFILE=$OUTFILE.".tex" };
+
+$PWD=$ENV{"PWD"}."/";
+
+if ($DIR =~ m|^/|) {
+    $fulldir=$DIR } else { $fulldir="$PWD$DIR" };
+$fulldir =~ s|/[.]$|| unless ($DIR =~ m|^/|);
+
+if ($FILE =~ m|^/|) {
+    $fullfile=$FILE } else { $fullfile="$PWD$FILE" };
+
+($fullfile =~ m|^$fulldir/$OUTFILE$|) && die "\nmakesegments: can't overwrite $FILE!\n";
+
+!(-f $FILE) && die "\nmakesegments: $FILE doesn't exist!\n" ;
+
+if (-e $DIR) {
+    stat $DIR;
+    !(-d _) && die "\nmakesegments: $DIR is not a directory!\n";
+    !(-r _) && die "\nmakesegments: $DIR is not readable!\n";
+    !(-w _) && die "\nmakesegments: $DIR is not writable!\n";
+    !(-x _) && die "\nmakesegments: $DIR is not executable!\n";
+    if (-e $OUTFILE) {
+	!(-w $OUTFILE) && die "\nmakesegments: $OUTFILE exists and is non-writable!\n"
+	}
+    } 
+else {
+    !(mkdir $DIR, 0777)
+	&& die "\nmakesegments: can\'t create $DIR!\nsystem error:$!\n"
+	};
+
+
+foreach $key (keys %levels) {
+    $segments{$key} = [$o,$m] unless ($levels{$key} > $levels{$LEVEL});
+};
+
+&make_known_cmds;
+
+$begin_env_re='\\\\begin\\s*\\{\\s*([^\}\s]+)\\s*\\}';
+$begin_simple_re='([\\{]|[\\[])';
+$end_simple_re='([\\}]|[\\]])';
+$simple_delim_re='([\\{]|[\\[]|[\\}]|[\\]])';
+$begin_block_re='([\\$]|[\\{]|[\\[]|\\\\begin\\s*\\{\\s*[^\}]+\\s*\\})';
+$end_block_re='([\\$]|[\\}]|[\\]]|\\\\end\\s*\\{\\s*[^\}]+\\s*\\})';
+$ord_command_re='(\\\\\\w+[*]?)';
+$special_re='('.$begin_block_re.'|'.$end_block_re.'|'.$ord_command_re.')';
+
+$command_re='(\\\\[\@\\w]+[*]?|\\\\[ !\\"\\$%&\'\\(\\)+,\\-.\\/:;<=>\\[\\]\\^_\\`{}|~]'.
+    '|\\\\a[=\'\\`]|\\\\\@\\.)';
+$no_escape_re='(^|[^\\\\])((?:\\\\\\\\)*)';
+$use_html_mark="\001<<HTML>>";
+$begin_htmlonly_mark="\001<<BEGIN_HTMLONLY>>";
+$end_htmlonly_mark="\001<<END_HTMLONLY>>";
+
+
+$input="IN000";
+$output="OUT000";
+$segname=$SEGSTART;
+$preamble=1;
+$head="";
+$ERROR="";
+
+@l2hinputs=split(/:/,($ENV{'LATEX2HTMLSTYLES'} ? 
+		      $ENV{'LATEX2HTMLSTYLES'}:$LATEX2HTMLSTYLES));
+
+@texinputs=split(/:/,$TEXINPUTS);
+@bibinputs=split(/:/,$BIBINPUTS);
+
+@bstinputs=split(/:/,$BSTINPUTS);
+@graphicsinputs=@texinputs;
+@graphicsextensions=(".ps",".eps",".gif",".prn");
+
+%packages=();
+
+@temporary_files=();
+
+($outname=$OUTFILE) =~ s/[.]tex//;
+
+($tmp_out = $OUTFILE) =~ s/[.]tex$/.tmp/;
+
+print STDERR "\nPass 1: Analyzing $FILE ...\n\n";
+&push_input($FILE);
+
+#print STDERR "first line: $_\n";
+
+($one,$two)=&parse_latex_block("",$_);
+
+&pop_output;
+&pop_input;
+
+print STDERR "\nPass 2: looking for dependencies & linking segments\n\n";
+
+&dependencies;
+
+&write_segments;
+
+&make_makefile unless $NOMAKE;
+
+print STDERR "Done.\n";
+
+exit 0;
+
+sub get_next_line {
+#    print STDERR "%";
+    if (eof ($input)) { 
+	if ($#inhandle > 0) { 
+	    &pop_input ;
+	} else { 
+	    die "\nmakesegment: Reached eof before end of block !\n" ;
+	};
+    };
+    my ($line);
+    $line=<$input>;
+#    print STDERR "get: $line\n";
+    chomp $line;
+    $line;
+}
+
+sub gently_get_next_line {
+#    print STDERR "&";
+    if (eof ($input)) { 
+	if ($#inhandle > 0) { 
+	    &pop_input ;
+	} else { 
+	    $ERROR="\nmakesegment: Reached eof before end of block !\n" ;
+	};
+    };
+    my ($line);
+    $line=<$input>;
+#    print STDERR "gently: $line\n";
+    chomp $line unless $ERROR;
+    ($ERROR ? "" : $line );
+}
+
+sub parse_latex_block {
+    local ($_);
+    my ($start);
+    ($start,$_)=@_;
+    my ($comment,$block,$delim,$after,$verb);
+    local ($env,$done,$end_re);
+    local $foundend=0;
+    $env="";
+    $verb="";
+    local $gentle=0;
+    local $direct="";
+    $done=$start;
+    $start =~ s/\s//g;
+# check which kind of block
+  TYPE: {
+      length($start) == 0 && do { 
+# This is only allowed for the outermost block
+	  $gentle=1;
+	  $preamble=1;
+	  $end_re="";
+	  $direct=&push_output ("$DIR/$tmp_out");
+	  $cur_seg=$SEGSTART;
+	  $segment_names{$cur_seg}="document";
+	  last TYPE };
+      $start =~ /^\{$/ && do {
+	  $end_re='\}';
+	  last TYPE };
+      $start =~ /^\[$/ && do {
+	  $end_re='\]';
+	  last TYPE };
+      $start =~  /^\\begin\{(\w+)([*]?)\}$/ && do {
+	  $env=$1.($2 ? "\[$2\]" : "");
+	  $end_re='\\\\end\s*\{\s*'.$env.'\s*\}';
+	  last TYPE };
+      $start =~ /^\$$/ && do {
+	  $end_re='\$';
+	  last TYPE };
+      die "\nparse_latex_block: invalid opening delimiter: \"$start\"!\n";
+  };
+#    print STDERR "Entering block: $start...$end_re\n";
+    while (1) {
+#	    print STDERR "line $.: \"$_\"\n";
+	($_,$comment)=&strip_comment($_);
+      CASE: {
+	  s/^\s*$// && do {
+	      if ($direct) { if ($preamble)
+			     { $head.="$&$comment\n" } else { print "$&$comment\n" } } 
+	      else { $done.="$&$comment\n" };
+	      $comment="";
+	      $_=&gently_get_next_line;
+	      if ($ERROR) {
+		  if ($gentle) {
+		      return ("","");
+		  } else {
+		      die $ERROR; 
+		  };
+	      };
+	      last CASE;
+	  };
+# handle \verb
+	  s/$no_escape_re(\\verb[*]?)(.*)$//o && do {
+	      $_.="$1$2";
+	      $verb=$3;
+	      $comment="$4$comment";
+# No last statement here - continue with \verb-stripped $_ and $verb set
+	  };
+	  s/$no_escape_re$special_re//o && do {
+	      if ($direct) { if ($preamble) { $head.="$`$1$2" } else { print "$`$1$2" } } 
+	      else { $done.="$`$1$2" };
+	      $after=$';
+	      ($delim=$3)=~ s/\s*//g;
+#		  print STDERR "BlockRE: $&, $1, $2, \"$delim\", $after\n";
+	    DELIM: {
+# we're done
+		$end_re && ($delim =~ /^$end_re$/) && do {
+		    if ($direct) { 
+			while ($#outhandle > 0 ) { 
+			    &pop_output } 
+		    };
+		    return ("$done$delim","$after$verb$comment");
+		};
+# It's an environment begin
+		$delim =~ /^$begin_env_re$/	&& do {
+		    ($block,$after)=&process_env($delim,"$after$verb$comment");
+#		    if ($gentle){ print STDERR "MAIN: closed $delim : $direct :".select."\n"};
+		    if ($direct && !(select =~ /$direct$/)) { $direct="" }; 
+		    if ($direct) { if ($preamble) { $head.=$block } else { print $block} } 
+		    else { $done.=$block };
+		    $comment="";
+		    $verb="";
+		    $_=$after;
+		    last CASE;
+		};			
+		$delim =~ /^$begin_block_re$/ && do {
+# It's a block begin
+		    ($block,$after)=&parse_latex_block($delim,"$after$verb$comment");
+#		    if ($gentle){ print STDERR "MAIN: closed $delim : $direct :".select."\n"};
+		    if ($direct && !(select =~ /$direct$/)) { $direct="" }; 
+		    if ($direct) { if ($preamble) { $head.=$block } else { print $block} } 
+		    else { $done.=$block };
+		    $comment="";
+		    $verb="";
+		    $_=$after;
+		    last CASE;
+		};
+		$delim =~ /^$end_block_re$/ && do {
+		    if ($delim =~ /^\]/) {
+			if ($direct) { if ($preamble) { $head.=$delim } else { print $delim} } 
+			else { $done.=$delim };
+#			print STDERR "WARNING: strange block: $done, $after, $_\n";
+			$_="$after$comment";
+			$comment="";
+			$verb="";
+			last CASE;
+			$_=$after;
+		    } else {
+			if ($delim =~ /^\}$/) {
+			    return ("$done","$delim$after$verb$comment") }
+			else {
+			    die "\nmakesegments: Block end doesn't match:\n".
+				"END: \"$delim\", expected: \"".
+				    ($env ? "\\end\{$env\}" : $end_re).
+					"\"\ntext:$done\n";}
+		    };
+	        };
+		$delim =~ /^$ord_command_re$/ && do {
+		    ($block,$after)=&process_command($delim,"$after$verb$comment");
+#			print STDERR "\$delim=$delim, select=".select.", \$direct=$direct\n";
+		    if ($direct) { if ($preamble) { $head.=$block } else { print $block} } 
+		    else { $done.=$block };
+		    if ($foundend) { return ($done,$after) };
+		    $comment="";
+		    $verb="";
+		    $_=$after;
+		    last CASE;
+		};
+	    };
+	  };
+	  $verb && do {
+	      if ($direct) { print "$_$verb" } else { $done.="$_$verb" };
+	      ($block,$after)=&process_verb($comment);
+#		  print STDERR "VERB FOUND:\n$block\n";
+	      if ($direct) { print $block } else { $done.=$block };
+	      $comment="";
+	      $verb="";
+	      $_=$after;
+	      last CASE;
+	  };
+#	      print STDERR "Nothing found on $_\n";
+	  if ($direct) { if ($preamble) { $head.="$_$comment\n" } 
+			 else { print "$_$comment\n" } }
+	  else { $done.="$_$comment\n" };
+	  $comment="";
+	  $_=&gently_get_next_line;
+	  if ($ERROR) {
+	      if ($gentle) {
+		  return ("","");
+	      } else {
+		  die $ERROR; 
+	      };
+	  };
+      };
+    };
+};
+
+sub parse_simple_block {
+# Special version, only needed for arguments of commands like
+# \newcommand or \newenvironment.
+# In these cases, constructs like 
+# \newcommand{\beq}{\begin{equation}} are legitimate.
+# (would be an error in parse_latex_block, sice environment isn't closed)
+# No command parsing is carried out.
+# Now generally used for command arguments, since these rarely contain
+# environments or commands that need to be parsed
+    local ($_);
+    my ($start);
+    ($start,$_)=@_;
+    my ($comment,$block,$delim,$after,$end_re,$done,$verb);
+    $verb="";
+    $done=$start;
+    $start =~ s/\s//g;
+# check which kind of block
+#    print stderr "Parse_simple_block: $start, $_\n";
+  TYPE: {
+      $start =~ /^\{$/ && do {
+	  $end_re='\}';
+	  last TYPE };
+      $start =~ /^\[$/ && do {
+	  $end_re='\]';
+	  last TYPE };
+      die "\nparse_simple_block: invalid opening delimiter: \"$start\"!\n";
+  };
+    while (1) {
+#	    print STDERR "line $.: \"$_\"\n";
+	($_,$comment)=&strip_comment($_);
+      CASE: {
+	  s/^\s*$// && do {
+	      $done.="$&$comment\n";
+	      $comment="";
+	      $_=&get_next_line;
+	      last CASE;
+	  };
+# handle \verb
+	  s/$no_escape_re(\\verb[*]?)(.*)$//o && do {
+	      $_.="$1$2";
+	      $verb=$3;
+	      $comment="$4$comment";
+# No last statement here - continue with \verb-stripped $_ and $verb set
+	  };
+	  s/$no_escape_re$simple_delim_re//o && do {
+	      $done.="$`$1$2";
+	      $after=$';
+	      ($delim=$3)=~ s/\s*//g;
+#		  print STDERR "BlockRE: $&, $1, $2, \"$delim\", $after\n";
+	    DELIM: {
+# we're done
+		$end_re && ($delim =~ /^$end_re$/) && do {
+		    return ("$done$delim","$after$verb$comment");
+		};
+		$delim =~ /^$begin_simple_re$/ && do {
+# It's a block begin
+		    ($block,$after)=&parse_simple_block($delim,"$after$verb$comment");
+		    $done.=$block ;
+		    $comment="";
+		    $verb="";
+		    $_=$after;
+		    last CASE;
+		};
+		$delim =~ /^$end_simple_re$/ && do {
+		    if ($delim =~ /^\]/) {
+			if ($direct) { if ($preamble) { $head.=$delim } else { print $delim} } 
+			else { $done.=$delim };
+			print STDERR "PSB WARNING: strange block: $done, $after, $_\n";		    
+			$_="$after$comment";
+			$comment="";
+			$verb="";
+			last CASE;
+		    } else {
+			if ($delim =~ /^\}$/) {
+			    return ("$done","$delim$after$verb$comment") }
+			else {
+			    die "\nmakesegments: Block end doesn't match:\n".
+				"$done\nEND: \"$delim\", expected: \"$end_re\"\n";}
+		    };
+	        };
+                   };
+	  };
+	  $verb && do {
+#	      print STDERR "Parse_simple_block: $start, $verb, $_\n";
+	      $done.="$_$verb";
+	      ($block,$after)=&process_verb($comment);
+#	      print STDERR "VERB FOUND:\n$block\n";
+	      $done.=$block;
+	      $comment="";
+	      $verb="";
+	      $_=$after;
+	      last CASE;
+	  };
+	  $done.="$_$comment\n";
+	  $comment="";
+	  $_=&get_next_line;
+      };
+    };
+};
+
+
+sub process_env {
+# $above is local from calling parse_latex_block
+    local ($_);
+    my ($delim,$env,$done,$after);
+    ($delim,$_)=@_;
+    $delim =~ $begin_env_re;
+    $env=$1;
+#    print STDERR "PE: environment \"$env\"\n";
+  CASE: {
+      $env =~ /document/ && do {
+	  !$preamble && die "\\begin{document} encountered after end of preamble !\n";
+          $head=&process_preamble($head);
+	  $preamble=0;
+	  last CASE;
+      };
+      $env =~ /htmlonly/ && do {
+# Ignore inputs in htmlonly blocks 
+	  local $IGNOREINPUTS=1;
+# Ignore segments 
+	  local %segments=();
+	  ($done,$_)=&parse_latex_block($delim,$_);
+	  $preamble && do {
+	      $done =~ s/^\s*\\begin\s*\{\s*htmlonly\s*\}/$begin_htmlonly_mark/;
+	      $done =~ s/\\end\s*\{\s*htmlonly\s*\}\s*$/$end_htmlonly_mark/;
+	  };
+	  return ($done,$_);
+      };
+      $env =~ /verbatim[*]?|rawhtml/ && do {
+	  my $end_re='\\\\end\s*\{\s*'.$env.'\s*\}';
+	  while (1) {
+	      if (s/$end_re//) {
+		  return ("$delim$done$`$&",$');
+	      } else {
+		  $done.="$_\n";
+		  $_=&get_next_line;
+	      };
+	  };
+      };
+      defined ($nosegment_envs{$env}) && do {
+	  while ($#outhandle > 0) { 
+	      $direct="";
+	      &pop_output;
+	  };
+	  $special_sections{$env}="";
+	  ($done,$_)=&parse_latex_block($delim,$_);
+	  $cur_seg=$SEGSTART;
+	  if ($SPECIALS && (defined $SPECIALNAMES{$env})) {
+	      open (SPECIAL,">$DIR/$SPECIALNAMES{$env}.tmp");
+	      print SPECIAL "\n$done";
+	      close SPECIAL;
+	      $done=join("\n","\\begin{latexonly}",
+#			 "\\DumpCounters\{$SPECIALNAMES{$env}\}\{section\}\{\}",
+			 $done,
+			 "\\end{latexonly}");
+	      push @specialsegments,("$SPECIALNAMES{$env}");
+	  };
+	  return ($done,$_);
+      };
+  };
+#    print STDERR "processing $env ...";
+    ($done,$_)=&parse_latex_block($delim,$_);
+    return ($done,$_);
+}
+
+sub getargs {
+    local($_);
+    $_=shift;
+    my ($actual,$done,$comment,$delim,@blocks);
+    $done="";
+    while ($actual=shift) {
+	if ($actual eq $m) { $actual="$actual|$ord_command_re" };
+	($_,$comment)=&strip_comment($_);
+# skip empty or pure comment lines
+	while ( s/^\s*$// ) {
+	    $done.="$&$comment\n";
+	    $_=&get_next_line;
+	    if (/^\s*$/) {
+		print STDERR "WARNING: empty line found where arguments expected.\n".
+		    "Ignoring - but LaTeX won\'t like this! \n"; 
+	    };
+	    ($_,$comment)=&strip_comment($_);
+	};
+	if (s/^(\s*)($o|$m|$ord_command_re)//o) {
+	    $done.=$1;
+	    $delim=$2;
+	  CASE: {
+	      $delim =~ /$actual/ && do {
+		  if ($delim =~ /$ord_command_re/) {
+		      ($block,$_)=($&,"$_$comment");
+#		      print STDERR "GA: $block, $_\n";
+		      push @blocks,("\{$block\}");
+		  } else {
+		      ($block,$_)=&parse_simple_block ($delim,"$_$comment");
+		      push @blocks, ($block);
+		  };
+		  $done.=$block;
+		  $comment="";
+		  last CASE;
+	      };
+# found mandatory, but opt requested
+	      ($actual eq $o) && do {
+		  push @blocks, ("");
+		  $_="$delim$_$comment";
+		  last CASE;
+	      };
+# found opt, but mandatory requested: error
+	      die "Wrong arguments to $command: $done $delim $_\n";
+	  };
+	} else {
+	    die "Wrong arguments to $command: $done $delim $_\n";
+	};
+    };
+    ($done,$_,@blocks);
+};
+	      
+sub process_command {
+    local($_,$command);
+    local ($cmd,@arg,@opt,@mand,$star,$text);
+    ($command,$_)=@_;
+    $command =~ s/\s*//g;
+    $command =~ s/[*]?$//;
+    $star=$&;
+    $command =~ s/^\\//;
+#    print STDERR "command: $command\n";
+    if (defined($known_commands{$command})) {
+	if ($star && (defined $known_commands{"$command*"})) {
+	    ($text,$_,@arg) = &getargs($_,@{$known_commands{"$command*"}});
+	} else {
+	    ($text,$_,@arg) = &getargs($_,@{$known_commands{$command}});
+	};
+        map { s/(^\s*|\s*$)//g } @arg;
+	@opt = grep { /^\[/ } @arg;
+	@mand = grep { /^\{/ } @arg;
+	map { s/^\[\s*//; s/\s*\]$// } @opt;
+	map { s/^\{\s*//; s/\s*\}$// } @mand;
+#	print STDERR "$command ->  @arg : ".join(',',@opt)." -> ".join(",",@mand)."\n";
+#	print STDERR "Known command found: $command!\n";
+      CMD: {
+	  defined (&{"do_$command"}) && do {
+	      &{"do_$command"};
+	      last CMD;
+	  };
+	  defined ($segments{$command}) && do {
+	      &do_segment_cmd;
+	      last CMD;
+	  };
+	  defined ($nosegment_cmds{$command}) && do {
+#	      print STDERR "NOSEG FOUND: $command!\n";	
+	      &do_nosegment_cmd;
+	      last CMD;
+	  };
+	  defined ($label_cmds{$command}) && do {
+	      &do_label_cmd;
+	      last CMD;
+	  };
+	  defined ($index_cmds{$command}) && do {
+	      &do_index_cmd;
+	      last CMD;
+	  };
+	  defined ($ref_cmds{$command}) && do {
+	      &do_ref_cmd;
+	      last CMD;
+	  };
+      };
+    };
+    return (($command ? "\\$command$star" : "").join(" ",@arg),$_);
+};
+
+sub do_begin {
+    my $block;
+    ($block,$_)=&process_env("\\begin\{$mand[0]\}",$_);
+    if ($direct && !(select =~ /$direct$/)) { $direct="" }; 
+    if ($direct) { if ($preamble) { $head.=$block } else { print $block} } 
+    else { $done.=$block };
+    $command="";
+    @arg=();
+};
+
+sub do_end {
+    if ($env eq $mand[0]) {
+	if ($direct) {
+	    while ($#outhandle > 0 ) { 
+		&pop_output 
+		};
+	};
+    } else {
+	die "\nmakesegments: Block end doesn't match:\n".
+	    "END: \"\\end\{$mand[0]\}\", expected: \"\\end\{$env\}\"\n";
+    };
+    $foundend=1;
+};
+
+sub do_segment_cmd {
+    while ($#outhandle > 0) { 
+	&pop_output;
+    };
+# protect commands in section heading
+# needed for the \segment command of html.sty
+    $segname++;
+    $mand[0] =~ s/$no_escape_re$ord_command_re/"$1$2".&protect($3)/ge;
+    $done.="\\segment$star".'{'.$segname."\}\{$command\}\{$mand[0]\}\n";
+    $direct=&push_output("$DIR/$segname.tmp");
+    $cur_seg=$segname;
+#    print STDERR "Starting segment: $segname\n";
+    $segment_names{$cur_seg}=$command;
+#    print STDERR join (", ",keys %segment_names)."\n";
+    ($segment_titles{$cur_seg}=$mand[0]) =~ s/[\n\t]//g;
+    1 while ($segment_titles{$cur_seg} =~
+	     s/$no_escape_re$ord_command_re(\s*\[[^\]]*\])*(\s*\{[^}]*\})*/$1$2/g);
+    $command="";
+    @arg=();
+};
+
+sub protect {
+    local ($_)=@_;
+    $_="\\protect$_" unless ($_ eq "\\protect");
+    $_;
+};    
+
+sub do_nosegment_cmd {
+    while ($#outhandle > 0) { 
+	$direct="";
+	&pop_output;
+    };
+    $special_sections{$command}="";
+    if ($command eq "bibliography") {
+	my $file,$key;
+	foreach $key (split(',',$mand[0])) {
+	    $file=&find_texinput($key,\@bibinputs,[".bib"]);
+	    push @bibfiles, ($file) unless $file =~ m:^(/|~):;
+	};
+    };
+    $cur_seg=$SEGSTART;
+    if ($SPECIALS && (defined $SPECIALNAMES{$command})) {
+	open (SPECIAL,">$DIR/$SPECIALNAMES{$command}.tmp");
+	print SPECIAL "\n\\$command".join("",@arg)."\n";
+	close SPECIAL;
+	push @specialsegments, ("$SPECIALNAMES{$command}");
+	$command=join("\n","begin{latexonly}",
+#		      "\\DumpCounters\{$SPECIALNAMES{$command}\}\{section\}\{\}",
+		      "  \\$command".join('',@arg),
+		      "\\end{latexonly}");
+	@arg=();
+    };
+};    
+
+sub do_label_cmd {
+    push @{$cur_seg."_labels"},($mand[0]);
+};
+
+sub do_index_cmd {
+    $indexsegs{$cur_seg}="";
+};
+
+sub do_ref_cmd {
+    push @{$cur_seg."_refs"},($mand[0]) unless 
+	($cmd=grep {/^$mand[0]$/} @{$cur_seg."_refs"});
+};
+
+sub do_htmlref {
+#    print STDERR "Htmlref: ".join(',',@mand)."\n";
+    push @{$cur_seg."_refs"},($mand[1]) unless 
+	($cmd=grep {/^$mand[1]$/} @{$cur_seg."_refs"});
+};
+
+sub do_hyperref {
+#    print STDERR "Hyperref: ".join(',',@mand)."\n";
+    push @{$cur_seg."_refs"},($mand[3]) unless 
+	($cmd=grep {/^$mand[3]$/} @{$cur_seg."_refs"});
+};
+
+sub do_bibliographystyle {
+    my $file=&find_texinput($mand[0],[(@bstinputs,@texinputs)],[".bst"]);
+    push @files_to_copy, ($file) unless $file =~ m:^(/|~):;
+};
+
+sub do_endinput {
+    &pop_input if ($#inhandle > 0);
+    $command="";
+};
+
+sub do_input {
+# Allow argument in braces or simple (TeX-like) argument
+    s/\s*\{\s*([^\}\s]+)\s*\}// || s/\s*([^\s\[\]\{\}]+)//;
+# Args are read in directly to allow for tex-style \input myfile
+    my $file=$1;
+    $file = &find_texinput ($file,\@texinputs,["",".tex"]);
+    if (!$IGNOREINPUTS) { 
+	&push_input ($file) if $file;
+	$command="";
+	@arg=();
+    } else {
+	push @files_to_copy, ($file) unless $file=~ m:^(/|~):;
+	@arg=("\{$file\}");
+    };
+};
+
+sub do_include {
+# Args are read in directly to allow for tex-style \input myfile
+    my $file = &find_texinput($mand[0],\@texinputs,["",".tex"]);
+    if (!$IGNOREINPUTS) {
+	&push_input ($file) if $file;
+	$command="";
+	@arg=();
+    } else {
+	push @files_to_copy, ($file) unless $file=~ m:^(/|~):;
+    };
+};
+
+sub do_includegraphics {
+    if ((defined $packages{"graphics"}) || (defined $packages{"graphicx"})) {
+	my $file=&find_texinput($mand[0],\@graphicsinputs,\@graphicsextensions);
+	push @files_to_copy, ($file) unless (!$file or $file=~ m:^(/|~):);
+    };
+};
+
+sub do_epsfig {
+    if (defined $packages{"epsfig"}) {
+	$mand[0]=~/file=(.*?)($|,)/;
+	my $file=$1;
+#	print STDERR "epsfig:\$file=$file\n";
+	$file =~ s/^\s*|\s*$//g;
+	$file=&find_texinput($file,\@graphicsinputs,\@graphicsextensions);
+	push @files_to_copy, ($file) unless (!$file or $file=~ m:^(/|~):);
+    };
+};
+
+sub do_segment {
+# Encoutered an already existing segment.
+#    print STDERR "processing segment file \"$mand[0]\"...$mand[1], $mand[2]\n";
+    my $file,$base;
+    $file = &find_texinput($mand[0],\@texinputs,["",".tex"]);
+    if (!$INGNOREINPUTS) {
+	($base = $file) =~ s/[.]tex$//;
+	unless (open (TMPIN,"<$file")) {
+	    die "Couldnt open $file for input!\n" };
+	unless (open (TMPOUT,">$base\_msg.tex")) {
+	    die "Couldnt open $base_msg.tex for output!\n" };
+	unshift @temporary_files,("$base\_msg.tex");
+	my $line;
+	my $startfound=0;
+	my $comment;
+# Search for the \startdocument command
+	while ($line=<TMPIN>) {
+	    ($line,$comment)=&strip_comment($line);
+	    if ($line =~ s/$no_escape_re\\startdocument(\W)//) {
+		$startfound=1;
+		$line="$3$'comment";
+		last;
+	    };
+	};
+	if ($startfound) {
+	    print TMPOUT $line;
+	    while ($line=<TMPIN>) {
+		print TMPOUT $line;
+	    };
+# Pretend a \section ... \input sequence was found in the text
+	    $_=join(" ","\\$mand[1]$star\{$mand[2]\}",
+		    "\\input\{$base\_msg.tex}",$_);
+	} else {
+	    print STDERR "WARNING: No \\startdocument found in segment $file!\n";
+	};
+	close TMPIN;
+	close TMPOUT;
+	$command="";
+	@arg=();
+    } else {
+	push @files_to_copy, ($file) unless $file=~ m:^(/|~):;
+    };
+};
+
+sub do_title {
+    ($maintitle=$mand[0]) =~ s/\n|\t//g;
+    1 while ($maintitle =~ s/$no_escape_re$ord_command_re(\s*\[[^\]]*\])*\s*(\{[^}]*\})*/$1$2/g);
+};
+
+sub do_usepackage {
+    my $file;
+    if ($opt[0]) {
+	if ($CHECK_LATEX_STYLES) {
+	    if (!($file=&find_texstyle("$mand[0].sty"))) {
+		print STDERR "WARNING: style file of package $mand[0] not found - ignored !\n";
+		$command=""; 
+		@arg=();
+	    } else {
+		push @files_to_copy, ($file) unless $file =~ m:^(/|~):;
+		$packages{$mand[0]}=$opt[0];
+	    };
+	} else {
+	    $packages{$mand[0]}=$opt[0];
+        };
+    } else {
+	my $pack;
+	    my @packs=split(',',$mand[0]);
+	foreach $pack (@packs) {
+	    if ($CHECK_LATEX_STYLES) {
+		if (!($file=&find_texstyle("$pack.sty"))) {
+		    print STDERR "WARNING: style file of package $pack not found - ignored !\n";
+		    @packs=grep {!(/$pack/)} @packs;
+		} else {
+		    $packages{$pack}="";
+		    push @files_to_copy,($file) unless $file=~ m:^(/|~):;
+		};
+	    } else { $packages{$pack}=""; };
+	    if ($#packs > -1) { 
+		@arg=("\{".join(',',@packs)."\}");
+	    } else {
+		@arg=();
+		$command=""
+	    };
+        };
+    };
+};
+
+sub do_documentclass {
+    my $file;
+    if (!$CHECK_LATEX_STYLES || ($file=&find_texstyle("$mand[0].cls"))) {
+	$class=$mand[0];
+	$global_options=$opt[0];
+	$_="$use_html_mark$_";
+	push @files_to_copy, ($file) unless $file =~ m:^(/|~):;
+    } else {
+	die "Fatal: document class file $mand[0].cls not found";
+    };
+};	      
+
+sub do_internal {
+    $command="";
+    @arg=();
+};
+
+
+
+sub process_preamble {
+    local ($_)=@_;
+    my ($args,$html,$dir);
+# insert a \usepackage{html} line if it's not yet there
+    print STDERR "Document class: $class, global options: $global_options\n";
+    print STDERR "packages found:\n";
+    foreach $args (keys %packages) {
+        print STDERR "$args ".($packages{$args} ? "(options: ".
+	    $packages{$args}.").. " : ".. ");
+        foreach $dir (@l2hinputs) {
+            if (-f "$dir/$args.perl") {
+		${$args."_supported"}=1 ;
+	        print STDERR "(supported!) .. ";
+	    };
+        };
+    };
+    print STDERR "\n";
+    $html=(defined $packages{"html"});
+    s/$use_html_mark/($html ? "" : "\n\\usepackage{html}") /e;
+    if (!$html) {
+	$packages{"html"}="";
+        print STDERR "Adding package html ...\n";
+    };
+    $_;
+}
+
+sub strip_comment {
+    local ($_)=@_;
+    my ($comment);
+    if (s/(^|[^\\])(\\\\)*(%.*)//) {
+	$comment=$3;
+	$_.="$1$2" ;
+    } else { $comment="" };
+    ($_,$comment);
+}
+
+sub get_following {
+    local ($_)=$@;
+    my ($found)=0;
+    my ($comment,$done,$arg,$command,$before,$block,$after);
+    while (!$found) {
+	($_,$comment)=&strip_comment($_);
+      CASE: {
+	  s/^\s$// && do {
+# Empty line
+	      $done.="$&$comment\n";
+	      $comment="";
+	      $_=&get_next_line;
+	      last CASE;
+	  };
+	  s/^\s*$end_block_re//o && do {
+	      $found=1;
+	      return ($found,$done,$1,"$'$comment");
+	  };
+	  s/^\s*$end_re//o && do {
+	      $found=1;
+	      $arg=$1;
+	      ($before,$block,$after)=&get_simple_argument("$'$comment");
+	      if ($block) {
+		  $done.=$before;
+		  $arg.=$block;
+		  return ($found,$done,$arg,$after);
+	      } else { die "\nCorrupted \\end statement: \"$arg$before$block$after\"\n" };
+	  };
+	  s/^\s*$begin_block_re//o && do {
+	      $found=2;
+	      return ($found,$done,$1,"$'$comment");
+	  };
+	  s/^\s*$end_re//o && do {
+	      $found=2;
+	      $arg=$1;
+	      ($before,$block,$after)=&get_simple_argument("$'$comment");
+	      if ($block) {
+		  $done.=$before;
+		  $arg.=$block;
+		  return ($found,$done,$arg,$after);
+	      } else { die "\nCorrupted \\begin statement: \"$arg$before$block$after\"\n" };
+	  };
+# \begin{...} and \end{...} already excluded
+	  s/^\s*$ord_command_re//o && do {
+	      $command=$1;
+	      $after=$';
+# swallow \verb?...?
+	      if ("$command$after$comment" =~ /^(\\verb[*]?)(.)/) {
+		  # it's a \verb command: read \verb block and continue
+		  $command=$&;
+		  ($block,$after)=&process_verb ($2,$');
+		  $done.="$command$block";
+		  $_=$after;
+		  last CASE;
+	      } else {
+		  $found=3;
+		  return ($found,$done,$command,"$after$comment");
+	      };
+	  };
+	  s/^\s*$command_re//o && do {
+	      $found=4;
+	      return ($found,$done,$1,"$'$comment");
+	  };
+# Normal text
+	  return (5,$done,"","$_$comment");
+      };
+    };
+};      
+		
+	
+sub find_end_of_opt {
+    local ($_)=@_;
+    chomp;
+    if (!(s/^\s*\[// )) { return ('',"$&$_\n") };
+    my ($before)=$&;
+    my ($text)="";
+    my ($found)=0;
+    my ($comment)="";
+    while (!$found) {
+	if (s/(^|[^\\])(\\\\)*(%.*)//) { 
+	    $_.="$1$2";
+	    $comment=$3 };
+	if (s/(^|.*?[^\\])(\\\\)*([\[\]])//) {
+	    $text=$&;
+	    if ($3 =~ /\]/) { $before.=$text; $found=1; }
+	    else { 
+		$before.=$text;
+		$before =~ s/[\[\]]$//;
+		my ($block,$afterblock)=&find_end_of_opt("\{$_$comment\n");
+		$comment="";
+		print STDERR "subblock:\n$block\n";
+		$before .= $block;
+		$_=$afterblock;
+		next 
+		}
+	} else {
+	    $before.="$_$comment\n";
+	    $comment="";
+	    if (eof) { die "\nmakesegment: Reached eof before end of optional !\n" };
+	    $_=<$input>;
+	    chomp;
+	};
+    };
+    ($before,$_.$comment)
+}
+	
+sub process_verb {
+    local ($_)=@_;
+    my ($mark)=substr($_,0,1);
+    my ($verbtext,$rest)=($mark,"");
+    if ($mark =~ /[\\\]\[\{\}\^\|\(\)]/) { $mark="\\$mark"; };
+#    print STDERR "mark: $mark\n";
+    $_ =~ s/^[$mark]//;
+    if (!$mark) { die "\nmakesegments: No valid \\verb delimiter found!\n" };
+    my ($found)=0;
+    unless (s/^[^$mark]*[$mark]//) { 
+	s/^[^$mark]*$//; 
+	print STDERR "\\verb ended by end of line: $verbtext$&\n"; 
+    };
+    $verbtext.=$&;
+    $rest=$';
+#    while (!$found) {
+#	if (/[$mark]/) {
+#	    $found=1;
+#	    $verbtext.=$`$&;
+#	    $rest=$';
+#	    }
+#	else {
+#	    $verbtext.="$_\n";
+#	    $_=&get_next_line;
+#	    }
+#    };
+    ($verbtext,$rest);
+}
+	    
+sub process_verbatim {
+    local ($star,$_)=@_;
+    my ($verbtext,$rest)=("","");
+    my ($found)=0;
+    my ($num)=0;
+    if ($star) { $star="[$star]" };
+    while (!$found) {
+	if (/\\end\s*\{\s*verbatim$star\s*\}/) {
+	    $found=1;
+	    $verbtext.="$`$&";
+	    $rest="$'";
+	}
+	else {
+	    $verbtext.="$_\n";
+	    $_=&get_next_line;
+	}
+    };
+    ($verbtext,$rest);
+}
+
+sub push_output {
+    my ($name)=@_;
+    push @outhandle,(select);
+#    print STDERR "outhandle: ".join(',',@outhandle)."\n";
+    $output++;
+    unless (open ($output,">$name")) { die "Can't open file $name for output:\n$!\n" };
+#    print STDERR "opening $name, Handle=$output\n";
+    select $output;
+    $output;
+};
+    
+sub push_input {
+    my ($name)=@_;
+    $input++;
+    unless (open ($input,"<$name")) { die "Can't open file $name for input:\n$!\n" };
+    print STDERR "processing file $name ...\n";
+    unshift @inhandle,($input);
+    $input;
+};
+
+sub pop_input {
+    my ($current)= shift @inhandle;
+    $input=$inhandle[0];
+    close $current;
+    $input;
+};
+
+sub pop_output {
+    my ($new)=pop @outhandle;
+#    print STDERR "outhandle: ".join(',',@outhandle)."\n";
+    my ($current)=select;
+#    print STDERR "Closed $current, selected $new\n";
+    close $current;
+    select $new;
+};
+
+sub make_known_cmds {    
+    my $key;
+    %known_commands= (
+		      %segments,
+		      %nosegment_cmds,
+		      %label_cmds,
+		      %ref_cmds,
+		      %index_cmds,
+		      %misc_cmds);
+#    print STDERR "Known commands:\n";
+#    foreach $key (keys %known_commands) {
+#	print "$key => ",join(',',@{$known_commands{$key}})."\n";
+#    };
+#    print STDERR join(", ",(keys %known_commands))."\n";
+};
+
+sub dependencies {
+
+    foreach $key (keys %segment_names) {
+	if (defined @{$key."_labels"}) {
+	    map { $labelsegs{$_} = $key } @{$key."_labels"};
+	};
+    };
+    
+    foreach $key (keys %segment_names) {
+	$internal{$key}="\\internal\{\}\n" ;
+	if (defined @{$key."_refs"}) {
+	    map { $internal{$key}.="\\internal\{$labelsegs{$_}\}\n" 
+		      unless ($labelsegs{$_} =~/$key|$SEGSTART/) } 
+	    @{$key."_refs"};
+        };
+        foreach $k (@specialsegments) {
+	    $internal{$key}.="\\internal\{$k\}\n" ;
+        };
+    };
+
+    $internal{$outname}="";
+
+    delete $segment_names{$SEGSTART};
+
+    foreach $k (@specialsegments) {
+	$internal{$k}="\\internal\{\}\n";
+	foreach $key ((keys %segment_names),@specialsegments) {
+	    $internal{$k}.="\\internal\{$key\}\n";
+	};
+    };
+
+    foreach $key ((keys %segment_names),@specialsegments) {
+	$internal{$outname}.="\\internal\{$key\}\n";
+    };
+
+    if (defined $special_sections{"printindex"}) {
+	if ($SPECIALS && (defined $SPECIALNAMES{"printindex"})) {
+	    foreach $key ("",keys %segment_names) {
+		$internal{$SPECIALNAMES{"printindex"}}.=
+		    "\\internal\[index\]\{$key\}\n";
+	    };
+	    if (defined $special_sections{"bibliography"}&& 
+		(defined $SPECIALNAMES{"bibliography"})) {
+		foreach $key ("",keys %segment_names) {
+		    $internal{$SPECIALNAMES{"bibliography"}}.=
+			"\\internal\[index\]\{$key\}\n";
+		};
+	    };
+	    if (defined $special_sections{"thebibliography"}
+		&& (defined $SPECIALNAMES{"thebibliography"})) {
+		foreach $key ("",keys %segment_names) {
+		    $internal{$SPECIALNAMES{"thebibliography"}}.=
+			"\\internal\[index\]\{$key\}\n";
+		};
+	    };
+	} else {
+	    foreach $key (keys %segment_names) {
+		$internal{$outname}.="\\internal\[index\]\{$key\}\n";
+	    };
+	};
+    };
+
+    if (defined $special_sections{"tableofcontents"}) {
+	if ($SPECIALS&& (defined $SPECIALNAMES{"tableofcontents"}))  {
+	    foreach $key ("",(keys %segment_names), @specialsegments) {
+		$internal{$SPECIALNAMES{"tableofcontents"}}.=
+		    "\\internal\[contents\]\{$key\}\n".
+			"\\internal\[sections\]\{$key\}\n" ;
+	    };
+	} else {
+	    foreach $key (keys %segment_names) {
+		$internal{$outname}.="\\internal\[contents\]\{$key\}\n".
+		    "\\internal\[sections\]\{$key\}\n";
+	    };
+	};
+    };
+
+    if (defined $special_sections{"listoffigures"}) {
+	if ($SPECIALS && (defined $SPECIALNAMES{"listoffigures"})) {
+	    foreach $key ("",keys %segment_names) {
+		$internal{$SPECIALNAMES{"listoffigures"}}.=
+		    "\\internal\[figure\]\{$key\}\n";
+	    };
+	} else {
+	    foreach $key (keys %segment_names) {
+		$internal{$outname}.="\\internal\[figure\]\{$key\}\n";
+	    };
+	};
+    };
+
+    if (defined $special_sections{"listoftables"}) {
+	if ($SPECIALS && (defined $SPECIALNAMES{"listoffigures"})) {
+	    foreach $key ("",keys %segment_names) {
+		$internal{$SPECIALNAMES{"listoftables"}}.=
+		    "\\internal\[table\]\{$key\}\n";
+	    };
+	} else {
+	    foreach $key (keys %segment_names) {
+		$internal{$outname}.="\\internal\[table\]\{$key\}\n";
+	    };
+	};
+    };
+    
+};
+
+sub write_segments {
+
+    my $seghead;
+    ($seghead=$head) =~ s/$begin_htmlonly_mark//g;
+    $seghead =~ s/$end_htmlonly_mark//g;
+    $head =~ s/$begin_htmlonly_mark/\\begin{htmlonly}/g;
+    $head =~ s/$end_htmlonly_mark/\\end{htmlonly}/g;
+    foreach $key (keys %segment_names) {
+	unless (open (TMPFILE,"$DIR/$key.tmp")) { 
+	    die "can't open $DIR/$key.tmp for input!\n" };
+	unless (open (CREATE,">$DIR/$key".".tex")) { 
+	    die "can't open $DIR/$key.tex for output!\n" };
+	print CREATE join("\n",
+			  "\\begin\{htmlonly\}",
+			  $seghead,
+			  "\\input\{".$key.".ptr\}",
+			  "\\end\{htmlonly\}",
+			  $internal{$key},
+			  "\\startdocument");
+	while (<TMPFILE>) {
+	    print CREATE $_;
+	};
+	close TMPFILE;
+	close CREATE;
+    };
+    
+    foreach $name (@specialsegments) {
+#	print "Making $DIR/$name.tex , $internal{$name}\n";
+	unless (open (TMPFILE,"$DIR/$name.tmp")) { 
+	    die "can't open $DIR/$name.tmp for input!\n" };
+	unless (open (CREATE,">$DIR/$name.tex")) { 
+	    die "can't open $DIR/$name.tex for output!\n" };
+	print CREATE join("\n",
+			  "\\begin\{htmlonly\}",
+			  $seghead,
+#			  "\\input\{".$name.".ptr\}",
+			  "\\end\{htmlonly\}",
+			  $internal{$name},
+			  "\\startdocument");
+	while (<TMPFILE>) {
+	    print CREATE $_;
+	};
+	close TMPFILE;
+	close CREATE;
+    }
+    
+    unless (open (TMPFILE,"$DIR/$outname.tmp")) { 
+	die "can't open $DIR/$outname.tmp for input!\n" };
+    unless (open (CREATE,">$DIR/$OUTFILE")) { 
+	die "can't open $DIR/$OUTFILE for output!\n" };
+
+    print CREATE join("\n",
+		      $head,
+		      $internal{$outname});
+    while (<TMPFILE>) {
+	print CREATE $_;
+    };
+    
+    close TMPFILE;
+    close CREATE;
+
+    if (!$DONTCOPY) {
+	foreach $file (@bibfiles) {
+	    if ($USELINKS) {
+		if ($file && (-f $file)) { 
+		    `rm -f $DIR/$file; ln -s $PWD$file $DIR/$file`; 
+		    print STDERR "Linking $file to $DIR/$file\n"} ;
+		$file="";
+	    } else {
+		if ($file && (-f $file)) { 
+		    `cp $file $DIR`; print STDERR "Copying $file to $DIR\n"} 
+		else { $file="" };
+	    };
+	};
+
+	foreach $file (@files_to_copy) {
+	    if ($USELINKS) {
+		if ($file && (-f $file)) { 
+		    `rm -f $DIR/$file; ln -s $PWD$file $DIR/$file`; 
+		    print STDERR "Linking $file to $DIR/$file\n"} ;
+	    } else {
+		if ($file && (-f $file)) { 
+		    `cp $file $DIR`; print STDERR "Copying $file to $DIR\n";
+		};
+	    };
+	};
+    };
+
+    unless ((unlink map { "$DIR/$_.tmp" } 
+	     ($outname,(keys %segment_names),(@specialsegments)))
+	    and (!@temporary_files or unlink @temporary_files)) {
+	print "\nmakesegments: Warning: couldn't delete temporary files!\n" };
+    
+};
+
+sub make_makefile {
+
+# Check segment hierarchy
+
+    $indexspecial=($SPECIALS && (defined $special_sections{"printindex"}) 
+		   && (defined $SPECIALNAMES{"printindex"}));
+    $contentspecial=($SPECIALS && (defined $special_sections{"tableofcontents"})
+		     && (defined $SPECIALNAMES{"tableofcontents"}));
+
+    foreach $key (sort (keys %levels)) {
+	@{$key."_segs"}=grep { $segment_names{$_} =~ /^$key$/ } (keys %segment_names);
+    };
+
+    foreach $key (keys %segment_names) {
+	$k=$key;
+	@higher= grep { ($levels{$segment_names{$_}} < $levels{$segment_names{$key}} )
+			    && ($_ lt $key) } (keys %segment_names);
+	$up=($#higher > -1 ? $higher[$#higher]: $outname);
+	@higher= grep { ($levels{$segment_names{$_}} <= $levels{$segment_names{$key}} )
+			    && ($_ lt $key) } (keys %segment_names);
+	$prev=($#higher > -1 ? $higher[$#higher]: $up);
+	@next= grep { ($levels{$segment_names{$_}} <= $levels{$segment_names{$key}} )
+			  && ($_ gt $key) } (keys %segment_names);
+	if ($#next > -1) { $down= $next[0] }
+	elsif (defined $segment_names{++$k}) { $down=$k }
+	elsif (defined @specialsegments) { 
+	    $down=$specialsegments[0];
+	    $lastsegment=$key;
+	} else { $down=$outname ; $lastsegment=$key};
+	($kupc=$key) =~ tr/a-z/A-Z/;
+	($uupc=$up)=~ tr/a-z/A-Z/;
+	($dupc=$down)=~ tr/a-z/A-Z/;
+	($pupc=$prev)=~ tr /a-z/A-Z/;
+	$make{$key}=join("\\\n\t\t",
+			 "\$(L2H)",
+			 "\$(MAKE_COMMON) \$(CONTENTS) \$(INDEX)",
+			 "\$(MAKE_CHILDREN)",
+			 "-prefix $key -t \$($kupc"."TITLE)",
+			 "-up_url $up.html -up_title \$($uupc"."TITLE)",
+			 "-prev_url $prev.html -prev_title \$($pupc"."TITLE)",
+			 "-down_url $down.html -down_title \$($dupc"."TITLE)",
+			 "$key.tex");
+    };
+
+    for ($i=0;$i <= $#specialsegments;$i++) {
+	$key=$specialsegments[$i];
+	$up=$outname;
+	if ($i==0) { $prev=$lastsegment } else { $prev=$specialsegments[i-1] };
+	if ($i==$#specialsegments) 
+	{ $down=$specialsegments[0] } else { $down=$specialsegments[$i+1] };
+	($kupc=$key) =~ tr/a-z/A-Z/;
+	($uupc=$up)=~ tr/a-z/A-Z/;
+	($dupc=$down)=~ tr/a-z/A-Z/;
+	($pupc=$prev)=~ tr/a-z/A-Z/;
+	$make{$key}=join("\\\n\t\t",
+			 "\$(L2H)",
+			 "\$(MAKE_COMMON) \$(CONTENTS) \$(INDEX)",
+			 "\$(MAKE_CHILDREN)",
+			 "-prefix $key -split 0 -link 0",
+			 "-t \$($kupc"."TITLE)",
+			 "-up_url $up.html -up_title \$($uupc"."TITLE)",
+			 "-prev_url $prev.html -prev_title \$($pupc"."TITLE)",
+			 "-down_url $down.html -down_title \$($dupc"."TITLE)",
+			 "$key.tex");
+    };
+
+    ($down=$SEGSTART)++;
+    ($dupc=$down)=~ tr/a-z/A-Z/;
+    ($kout=$outname) =~ tr/a-z/A-Z/;
+    ($pupc=$lastsegment) =~ tr/a-z/A-Z/;
+    $make{$outname}=join("\\\n\t\t",
+			 "\$(L2H)",
+			 "\$(MAKE_COMMON) \$(CONTENTS) \$(INDEX)",
+			 "\$(MAKE_TOP) -t \$($kout"."TITLE)",
+			 "-prev_url $lastsegment.html -prev_title \$($pupc"."TITLE)",
+			 "-down_url $down.html -down_title \$($dupc"."TITLE)",
+			 "$outname.tex");
+    
+    print STDERR "Generating Makefile (edit for your own needs afterwards ...)\n";
+    
+    unless (open (MAKE,">$DIR/Makefile")) { die "Can't create Makefile in $DIR!\n$!\n" };
+    
+    print MAKE join("\n",
+		    "#",
+		    "# Makefile for segmented L2H document $OUTFILE",
+		    "# Generated by makesegments",
+		    "#",
+		    "# COMMANDS:",
+		    "#",
+		    "LATEX\t\t= $LATEX",
+		    "DVIPS\t\t= $DVIPS",
+		    "BIBTEX\t\t= $BIBTEX",
+		    "MAKEINDEX\t\t= $MAKEINDEX",
+		    "L2H\t\t= $L2H",
+		    "MAKE\t\t= $MAKE",
+		    "TOUCH\t\t= $TOUCH",
+		    "#",
+		    "# HTML TITLES: ",
+		    "#",
+		    "# Edit the XYTITLE variables to change HTML titles",
+		    "#",
+		    "");
+    
+    print MAKE "$kout"."TITLE\t\t= \"".($maintitle ? $maintitle : "Main document")."\"\n";
+    foreach $key (keys %segment_names) {
+	($kupc=$key) =~ tr/a-z/A-Z/;
+	print MAKE "$kupc"."TITLE\t\t= \"$segment_titles{$key}\"\n";
+    };
+    foreach $key (keys %special_sections) {
+	($kupc=$SPECIALNAMES{$key}) =~ tr/a-z/A-Z/;
+	print MAKE "$kupc"."TITLE\t\t= \"$SPECIALTITLES{$key}\"\n" if $kupc;
+    };
+    
+    print MAKE join("\n",
+		    "#",
+		    "# FURTHER DEFINITIONS:",
+		    "#",
+		    "TEXFILES\t\t= ".join(' ',(map {$_.".tex"} 
+					       (keys %segment_names, @specialsegments))),
+		    "SEGMENTS\t\t= ".join(' ',(map {"$outname/$_".".html"} 
+					       (keys %segment_names, @specialsegments))),
+		    "INT\t\t= internals.pl\n",
+		    "");
+    
+    print MAKE join("\n",
+		    "#",
+		    "# Latex2HTML command lines for each segment:",
+		    "#",
+		    "# Set INDEX to \"-index XXXX.html\" and ",
+		    "#     CONTENTS to \"-contents YYYY.html\" for",
+		    "# correct links to contents and index page - ",
+		    "# Or set \$SPECIALS=1 in your Makesegments config file",
+		    "#",
+		    "MAKE_COMMON\t\t= -dir $outname $MAKE_COMMON",
+		    "MAKE_TOP\t\t= $MAKE_TOP",
+		    "MAKE_CHILDREN\t\t= -external_file $outname $MAKE_CHILDREN",
+		    "CONTENTS\t\t=".
+		    ($contentspecial ? " -contents ". 
+		     $SPECIALNAMES{"tableofcontents"}.".html":""),
+		    "INDEX\t\t=".
+		    ($indexspecial ? " -index ".$SPECIALNAMES{"printindex"}.".html":""),
+		    "",
+		    "L2H$kout\t\t=$make{$outname}",
+		    "");
+    
+    foreach $key (keys %segment_names) {
+	($kupc=$key) =~ tr/a-z/A-Z/;
+	print MAKE "L2H$kupc\t\t= $make{$key}\n";
+    };
+
+    foreach $key (@specialsegments) {
+	($kupc=$key) =~ tr/a-z/A-Z/;
+	print MAKE "L2H$kupc\t\t= $make{$key}\n";
+    };    
+
+    print MAKE join ("\n",
+		     "html:\t$outname/$outname.html \$(SEGMENTS)",
+		     "",
+		     "all:\t$outname.ps html",
+		     "",
+		     "$outname.ps:\t$outname.dvi",
+		     "\t\$(DVIPS) -o \$\@ $outname",
+		     "",
+		     "$outname.dvi:\t$outname.aux",
+		     "\t\$(LATEX) $outname",
+		     "",
+		     "$outname.aux:\t$outname.stamp ".
+		     (defined $special_sections{"bibliography"} ? "$outname.bbl " : "").
+		     (defined $special_sections{"printindex"}   ? "$outname.ind " : ""),
+		     "\t\$(LATEX) $outname",
+		     "",
+		     "$outname.stamp:\t$outname.tex \$(TEXFILES)",
+		     "\t\$(LATEX) $outname",
+		     "\t\$(TOUCH) \$\@",
+		     "",
+		     (defined $special_sections{"bibliography"} ? 
+		      "$outname.bbl:\t$outname.stamp ".
+		      join(' ', (map { (m:.*/: ? $& : $_) } @bibfiles)).
+		      "\n\t\$(BIBTEX) $outname\n" : ""),
+		     "",
+		     (defined $special_sections{"printindex"} ? 
+		      "$outname.ind:\t$outname.stamp $outname.idx".
+		      "\n\t\$(MAKEINDEX) $outname.idx\n\n".
+		      "$outname.idx:\t$outname.stamp" : ""),
+		     "",
+		     "$outname/$outname.html:\t".
+		     join(" ",
+			  (map { ($internal{$outname} =~ /\{$_\}/ ? "$outname/$_".".stamp" : "") } 
+			   ((keys %segment_names),@specialsegments))),
+		     "\t\$(L2H$kout)",
+		     "",
+		     "$outname/$outname.stamp:\t$outname.aux",
+		     "\t\$(L2H$kout)",
+		     "\t\$(TOUCH) \$\@",
+		     "","");
+    
+    foreach $key (@specialsegments) {
+	($kupc=$key) =~ tr/a-z/A-Z/;
+	print MAKE join ("\n",
+			 "$outname/$key.html:\t".
+			 join(" ",
+			      (map { ($internal{$key} =~ /\{$_\}/ ? "$outname/$_".".stamp" : "") } 
+			       ((keys %segment_names),@specialsegments))),
+			 "\t\$(L2H$kupc)",
+			 "",
+			 "$outname/$key.stamp:\t$outname.aux",
+			 "\t\$(L2H$kupc)",
+			 "\t\$(TOUCH) \$\@",
+			 "","");
+    };
+    
+    foreach $key (keys %segment_names) {
+	($kupc=$key) =~ tr/a-z/A-Z/;
+	print MAKE join ("\n",
+			 "$outname/$key.html:\t".
+			 join(" ",
+			      (map { ($internal{$key} =~ /\{$_\}/ ? "$outname/$_".".stamp" : "") } 
+			       ((keys %segment_names),@specialsegments))),
+			 "\t\$(L2H$kupc)",
+			 "",
+			 "$outname/$key.stamp:\t$outname.aux",
+			 "\t\$(L2H$kupc)",
+			 "\t\$(TOUCH) \$\@",
+			 "","");
+    };
+    
+    print MAKE join ("\n",
+		     "clean:\t",
+		     "\trm -rf $outname \\",
+		     "\t".
+		     join(' ',
+			  map { $outname.$_ } 
+			  (".ps",".dvi",".aux",".toc",".lof",".lot",".bbl",".idx",".ind",".stamp")
+			  )." \\",
+		     "\t".join(' ',
+			       map { $_.".ptr" } (keys %segment_names))."\\",
+		     "\t".join(' ',
+			       map { $_.".stamp" } (keys %segment_names)),
+		     "");
+    
+    close MAKE;
+};
+
+sub find_texinput {
+# parameters: filename, array reference for input dirs, 
+# array reference for possible extensions
+    my ($file,$inputs,$extensions) = @_;
+#    print STDERR "Looking for $file in ".
+#	join (" and ",@$inputs).", extensions: ".join (" and ",@$extensions)."\n";
+    my $basedir,$dir,$found,$dirtext,$match,$ex;
+    $ext="";
+    $found="";
+    ($file =~ s/([.]\w+)$//) && do { $ext=$1 };
+# Absolute pathname ?
+    my $abs= ($file =~ m:^/|^~:);
+# filename is absolute 
+    if ($abs) { 
+	if ($ext) { 
+	    (-f "$file$ext") && ($found="$file$ext") ;
+	} else {
+	    foreach $ex (@$extensions) {
+		$found || ((-f "$file$ex") && ($found="$file$ex"));
+	    };
+	};
+    } else {
+	foreach $basedir (@$inputs) {
+	    $found =&search_tree ($basedir,$file,($ext ? $ext : @$extensions));
+	    last if $found;
+	};
+    };
+    !$found && print STDERR "WARNING: Input file $file not found!\n";
+    $ext && ($ext =~ /^.sty$|^.clo$|^.cls/) && do {
+	print STDERR "WARNING: Attempt to input style file $file$ext with \\input or \\include!\n";
+	$found="";
+    };
+    return $found;
+};
+
+sub find_texstyle {
+    my ($file) = @_;
+    my $basedir,$dir,$found,$dirtext;
+    $ext="";
+    $found="";
+    ($file =~ s/([.]\w+)$//) && do { $ext=$1 };
+# Absolute pathname ?
+    my $abs= ($file =~ m:^/|^~:);
+# filename is absolute 
+    if ($abs) { 
+	((-f $file) && ($found=$file)) || ((-f "$file.tex") && ($found="$file.tex"));
+    } else {
+# strip directories
+	$file =~ s:.*/::;
+	(print STDERR "WARNING: Invalid input/inlude filename: $&\n", return "") unless $file;
+	foreach $basedir (@texinputs) {
+	    $found =&search_tree ($basedir,$file,($ext ? $ext : ("",".tex")));
+	    last if $found;
+	};
+    };
+    !$found && print STDERR "WARNING: Input file $file not found!\n";
+    return $found;
+};
+
+sub search_tree {
+    local($_,$file,@exts)=@_;
+    my ($found,$dir);
+    my @subdirs,$filelist;
+    my @files;
+#    print STDERR "Looking for $file in $_, extensions: ".join(", ",@exts)." ...\n";
+    if (m://:) {
+# dirname contains double slash
+	my $base=$`;
+	my $sub=$';
+	if ($sub && $sub =~ s:/.*::) {
+	    my $rest=$&;
+	    @subdirs=split("\n",
+			   `find $base -follow -name $sub -type d -print`);
+	    foreach $dir (@subdirs) {
+		if ($found=&search_tree("$dir$rest",$file,@exts)) { return $found };
+	    };
+	} else {
+	    $filelist=join(" -o ",map { "-name $file$_" } @exts);
+	    @files=split("\n",
+			 `find $base -follow -type f \\( $filelist \\) -print`);
+	    if ($#files > 0) {
+		print STDERR "WARNING: multiple files matching $file found in $base!\n";
+		return $files[0];
+	    } elsif ($#files == 0) { return $files[0] };
+	};
+    } else {
+	my $base=$_;
+	$base.="/" unless ($base=~m:/$:);
+	@files=grep { -f "$base$file$_" } @exts;
+	if ($#files > 0) {
+	    print STDERR "WARNING: multiple files matching $file found in $base!\n";
+	    return "$file$files[0]";
+	} elsif ($#files == 0) { return "$file$files[0]" };
+    };
+    return "";
+};
+    
+sub init { 
+    local @_=@ARGV;
+# openers for *o*ptional and *m*andatory arguments
+    ($o,$m)=("\\[","\\{");
+    $usage_string=join("\n",
+		       "Makesegments - create segmented documents for LaTeX2HTML.","",
+		       "Usage:",
+		       "   makesegments [options] LaTeX-file\[.tex\]","",
+		       "Options:",
+		       "  -level level: specify level of sectioning commands down to which",
+		       "                segmentation is carried out (default section)",
+		       "                (short: -l level)",
+		       "  -dir dir: specify target directory (default ./segmented)",
+		       "            (short: -d dir)",
+		       "  -output outputfile: specify the name of the master file for output",
+		       "                      (short: -o outputfile)",
+		       "  -config config-file: specify name of makesegments\'s configuration file",
+		       "                       (default ./.makesegments.cnf, \$HOME/.makesegments.cnf)",
+		       "                       (short: -c config-file)",
+		       "  -zero string: basename of zeroeth segment (default a0)",
+		       "                if you specify \"-zero SEG000\", segment names will be",
+		       "                \"SEG001.tex\", \"SEG002.tex\",...",
+		       "                (short: -z string)",
+		       "  -no_makefile: Don\'t generate the Makefile (short: -n)",
+		       "  -check_latex_styles: Check if requested LaTeX packages are accessible",
+		       "                       (requires proper setting of TEXINPUTS)",
+		       "                       (short: -s)",
+		       "  -ignore_inputs: Don\'t replace \\input and \\include statements by the",
+		       "                  contents of input files (short: -i)",
+		       "  -use_links: Use soft links for input files in the target directory",
+		       "              instead of copying them (short: -u)",
+		       "  -dont_copy: Don\'t copy or link input files from current in the target",
+		       "              directory (short: -y)",
+		       "  -specialsegments: Create special \"segments\" for Table of contents,",
+		       "                    index, bibliography etc. (short: -e)",
+		       "  -help: Print this message (short: -h or -?)","",
+		       "See the documentation in makesegments.tex for further details.");
+
+# Parse options
+    while ($_=shift) {
+      OPTIONS: {
+	  /^-l$|^-level$/ && do { $O_LEVEL=shift; last OPTIONS };
+	  /^-d$|^-dir$/ && do { $O_DIR=shift; last OPTIONS };
+	  /^-o$|^-output$/ && do { $O_OUTFILE=shift; last OPTIONS };
+	  /^-c$|^-config$/ && do { $CNF_FILE=shift; last OPTIONS };
+	  /^-z$|^-zero$/ && do { $O_SEGSTART=shift; last OPTIONS };
+	  /^-h$|^-?$|^-help$/ && do { print STDERR $usage_string; exit 0 };
+	  /^-s$|^-check_latex_styles$/ && do { $O_CHECK_LATEX_STYLES=1; last OPTIONS };
+	  /^-n$|^-no_makefile$/ && do { $O_NOMAKE=1; last OPTIONS };
+	  /^-i$|^-ignore_inputs$/ && do { $O_IGNOREINPUTS=1; last OPTIONS };
+	  /^-e$|^-specialsegments$/ && do { $O_SPECIALS=1; last OPTIONS };
+	  /^-u$|^-use_links$/ && do { $O_USELINKS=1; last OPTIONS };
+	  /^-y$|^-dont_copy$/&& do { $O_DONTCOPY=1; last OPTIONS };
+	  /^-/ && die "$usage_string\nmakesegments: unknown option $_!\n";
+	  $FILE=$_;
+	  };
+    };
+    
+# $CNF_FILE overrides ./.makesegments.cnf which overrides $HOME/.makesegments.cnf
+    if (-f ($cnf=$ENV{'HOME'}."/.makesegments.cnf")) {
+	unless (require $cnf) { print "WARNING: couldn't execute $cnf!\n" };
+    };
+    
+    if (-f ($cnf="./.makesegments.cnf")) {
+	unless (require $cnf) { print "WARNING: couldn't execute $cnf!\n" }; 
+    };
+	    
+    if (defined $CNF_FILE) {
+	unless (require $CNF_FILE) { 
+	    die "makesegments:\nCan't open configuration file $CNF_FILE!\n" };
+    };
+};
+

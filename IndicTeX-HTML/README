@@ -1,0 +1,67 @@
+		--- IndicTeX/HTML ---
+
+This is a suite of LaTeX-2e styles, with corresponding .perl
+implementations for use with LaTeX2HTML, for interfacing to
+existing packages and pre-processors for including traditional
+Indic scripts within LaTeX documents and HTML pages.
+
+These packages are supported by LaTeX2HTML v98.1 and later.
+Translation can be performed on the manuscript either before
+or after pre-processing.
+
+( `before' is preferable, since it automates the pre-processing
+ and may result in smaller HTML files+images. )
+
+
+Languages covered include:
+
+Language	support			pre-processors
+_____________________________________________________________________
+Bengali		bengali.sty/perl  	Indica  
+Devanagri	devnagri.sty/perl 	devnag  or  patc+devnag
+Gujarathi	gujrathi.sty/perl  	Indica  
+Gurmukhi	gurmukhi.sty/perl    	Indica    
+Hindi		hindi.sty/perl  	Indica
+Kannada		kannada.sty/perl   	Indica    
+Malyalam	malyalam.sty/perl  	Indica  or  mm
+Oriya		oriya.sty/perl  	Indica
+Sanskrit	sanskrit.sty/perl    	Indica  
+Sinhala		sinhlese.sty/perl  	Indica
+Tamil		tamil.sty/perl  	Indica  or  patc  or  tamilize
+Telugu		telugu.sty/perl  	Indica
+Tibetan		tibetan.sty/perl  	Indica
+
+various		indica.sty/perl		Indica
+_____________________________________________________________________
+
+Several different transcription/transliteration schemes are supported;
+see the individual .sty or .perl files for documentation.
+
+The .perl files should be copied into the $LATEX2HTMLSTYLES directory
+to become available for use with LaTeX2HTML.
+Similarly, the .sty files should be copied into an appropriate place
+within the texmf/ tree (or texinputs on older installations) so as to
+be available for use with LaTeX. (Don't forget to rebuild the  ls-R
+file for the  kpathsea  database, using  texhash  or  mktexlsr .)
+
+
+Preprocessors:
+_____________________________________________________________________
+Indica		with Sinhala-TeX  by Yannis Haralambous
+devnag		by Frans Velthuis
+patc , mm	by Jeroen Hellingman
+tamilize	Washington State Uni.
+_____________________________________________________________________
+These pre-processors and their accompanying macros are *not*
+included as part of IndicTeX/HTML.
+They must be obtained separately; e.g. from CTAN archives.
+
+Support for other packages (e.g. Telugu-TeX) is planned.
+
+
+
+I hope these will be useful.
+
+	Ross Moore  <ross@mpce.mq.edu.au>
+
+

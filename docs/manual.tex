@@ -1,0 +1,599 @@
+%\scrollmode
+%\documentclass[dvips,a4paper,twoside]{article}
+\documentclass[dvips,a4paper]{article}
+\usepackage[dvips]{graphicx,color}
+% \usepackage{times}
+
+\usepackage{html,htmllist,makeidx,enumerate}
+%\usepackage{frames}
+
+%
+% use the url.sty package, by  Donald Arseneau <asnd@triumf.ca>
+% to typeset email-addresses, URLs and directory paths in LaTeX ...
+%
+%begin{latexonly}
+ \usepackage[dvips,rightbars]{changebar}
+ \usepackage{l2hman}
+ \usepackage{url}
+ \usepackage{longtable}
+ \def\email{\begingroup \urlstyle{tt}\Url}
+ \def\Email#1{\email{#1}}
+% \urldef\onlinedoc\url{http://www-dsed.llnl.gov/files/programs/unix/latex2html/manual/}
+ \urldef\onlinedoc\url{http://www-texdev.ics.mq.edu.au/l2h/docs/manual/}
+ \urldef\onlinedocRM\url{http://www-texdev.ics.mq.edu.au/l2h/docs/manual/}
+ \urldef\EXcolors\url{http://www-texdev.ics.mq.edu.au/l2h/crayola/}
+% \urldef\CVSrepos\url{http://cdc-server.cdc.informatik.tu-darmstadt.de/~latex2html/user/}
+% \urldef\CVSsite\url{http://cdc-server.cdc.informatik.tu-darmstadt.de/~latex2html/}
+% \urldef\CVSlatest\url{http://cdc-server.cdc.informatik.tu-darmstadt.de/~latex2html/l2h-latest.tar.gz}
+ \urldef\CVSrepos\url{http://www.latex2html.org/user/}
+% \urldef\CVSsite\url{http://www.latex2html.org/}
+ \urldef\CVSsite\url{http://saftsack.fs.uni-bayreuth.de/~latex2ht/}
+% \urldef\CVSlatest\url{http://saftsack.fs.uni-bayreuth.de/~latex2ht/l2h-latest.tar.gz}
+ \urldef\CVSlatest\url{http://www.latex2html.org/current/}
+% \urldef\patches\url{http://www-dsed.llnl.gov/files/programs/unix/latex2html/}
+ \urldef\patches\url{http://www.latex2html.org/current/}
+% \urldef\sourceA\url{http://www-dsed.llnl.gov/files/programs/unix/latex2html/sources/}
+ \urldef\sourceA\url{http://www.latex2html.org/current/}
+% \urldef\sourceB\url{ftp://ftp.mpn.com/pub/nikos/latex2html-98.1.tar.gz}
+ \def\sourceB{\CTANtug\CTANA}
+ \urldef\sourceC\url{http://ftp.rzg.mpg.de/pub/software/latex2html/sources/}
+ \urldef\CTANtug\url{http://ctan.tug.org/ctan/}
+ \urldef\CTANA\path{tex-archive/support/latex2html}
+ \urldef\tugURL\url{http://www.tug.org/}
+ \urldef\danteURL\url{http://www.dante.de/}
+% \urldef\ListURL\url{http://www.xray.mpe.mpg.de/mailing-lists/latex2html/}
+ \urldef\ListURL\url{http://www.tug.org/mailman/listinfo/latex2html/}
+
+%
+%  a little hack, needed since a footnote occurs in a figure-caption
+%
+\def\adjustfootnote{\setcounter{footnote}{6}\footnotetext{\url{http://csep1.phy.ornl.gov/csep.html}}}
+
+%
+% These are needed for the Glossary and Index. 
+%
+\newenvironment{theglossary}{\begin{list}{}{\setlength{\labelwidth}{20pt}%
+ \setlength{\leftmargin}{\labelwidth}\setlength\itemindent{-\labelwidth}%
+ \setlength\itemsep{0pt}\setlength\parsep{0pt}\rmfamily}}{\end{list}}
+\def\dotfill{\leaders\hbox to.6em{\hss .\hss}\hskip 0pt plus  1fill}%
+\def\dotfil{\leaders\hbox to.6em{\hss .\hss}\hfil}%
+\def\pfill{\unskip~\dotfill\penalty500\strut\nobreak\dotfil~\ignorespaces}%
+
+\newcommand\Glossary[2]{\glossary{#1@#2}}
+\newcommand{\gsl}{\textsl}
+\newcommand{\indexentry}[2]{\item #1 #2}
+
+%\newcommand{\latextohtml}{\textup{\LaTeX 2\texttt{HTML}}}%
+
+\DeclareRobustCommand\FoilTeX{{\normalfont{\sffamily Foil}\kern-.03em{\rmfamily\TeX}}}
+%
+% These macros are built-in to LaTeX2HTML:
+%
+\newcommand{\Xy}{\leavevmode
+ \hbox{\kern-.1em X\kern-.3em\lower.4ex\hbox{Y\kern-.15em}}}
+\newcommand{\AmSTeX}{\protect\AmS-\protect\TeX{}}
+\newcommand{\AmS}{{\protect\AmSfont A\kern-.1667em\lower.5ex\hbox{M}\kern-.125emS}}
+\gdef\AmSfont{\usefont{OMS}{cmsy}{m}{n}}
+
+\newcommand{\sameas}[1]{\ (Same as setting: #1)}
+\setcounter{footnote}{0}
+%end{latexonly}
+
+\begin{imagesonly}
+ \usepackage{l2hman}
+\end{imagesonly}
+%
+\begin{htmlonly}
+ \def\makeglossary{}
+ \pagecolor[named]{White}
+\end{htmlonly}
+
+\input manhtml.tex
+
+
+% use %sort -f -u manual.idx > manual.index for a primitive index
+%
+%  NOTE:  You must use LaTeX2e in order to process this document
+%       If you do not have LaTeX2e, a PostScript version
+%       (manual.ps) is included with this distribution.
+%
+%%%%%%%%%%%%%%%%%%% No changes beyond this point %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeindex
+\makeglossary
+\sloppy
+%
+\setlength{\textwidth}{5.5in}
+%\addtolength{\oddsidemargin}{-1in}
+%\addtolength{\evensidemargin}{-1in}
+\setlength{\changebarwidth}{1pt}
+
+%
+% read own internals for sections/contents before any
+% from the segments.
+%
+%\internal[sections]{}
+%\internal[contents]{}
+
+\internal[figure]{O}
+\internal[figure]{S}
+\internal[figure]{M}
+\internal[figure]{H}
+\internal[figure]{E}%{F}
+
+\internal[table]{O}
+\internal[table]{S}
+\internal[table]{M}
+\internal[table]{H}
+\internal[table]{E}%{F}
+
+\internal[sections]{O}
+\internal[sections]{S}
+\internal[sections]{M}
+\internal[sections]{H}
+\internal[sections]{E}%{F}
+\internal[sections]{P}
+%\internal[sections]{C}
+
+\internal[contents]{O}
+\internal[contents]{S}
+\internal[contents]{M}
+\internal[contents]{H}
+\internal[contents]{E}%{F}
+\internal[contents]{P}
+%\internal[contents]{C}
+
+
+\internal[internals]{O}
+\internal[internals]{S}
+\internal[internals]{M}
+\internal[internals]{H}
+\internal[internals]{E}%{F}
+\internal[internals]{P}
+%\internal[internals]{C}
+
+%\internal[index]{O}
+%\internal[index]{S}
+%\internal[index]{M}
+%\internal[index]{H}
+%\internal[index]{E}%{F}
+%\internal[index]{P}
+%%\internal[index]{C}
+
+
+\begin{document}
+\sloppy
+%
+%  TITLE-PAGE 
+%
+\Glossary{latex2html}{\LaTeX2HTML}{}
+\title{The \LaTeX2HTML{} Translator}
+\author{Nikos Drakos\\Computer Based Learning\\Unit University of Leeds}
+\date{\today}
+\index{Computer~Based~Learning~Unit!University of Leeds}%
+\maketitle 
+
+\htmlrule
+%
+\begin{center}{
+Documentation revised and updated for \textsc{v97.1} and \texttt{HTML}~3.2;\\
+and further revisions for \textsc{v98.1} and later, and for \texttt{HTML}~4.0 by:}
+\end{center}
+\medskip
+\begin{center}
+%begin{latexonly}
+\begin{large}
+%end{latexonly}
+\RossMoore\\
+Mathematics Department\\
+\Macquarie, Sydney.
+%begin{latexonly}
+\end{large}
+%end{latexonly}
+\end{center}
+\bigskip
+\htmlrule
+
+%
+%  for printed version only
+%
+\begin{latexonly}
+\begin{center}
+{\large 
+This document accompanies \latextohtml{} version 99.1 (beta)%
+\footnote{\bfseries This is a preliminary document for \latextohtml{} 99.1.}}.
+
+\paragraph{}
+This manual differs from earlier versions by updates to the section
+\htmlref{``Installation and Further Support''}{sec:sup},
+a few small changes in other sections,
+and a shortening of \htmlref{``Known Problems''}{sec:prb} 
+by removing references to old problems that no longer occur.
+Not all of the newer features of \latextohtml{} \textsc{v99.1} are described yet. 
+A fully updated manual is underway and will be released when completed.
+
+\paragraph{History}
+\NikosDrakos' original manuscript was updated for version \textsc{v96.1}\,%,
+by \HerbSwan\ and converted for \LaTeXe{} by \Goossens.
+Extensive revisions were made by \RossMoore\ for \textsc{v96.1} \texttt{rev-f}, 
+incorporating also suggestions from \Goossens.
+Another major revision was required to adequately describe the new features 
+made possible with \texttt{HTML} 3.2\,,
+and recent developments in image-generation and macro-handling.
+This work was done by \RossMoore, 
+as were most of the revisions for \textsc{v98.1}, \textsc{v98.2}
+and \textsc{v99.1}.
+
+Portability for non-Unix systems has been achieved due to work done mainly by
+\Rouchal, \Wortmann, \Popineau{} and \Taupin.
+
+Changes for the \textsc{v98.1} revision are indicated with narrow change-bars.
+Wider change-bars indicate where the most recent changes and features 
+added in \textsc{v99.1} are described.
+\Glossary{latex2e}{\LaTeXe}%
+\end{center}
+\end{latexonly}
+
+%
+%  for HTML version only
+%
+\begin{htmlonly}
+
+This document accompanies \latextohtml{}\Glossary{latex2html}{\LaTeX2HTML}{},
+version 99.1(beta).
+\Glossary{latex2e}{\LaTeXe}{}
+
+This manual differs from earlier versions by updates to the section
+\htmlref{``Installation and Further Support''}{sec:sup},
+a few small changes in other sections,
+and a shortening of \htmlref{``Known Problems''}{sec:prb} 
+by removing references to old problems that no longer occur.
+Not all of the newer features of \latextohtml{} \textsc{v99.1} are described yet. 
+A fully updated manual is underway and will be released when completed.
+
+\textbf{History: }
+The manuscript was updated for version 96.1 by \HerbSwan{} 
+and converted for \LaTeXe{} by \Goossens.
+
+Updates and extensive revisions to the manuscript for version \textsc{v96.1}
+\texttt{rev-f}, were made by \RossMoore,
+also incorporating suggestions from \Goossens. 
+
+\bigskip
+Another major revision was required to adequately describe the new features 
+made possible with \texttt{HTML} 3.2\,,
+and developments in image-generation and macro-handling.
+This work was done by \RossMoore, 
+as were most of the revisions for \textsc{v98.1}, \textsc{v98.2} and \textsc{v99.1}.
+Portability for non-Unix systems has been achieved due to work done mainly by
+\Rouchal, \Wortmann, \Popineau{} and \Taupin.
+
+Appropriate change-bar icons indicate where newly added features are described.
+
+\htmlrule
+
+%
+% customise the URLs below, for the nearest copies of  manual.ps(.gz)
+%
+\index{PostScript version}
+A \htmladdnormallink{PostScript version}%{manual.ps}
+{http://www-texdev.ics.mq.edu.au/l2h/docs/manual.ps.gz}
+is available. %; also with \htmladdnormallink{no included fonts}%{manual.ps.gz}
+%{ftp://www-texdev.ics.mq.edu.au/l2h/docs/manual.nofonts.ps.gz},
+%instead with references to PostSript fonts.
+
+\htmlrule
+
+Browse the following links for information concerning:
+
+\begin{htmllist}\htmlitemmark{RedBall}
+\item[Contributions from others --- \htmlref{early development}{credits}] 
+\item[Contributions from others --- \htmlref{recent developments, 1996}{recent96}] 
+\item[Contributions from others --- \htmlref{recent developments, 1997}{recent97}] 
+\item[Contributions from others --- \htmlref{recent developments, 1998}{recent98}] 
+\item[Proposals for \htmlref{future development}{future}] 
+\item[\htmlref{Licensing}{licence}] 
+\end{htmllist}
+
+\htmlrule
+
+\textbf{Warning:} The contents of this document are likely to change.\\
+It is advisable not to use links to any pages other than the first page (i.e. this page).
+
+\end{htmlonly}
+
+\htmlrule
+\latex{\newpage\vglue1pt\vfil}
+%
+%
+%  ABSTRACT
+%
+\Glossary{latex}{\LaTeX}{}%
+\Glossary{perl}{\textsl{Perl}}{}%
+\glossary{HTML}%
+\begin{abstract}%
+\latextohtml{} is a conversion tool that allows documents
+written in \LaTeX{}  to become part of the World-Wide Web.
+In addition, it offers an easy migration path towards
+authoring complex hyper-media documents using
+familiar word-processing concepts, including the power of a \LaTeX-like
+macro language capable of producing correctly structured \texttt{HTML} tags.
+
+\latextohtml{} replicates the basic structure of a \LaTeX{}  document 
+as a set of interconnected \texttt{HTML} files which can be explored using
+automatically generated navigation panels. 
+The cross-references, citations, footnotes, the table-of-contents and the lists
+of figures and tables, are also translated into hypertext links. Formatting
+information which has equivalent ``tags'' in \texttt{HTML} 
+(lists, quotes, paragraph-breaks, type-styles, etc.) 
+is also converted appropriately. 
+The remaining heavily formatted items
+such as mathematical equations, pictures etc. are converted to images
+which are placed automatically at the correct position in the
+final \texttt{HTML} document.
+
+\latextohtml{} extends \LaTeX{}  by supporting arbitrary hypertext links 
+and symbolic cross-references between evolving 
+remote documents. It also allows the specification
+of \emph{conditional text} and the inclusion of raw \texttt{HTML} commands.
+These hyper-media extensions to \LaTeX{}  are available as 
+new commands and environments from within a \LaTeX{}  document.
+
+This document presents the main features of \latextohtml{} and
+describes how to obtain and install it, and how to use it effectively.
+\end{abstract}
+
+
+%
+%  CREDITS
+%
+\latex{\pagenumbering{roman}}
+\clearpage\input{credits.tex}
+\clearpage\input{licence.tex}
+
+
+%
+%  CONTENTS, 
+%  Lists of figures, tables
+%
+\clearpage
+\tableofcontents
+\clearpage
+\listoffigures
+\listoftables
+%begin{latexonly}
+ \adjustfootnote
+%end{latexonly}
+\clearpage
+
+
+%
+%  MAIN MANUAL
+%
+
+%begin{latexonly}
+\cleardoublepage
+\pagenumbering{arabic}\setcounter{page}{1}
+%end{latexonly}
+
+\relax   %% this is important, else the next segment doesn't get processed
+
+%%% START XTRACTFAQ (END is somewhere within that segment)
+\segment{overview}{section}{Overview}
+\latex{\vfil\goodbreak}
+%%% START XTRACTFAQ
+\segment{support}{section}{Installation and Further Support}
+%%% END XTRACTFAQ
+\latex{\vfil\goodbreak}
+\segment{features}{section}{Environments and Special Features}
+\latex{\vfil\goodbreak}
+\segment{hypextra}{section}{Hypertext Extensions to \LaTeX{}}
+\latex{\vfil\goodbreak}
+\segment{userman}{section}{Customising the Layout of HTML pages}
+\latex{\vfil\goodbreak}
+%%% START XTRACTFAQ
+\segment{problems}{section}{Known Problems}
+%%% END XTRACTFAQ
+
+%\segment{changes}{section}{Changes from Previous Versions
+% \protect\label{sec:chg}\protect\index{changes|(}}
+
+%
+%  CHANGES
+%
+%\begin{htmlonly}
+%\relax   %% this is important, else the next section doesn't get handled correctly
+%\section{Changes from Previous Versions}
+%\input{changes.tex}
+%\end{htmlonly}
+
+\endsegment[section]
+
+%%% START XTRACTFAQ
+%
+%  BIBLIOGRAPHY
+%
+\bibliographystyle{plain}
+\newcommand{\AWcsengURL}{http://www.awl.com/cseng}
+\newcommand{\AddWes}[1]{\htmladdnormallink{Addison--Wesley}{#1}}
+\newcommand{\awlogo}{\AWcsengURL/images/tri.gif}
+\newcommand{\AWlamport}{\AWcsengURL/titles/0-201-52983-1}
+\newcommand{\LAMPcover}{\AWlamport/coversm.gif}
+\newcommand{\AWtheTLC}{\AWcsengURL/titles/0-201-54199-8}
+\newcommand{\TLCcover}{\AWtheTLC/tlc.gif}
+\newcommand{\AWtheLGC}{\AWcsengURL/titles/0-201-85469-4}
+\newcommand{\LGCcover}{\AWtheLGC/coversm.gif}
+\newcommand{\AWtheLWC}{\AWcsengURL}
+\newcommand{\LWCcover}{}
+\begin{thebibliography}{1}\label{biblio}
+
+\index{LaTeX blue book@\LaTeX{} blue book!Leslie Lamport}%
+\htmladdimg[ALIGN=RIGHT width=80 height=100]{\LAMPcover}
+\bibitem{lamp:latex}
+Leslie Lamport,
+\newblock \LaTeX,\textit{A Document Preparation System}.
+ User's Guide \& Reference Manual, 2nd edition.
+\newblock ISBN 0-201-52983-1, Paperback 256 pages, 
+ \AddWes{\AWlamport}, 1994.
+\newblock Online information on {\TeX} and {\LaTeX} is available at \tugURL\ and~\danteURL~.
+
+%begin{latexonly}
+\index{Companion|see{The \LaTeX\hfil Companion}}%
+\index{LaTeX Companion@\LaTeX\ Companion|see{~The \LaTeX\\ Companion}}%
+\index{The LaTeX Companion@\emph{The {\upshape\LaTeX} Companion}\label{IIIlatcomp}!Goossens--Mittelbach--Samarin}%
+%end{latexonly}
+\begin{htmlonly}
+\index{Companion|see{\htmlref{~The \textup{\LaTeX} Companion}{IIIlatcomp}}}%
+\index{LaTeX Companion@\LaTeX\ Companion|see{\htmlref{The \textup{\LaTeX} Companion}{IIIlatcomp}}}%
+\index{The LaTeX Companion@The \textup{\LaTeX} Companion\label{IIIlatcomp}!Goossens--Mittelbach--Samarin}%
+\end{htmlonly}
+\htmladdimg[ALIGN=RIGHT,WIDTH=61,HEIGHT=76]{\TLCcover}
+\bibitem{goossens:latex}
+Michel Goossens, Frank Mittelbach, Alexander Samarin,
+\newblock \emph{The }\LaTeX\emph{ Companion}
+\newblock ISBN 0-201-54199-8, Paperback 530 pages, \AddWes{\AWtheTLC/}, 1994.
+\html{\bigskip\bigskip}
+
+%begin{latexonly}
+\index{Graphics Companion|see{~The~\textup{\LaTeX}\\ Graphics Companion}}%
+\index{LaTeX Graphics Companion@\LaTeX\ Graphics Companion|see{~The\\ \textup{\LaTeX} Graphics Companion}}%
+\index{The LaTeX Graphics Companion@\emph{The \textup{\LaTeX} Graphics Companion}\label{IIIlatgraph}!Goossens--Rahtz--Mittelbach}%
+%end{latexonly}
+\begin{htmlonly}
+\index{Graphics Companion|see{\htmlref{The \textup{\LaTeX}\latex{\hfil} Graphics Companion}{IIIlatgraph}}}%
+\index{LaTeX Graphics Companion@\LaTeX{} Graphics Companion|see{\htmlref{The \textup{\LaTeX}\latex{\hfil} Graphics Companion}{IIIlatgraph}}}%
+\index{The LaTeX Graphics Companion@The \textup{\LaTeX} Graphics Companion\label{IIIlatgraph}!Goossens--Rahtz--Mittelbach}%
+\end{htmlonly}
+\htmladdimg[ALIGN=RIGHT]{\LGCcover}
+\bibitem{goossens:latexGraphics}
+Michel Goossens, Sebastian Rahtz and Frank Mittelbach,
+\newblock \emph{The }\LaTeX\emph{ Graphics Companion}.
+\newblock ISBN 0-201-85469-4, Softcover 608 pages, \AddWes{\AWtheLGC/}, 1997.
+
+%begin{latexonly}
+\index{Web Companion|see{~The~\textup{\LaTeX}\\ Web Companion}}%
+\index{LaTeX Web Companion@\LaTeX\ Web Companion|see{~The\\ \textup{\LaTeX} Web Companion}}%
+\index{The LaTeX Web Companion@\emph{The \textup{\LaTeX} Web Companion}\label{IIIlatweb}!Rahtz--Goossens et al.}%
+%end{latexonly}
+\begin{htmlonly}
+\index{Graphics Web|see{\htmlref{The \textup{\LaTeX}\latex{\hfil} Web Companion}{IIIlatweb}}}%
+\index{LaTeX Web Companion@\LaTeX{} Web Companion|see{\htmlref{The \textup{\LaTeX}\latex{\hfil} Web Companion}{IIIlatweb}}}%
+\index{The LaTeX Web Companion@The \textup{\LaTeX} Web Companion\label{IIIlatweb}!Rahtz--Goossens et al.}%
+\end{htmlonly}
+%\htmladdimg[ALIGN=RIGHT]{\LWCcover}
+\bibitem{rahtz:latexWeb}
+Sebastian Rahtz and Michel Goossens, with E. Gurari, R. Moore \& R. Sutor.
+\newblock \emph{The }\LaTeX\emph{ Web Companion}.
+\newblock to appear in 1999, \AddWes{\AWtheLWC/}.
+
+\bibitem{drakos:bask}
+\NikosDrakos,
+\newblock Text to Hypertext conversion with \latextohtml.
+\newblock \textit{Baskerville}, December 1993, Vol.\,3, No.\,2, pp 12--15.
+\newblock \url{http://cbl.leeds.ac.uk/nikos/doc/www94/www94.html}
+
+\bibitem{drakos:www94}
+\NikosDrakos,
+\newblock From Text to Hypertext: A Post-Hoc Rationalisation of \latextohtml.
+\newblock Published in ``Proceedings of the 1st World Wide Web Conference'',
+\newblock May 1994, CERN, Geneva, Switzerland.
+\newblock \url{http://cbl.leeds.ac.uk/nikos/doc/www94/www94.html}
+
+\end{thebibliography}
+%%% END XTRACTFAQ
+
+%\end{document}
+
+%
+%  GLOSSARY
+%
+% Glossary info stored in:  manual.gls ,  which was created using:
+%
+%       makeindex -o manual.gls -s l2hglo.ist manual.glo
+%       
+\begin{latexonly}
+\InputIfFileExists{manual.gls}{\clearpage\typeout{^^Jcreating Glossary...}}%
+{\typeout{^^JNo Glossary, since  manual.gls  could not be found.^^J}}
+\end{latexonly}
+
+\begin{htmlonly}
+\section{Glossary of variables and file-names\label{Glossary}}
+\begin{htmllist}\htmlitemmark{OrangeBall}
+\input l2hfiles.dat
+\end{htmllist}
+\end{htmlonly}
+
+%
+%  INDEX
+%
+\internal[index]{O}
+\internal[index]{S}
+\internal[index]{E}
+\internal[index]{H}
+\internal[index]{M}
+\internal[index]{P}
+%
+% Index info stored in:  manual.ind ,  which was created using:
+%
+%       makeindex -s l2hidx.ist manual.idx
+%
+\printindex
+
+%
+%  Alphabetization and navigation within the index
+%  ...these special index entries must come *after* the  \printindex
+%  else half of the hyperlinks will point to the preceding page.
+%
+\begin{htmlonly}
+\newcommand{\indexAlpha}[5]{\index{#1@\htmlref{_}{#2}%
+ \htmlref{\HTML{SUB}{\LARGE #3}}{AZ}\htmlref{_}{#4}\label{#5}| }}
+%
+\indexAlpha{\$}{Z}{\$}{dot}{doll}%
+\indexAlpha{.}{doll}{~.~}{A}{dot}%
+\indexAlpha{A}{dot}{A}{B}{A}%
+\indexAlpha{B}{A}{B}{C}{B}%
+\indexAlpha{C}{B}{C}{D}{C}%
+\indexAlpha{D}{C}{D}{E}{D}%
+\indexAlpha{E}{D}{E}{F}{E}%
+\indexAlpha{F}{E}{F}{G}{F}%
+\indexAlpha{G}{F}{G}{H}{G}%
+\indexAlpha{H}{G}{H}{I}{H}%
+%\indexAlpha{I}{H}{I}{J}{I}%
+\indexAlpha{I}{H}{I}{L}{I}%
+\indexAlpha{J}{I}{J, K}{L}{K}%
+%\indexAlpha{J}{I}{J}{K}{J}%
+%\indexAlpha{K}{J}{K}{L}{K}%
+\indexAlpha{L}{K}{L}{M}{L}%
+\indexAlpha{M}{L}{M}{N}{M}%
+\indexAlpha{N}{M}{N}{O}{N}%
+\indexAlpha{O}{N}{O}{P}{O}%
+%\indexAlpha{P}{O}{P}{Q}{P}%
+\indexAlpha{P}{O}{P}{R}{P}%
+\indexAlpha{Q}{P}{Q, R}{S}{R}%
+%\indexAlpha{Q}{P}{Q}{R}{Q}%
+%\indexAlpha{R}{Q}{R}{S}{R}%
+\indexAlpha{S}{R}{S}{T}{S}%
+\indexAlpha{T}{S}{T}{U}{T}%
+\indexAlpha{U}{T}{U}{V}{U}%
+\indexAlpha{V}{U}{V}{W}{V}%
+\indexAlpha{W}{V}{W}{X}{W}%
+%\indexAlpha{X}{W}{X}{Y}{X}%
+\indexAlpha{X}{W}{X}{Z}{X}%
+\indexAlpha{Y}{X}{Y, Z}{doll}{Z}%
+%\indexAlpha{Y}{X}{Y}{Z}{Y}%
+%\indexAlpha{Z}{Y}{Z}{doll}{Z}%
+%
+%
+%% This is an alphabetical navigation panel.
+\index{@\label{AZ}\textbf{\LARGE
+\htmlref{\$}{doll} \htmlref{.}{dot} \htmlref{A}{A} 
+ \htmlref{B}{B} \htmlref{C}{C} \htmlref{D}{D} \htmlref{E}{E} \htmlref{F}{F}
+ \htmlref{G}{G} \htmlref{H}{H} \htmlref{I}{I} \htmlref{J}{K} \htmlref{K}{K}
+ \htmlref{L}{L} \htmlref{M}{M} \htmlref{N}{N} \htmlref{O}{O} \htmlref{P}{P}
+ \htmlref{Q}{R} \htmlref{R}{R} \htmlref{S}{S} \htmlref{T}{T} \htmlref{U}{U}
+ \htmlref{V}{V} \htmlref{W}{W} \htmlref{X}{X} \htmlref{Y}{Z} \htmlref{Z}{Z}}\\
+\htmlrule[all]| }
+
+\end{htmlonly}
+
+\end{document}

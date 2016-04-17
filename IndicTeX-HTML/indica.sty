@@ -1,0 +1,135 @@
+% indica.sty by Ross Moore <ross@mpce.mq.edu.au> $
+%% $Log: 
+%
+% LaTeX2e package interface for ...
+%
+%  Indica pre-processor, and sinhala fonts:  sinha, sinhb, sinhc
+%   by Yannis Haralambous <Yannis.Haralambous@univ-lille1.fr>
+%
+%  and the  sinhala.sty  package for LaTeX-2e, 
+%   by Dominik Wujastyk <D.Wujastyk@ucl.ac.uk>
+%
+%  extended for Prasad Dharmasena's <pkd@isr.umd.edu> 
+%  `samanala'  transliteration scheme
+%    by Vasantha Saparamadu <vsaparam@ocs.mq.edu.au>
+%
+% These resources are *not* included with this package.
+% Obtain them from CTAN:  http//ctan.tug.org/ctan
+%
+% ===================================================================
+% In LaTeX this package does little more than to load  sinhala.sty .
+% However...
+%
+% ...the package has a corresponding implementation for  LaTeX2HTML 
+% called: indica.perl .
+%
+% With LaTeX2HTML the options on the \usepackage line specify 
+% pre-processor commands to be included automatically.
+%
+% Usage:
+%
+%  \usepackage{indica}            %|  for text already pre-processed
+%  \usepackage[indica]{indica}    %|  for all supported languages
+%  \usepackage[preprocess]{indica}%|  same as  [indica]
+%
+%  options affecting Input-forms
+%
+%  \usepackage[7bit]{indica}    %|  Velthuis' Hindi/Sanskri transcription
+%  \usepackage[csx]{indica}     %|  8-bit Sanskrit extension of ISO 646
+%  \usepackage[latex]{indica}   %|  standardized LaTeX transcription form
+%  \usepackage[unicode]{indica} %|  ISO 10646-1 + Sinhalese extension
+%  \usepackage[samanala]{indica}%|  Prasad Dharmasena's transliteration
+%
+%  options specifyinging languages:
+%
+%  \usepackage[ben]{indica} %|  Bengali
+%  \usepackage[guj]{indica} %|  Gujarati
+%  \usepackage[gur]{indica} %|  Gurmukhi
+%  \usepackage[hin]{indica} %|  Hindi
+%  \usepackage[kan]{indica} %|  Kannada
+%  \usepackage[mal]{indica} %|  Malayalam
+%  \usepackage[ori]{indica} %|  Oriya
+%  \usepackage[san]{indica} %|  Sanskrit
+%  \usepackage[sin]{indica} %|  Sinhala, Sinhalese
+%  \usepackage[tam]{indica} %|  Tamil
+%  \usepackage[tel]{indica} %|  Telugu
+%  \usepackage[tib]{indica} %|  Tibetan
+%
+%  LaTeX2HTML: create aliases to 3-letter abbreviations;
+%  e.g.   #ALIAS SANSKRIT SAN
+%
+%
+%  \usepackage[bengali]{indica}   %|  Bengali
+%  \usepackage[gujarati]{indica}  %|  Gujarati
+%  \usepackage[gurmukhi]{indica}  %|  Gurmukhi
+%  \usepackage[hindi]{indica}     %|  Hindi (Devanagari,Marathi,Nepali)
+%  \usepackage[kannada]{indica}   %|  Kannada
+%  \usepackage[malayalam]{indica} %|  Malayalam
+%  \usepackage[oriya]{indica}     %|  Oriya
+%  \usepackage[sanskrit]{indica}  %|  Sanskrit
+%  \usepackage[sinhala]{indica}   %|  Sinhala, Sinhalese
+%  \usepackage[sinhalese]{indica} %|  Sinhala, Sinhalese
+%  \usepackage[tamil]{indica}     %|  Tamil
+%  \usepackage[telugu]{indica}    %|  Telugu
+%  \usepackage[tibetan]{indica}   %|  Tibetan
+%
+%  LaTeX2HTML: create aliases to 1-letter abbreviations;
+%  e.g.   #ALIAS SANSKRIT S
+%
+% ===================================================================
+%
+\ProvidesFile{indica.sty}[1998/1/14]
+%
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{sinhala}
+%
+\DeclareOption{preprocess}{\ds@indica}
+\DeclareOption{indica}{\ds@indica}
+\DeclareOption{7bit}{\ds@indica}
+\DeclareOption{csx}{\ds@indica}
+\DeclareOption{latex}{\ds@indica}
+\DeclareOption{samanala}{\ds@indica}
+\DeclareOption{unicode}{\ds@indica}
+
+\DeclareOption{ben}{\ds@indica} %|  Bengali
+\DeclareOption{guj}{\ds@indica} %|  Gujarati
+\DeclareOption{gur}{\ds@indica} %|  Gurmukhi
+\DeclareOption{hin}{\ds@indica} %|  Hindi
+\DeclareOption{kan}{\ds@indica} %|  Kannada
+\DeclareOption{mal}{\ds@indica} %|  Malayalam
+\DeclareOption{ori}{\ds@indica} %|  Oriya
+\DeclareOption{san}{\ds@indica} %|  Sanskrit
+\DeclareOption{sin}{\ds@indica} %|  Sinhala, Sinhalese
+\DeclareOption{tam}{\ds@indica} %|  Tamil
+\DeclareOption{tel}{\ds@indica} %|  Telugu
+\DeclareOption{tib}{\ds@indica} %|  Tibetan
+
+\DeclareOption{bengali}{\ds@indica}   %|  Bengali
+\DeclareOption{gujarati}{\ds@indica}  %|  Gujarati
+\DeclareOption{gurmukhi}{\ds@indica}  %|  Gurmukhi
+\DeclareOption{hindi}{\ds@indica}     %|  Hindi
+\DeclareOption{kannada}{\ds@indica}   %|  Kannada
+\DeclareOption{malayalam}{\ds@indica} %|  Malayalam
+\DeclareOption{oriya}{\ds@indica}     %|  Oriya
+\DeclareOption{sanskrit}{\ds@indica}  %|  Sanskrit
+\DeclareOption{sinhala}{\ds@indica}   %|  Sinhala, Sinhalese
+\DeclareOption{sinhalese}{\ds@indica} %|  Sinhala, Sinhalese
+\DeclareOption{tamil}{\ds@indica}     %|  Tamil
+\DeclareOption{telugu}{\ds@indica}    %|  Telugu
+\DeclareOption{tibetan}{\ds@indica}   %|  Tibetan
+
+
+\DeclareOption*{\@latexerr{%
+ `\CurrentOption' is an invalid option, using `preprocess' instead}%
+ {Available Options:^^J^^J indica,7bit,csx,latex,unicode,samanala^^J
+  bengali,gujarati,gurmukhi,hindi,kannada,malayalam,oriya^^J
+  sanskrit,sinhala,sinhalese,tamil,telugu,tibetan^^J^^J
+  ben,guj,gur,hin,kan,mal,ori,san,sin,tam,tel,tib^^J}%
+ \PassOptionsToPackage{preprocess}{indica}}
+
+\def\ds@indica{\def\indicaloaded{}}
+
+\ProcessOptions*
+\expandafter\ifx\csname indicaloaded\endcsname\relax\expandafter\ds@indica\fi
+\endinput
+

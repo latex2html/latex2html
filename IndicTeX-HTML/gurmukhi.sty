@@ -1,0 +1,72 @@
+% gurmukhi.sty by Ross Moore <ross@mpce.mq.edu.au> $
+%% $Log: 
+%
+% LaTeX2e package interface for ...
+%
+%  Indica pre-processor, and sinhala fonts:  sinha, sinhb, sinhc
+%   by Yannis Haralambous <Yannis.Haralambous@univ-lille1.fr>
+%
+%  and the  sinhala.sty  package for LaTeX-2e, 
+%   by Dominik Wujastyk <D.Wujastyk@ucl.ac.uk>
+%
+%  extended for Prasad Dharmasena's <pkd@isr.umd.edu> 
+%  `samanala'  transliteration scheme
+%    by Vasantha Saparamadu <vsaparam@ocs.mq.edu.au>
+%
+% These resources are *not* included with this package.
+% Obtain them from CTAN:  http//ctan.tug.org/ctan
+%
+% ===================================================================
+% In LaTeX this package does little more than to load  indica.sty .
+% which in turn loads  sinhala.sty .
+% However...
+%
+% ...the package has a corresponding implementation for  LaTeX2HTML 
+% called: gurmukhi.perl  which loads  indica.perl .
+%
+% With LaTeX2HTML the options on the \usepackage line specify 
+% pre-processor commands to be included automatically.
+%
+% Usage:
+%
+%  \usepackage{gurmukhi}            %|  pre-process source using Indica
+%  \usepackage[indica]{gurmukhi}    %|  with  #ALIAS GURMUKHI G 
+%  \usepackage[preprocess]{gurmukhi}%|  and   #ALIAS NIL N
+%
+%  \usepackage[gur]{gurmukhi}       %| also use #ALIAS GURMUKHI GUR
+%
+%
+%  options affecting Input-forms
+%
+%  \usepackage[7bit]{gurmukhi}    %|  Velthuis' Hindi/Sanskri transcription
+%  \usepackage[csx]{gurmukhi}     %|  8-bit Sanskrit extension of ISO 646
+%  \usepackage[latex]{gurmukhi}   %|  standardized LaTeX transcription form
+%  \usepackage[unicode]{gurmukhi} %|  ISO 10646-1 + Sinhalese extension
+%  \usepackage[samanala]{gurmukhi}%|  Prasad Dharmasena's transliteration
+%
+% ===================================================================
+%
+\ProvidesFile{gurmukhi.sty}[1998/1/17]
+%
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{indica}
+\PassOptionsToPackage{gurmukhi}{indica}
+%
+\DeclareOption{preprocess}{\PassOptionsToPackage{preprocess}{indica}}
+\DeclareOption{indica}{\PassOptionsToPackage{gurmukhi}{indica}}
+\DeclareOption{7bit}{\PassOptionsToPackage{7bit}{indica}}
+\DeclareOption{csx}{\PassOptionsToPackage{csx}{indica}}
+\DeclareOption{latex}{\PassOptionsToPackage{latex}{indica}}
+\DeclareOption{samanala}{\PassOptionsToPackage{samanala}{indica}}
+\DeclareOption{unicode}{\PassOptionsToPackage{unicode}{indica}}
+
+\DeclareOption{gur}{\PassOptionsToPackage{gur}{indica}}
+
+\DeclareOption*{\@latexerr{%
+ `\CurrentOption' is an invalid option, using `preprocess' instead}%
+ {Available Options:^^J^^J indica,7bit,csx,latex,unicode,samanala,gur^^J}%
+ \PassOptionsToPackage{preprocess}{indica}}
+
+\ProcessOptions*
+\endinput
+

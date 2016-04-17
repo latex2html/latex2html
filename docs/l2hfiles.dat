@@ -1,0 +1,401 @@
+\item[\gn{.dvipsrc}] initialisation file for \fn{dvips}
+\item[\gn{.latex2html-init}] initialisation file for \latextohtml{}
+\item[\gn{\$ACCENT\_IMAGES}] holds the \LaTeX\ style to be used when making images of accented characters which are not present in the character encoding being used
+\item[\gn{\$ADDRESS}] contains information to be included as a signature at the bottom of each \texttt{HTML} page
+\item[\gn{\$ALTERNATIVE\_ICONS}] contains the location of special icons, other than the standard ones
+\item[\gn{\$ANTI\_ALIAS}] when set, specifies that anti-aliasing be used with generated images of figures and included images
+\item[\gn{\$ANTI\_ALIAS\_TEXT}] when set (the default), specifies that anti-aliasing be used with generated images of maths and typeset text
+\item[\gn{\$ASCII\_MODE}] when set, all icons and images are replaced with text strings, suitable for text-only browsers
+\item[\gn{\$AUTO\_NAVIGATION}] when set, a navigation panel is placed at the bottom of long pages, unless overridden by \fn{\$NO\_NAVIGATION} being set also
+\item[\gn{\$AUTO\_PREFIX}] if set, all files produced have a filename-prefix using the name of the \LaTeX\ file being processed
+\item[\gn{\$BACKGROUND\_DIR}] with frames, directory URL for background images
+\item[\gn{\$BACKGROUND\_IMAGE}] with frames, filename of the image to use to tile the background
+\item[\gn{\$BODYTEXT}] string to be used within the \HTMLtag{BODY ... } tag on \texttt{HTML} pages
+\item[\gn{\$BOTTOM\_NAVIGATION}] when set, a navigation panel is placed at the bottom of every \texttt{HTML} page, unless overridden by \fn{\$NO\_NAVIGATION} being set also
+\item[\gn{\$CHARSET}] specifies the character set used within the \texttt{HTML} pages, currently this defaults to \texttt{\char34iso\_8859\_1\char34} (ISO--Latin--1)
+\item[\gn{\$CHILDLINE}] has piece of \texttt{HTML} code to be inserted between the child-links table and page contents
+\item[\gn{\$CONFIG\_FILE}] defaults to \fn{latex2html.config} unless \fn{\$ENV\{'L2HCONFIG'\}} gives a different file for the main configuration settings
+\item[\gn{\$CONTENTS}] when navigation panels are created, this holds a hyperlink to the \texttt{HTML} file that has the Table-of-Contents
+\item[\gn{\$CONTENTS\_BANNER}] with frames, raw \texttt{HTML} to precede the Table-of-Contents listing
+\item[\gn{\$CONTENTS\_FOOTER}] with frames, raw \texttt{HTML} to follow the Table-of-Contents listing
+\item[\gn{\$CONTENTS\_IN\_NAVIGATION}] when set, an iconic link to the Table-of-Contents is placed in navigation panels 
+\item[\gn{\$CONTENTS\_TABLE\_WIDTH}] if set to a number with frames, will impose this as a fixed width for the Table-of-Contents listing
+\item[\gn{\$CRAYOLAFILE}] when \fn{color.perl} has been loaded, holds the name of the file which contains named color specifications for crayon colors 
+\item[\gn{\$CUSTOM\_BUTTONS}] variable available to link to customised buttons in navigation panels 
+\item[\gn{\$CUSTOM\_ICONS}] when set, a copy of each icon actually used is included in the directory along with the \texttt{.html} files and images
+\item[\gn{\$CUSTOM\_TITLES}] when set, a customised subroutine is used to determine the filename for each \texttt{HTML} page 
+\item[\gn{\$DEBUG}] when non-zero, \latextohtml\ shows messages that would otherwise be ignored
+\item[\gn{\$DESTDIR}] specifies the directory into which all the generated files will be placed
+\item[\gn{\$DISCARD\_PS}] when set, specifies that the temporary \PS\ files created by \fn{dvips} be discarded immediately after use
+\item[\gn{\$DISP\_SCALE\_FACTOR}] extra magnification for images of displayed math environments; multiplies the \fn{\$MATH\_SCALE\_FACTOR} to give the total scaling
+\item[\gn{\$DJGPP}] set in \fn{Override.pm} under DOS, or with a  command-line switch; causes alternative stategies during processing that would be less efficient under Unix 
+\item[\gn{\$DONT\_INCLUDE}] holds a list of filenames and filename extensions to \emph{not} include, even if requested; filenames ending with \texttt{.sty } are automatically excluded
+\item[\gn{\$DO\_INCLUDE}] holds a list of filenames and filename extensions to be included, even when the \fn{\$DONT\_INCLUDE} variable would normally exclude them
+\item[\gn{\$DVIPS}] contains the command to be used when the \fn{dvips} program processes \fn{images.dvi} to create \PS\ files describing the required images
+\item[\gn{\$DVIPS\_MODE}] contains the \MF{} mode to be used when the \fn{dvips} program supports automatic font-generation
+\item[\gn{\$ENV\{'L2HCONFIG'\}}] environment variable for adjusting the value of \fn{\$CONFIG\_FILE}
+\item[\gn{\$ENV\{'L2HINIT\_NAME'\}}] environment variable for adjusting the name used for initialisation files
+\item[\gn{\$ENV\{'PERL5LIB'\}}] environment variable used by \Perl\ to locate modules, for version 5 and later
+\item[\gn{\$ENV\{'PERLLIB'\}}] environment variable used by \Perl\ to locate modules, any version
+\item[\gn{\$EXTERNAL\_BIBLIO}] specifies the URL for a bibliography page external to the current document
+\item[\gn{\$EXTERNAL\_CONTENTS}] specifies the URL for the \textsl{CONTENTS} button in the navigation panel
+\item[\gn{\$EXTERNAL\_DOWN\_LINK}] specifies the URL for the \textsl{NEXT} button in the navigation panel
+\item[\gn{\$EXTERNAL\_DOWN\_TITLE}] specifies the text for the \textsl{NEXT} button hyperlink in the navigation panel
+\item[\gn{\$EXTERNAL\_FILE}] prefix of a \texttt{.aux } file to be read for numbering and other information provided by \LaTeX
+\item[\gn{\$EXTERNAL\_IMAGES}] when set, hyperlinks to the generated images are included on the \texttt{HTML} pages, not \texttt{<IMG>} tags
+\item[\gn{\$EXTERNAL\_INDEX}] specifies the URL for the \textsl{INDEX} button in the navigation panel
+\item[\gn{\$EXTERNAL\_PREV\_LINK}] specifies the URL for the \textsl{PREVIOUS} button in the navigation panel
+\item[\gn{\$EXTERNAL\_PREV\_TITLE}] specifies the text for the \textsl{PREVIOUS} button hyperlink in the navigation panel
+\item[\gn{\$EXTERNAL\_STYLESHEET}] name of stylesheet file whose contents are prepended to the default stylesheet
+\item[\gn{\$EXTERNAL\_UP\_LINK}] specifies the URL for the \textsl{UP} button in the navigation panel
+\item[\gn{\$EXTERNAL\_UP\_TITLE}] specifies the text for the \textsl{UP} button hyperlink in the navigation panel
+\item[\gn{\$EXTN}] holds the filname suffix for the \texttt{HTML} files to be produced, either \texttt{.html} or \texttt{.htm}
+\item[\gn{\$EXTRA\_IMAGE\_SCALE}] when set, specifies that images should be created at one size but displayed at another; it provides the ratio between these sizes
+\item[\gn{\$FHELP\_FILE}] with frames, name of the file to contain the \texttt{HTML} for the `help' strip
+\item[\gn{\$FIGURE\_CAPTION\_ALIGN}] sets the attribute for positioning captions of \env{figure} environments; default = \verb|'BOTTOM'|
+\item[\gn{\$FIGURE\_SCALE\_FACTOR}] magnification factor to be used with images of whole \env{figure} and \env{table} environments
+\item[\gn{\$FILE}] holds the name of the \texttt{HTML} output of the top-most page in a document, when vital links are to be established
+\item[\gn{\$FIXEDDIR}] specifies the target directory for the \texttt{HTML} file, when several sources are processed from a single command-line 
+\item[\gn{\$FOILCLASS}] The document class that is substituted for \texttt{foils} in the \texttt{images.tex} file when using \FoilTeX{}; default is \texttt{'article'}
+\item[\gn{\$FOILHEADLEVEL}] holds the sectioning level for the pages containing \FoilTeX{} `foils' generated using \fn{foilhtml.sty} and \fn{foils.perl} 
+\item[\gn{\$FOILOPTIONS}] Options for  \fn{images.tex}, obtained from processing a \FoilTeX{} source; by default '10pt'
+\item[\gn{\$FONT\_SIZE}] gives font size used with images of math and other environments
+\item[\gn{\$FOOTNOTE_HEIGHT}] with frames, holds the height of the footnote frame; default = 60 pixels
+\item[\gn{\$FOOT\_COLOR}] with frames, holds the color settings for all the \HTMLtag{BODY} options of the footnote frame
+\item[\gn{\$FRAME\_DOCTYPE}] with frames, holds the \HTMLtag{!DOCTYPE} tag for the Frameset DTD
+\item[\gn{\$FRAME\_HELP}] with frames, raw \texttt{HTML} for the `help' strip in the main frame view
+\item[\gn{\$GS}] contains the command to call the \appl{Ghostscript} program, used by \fn{pstoimg}
+\item[\gn{\$GS\_DEVICE}] contains the name of the device driver for the \appl{Ghostscript} program, used by \fn{pstoimg}
+\item[\gn{\$GS\_LIB}] contains the directory path prefix to the \appl{Ghostscript} program's library of special input files
+\item[\gn{\$HOME/.latex2html-init}] user's default initialisation file for \latextohtml{}; if present, it will be read unless another has already been found
+\item[\gn{\$HOWTO\_INTERLACE\_GIF}] contains the name of the graphics utility package to use for creating interlaced GIF images
+\item[\gn{\$HOWTO\_TRANSPARENT\_GIF}] contains the name of the graphics utility package to use for creating transparent GIF images
+\item[\gn{\$HTML\_VERSION}] specifies the version of \texttt{HTML} code to be generated
+\item[\gn{\$ICONSERVER}] contains the URL where icon-images are to be found
+\item[\gn{\$IDX\_COLOR}] with frames, holds the color settings for all the \HTMLtag{BODY} options of the Index frame; default same as \fn{\$MAIN\_COLOR}
+\item[\gn{\$IDX\_WIDTH}] with frames, holds the initial width of the index-frame; default = 200 pixels
+\item[\gn{\$IMAGES\_ONLY}] if set, this run simply processes the \fn{images.tex} file generated on an earlier run
+\item[\gn{\$IMAGE\_PREFIX}] specifies part of the filename, excluding numbers, for the \PS\ files produced by \fn{dvips}
+\item[\gn{\$IMAGE\_TYPE}] specifies the graphics format for the images that may be generated; currently either \texttt{gif} or \texttt{png}
+\item[\gn{\$INDEX}] when navigation panels are created, this holds a hyperlink to the \texttt{HTML} file that has the Index
+\item[\gn{\$INDEX\_BANNER}] with frames, raw \texttt{HTML} to precede the Index listing, following the title
+\item[\gn{\$INDEX\_FOOTER}] with frames, raw \texttt{HTML} to follow the Index listing
+\item[\gn{\$INDEX\_IN\_NAVIGATION}] when set, an iconic link to the Index is placed in navigation panels 
+\item[\gn{\$INDEX\_STYLES}] with frames, cotains tag-names to apply to Index keys, within the Index frame
+\item[\gn{\$INDEX\_TABLE\_WIDTH}] if set to a number with frames, will impose this as a fixed width for the Index listing
+\item[\gn{\$INFO}] when set, contains \Perl{} code to produce a replacement for the standard \emph{``About this document''} information
+\item[\gn{\$INIT\_FILE\_NAME}] holds the name used for initialisation files; defaults to \fn{latex2html-init} unless \fn{\$ENV\{'L2HINIT\_NAME'\}} specifies a different name
+\item[\gn{\$INTERLACE}] if set, this specifies that any generated images should be interlaced 
+\item[\gn{\$ISO\_LANGUAGE}] if set, this specifies the language of the \texttt{HTML} DTD; usually 'EN' but other language versions may exist
+\item[\gn{\$LANGUAGE\_TITLES}] contains the titles for chapters, sections, etc. in the chosen language (default: English)
+\item[\gn{\$LATEX}] holds the command to be used to invoke \LaTeX\ on the \fn{images.tex} file, for typesetting the contents of images
+\item[\gn{\$LATEX\_DUMP}] if set, speeds up image processing during subsequent runs on your document
+\item[\gn{\$LATEX2HTMLDIR}] directory where \latextohtml{} is installed
+\item[\gn{\$LATEX2HTMLDIR/Changes}] text file, record of changes made to \latextohtml{} since it was first released in July 1993
+\item[\gn{\$LATEX2HTMLDIR/latex2html.config}] configuration-file for the local setup; this file is read before any \fn{.latex2html-init} files
+\item[\gn{\$LATEX2HTMLDIR/local.pm}] created by \fn{configure-pstoimg}, this file holds information about what graphics utilities are available on the local system
+\item[\gn{\$LATEX2HTMLDIR/styles/german.perl}] adds \Perl{} code to establish compatibility with the \fn{german.sty} \LaTeXe\ package
+\item[\gn{\$LATEX2HTMLDIR/styles/makeidx.perl}] adds \Perl{} code to interpret index-entries otherwise intended for the \fn{makeindex} program
+\item[\gn{\$LATEX2HTMLSTYLES}] contains the directory path to find the \fn{styles/} directory; usually a subdirectory of \fn{\$LATEX2HTMLDIR}
+\item[\gn{\$LATEX2HTMLVERSIONS}] contains the directory path to find the \fn{versions/} directory; usually a subdirectory of \fn{\$LATEX2HTMLDIR}
+\item[\gn{\$LATEX2HTML\_META}] holds \HTMLtag{META} tags equivalent to HTTP-headers
+\item[\gn{\$LINE\_WIDTH}] holds the width of displayed equations, used for right-justification
+\item[\gn{\$LINKNAME}] name for the duplicate \texttt{HTML} file which enables automatic browser-linking from a directory name
+\item[\gn{\$LINKPOINT}] specifies the name for the \texttt{HTML} file to be duplicated to enable automatic browser-linking from a directory name
+\item[\gn{\$LOCAL\_ICONS}] when non-zero, causes a copy of the icons used to be placed within the directory along with the \texttt{HTML} files and generated images 
+\item[\gn{\$LONG\_TITLES}] when non-zero, specifies how many words from the section-title are used to determine the filename for each \texttt{HTML} page 
+\item[\gn{\$LOWER\_CASE\_TAGS}] when set, causes the \texttt{HTML} tag names to be written using lowercase letters
+\item[\gn{\$MAIN\_COLOR}] with frames, holds the color settings for all the \HTMLtag{BODY} options of the main frame
+\item[\gn{\$MATH\_SCALE\_FACTOR}] magnification factor for images of inlined equations and displayed math environments
+\item[\gn{\$MAX\_LINK\_DEPTH}] number of depth levels for which child-links are displayed, within the mini table-of-contents on each page
+\item[\gn{\$MAX\_SPLIT\_DEPTH}] sectioning-level at (and below) which creating a new \texttt{HTML} page ceases to occur
+\item[\gn{\$METAFONT\_DPI}] dots per inch required when \MF{} is called to generate a font
+\item[\gn{\$NAVIGATION_HEIGHT}] with frames, holds the height of the navigation frame; default = 38 pixels
+\item[\gn{\$NAVIG\_COLOR}] with frames, holds the color settings for all the \HTMLtag{BODY} options of the navigation frame
+\item[\gn{\$NAV\_BORDER}] when set, holds the width (in pt) of a border for navigation buttons
+\item[\gn{\$NETSCAPE\_HTML}] when set, will allow \texttt{HTML} extensions understood by \appl{Netscape} to be used; e.g. tables
+\item[\gn{\$NEXT}] when navigation panels are created, this holds a hyperlink to the next \texttt{HTML} page
+\item[\gn{\$NEXT\_GROUP}] when navigation panels are created, this holds a hyperlink to the next \texttt{HTML} page at the same level or shallower
+\item[\gn{\$NEXT\_GROUP\_TITLE}] when navigation panels are created, this holds the title of the next \texttt{HTML} page at the same section level or shallower
+\item[\gn{\$NEXT\_PAGE\_IN\_NAVIGATION}] when set, an iconic link to the next logical page is placed in navigation panels, unless overridden by \fn{\$NO\_NAVIGATION} being set also
+\item[\gn{\$NEXT\_TITLE}] when navigation panels are created, this holds the title of the next \texttt{HTML} page
+\item[\gn{\$NOFORK}] when set, prevent the translator to crash if your operating system does not support forking
+\item[\gn{\$NOFRAMES}] when set using frames, a non-frames version is included within the top-most frameset
+\item[\gn{\$NOLATEX}] when set, no image generation is performed but a text-string is placed; this is no longer needed
+\item[\gn{\$NO\_AUTO\_LINK}] if set, the second copy of the \texttt{HTML} file specified in \fn{\$LINKPOINT} is not created, with the name given in \fn{\$LINKNAME}; this allows a URL to a directory name to reach the main \texttt{HTML} page
+\item[\gn{\$NO\_FOOTNODE}] if set, footnotes will appear at the bottom of the current \texttt{HTML} page, rather than on a separate page for footnotes only
+\item[\gn{\$NO\_FRAME\_HELP}] if set with frames, rather than on a separate page for footnotes only
+\item[\gn{\$NO\_IMAGES}] if set, the \fn{images.tex} file is generated but not processed to create images
+\item[\gn{\$NO\_ISOLATIN}]
+\item[\gn{\$NO\_MATH\_MARKUP}] 
+\item[\gn{\$NO\_MATH\_PARSING}] allows some features of \fn{math.pl} to be used, without full parsing; i.e. 'professional' math mode
+\item[\gn{\$NO\_NAVIGATION}] when set, no navigation panels are placed on \texttt{HTML} pages
+\item[\gn{\$NO\_PARBOX\_IMAGES}] when set, this inhibits making an image of the text in \texttt{\char92parbox} commands, instead placing the text with no extra formatting
+\item[\gn{\$NO\_ROBOTS}] with frames, holds a \HTMLtag{META} tag to inhibit robots searching for embedded URLs
+\item[\gn{\$NO\_SIMPLE\_MATH}] when set, inhibits the use of ``simple math'', unless the \texttt{,math} extension is loaded; in which case \TeX\-like parsing is used, creating images of sub-parts of expressions, as needed
+\item[\gn{\$NO\_SPLIT}] 
+\item[\gn{\$NO\_SUBDIR}] when set, the \texttt{HTML} files and images will be placed in the current directory, rather than a sub-directory
+\item[\gn{\$NUMBERED\_FOOTNOTES}] numbers your footnotes when defined
+\item[\gn{\$PAPERSIZE}] controls the maximum size for large images constructed by \LaTeX, on a single page
+\item[\gn{\$PARTITION\_PREFIX}] used internally for the names of document parts
+\item[\gn{\$PBMMAKE}] contains the command to call the \fn{pbmmake} utility, used by \fn{pstoimg}
+\item[\gn{\$PBMPLUSDIR}] when set, contains where to find the \appl{pbmplus} graphics utilities; (no longer needed)
+\item[\gn{\$PK\_GENERATION}] when set, automatic font-generation is enabled for low-res bitmapped fonts; not needed with anti-aliasing of hi-res bitmaps, or \PS\ outlines
+\item[\gn{\$PNMCAT}] contains the command to call the \fn{pnmcat} utility, used by \fn{pstoimg}
+\item[\gn{\$PNMCROP}] contains the command to call the \fn{pnmcrop} utility, used by \fn{pstoimg}
+\item[\gn{\$PNMFILE}] contains the command to call the \fn{pnmfile} utility, used by \fn{pstoimg}
+\item[\gn{\$PNMFLIP}] contains the command to call the \fn{pnmflip} utility, used by \fn{pstoimg}
+\item[\gn{\$PPMQUANT}] contains the command to call the \fn{ppmquant} utility, used by \fn{pstoimg}
+\item[\gn{\$PPMTOGIF}] contains the command to call the \fn{ppmtogif} utility, used by \fn{pstoimg}
+\item[\gn{\$PREFIX}] contains the filename-prefix to prepend to all \texttt{HTML}, image and data files created for the current document
+\item[\gn{\$PREVIOUS}] when navigation panels are created, this holds a hyperlink to the previous \texttt{HTML} page
+\item[\gn{\$PREVIOUS\_GROUP}] when navigation panels are created, this holds a hyperlink to the \texttt{HTML} page starting the previous section at the same level or shallower
+\item[\gn{\$PREVIOUS\_GROUP\_TITLE}] when navigation panels are created, this holds the title of the previous \texttt{HTML} page at the same section level or shallower
+\item[\gn{\$PREVIOUS\_PAGE\_IN\_NAVIGATION}] when set, an iconic link to the previous logical page is placed in navigation panels, unless overridden by \fn{\$NO\_NAVIGATION} being set also 
+\item[\gn{\$PREVIOUS\_TITLE}] when navigation panels are created, this holds the title of the previous \texttt{HTML} page
+\item[\gn{\$PSTOIMG}] contains the command to run the \fn{pstoimg} utility to convert \PS\ files into images in the required graphics format
+\item[\gn{\$PS\_IMAGES}] when set, hyperlinks to \PS\ files are included on the \texttt{HTML} pages, not \texttt{<IMG>} tags
+\item[\gn{\$REFRESH\_BUTTON}] with frames, text for the 'Refresh' hyperlink in the navigation panel frame
+\item[\gn{\$REL\_DEPTH}] set to 1 with a negative value of \fn{\$MAX\_SPLIT\_DEPTH} to have the actual depth calculated relative to the document class
+\item[\gn{\$REUSE}] settings affect whether images constructed on a previous run of \latextohtml{} are re-used on the next run of the same document
+\item[\gn{\$RGBCOLORFILE}] when \fn{color.perl} has been loaded, holds the name of the file which contains color specifications and names
+\item[\gn{\$ROOTED}] when set, specifies that  the directory set in \fn{\$DESTDIR} is a root for the directories containing the \texttt{HTML} files, rather than containing them directly
+\item[\gn{\$SCALABLE\_FONTS}] used when scalable fonts (e.g. \PS) are available for use with image-generation
+\item[\gn{\$SEGMENT}] is set when the current source is a 'segment' of a larger document
+\item[\gn{\$SEGMENTED}] is set when the current source is the main file for a 'segmented' document
+\item[\gn{\$SERVER}] used in conjunction with image-maps to specify the type of web-server which will interpret the map
+\item[\gn{\$SHORTEXTN}] when set, uses \texttt{.htm } as the filename suffix, rather than \texttt{.html }
+\item[\gn{\$SHORT\_INDEX}] when set, results in a more compact Index being produced
+\item[\gn{\$SHOW\_INIT\_FILE}] when set, the contents of any initialisation file is included on the info-page
+\item[\gn{\$SHOW\_SECTION\_NUMBERS}] when set, \LaTeX's section numbering is included with section titles
+\item[\gn{\$STRICT\_HTML}] flag to indicate that \texttt{HTML} according to the 'strict' DTD should be generated --- not yet implemented
+\item[\gn{\$STYLESHEET}] holds the name of the stylesheet to use as default; generated automatically if empty 
+\item[\gn{\$STYLESHEET\_CASCADE}] can hold a list of alternative styles to precede the default in the style cascade
+\item[\gn{\$TABLE\_CAPTION\_ALIGN}] sets the attribute for positioning captions of \env{table}, and related, environments; default = \verb|'TOP'|
+\item[\gn{\$TEX2HTMLV\_SHORT}] holds a short form of the current version name
+\item[\gn{\$TEXDEFS}] when set, the \fn{texdefs.perl} file is read, allowing some \TeX\ constructions to be interpreted
+\item[\gn{\$TEXEXPAND}] contains the command to run the \fn{texexpand} utility which combines all required portions of input files for a \latextohtml{} document
+\item[\gn{\$TEXINPUTS}] contains the paths for \LaTeX\ to search for styles and input files, when making images
+\item[\gn{\$TIMING}] when set, gives a message on the time taken to perform the main processing of the document
+\item[\gn{\$TITLE}] initially can be set to hold a title for the document, as a whole
+\item[\gn{\$TITLES\_LANGUAGE}] specifies the collection of strings to use as titles, for special document sections
+\item[\gn{\$TMP}] when set in \fn{local.pm}, used by \fn{pstoimg} as a temporary directory for image-generation
+\item[\gn{\$TMP\_PREFIX}] prefix to use for the directory in which image-generation takes place;default value is '\texttt{l2h}'
+\item[\gn{\$IDX\_COLOR}] with frames, holds the color settings for all the \HTMLtag{BODY} options of the Table-of-Contents frame
+\item[\gn{\$TOC\_DEPTH}] sectioning-level down to which links occur on the Table-of-Contents page
+\item[\gn{\$TOC\_STARS}] when set, star-sections are listed/linked on the Table-of-Contents page
+\item[\gn{\$TOC\_WIDTH}] with frames, holds the initial width of the Table-of-Contents frame; default = 150 pixels
+\item[\gn{\$TOP\_NAVIGATION}] when set, a navigation panel is placed at the top of every \texttt{HTML} page, unless overridden by \fn{\$NO\_NAVIGATION} being set also
+\item[\gn{\$TRANSPARENT\_FIGURES}] when set, this specifies that the background of generated images should be made transparent
+\item[\gn{\$TRANSPARENT\_IMAGES}] when set, this \emph{prevents} the background of images from being made transparent (no longer used)
+\item[\gn{\$UNSEGMENT}] when set, \latextohtml{} translates a segmented document as a whole rather than a single segment; use this for testing your segmented document
+\item[\gn{\$UP}] when navigation panels are created, this holds a hyperlink to the parent \texttt{HTML} page
+\item[\gn{\$UP\_TITLE}] when navigation panels are created, this holds a title of the parent \texttt{HTML} page
+\item[\gn{\$USE\_ENTITY\_NAMES}] when set, and \fn{math.pl} and \fn{unicode.pl} are loaded, math symbols are given using entity names, rather than parameter entities
+\item[\gn{\$USENETPBM}] when set, indicates that the \appl{netpbm} graphics utilities are available; (no longer needed)
+\item[\gn{\$VERBOSITY}] has a numerical value which determines the messages to be printed on-screen as \latextohtml{} processes a document
+\item[\gn{\$WHITE\_BACKGROUND}] when set, ensures that images of \env{figure} environments have a white background
+\item[\gn{\$WORDS\_IN\_NAVIGATION\_PANEL\_TITLES}] used to limit the number of words shown with the navigation-panel buttons
+\item[\gn{\$WORDS\_IN\_PAGE}] contains the number of words required before a navigation-panel is placed also at the bottom of a page
+\item[\gn{\$cb\_version}] when using the \env{changebar} package, this holds a version identifier set by the \texttt{\char92cbversion} command
+\item[\gn{\$dd}] ``directory delimiter'', set automatically to `\texttt{/}' in \fn{Override.pm} for Unix systems, and to whatever else is appropriate on other platforms
+\item[\gn{\$default\_language}] specifies the language whose international code should be specified within the \HTMLtag{!DOCTYPE ... } tag
+\item[\gn{\$depth}] holds the value of the sectioning depth when the \HTMLtag{ADDRESS} tag of an \texttt{HTML} page is being created
+\item[\gn{\$envkey}] the delimiter to separate search paths in the values of other variables; e.g. \texttt{:} under Unix, set in \fn{Override.pm}
+\item[\gn{\$file}] holds the name of the \texttt{HTML} page when its \HTMLtag{ADDRESS} tag is being created
+\item[\gn{\$frame_body_name}] with frames, target name for the frame containing the actual data; default = \verb|contents|
+\item[\gn{\$frame_body_suffix}] with frames, filename addition for \texttt{HTML} file containing the actual data; default = \verb|_ct|
+\item[\gn{\$frame_foot_name}] with frames, target name for the frame containing the footnotes; default = \verb|footer|
+\item[\gn{\$frame_head_suffix}] with frames, filename addition for \texttt{HTML} files the navigation panel; default = \verb|_hd|
+\item[\gn{\$frame_idx_name}] with frames, target name for the frame containing the Index; default = \verb|index|
+\item[\gn{\$frame_idx_suffix}] with frames, filename addition for \texttt{HTML} file for the Index frameset; default = \verb|_id|
+\item[\gn{\$frame_main_name}] with frames, target name for the main frame; default = \verb|main|
+\item[\gn{\$frame_main_suffix}] with frames, filename addition for \texttt{HTML} file for the main frameset; default = \verb|_mn|
+\item[\gn{\$frame_toc_name}] with frames, target name for the frame containing the Table-of-Contents; default = \verb|toc|
+\item[\gn{\$frame_toc_suffix}] with frames, filename addition for \texttt{HTML} file for the Table-of-Contents frameset; default = \verb|_tf|
+\item[\gn{\$frame_top_name}] with frames, target name for the outermost frame; predefined constant = \verb|_top|
+\item[\gn{\$image\_pre}] set in \fn{Override.pm} to be the default for \fn{\$IMAGE\_PREFIX}
+\item[\gn{\$title}] holds the title of the current section when the \HTMLtag{ADDRESS} tag of an \texttt{HTML} is being created
+\item[\gn{\textsl  {ALIWEB}}] a network search and retrieval tool
+\item[\gn{amsfonts.perl}] contains code to recognise or implement features of the \env{amsfonts} package for \LaTeX{}
+\item[\gn{amstex.perl}] contains code to recognise or implement features of the \env{amstex} package for \LaTeX{}
+\item[\gn{\textsl  {anonymous ftp}}] pseudonym for use of the \appl{ftp} program as the \texttt{anonymous} user, for file-transfers 
+\item[\gn{\textsl  {Archie}}] publicly-accessible database of files and programs available via \appl{anonymous ftp} or \htmladdnormallinkfoot{using the Web}{http://www.pvv.unit.no/archie/}
+\item[\gn{\textsl  {Arena}}] \htmladdnormallinkfoot{Web-browser}{http://www.w3.org/hypertext/WWW/Arena}; currently the only one which displays \texttt{HTML} 3.1 math markup 
+\item[\gn{article.perl}] implements section-numbering conventions, etc. for the \emph{article} document-class
+\item[\gn{bash}] a unix shell, does not directly support use of \latextohtml
+\item[\gn{bibtex}] bibliography data-base program, used with \LaTeX
+\item[\gn{book.perl}] implements section-numbering conventions, etc. for the \emph{book} document-class
+\item[\gn{\textsl  {CERN}}] originally named ``Conseil Europeen pour la Recherche Nucleaire'', now known as the \htmladdnormallinkfoot{``European Laboratory for Particle Physics''}{http://www.cern.ch/Welcome.html}, located near Geneva; also where the \htmladdnormallinkfoot{World-Wide Web}{http://www.w3.org/hypertext/WWW/TheProject.html} was originally conceived
+\item[\gn{changebar.sty}] \LaTeXe\ package to mark changes in documentation; this super\-cedes an earlier package
+\item[\gn{Changes}] text file, recording the changes made to \latextohtml{} since it was first released in July 1993, until V96.1 and revisions during 1996
+\item[\gn{changes.tex}] input file for the \latextohtml{} manual; normally loaded only with the \texttt{HTML} version
+\item[\gn{chmod}] Unix command for changing the access-privileges on files
+\item[\gn{color.perl}] contains \Perl{} code to implement all the features of \LaTeX's \env{color} package and loads a list of named colors
+\item[\gn{\textsl  {Common \LaTeX\ Commands}}] cardboard lift-out, at the back of the ``Blue Book'', containing a summary of \LaTeX\ commands
+\item[\gn{configure-pstoimg}] \Perl{} script to locate which Unix utilities are available on the local system, for use in generating images
+\item[\gn{crayola.txt}] contains a list of color specifications for the Crayola crayon colors, giving a name and CMYK coordinates 
+\item[\gn{credits.tex}] input file for the \latextohtml{} manual; acknowledges the multitude of contributors to the development of \latextohtml{}
+\item[\gn{csh}] a unix shell, provides support for \latextohtml
+\item[\gn{\textsl {CVS}}] \textsl{Concurrent Version System} software to administer multiple authors updating the software source files
+\item[\gn{\textsl  {DBM}}] Unix Database Management utility
+\item[\gn{dn.gif}] image of a small downward-turning arrow
+\item[\gn{docs/}] subdirectory of \fn{\$LATEX2HTMLDIR} containing the \latextohtml{} documentation and a \fn{Makefile} to control its processing
+\item[\gn{docs/foilhtml/}] subdirectory of \fn{\$LATEX2HTMLDIR} containing an implementation for the \FoilTeX{} system
+\item[\gn{docs/manual.tex}] main \LaTeX\ source for \latextohtml{} documentation
+\item[\gn{dot.latex2html-init}] example initialisation file for \LaTeX2HTML; usually to be found in the \fn{\$LATEX2HTMLDIR}
+\item[\gn{dvips}] \texttt{dvi} to \PS\ conversion program
+\item[\gn{dvipsk}] a variant of \fn{dvips}
+\item[\gn{eform.ps}] \PS\ graphic used in the \latextohtml{} manual
+\item[\gn{example/}] subdirectory of \fn{\$LATEX2HTMLDIR} containing an example illustrating the document segmentation technique
+\item[\gn{features.tex}] input file for a section of the \latextohtml{} manual; describes special features available with \latextohtml{}
+\item[\gn{figure.ps}] another \PS\ graphic used in the \latextohtml{} manual
+\item[\gn{finger}] network utility to obtain information about email addresses of users at computer installations
+\item[\gn{floatfig.sty}] \LaTeXe\ package for floating figures with text flowing around
+\item[\gn{foilhtml.sty}] a \LaTeX{} package that adds structural markup to  \FoilTeX{}
+\item[\gn{foils.perl}] adds \Perl{} code to implement the  \env{foils} document-class of \FoilTeX{} 
+\item[\gn{\FoilTeX}] system for producing transparencies (foils) in \LaTeX.
+\item[\gn{footnode.html}] the \texttt{HTML} page on which the text of footnotes will appear
+\item[\gn{french.perl}] adds \Perl{} code to be compatible with the \fn{french.sty} \LaTeX\ package
+\item[\gn{french.sty}] \LaTeX\ package for documents written in French
+\item[\gn{\textsl  {ftp}}] `File Transfer Protocols', network utility for transferring files
+\item[\gn{\textsl  {FTP search}}] modern Web-based search utility
+\item[\gn{\textsl  {GDBM}}] GNU Database Management utility
+\item[\gn{german.perl}] adds \Perl{} code to be compatible with \fn{german.sty} \LaTeX\ package
+\item[\gn{german.sty}] \LaTeX\ package for documents written in German
+\item[\gn{getcwd.pl}] input file for \Perl{}
+\item[\gn{\textsl  {Ghostscript}}] program to render graphics written in the \PS\ language, or minor variations thereof
+\item[\gn{ghostscript}] Unix command to launch the \appl{Ghostscript} program
+\item[\gn{\textsl  {Ghostscript 3.x}}] latest versions of the \appl{Ghostscript} program
+\item[\gn{giftool}] utility to make transparent the backgrounds of GIF images, or to create interlaced GIF images
+\item[\gn{giftrans}] utility to make transparent the backgrounds of GIF images; not needed if \fn{netpbm} is used
+\item[\gn{graphics.sty}] \LaTeXe\ package for inclusion of graphics within typeset documents
+\item[\gn{grep}] standard Unix utility, useful for finding specific strings within (groups of) files
+\item[\gn{gs}] commonly-used shortening of the \fn{ghostscript} command
+\item[\gn{\textsl {GS-Preview}}] dvi-viewer, using \appl{Ghostscript}
+\item[\gn{gs\_fonts.ps}] read by \appl{Ghostscript} to locate the \PS\ fonts available on the local system
+\item[\gn{heqn.perl}] package adding code to \latextohtml{} for placing equation-numbering at the left of images
+\item[\gn{heqn.sty}] empty \LaTeX\ package to force loading of \fn{heqn.perl}; moves equation numbering to the left of images
+\item[\gn{HTML}] ``Hyper-Text Markup Language'', as used by Web-browsers
+\item[\gn{html.perl}] adds \Perl{} code to be compatible with \fn{html.sty} \LaTeX\ package
+\item[\gn{html.sty}] symbolic link (see below) to a \LaTeX\ package allowing \texttt{HTML} links and conditional code
+\item[\gn{html209.sty}] the \LaTeX2.09 version, target for the symbolic link \fn{html.sty}
+\item[\gn{html2e.sty}] the \LaTeXe\ version, target for the symbolic link \fn{html.sty}
+\item[\gn{htmllist.perl}] contains \Perl{} code to implement the \env{htmllist} environment
+\item[\gn{htmllist.sty}] \LaTeX\ package for the \env{htmllist} environment, which uses special icons in the \texttt{HTML} version
+\item[\gn{hypextra.tex}] input file for a section of the \latextohtml{} manual; describes hypertext extensions
+\item[\gn{IndicTeX-HTML/}] subdirectory of \fn{\$LATEX2HTMLDIR} containing \LaTeX{} and \Perl{} extensions to handle IndicTeX documents
+\item[\gn{icons.gif/}] subdirectory of \fn{\$LATEX2HTMLDIR} containing GIF format versions of the default icons used for navigation buttons and other purposes
+\item[\gn{icons.png/}] subdirectory of \fn{\$LATEX2HTMLDIR} containing PNG format versions of the default icons used for navigation buttons and other purposes
+\item[\gn{icons/}] subdirectory of \fn{\$LATEX2HTMLDIR} containing the default GIF icons used for navigation buttons (no longer used, from v97.1 onwards)
+\item[\gn{image-test.tex}] example test-document for probing into the cause for image-generation problems
+\item[\gn{images.dvi}] the dvi-file created by running \LaTeX\ on \fn{images.tex} for creating images of mathematics and other awkward environments
+\item[\gn{images.log}] the log-file produced by running \LaTeX\ on \fn{images.tex}
+\item[\gn{images.pl}] data file produced by \latextohtml{}; contains information about the images in your document, used for cyclic image generation
+\item[\gn{images.tex}] file created by \latextohtml\ which is passed to \LaTeX\ to typeset complicated environments for conversion to images
+\item[\gn{index.html}] on many systems a file of this name will be sent to the browser when a URL to its parent directory has been specified
+\item[\gn{install-test}] tests the \latextohtml{} installation
+\item[\gn{justify.perl}] package defining HTML 3.2 markup for left/right/center justified paragraphs, interpreting the standard \LaTeX{} environments \env{flushleft}/\env{flushright}/\env{center}
+\item[\gn{justify.sty}] \LaTeX{} package which does nothing other than force loading of \fn{justify.perl} by \latextohtml{}
+\item[\gn{l2hfiles.dat}] contains the descriptive data appearing in this glossary
+\item[\gn{l2hglo.ist}] configuration for \fn{makeindex} to construct this glossary
+\item[\gn{l2hidx.ist}] configuration for \fn{makeindex} to construct the index
+\item[\gn{l2hman.sty}] style-file needed for typesetting the \latextohtml{} manual using \LaTeX{}
+\item[\gn{labels.pl}] data file containing symbolic labels for references to locations within a \texttt{HTML} document produced by \latextohtml{}
+\item[\gn{latex}] command to run to \LaTeX\ 
+\item[\gn{\LaTeX}] the markup language, interpreted by \latextohtml{}; images are processed by the \LaTeX\ program
+\item[\gn{\LaTeXe}] the current version of \LaTeX, first introduced in 1993
+\item[\gn{latex2html}] Unix command to execute the \latextohtml{} script for generating \texttt{HTML} pages from a \LaTeX\ document
+\item[\gn{\LaTeX2HTML}] \Perl{} script to convert \LaTeX\ documents into web-pages, by Nikos Drakos with updates and extensions by others
+\item[\gn{latex2html-96.1.tar.gz}] compressed archive of the Feb. 1996 major \latextohtml{} distribution
+\item[\gn{latex2html-97.1.tar.gz}] compressed archive of the previous (since May. 1997) \latextohtml{} distribution
+\item[\gn{latex2html-98.1.tar.gz}] compressed archive of the latest (since Feb. 1998) \latextohtml{} distribution
+\item[\gn{latex2html.config}] configuration file for \latextohtml, normally to be found in the \fn{\$LATEX2HTMLDIR} directory
+\item[\gn{letter.perl}] implements section-numbering conventions, etc. for the \emph{letter} document-class
+\item[\gn{libpng-0.89c.tar.gz}] implements the \texttt{PNG} image format routines, available via \textsl{Archie}
+\item[\gn{libz}] implements data compression routines, should be part of your operating system, if not get it via \textsl{Archie}
+\item[\gn{licence.tex}] input file for the \latextohtml{} manual; contains the licence statement and copyright notice
+\item[\gn{\textsl  {Linux}}] Unix system for DOS-based PCs; \latextohtml{} will work, provided some variables are set correctly
+\item[\gn{local.pm}] written by \fn{configure-pstoimg}, this \Perl{} file records the locations of the graphics utilities on the local system used by \fn{pstoimg}
+\item[\gn{lslide.sty}] \LaTeX\ package for producing colour-separations
+\item[\gn{\textsl  {lynx}}] character-based Web-browser, available for DOS and Unix systems
+\item[\gn{make}] Unix utility used to track the time-dependency of multiple files in the development of a document or computing project
+\item[\gn{Makefile}] contains the time-dependency data used by the \fn{make} utility
+\item[\gn{makeidx.perl}] adds \Perl{} code to interpret index-entries otherwise intended for the \fn{makeindex} program
+\item[\gn{makeindex}] utility for sorting and filtering textual data; used primarily for making the index or glossary 
+\item[\gn{makemap}] \Perl{} script to generate image-maps
+\item[\gn{makeseg}] \Perl{} script to generate Makefiles for segmented documents, so that you can initiate the translation with a single \texttt{make} call.
+\item[\gn{MakeTeXPK}] script used by \fn{dvips}, and other \texttt{dvi}-drivers, controlling generation of missing fonts
+\item[\gn{manhtml.tex}] input file containing  definitions needed for segments of the \texttt{HTML} version of the \latextohtml{} manual
+\item[\gn{manual.aux}] auxiliary file created by running \LaTeX\ on the \latextohtml{} manual
+\item[\gn{manual.glo}] collects (unsorted) glossary entries for the \LaTeX{} version of the \latextohtml{} manual
+\item[\gn{manual.gls}] file containing the sorted entries for the glossary in the \latextohtml{} manual; created by running \fn{makeindex} on \fn{manual.glo} using \fn{l2hglo.ist}
+\item[\gn{manual.idx}] collects (unsorted) index entries for the \LaTeX{} version of the \latextohtml{} manual
+\item[\gn{manual.ind}] file containing the sorted entries for the index in the \latextohtml{} manual; created by running \fn{makeindex} on \fn{manual.idx} using \fn{l2hidx.ist}
+\item[\gn{manual.tex}] main \LaTeX\ source for the \latextohtml{} manual
+\item[\gn{\textsl  {Metafont}}] generates bitmapped fonts for \TeX\ and \LaTeX\ 
+\item[\gn{misc/}] subdirectory containing miscellaneous files used by \MF{}, often the location for \fn{modes.mf}
+\item[\gn{modes.mf}] used by \MF{} to customise font bitmaps for different printers
+\item[\gn{\textsl  {Mosaic}}] commonly-used Web-browser, see \appl{NCSA Mosaic} below
+\item[\gn{mybutton.gif}] file-name used in example code for an image as a button to a hyperlink
+\item[\gn{natbib.perl}] implements the commands in the \env{natbib} package, allowing flexible styles for citations
+\item[\gn{\textsl  {NCSA}}] ``National Center for Supercomputing Applications'' located at University of Illinois at Urbana--Champaign
+\item[\gn{\textsl  {NCSA Mosaic}}] Web-browser, \htmladdnormallinkfoot{freely available}{http://www.ncsa.uiuc.edu/SDG/Software/Mosaic/Docs/help-about.html} for most platforms
+\item[\gn{\textsl  {NDBM}}] alternative Database Management utility for Unix
+\item[\gn{netpbm}] suite of Unix \htmladdnormallinkfoot{graphics utilities}{ftp://ftp.x.org/contrib/utilities/}; alternative to \fn{pbmplus}
+\item[\gn{\textsl  {Netscape Navigator}}] popular Web-browser, \htmladdnormallinkfoot{commercially available}{http://home.netscape.com} for most platforms and free to academic institutions
+\item[\gn{nharvard.perl}] contains code to load the \env{natbib} package and use this to implement the `harvard' style of citations
+\item[\gn{nslookup}] network utility for findinging network addresses
+\item[\gn{\textsl  {OSF}}] a unix shell
+\item[\gn{Override.pm}] \Perl{} input file for operating system specific constructs like directory delimiter, getenv()/setenv(), and other system calls and quirks
+\item[\gn{overview.tex}] input file for a section of the \latextohtml{} manual; contains a brief summary of \latextohtml's capabilities
+\item[\gn{pbmmake}] Unix graphics utility which creates rectangles of a single color as a bitmapped graphic
+\item[\gn{pbmplus}] suite of Unix \htmladdnormallinkfoot{graphics utilities}{ftp://ftp.x.org/contrib/utilities/}
+\item[\gn{\textsl  {Perl}}] the \htmladdnormallinkfoot{Unix program}{ftp://ftp.uu.net/languages/perl/} which interprets \latextohtml{} and orchestrates the whole conversion process
+\item[\gn{perl}] unix command to run the \Perl{} program on a given script; e.g. on \fn{latex2html} or \fn{pstoimg}
+\item[\gn{PNG}] Portable Network Graphics format, devised as an alternative to GIF with extra capabilities
+\item[\gn{pnmcat}] Unix graphics utility which concatenates several bitmapped graphics to produce a single bitmapped graphic 
+\item[\gn{pnmcrop}] Unix graphics utility which crops whole rows and/or columns of a single color, from specified edges of a bitmapped graphic 
+\item[\gn{pnmfile}] Unix graphics utility which reads a graphic in one of a large range of formats, creating a bitmap suitable for input to other utilities 
+\item[\gn{pnmflip}] Unix graphics utility which rotates and reflects through multiples of $90^\circ$. 
+\item[\gn{pnmtopng}] Unix graphics utility which converts to \fn{PNG} format. 
+\item[\gn{PostScript}] graphics programming language used in printers; interpreted by \appl{Ghostscript}
+\item[\gn{ppmquant}] Unix graphics utility used to limit the number of distinct colours in a single image
+\item[\gn{ppmtogif}] Unix graphics utility used to convert a bitmapped graphic in \texttt{ppm} format into GIF format
+\item[\gn{problems.tex}] input file for the \latextohtml{} manual; contains a description of known problems with \latextohtml{}, and how best to avoid or deal with them
+\item[\gn{psfiles/}] sub-directory of \fn{docs/} containing \PS\ graphics used in the printed version of the \latextohtml{} manual
+\item[\gn{pstogif}] \Perl{} script which controls the conversion of images from \PS\ to GIF bitmaps; replaced by \fn{pstoimg} for V97.1
+\item[\gn{pstoimg}] \Perl{} script which controls the conversion of images from \PS\ to a chosen graphics format
+\item[\gn{pstoppm.ps}] contains \PS\ code needed for image conversion with versions of \appl{Ghostscript} earlier than 3.0
+\item[\gn{pstoppm3.ps}] \texttt{--"--"--} with \texttt{v3.x} of \appl{Ghostscript} and \latextohtml\ earlier than 96.1
+\item[\gn{pstoxbm}] Unix graphics utility that is no longer used by \latextohtml
+\item[\gn{README}] found in \fn{\$LATEX2HTMLDIR}, this file contains simple information concerning the latest release
+\item[\gn{report.map}] example data-file used as input for \fn{makemap} to produce an image-map 
+\item[\gn{report.perl}] implements section-numbering conventions, etc. for the \emph{report} document-class
+\item[\gn{report.ps}] \PS\ version produced by \LaTeX, for the \fn{report.tex} example of a segmented document
+\item[\gn{report.tex}] example source for a segmented document
+\item[\gn{report/}] subdirectory created when processing the example segmented document 
+\item[\gn{rgb.txt}] contains a list of color specifications, giving a name and RGB coordinates 
+\item[\gn{\textsl  {SDBM}}] Unix Database Management utility distributed with \Perl{ 5}
+\item[\gn{sec1.tex}] one section of the example segmented document
+\item[\gn{sec2.html}] one \texttt{HTML} page produced with the example segmented document
+\item[\gn{sec2.tex}] another section of the example segmented document
+\item[\gn{slides.perl}] implements section-numbering conventions, etc. for the \emph{slides} document-class
+\item[\gn{styles/}] subdirectory of \fn{\$LATEX2HTMLDIR} containing \texttt{\Meta{file}.perl} files corresponding to \LaTeX\ packages
+\item[\gn{support.tex}] input file for a section of the \latextohtml{} manual; details installation and some technical aspects
+\item[\gn{tar}] utility for creating, and extracting files from, archives
+\item[\gn{tcsh}] a unix shell, provides support for \latextohtml
+\item[\gn{tests/}] subdirectory of \fn{\$LATEX2HTMLDIR} with various test documents, in particular you might be interested in running {\tt pages.tex} to check the image generation
+\item[\gn{texdefs.perl}] package providing ability to recognise and process some common \TeX\ macro constructions
+\item[\gn{texexpand}] \Perl{} script used with \latextohtml\ for combining the required portions of all input-files into a single document
+\item[\gn{TEXINPUTS}] shell-variable which contains the usual paths used by \LaTeX\ to find packages and other input-files
+\item[\gn{texinputs/}] subdirectory of \fn{\$LATEX2HTMLDIR} containing the \LaTeX\ packages needed to successfully typeset its manual
+\item[\gn{TMP-part1}] first of a series of temporary files created during \latextohtml{} processing; they are automatically deleted unless \Cs{debug} was specified
+\item[\gn{toshiba}] \MF{} mode recommended for setting mathematics and text included within auto\-mat\-ic\-ally generated images
+\item[\gn{up.gif}] image of a small upward-turning arrow
+\item[\gn{url.sty}] \LaTeXe\ package for typesetting URLs across multiple lines 
+\item[\gn{urls.bib}] suggested name for a Bib\TeX\ input file, containing \texttt{@string} definitions for URLs to be used within bibliographic references
+\item[\gn{userman.tex}] input file for the main section of the \latextohtml{} user-manual
+\item[\gn{versions/}] subdirectory of \fn{\$LATEX2HTMLDIR} containing files to adapt to different versions of \texttt{HTML}
+\item[\gn{wrapfig.sty}] \LaTeXe\ package for wrapping text around non-floating figures
+\item[\gn{xv}] useful Unix graphics utility; allows interactive manipulation and format-conversion of bitmapped images

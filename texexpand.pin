@@ -1,0 +1,1337 @@
+#- -*- perl -*- header inserted automatically
+# $Id: texexpand.pin,v 1.12 2004/01/02 08:08:34 RRM Exp $
+#
+# texexpand for LaTeX2HTML v2K
+
+# Based on texexpand by Robert Thau, MIT AI lab, including modifications by
+# Franz Vojik <vojik@de.tu-muenchen.informatik>
+# Nikos Drakos <nikos@cbl.leeds.ac.uk>
+# Sebastian Rahtz <spqr@uk.ac.tex.ftp>
+# Maximilian Ott <max@com.nec.nj.ccrl>
+# Martin Boyer
+# Herbert Swan
+# Jens Lippmann
+
+# Recognizes \documentclass, \documentstyle, \usepackage, \RequirePackage,
+# \begin{verbatim}...\end{verbatim}, %begin{latexonly}...%end{latexonly},
+# \begin{latexonly}...\end{latexonly}, \input, \include, \verb, \latex
+# \endinput, \end{document}
+# \includecomment, \excludecomment
+# \begin{"to exclude"}, \end{"to exclude"}
+# %begin{"to exclude"}, %end{"to exclude"}
+
+###############################################################################
+# Notes:
+#
+# General translation mechanism:
+#
+#
+# The main program latex2html calls texexpand with the document name
+# in order to expand some of its \input and \include statements, here
+# also called 'merging', and to write a list of sensitized style, class,
+# input, or include file names.
+# When texexpand has finished, all is contained in one file, TMP_foo.
+# (assumed foo.tex is the name of the document to translate).
+# 
+# In this version, texexpand cares for following environments
+# that may span include files / section boundaries:
+#  a) \begin{comment}
+#  b) %begin{comment}
+#  c) \begin{any}  introduced with \excludecomment
+#  d) %begin{any}
+#  e) \begin{verbatim}
+#  f) \begin{latexonly}
+#  g) %begin{latexonly}
+# 
+# a)-d) cause texexpand to drop its contents, it will not show up in the
+# output file. You can use this to 'comment out' a bunch of files, say.
+# 
+# e)-g) prevent texexpand from expanding input files, but the environment
+# content goes fully into the output file.
+# 
+# Together with each merging of \input etc. there are so-called %%%texexpand
+# markers accompanying the boundary.
+# 
+# When latex2html reads in the output file, it uses these markers to write
+# each part to a separate file, and process them further.
+#
+#
+#
+# Detailed technical notes:
+#
+# 1. %begin{latexonly} and %end{latexonly} have to be on a separate line.
+#    Anything between these tags (including the tags) is discarded.
+# 2. \begin{latexonly} and \end{latexonly} have to be on a separate line.
+#    Anything between these tags (including the tags) is not expanded.
+# 3. [%\]begin{"to exclude"} and [%\]end{"to exclude"} have to be on a
+#    separate line.
+#    Anything between these tags (including the tags) is discarded.
+# 4. \begin{verbatim/verbatim*} and \end{verbatim/verbatim*} have to be
+#    on a separate line.
+#    Anything between these tags (including the tags) is not expanded.
+# 5. The scope of any such tags may extend over several files.
+#    The opening tag for latexonly may occur on a different include level
+#    than the closing tag.
+#    The opening tag for verbatim/"to exclude" must occur within the same
+#    file than the closing tag.
+# 6. Warnings are printed when the document has been parsed and open
+#    tags remain.
+# 7. When in a "to exclude"/verbatim environment, texexpand won't recognize
+#    ANY command except the corresponding closing tag.
+#    There cannot be any nested constructions.
+#    This behaviour is identical to that of LaTeX.
+# 8. \begin{latexonly},\end{latexonly} may be nested, whereas
+#    %begin{latexonly},%end{latexonly} may not be nested.
+# 9. A "%" tag cannot close a "\" tag, and vice versa.
+# 10. Every \document(class|style), \usepackage, \input and \include command
+#     has to be on a separate line.
+# 11. Everything behind a `%' that isn't preceded by a `\' is regarded as
+#     a comment, i.e. it is printed but not interpreted.
+# 12. If any command listed in 10. is preceded by an occurence of `\verb' or
+#    `\latex' then it is NOT interpreted. This crashes on lines like this:
+#        blah blah \verb+foo foo+ \input{bar} % bar won't be loaded!
+# 13. Packages provided via \usepackage are handled the same way as
+#    `options' in \document(class|style), i.e. they are included when
+#    -auto_exclude is off, the package isn't in @dont_include *OR* the
+#    package is in @do_include (new). They are added to the style file 
+#    together with their options if the file itself hasn't been merged.
+#    \documentclass[options]{class} searches for every option.clo,
+#    \documentstyle[options]{style} searches for every option.sty.
+#    \usepackage[options]{packages} searches for every package.sty.
+# 14. Each texinputs directory is searched for input files/styles. If it
+#    ends in `//', the whole subdirectory tree is searched.
+# 15. \input / \include merge the given file (if found under the given
+#    name or with .tex extension) if its basename is in @do_include or if it
+#    isn't in @dont_include or if the given filename doesn't end in 
+#    .sty/.clo/.cls when -auto_exclude is set.
+#
+###############################################################################
+# History:
+#   mro = Marek Rouchal <marek@saftsack.fs.uni-bayreuth.de>
+#   jcl = Jens Lippmann <lippmann@rbg.informatik.tu-darmstadt.de>
+#
+# $Log: texexpand.pin,v $
+# Revision 1.12  2004/01/02 08:08:34  RRM
+#  --  include support for  -out <outfile>  switch to avoid incompatibility
+#      when  POSIXLY_CORRECT  is set.
+#      Thanks to Juhapekka Tolvanen <juhtolv@iki.fi> for the problem report.
+#
+# Revision 1.11  2000/08/23 04:09:05  RRM
+#  --  fixed typo using  $latexonlyenv  instead of  $latexonlytype
+#  --  keep  $mute=0  for fake-env inside  $latexonly  envs.
+#  --  use \n instead of ',' as delimiter for STYLES lising,
+#      with LaTeX-2e documents, starting with \documentclass
+#
+# Revision 1.10  1999/11/03 11:29:50  RRM
+#  --  recoded  $ignore_cmd_rx ,  thanks Achim Haertel for reporting problem
+#
+# Revision 1.9  1999/10/06 22:04:13  MRO
+#
+# -- texexpand: latex2html calls texexpand with the -out option instead of
+#    output redirection: this is safer on non-UNIX platforms
+# -- pstoimg: now there's no default cropping (useful for standalone
+#    conversions). latex2html was changes appropriately
+# -- minor cleanups in latex2html script and documentation
+#
+# Revision 1.8  1999/10/03 18:40:42  MRO
+#
+# -- some cleanups for beta2
+# -- "make check" now checks all Perl code
+#
+# Revision 1.7  1999/09/16 11:27:01  RRM
+#  --  $keepcomments  environments do not need to start at the beginning
+#  	of the line
+#  --  %begin{latexonly} and $fakeenv environments are now correctly
+#  	handled inside  $keepcomments  environments.
+#
+# Revision 1.6  1999/06/24 07:28:59  MRO
+#
+#
+# -- removed L2HMODULE
+# -- fixed processing of -info switch
+# -- changed option order for dvips on win32 (thanks JCL)
+# -- bumped version to 99.2a8
+#
+# Revision 1.5  1999/06/10 23:00:00  MRO
+#
+#
+# -- fixed an artifact in the *ball icons
+# -- cleanups
+# -- option documentation added
+# -- fixed bug in color perl (determining path to rgb/crayola)
+#
+# Revision 1.4  1999/06/02 12:11:23  RRM
+#  --  the option 'style_file' should be 'save_styles' ; fixed.
+#  --  extended $ignore_cmd_rx to ignore \input commands that are contained
+#      within conditional TeX code;  (e.g. in macro definitions)
+#  --  ignore \usepackage commands in brackets; e.g.  [\usepackage]
+#
+# Revision 1.3  1999/05/31 07:49:04  MRO
+#
+#
+# - a lot of cleanups wrt. OS/2
+# - make test now available (TEST.BAT on Win32, TEST.CMD on OS/2)
+# - re-inserted L2HCONFIG environment
+# - added some new subs to L2hos (path2os, path2URL, Cwd)
+#
+# Revision 1.2  1999/05/17 21:31:00  MRO
+#
+#
+# -- make texexpand warning-free and start making it use strict
+#    compliant
+#
+# Revision 1.1  1999/05/11 06:10:02  MRO
+#
+#
+# - merged config stuff, did first tries on Linux. Simple document
+#   passes! More test required, have to ger rid of Warnings in texexpand
+#
+# Revision 1.30  1999/04/09 18:09:21  JCL
+# changed my e-Mail address
+#
+# Revision 1.29  1998/12/02 07:23:35  RRM
+#  --  closedir(SUBDIR) instead of close(SUBDIR) ; thanks Marek Bukowy
+#      else can run out of filehandles
+#
+# Revision 1.28  1998/08/14 09:35:21  RRM
+#  --  allow the arguments and options to \documentclass (style)
+#  	and \usepackage commands to extend over several lines
+#
+# Revision 1.27  1998/07/03 11:44:54  RRM
+#  --  ignore $keepcomments  environments when  $latexonly
+#
+# Revision 1.26  1998/06/26 08:16:46  RRM
+#  --  quoted $dd for the sake of Win95 and DOS
+#
+# Revision 1.25  1998/05/14 13:34:11  latex2html
+#  	texexpand  for V98.2
+#
+#  --  reordered some of the early code to use the $TEXINPUTS variable
+# 	rather than $ENV{'TEXINPUTS'}
+#  --  LaTeX2HTML passes its value via the command-line
+#  --  Web2C  should *not* be used
+#  --  there is no searching along paths for TeX, just for LaTeX2HTML
+#
+# Revision 1.24  1998/05/09 05:34:13  latex2html
+#  --  removed local customisation, sorry
+#  --  removed the old/commented call to  use Override.pm
+#
+# Revision 1.23  1998/05/09 05:29:54  latex2html
+#  --  cosmetic changes to $debug messages
+#  --  removed duplicated path-searching
+#  --  fixed error whereby full path-names got lost
+#  --  experimented with the Web2C options
+#     Are these actually useful ?
+#
+# Revision 1.22  1998/04/28 11:53:08  latex2html
+#       implemented Fabrice Popineau's changes for Win32 compatibility
+#
+#  --  more functions defined in  Override.pm
+#  --  checks for  kpsewhich  and Web2C
+#
+# Revision 1.21  1998/02/19 22:26:49  latex2html
+# th-darmstadt -> tu-darmstadt
+#
+# Revision 1.20  1997/12/04 07:35:25  RRM
+#  --  include a  use lib  command, to find the Override.pm  module
+#  --  generalised pattern for matching verbatim-like environments
+#
+# Revision 1.19  1997/11/05 11:31:27  RRM
+#  --  changed the way Override.pm is called; this should work better.
+#
+# Revision 1.18  1997/10/14 16:28:16  JCL
+# o added command line option -unsegment and $UNSEGMENT
+#   Use latex2html -unsegment, or texexpand -unsegment, or set $UNSEGMENT to 1
+#   in latex2html.config.
+#
+# Revision 1.17  1997/10/10 10:40:07  RRM
+#  --  Oops, didn't quite get that right last time.
+#
+# Revision 1.15  1997/10/09 07:11:14  RRM
+#  --  temporary fix to the Override problem
+#
+# Revision 1.14  1997/10/06 16:02:29  UW
+# override.pm contains now unlink() too. Adapted the call to override.pm
+# accordingly
+#
+# Revision 1.13  1997/10/06 14:49:37  UW
+# Added support for override.pm to texepand.
+# Furthermore, all references to the path-delimiter ':'
+# should now be made via $envkey
+# Texepand used previously the variable $DS as directory delimiter. Since
+# all other modules use $dd, I changed $DS to $dd.
+#
+# Revision 1.12  1997/09/27 10:36:14  JCL
+# o several enhancements to the inline documentation
+# o small fix to &interprete, \input|include now doesn't loose the comment
+#   if merging fails
+# o introduced -no_segments switch (or set shell variable $NO_SEGMENTS to 1):
+#   This will force a segmented document to expand its segment files, so
+#   that it may be processed as a whole with LaTeX2HTML.
+#   Use this feature to test a segmented document or whenever a document
+#   needs to be fully expanded.
+#   XtractFAQ will need this feature to determine the FAQ entries.
+#
+# Revision 1.11  1997/06/15 18:26:00  JCL
+# Now texexpand will only merge files that exist *and* are readable.
+# (Trying to merge a void link caused it to crash on my site.)
+#
+# Revision 1.10  1997/06/06 14:13:54  RRM
+# This is the texexpand for V97.1.
+#
+#     only dofference is that it is quieter under  -debug .
+#     use  -verbosity <num>  as well, to get all the previous messages,
+#     when  <num> is at least 2.
+#
+# Revision 1.9  1997/03/24 12:26:15  RRM
+# Implemented a new class of environments: $keepcomments .
+# This allows environments of TeX-like code to be preserved verbatim,
+# and passed to LaTeX for processing: e.g. picture, makeimage, xy  etc.
+# Also, fixed the bug which loses any code on the same line as, but preceding
+# an  \input  or  \include  command.
+#
+# Revision 1.8  1997/03/03 20:35:42  JCL
+# added some comments
+#
+# Revision 1.7  1996/12/21 20:30:00  JCL
+# - small changes to get verbatim parsed separately from verbatim*
+# - provided expand test for regression suite
+# - bound diagnostic status messages to debug level
+#
+#   texexpand is operational
+#
+# Revision 1.6  1996/12/20 20:27:08  JCL
+# fixed severe bug with my $DS variable :-[
+#
+# Revision 1.5  1996/12/20 18:51:54  JCL
+# *** empty log message ***
+#
+# Revision 1.4  1996/12/20 01:29:39  JCL
+# Moved initialisation tokens for @dont_include to latex2html.config,
+# to have a more central place to control them.
+#
+# Revision 1.3  1996/12/18 04:36:58  JCL
+# substantial changes to allow for environments grouping several files
+#  o chunked code into more functions
+#  o revised documentation
+#  o designed new parsing logic
+#  o introduced parsing of \includecomment, \excludecomment to care
+#    for self-defined comment environments
+#  o handles default "comment" environment as known from html.sty
+#  o and much more (see comments)
+#
+#
+# V96.2a6 Fixed bug in recursive directory search for texinputs. Thanks to
+#         Marcus Harnisch <harnisch@hhi.de> for reporting the bug.
+#         Included possibility of adding extensions to $TEXE_DONT_INCLUDE
+#         e.g. '.psfig', so that all files ending in .psfig won't be
+#         \input or \include 'ed. Same for $TEXE_DO_INCLUDE. Added `o' 
+#         option to some regexps.
+# -------
+# V96.2a5 Followed suggestions by Jens Lippmann regarding file inclusion
+#         logic. Added \RequirePackage. Some minor changes.
+# -------
+# V96.2a4 Fixed severe bugs in comments regexp and usepackage logic.
+#         Thanks to Ross Moore <roos@mpce.mq.edu.au> for reporting them.
+#         Added support for LaTeX2e .clo filename extension (see 7. above)
+#         Cleaned up some code, added more comments
+#         Added command line option -do_include
+# -------
+# V96.2a3 Fixed bugs & typos
+# -------
+# V96.2a2 Following suggestions made by 
+#         Jens Lippmann <lippmann@rbg.Informatik.TH-Darmstadt.DE>
+#         Added recursive directory search for include files.
+#         Added @do_include: Forces inclusion of packages (when found)
+#         Some bug fixes
+# -------
+# V96.2a1 released Thu Oct 24 16:51:36 MET 1996
+# -------
+# 21-NOV-96 mro
+# Almost complete rewrite by Marek Rouchal <marek@saftsack.fs.uni-bayreuth.de>
+#
+###############################################################################
+
+use vars qw($LATEX2HTMLDIR $SCRIPT);
+#- the (texlive) wrapper sets these values
+#- or it is stored in the enviroment
+
+#unless @wrapper@ || @texlive@
+BEGIN {
+  # print STDERR "scanning for l2hdir\n";
+  if($ENV{LATEX2HTMLDIR}) {
+    $LATEX2HTMLDIR = $ENV{LATEX2HTMLDIR};
+  } else {
+    $ENV{LATEX2HTMLDIR} = $LATEX2HTMLDIR = '@LATEX2HTMLDIR@';
+  }
+
+  if(-d $LATEX2HTMLDIR) {
+    push(@INC,$LATEX2HTMLDIR);
+  } else {
+    die qq{Fatal: Directory "$LATEX2HTMLDIR" does not exist.\n};
+  }
+}
+#fi
+
+use L2hos;
+
+my $RELEASE = '@distver@';
+my ($VERSION) = q$Revision: 1.12 $ =~ /:\s*(\S+)/;
+
+my $envkey = L2hos->pathd();
+
+# $dd is the directory delimiter character
+my $dd = L2hos->dd();
+
+my $prompt = "\ntexexpand:";
+
+# Initialize styles to be excluded (if any).
+# This is a sanity setup in case the \d is garbled during shell
+# variable handling.
+# The initialisation really comes from latex2html.config.
+my @dont_include = ('\d+pt');
+
+# These are the extensions to be auto-excluded
+my $dont_include_ext_rx = 'sty|cls|clo';
+
+if($ENV{'TEXE_DONT_INCLUDE'}) {
+    &process_dont_include(split(/$envkey/,$ENV{'TEXE_DONT_INCLUDE'}));
+}
+
+# Initialize styles to be included (if any). This overrides @dont_include
+# These are the extensions to be auto-included
+my $do_include_ext_rx = '';
+
+if($ENV{'TEXE_DO_INCLUDE'}) {
+    &process_do_include(split(/$envkey/,$ENV{'TEXE_DO_INCLUDE'}));
+}
+
+# Parse arguments
+use Getopt::Long;
+my %opt = ();
+unless(GetOptions(\%opt, qw(-help -version -debug -verbose -w
+     -do_include=s@ -dont_include=s@ -auto_exclude -unsegment
+     -save_styles=s -texinputs=s@ -output=s -out=s))) {
+  die "$prompt Error: Invalid option(s) specified.\n";
+}
+
+if($opt{help}) {
+  print STDERR "-- to be implemented --\n";
+  exit 0;
+}
+&banner();
+if($opt{version}) {
+  exit 0;
+}
+
+my $debug = $opt{debug} || 0; # no debug by default
+$debug = 2 if($opt{verbose});
+
+if($opt{dont_include} && @{$opt{dont_include}}) {
+    &process_dont_include(@{$opt{dont_include}});
+}
+if($opt{do_include} && @{$opt{do_include}}) {
+    &process_do_include(@{$opt{do_include}});
+}
+
+my $TEXINPUTS = '';
+if(@{$opt{texinputs}}) {
+    $TEXINPUTS = join($envkey, @{$opt{texinputs}});
+}
+
+unless(@ARGV) {
+  die "$prompt Error: No input file specified.\n";
+}
+my $infile = shift(@ARGV);
+if(@ARGV) {
+  die "$prompt Error: More than one input file specified.\n";
+}
+
+#FP: Web2C does not use @texinputs at all
+# moreover, it uses kpsewhich to find files, so no need to
+# bother with @texinputs
+    # $Web2C = &find_executable('kpsewhich',$ENV{'PATH'});
+
+#RRM: I don't think it is a good idea to use  kpsewhich  this way
+my $Web2C = '';
+
+# Initialize texinputs
+my @texinputs = qw(.);
+if($TEXINPUTS) {
+    my $dir;
+    foreach $dir (split(/$envkey/, $TEXINPUTS)) {
+        push (@texinputs, $dir)
+	    if(($dir =~ /\S+/) && ($dir ne '.')); # save only if non-empty
+    }
+}
+
+## Ignore the environment
+#    if((!$TEXINPUTS)&&(defined $ENV{'TEXINPUTS'})) {
+#	foreach $dir (split(/$envkey/,$ENV{'TEXINPUTS'})) {
+#	    push (@texinputs, $dir)
+#		if (($dir =~ /\S+/)&&($dir ne '.')); # save only if non-empty
+#	}
+#    }
+
+
+## Expand paths with `~'
+#    $homeDir = (getpwuid($<))[7];
+#    grep(s|^~$dd|$homeDir$dd|, @texinputs);
+#    grep((m|^~([^$dd]+)$dd|) &&
+#	($homeDir = (getpwnam($1))[7]) && (s||$homeDir$dd|), @texinputs);
+
+&initialise;
+&main;
+exit(0);
+
+sub banner {
+    print STDERR "texexpand V$RELEASE (Revision $VERSION)\n";
+}
+
+sub initialise {
+# Create generic regexp's:
+# If this matches before a command, the command is ignored.
+    $ignore_cmd_rx =
+#	'(\\latex\W|\\verb|\\expandafter|\\ifx|\\else\W|[\|\[\@]$)';
+  "(\\\\latex\\W|\\\\verb|\\\\expandafter|\\\\ifx|\\\\else\\W|[\\|\\[\\@]\$)";
+# This matches a square bracket pair (typically an option list).
+    $options_rx = '(\[[^\]]*\]|)';
+# This matches a single argument.
+    $arg_rx = '\{([^\}]*)\}';
+    $fakeenv_rx = '(comment)';
+    $keepcomments_rx = '(picture|makeimage|xy|diagram)';
+
+# Print environments
+    my $dir;
+    if ($debug) {
+ 	print STDERR "$prompt LaTeX2HTML inputs are in:";
+#	foreach $dir (@texinputs) { print STDERR "$prompt   $dir"; }
+        if ($Web2C) {
+	    print STDERR "$prompt " . `kpsewhich -expand-var \$TEXINPUTS` ;
+#RRM: I cannot make this work, to replace the `...` in the line above
+#	    local($kpse) = "kpsewhich -expand-var=\$TEXINPUTS";
+#	    print STDERR "$prompt $kpse";
+#	    $kpse = system($kpse);
+#	    print STDERR "$prompt $kpse";
+        } else {
+            foreach $dir (@texinputs) { print STDERR "$prompt    $dir"; }
+        }
+
+	if ($debug>1) {
+	    print STDERR "\n$prompt Special names (not to be input or included):";
+	    foreach $name (@dont_include) { print STDERR "$prompt   $name"; }
+	    print STDERR "\n$prompt Extensions of files not to be input or included: "
+		. "$dont_include_ext_rx";
+
+	    print STDERR "\n$prompt Special names (to *be* input or included):";
+	    foreach $name (@do_include) { print STDERR "$prompt   $name"; }
+	    print STDERR "\n$prompt Extensions of files to *be* input or included: "
+		. "$do_include_ext_rx\n";
+	}
+    }
+    print STDERR "\n$prompt %--- Expanding $infile" if ($debug>1);
+}
+
+
+sub main {
+# Note that verbatim/latexonly may split over different files!
+# $verbatim is 1 if inside a verbatim environment,
+# $latexonly is > 0 if inside latexonly environments
+# $includelevel indicates the depth of include/input
+    local($includelevel) = 0;
+    local($verbatim,$verbatimname) = (0,"");
+    local($latexonly,$latexonlytype) = (0,"");
+    local($fakeenv,$fakeenvname,$fakeenvtype) = (0,"","");
+    local($keepcomments,$keepcommentsname) = (0,"");
+    local($active,$mute) = (1,0);
+
+# Main procedure
+    $dont_include_rx = join("|",@dont_include);
+    $do_include_rx = join("|",@do_include);
+
+    if($opt{save_styles}) {
+	open(STYLES,">$opt{save_styles}")
+            || die "$prompt Error: Cannot open style file '$opt{save_styles}': $!\n";
+    }
+    my $out_file = $opt{output}||$opt{out};
+    if($out_file) {
+	open(OUT,">$out_file")
+            || die "$prompt Error: Cannot open output file '$out_file': $!\n";
+    }
+    else {
+	open(OUT,">&STDOUT");
+    }
+
+    &process_file($infile); # the workhorse...
+
+    close(OUT) if $out_file;
+    close(STYLES) if ($opt{save_styles});
+
+    print STDERR "$prompt Warning: No ${latexonlytype}end\{latexonly\} found."
+	if ($latexonly);
+    print STDERR "$prompt Warning: No ${fakeenvtype}end\{$fakeenvname\} found."
+	if ($fakeenv);
+    print STDERR "$prompt Warning: No \\end\{$keepcommentsname\} found."
+	if ($keepcomments);
+    print STDERR "$prompt Warning: No \\end{verbatim} found."
+	if ($verbatim);
+}
+
+
+# Include and parse a file.
+# This routine is recursive, see also &process_input_include_file,
+# &process_document_header, and &process_package_cmd.
+#
+# Two global flags control the states of texexpand.
+#  o $active is true if we should interprete the lines to expand
+#    files, check for packages, etc.
+#  o $mute is true if we should prevent the lines from going
+#    into the out file.
+#
+# We have three general states of texexpand:
+#  1) interprete the lines and pass them to the out file
+#     This is the normal case.
+#     Corresponding: $active true, $mute false
+#  2) interprete minimal and suppress them
+#     This is when parsing inside a comment environment, which
+#     also would retain its body from LaTeX.
+#     => $active false, $mute true
+#  3) interprete minimal and pass the lines to the out file
+#     This is inside a verbatim or latexonly environment.
+#     The line of course must be at least interpreted to
+#     determine the closing tag.
+#     => $active false, $mute false
+#
+# Any environment may extend over several include files.
+# Any environement except verbatim and latexonly may have its
+# opening or closing tag on different input levels.
+# The comment and verbatim environments cannot be nested, as
+# is with LaTeX.
+# We must at least parse verbatim/comment environments in
+# latexonly environments, to catch fake latexonly tags.
+#
+# The work scheme:
+# Five functions influence texexpand's behavior.
+# o &process_file opens the given file and parses the non-comment part in
+#   order to set $active and $mute (see above).
+#   It calls &interprete to interprete the non-comment content and either
+#   continues with the next line of its file or terminates if &interprete
+#   detected the \end{document} or an \endinput.
+# o &interprete handles some LaTeX tags with respect to the three states
+#   controlled by $active and $mute.
+#   Regarding to \input|include, \document(class|style), and
+#   \(use|Require)package the functions &process_input_include_file,
+#   &process_document_header, and &process_package_cmd are called respectively.
+# o These three functions check if the file name or option files are enabled
+#   or disabled for merging (via TEXE_DO_INCLUDE or TEXE_DONT_INCLUDE).
+#   Any file that is to include will be 'merged' into the current file, i.e.
+#   the function &process_file is called at this place in time (recursively).
+#   This will stop interpretation at the current line in file, start with the
+#   new file to process and continues with the next line as soon as the new
+#   file is interpreted to its end.
+#
+# The call tree (noweb+xy.sty would be handy here):
+#
+#     main
+#       |
+#       v
+#  +->process_file
+#  |    |
+#  |    v
+#  |  interprete (with respect to the current line, one of that three)
+#  |    |                           |                        |
+#  |    v                           v                        v
+#  |  process_input_include_file  process_document_header  process_package_cmd
+#  |    |                           |                        |
+#  |    v                           v                        v
+#  +----+---------------------------+------------------------+
+#
+# Bugs:
+# o Since the latexonly environment is not parsed, its contents
+#   might introduce environments which are not recognized.
+# o The closing tag for latexonly is not found if hidden inside
+#   an input file.
+# o One environment tag per line, yet!
+# o If I would have to design test cases for this beast I would
+#   immediately desintegrate into a logic cloud.
+#
+# Notes:
+# o Ok, I designed test cases for it.
+#   Please refer to test 'expand' of the regression test suite
+#   in the developers' module of the l2h repository.
+# o -unsegment feature:
+#   In this (rare) case, the user wants to translate a segmented document
+#   not in segments but in a whole (for testing, say).
+#   We enable this by recognizing the \segment command in &interprete,
+#   causing the segment file to be treated like \input but loosing the first
+#   lines prior to \startdocument (incl.), as controlled via $segmentfile.
+#   On how to segment a document you are best guided by section
+#   ``Document Segmentation'' of the LaTeX2HTML manual.
+#
+sub process_file {
+    my ($infile) = @_;
+    local(*IN);
+    local($comments,$before,$orig);
+
+
+    # Keep track of input/include level
+    $includelevel++;
+
+    open(IN,"<$infile") || die "$prompt Cannot open $infile\n";
+    print STDERR "$prompt %--- Processing $infile" if ($debug > 1);
+
+    # if we don't include this file marker LaTeX2HTML won't split
+    # the document at this point
+    print OUT "%%% TEXEXPAND: INCLUDED FILE MARKER $infile\n"
+	if ($includelevel > 1 && $active);
+
+    if ($segmentfile) {
+	# This variable is set by &interprete to change the behavior of the
+	# next file to merge.
+	while(<IN>) {
+	    # strip comments
+	    s/(^|[^\\])(\\\\)*(%.*)/$comments = $3; $1.$2/e;
+	    last if /^\s*\\startdocument/;
+	}
+	$segmentfile = 0;
+    }
+
+    while(<IN>) {
+	#for debugging
+	$orig = $_;
+
+	# lift comments from line
+	$comments = "";
+	if ($keepcomments) { $comments = '' }
+	else {
+	    s/(^|[^\\])((?:\\\\)*)(%.*)/$comments = $3; $1.$2/e
+	}
+
+	# Deal with latexonly environment(s)
+	# begin/end tags must be on single line
+	if (!$fakeenv && !$verbatim && !$latexonly && (
+	    ($comments =~ /%\s*begin\s*\{\s*latexonly\s*\}/)||
+	    ($keepcomments && /%\s*begin\s*\{\s*latexonly\s*\}/))) {
+
+	    # A comment latexonly environment. May not be nested.
+	    $latexonly = 1;
+	    $latexonlytype = "%";
+	    $active = 0;
+	    $mute=1;
+	}
+	elsif (!$fakeenv && !$verbatim &&
+	       (!$latexonly || $latexonlytype eq "\\") &&
+	       /^\s*\\begin\s*\{\s*latexonly\s*\}/) {
+
+	    # A latexonly environment. LaTeX types may be nested,
+	    # but discard them as long as we are in a latexonly
+	    # comment part.
+	    # We definitely don't like to push the "\\", "%" types
+	    # onto a stack to keep track of them in alternating types.
+	    # On the other hand we won't allow for a comment type
+	    # part to close a LaTeX environment, eg.
+	    $latexonly++;
+	    $latexonlytype = "\\";
+	    $active = 0;
+	}
+	elsif (!$fakeenv && !$verbatim && (
+	       ($comments =~ /%\s*begin\s*\{\s*$fakeenv_rx\s*\}/)||
+	       ($keepcomments && /%\s*begin\s*\{\s*$fakeenv_rx\s*\}/))) {
+	    # Begin of a fake comment part. May not be nested.
+	    $fakeenv=1;
+	    $fakeenvtype="%";
+	    # Remember the part name.
+	    $fakeenvname = $1;
+	    $active=0;
+	    $mute=1 unless $latexonly;
+	}
+	elsif (!$fakeenv && !$verbatim && /^\s*\\begin\s*\{\s*$fakeenv_rx\s*\}/) {
+	    # Begin of a fake environment. May not be nested.
+	    $fakeenv="1";
+	    $fakeenvtype="\\";
+	    # Remember the environment name.
+	    $fakeenvname = $1;
+	    $active=0;
+	    $mute=1 unless $latexonly;
+	}
+	elsif (!$fakeenv && !$verbatim && !$latexonly &&
+		/^\s*\\begin\s*\{\s*$keepcomments_rx\s*\}/) {
+	    # Begin of a keepcomments environment. May be nested.
+	    if (! $keepcomments) {
+		$keepcomments = 1;
+		# Remember the environment name.
+	        $keepcommentsname = $1;
+	    } elsif ($keepcommentsname eq $1) {
+		$keepcomments++;
+	    }
+	    $active=1;
+	    $mute=1 unless $latexonly;
+	}
+#	elsif (!$fakeenv && !$verbatim && /\\begin\s*\{\s*verbatim(\*)?\s*\}/) {
+	elsif (!$fakeenv && !$verbatim && /\\begin\s*\{\s*(\w*[Vv]erbatim\w*\*?)\s*\}/) {
+	    ($before,$verbatimname) = ($`,$1);
+	    ($active,$verbatim) = (0,1)
+		unless ($before =~ /$ignore_cmd_rx/o);
+	}
+
+	print STDERR "$prompt %--line::${orig}%--      active=$active mute=$mute ".
+	    "latexonly=$latexonly fakeenv=$fakeenv verbatim=$verbatim ".
+	    "keepcomments=$keepcomments"
+		if ($debug > 1) && $orig =~ /\\begin|%\s*begin/;
+
+	# Interprete the single line, care for file to merge,
+	# locate new comment environments, etc.
+	# This one does recursive calls.
+	# Stop this file if we are told so.
+	last
+	    unless &interprete($_, $comments);
+
+	last if $end_document;
+
+	# Sorry for that ifs...
+	if (!$fakeenv && !$verbatim && $latexonly && $latexonlytype eq "%" && (
+	    ($comments =~ /%\s*end\s*\{\s*latexonly\s*\}/)||
+	    ($keepcomments && /%\s*end\s*\{\s*latexonly\s*\}/))) {
+
+	    # only %end{latexonly} can close the part
+	    $latexonly=0;
+	    $active = 1;
+	    $mute = 0;
+	}
+	elsif (!$fakeenv && !$verbatim && $latexonly && $latexonlytype eq "\\" &&
+	    /^\s*\\end\s*\{\s*latexonly\s*\}/) {
+
+	    # only \end{latexonly} can close the environment
+	    $latexonly--;
+	    $active = ($latexonly ? 0 : 1);
+	}
+	elsif ($fakeenv && $fakeenvtype eq "%" && (
+	       ($comments =~ /%\s*end\s*\{\s*$fakeenv_rx\s*\}/)||
+	       ($keepcomments && /%\s*end\s*\{\s*$fakeenv_rx\s*\}/))) {
+
+	    # only a matching %end{name} can close the part
+	    if ($1 eq $fakeenvname) {
+		$fakeenv=0;
+		$active = ($latexonly ? 0 : 1);
+		$mute=0
+		    unless $latexonly && $latexonlytype eq "%";
+	    }
+	}
+	elsif ($fakeenv && $fakeenvtype eq "\\" &&
+	       /^\s*\\end\s*\{\s*$fakeenv_rx\s*\}/) {
+
+	    # only a matching \end{name} can close the environment
+	    if ($1 eq $fakeenvname) {
+		$fakeenv=0;
+		$active = ($latexonly ? 0 : 1);
+		$mute=0 unless $latexonly;
+	    }
+	}
+	elsif ($keepcomments &&
+	       /^[^%]*?\\end\s*\{\s*$keepcomments_rx\s*\}/) {
+
+	    # only a matching \end{name} can close the part
+	    if ($1 eq $keepcommentsname) {
+		$keepcomments--;
+		$keepcommentsname = '' unless ($keepcomments);
+		$active = ($latexonly ? 0 : 1);
+		$mute=0
+		    unless $latexonly && $latexonlytype eq "%";
+	    }
+	}
+#	elsif ( /\\end\s*\{\s*verbatim(\*)?\s*\}/) {
+	elsif ( /\\end\s*\{\s*(\w*[Vv]erbatim\w*\*?)\s*\}/) {
+	    if ($1 eq $verbatimname) {
+		$verbatim=0;
+		$active = ($latexonly ? 0 : 1);
+	    }
+	}
+	print STDERR "$prompt %--line::${orig}%--      active=$active mute=$mute ".
+	    "latexonly=$latexonly fakeenv=$fakeenv verbatim=$verbatim"
+		if ($debug > 1) && $orig =~ /\\end|%\s*end/;
+
+    }
+    print OUT "%%% TEXEXPAND: END FILE $infile\n"
+	if ($includelevel > 1 && $active);
+    close(IN);
+    $includelevel--;
+}
+
+
+# Handle the LaTeX tags \input, \include, \endinput, \documentclass,
+# \documentstyle, \usepackage, \RequirePackage, \end{document},
+# \includecomment, \excludecomment with respect to the three states
+# controlled by $active and $mute.
+# The state 'interprete minimal and suppress' ($active false, $mute true)
+# does not require further actions, just do nothing.
+# When in $active state, call one of &process_input_include_file,
+# &process_document_header, or &process_package_cmd to examine the
+# apropriate line further.
+# 
+# Returns 0 if the caller is to stop interpreting the current file (\endinput).
+# Returns 1 otherwise.
+# Set $end_document to 1 if an \end{document} is detected (this stops
+# the whole task of texexpand).
+#
+sub interprete {
+    local($_,$comments) = @_;
+    local($line) = $_;
+    local($before,$after);
+
+    # the default to print to OUT
+    $line =~ s/\n/$comments\n/;
+
+    if ($active) {
+	#looses $comments on successful input/include, document header,
+	#or usepackage/RequirePackage
+
+	if (/\\(input|include)\W/) { 
+	    ($before,$after) = ($`,$&.$');
+	    if ($before =~ /$ignore_cmd_rx/o) {
+		print OUT $line;
+	    }
+	    else {
+                if (length($before)) {
+		    #put prefix to \\input etc. to single line
+		    print OUT $before,"\%\n";
+		    #mask special chars
+                    $before =~ s/(\W)/\\$1/g;
+		    #strip prefix from total line incl. comments
+		    $line =~ s/$before//;
+		}
+		# print total line incl. comments if merging failed
+		print OUT $line
+		    #may re-enter &process_file
+		    unless &process_input_include_file($after);
+	    }
+	}
+#	elsif (/\\(usepackage|RequirePackage)\s*$options_rx\s*$arg_rx/s) {
+	elsif (/\\(usepackage|RequirePackage)[^]]/s) {
+	    $before = $`;
+	    if($before =~ /$ignore_cmd_rx/o) {
+		print OUT $line;
+	    }
+	    else {
+		while (!/\\(usepackage|RequirePackage)\s*$options_rx\s*$arg_rx/so) {
+		    chomp; $_ =~ s/%.*$//;
+		    $_ .= <IN>;
+		}
+		&process_package_cmd($_);
+	    }
+	}
+#	elsif (/\\document(class|style)\s*$options_rx\s*$arg_rx/o) {
+	elsif (/\\document(class|style)/o) {
+	    $before = $`;
+	    if ($before =~ /$ignore_cmd_rx/o) {
+		print OUT $line;
+	    }
+	    else {
+		while (!/\\document(class|style)\s*$options_rx\s*$arg_rx/so) {
+		    chomp; $_ =~ s/%.*$//;
+		    $_ .= <IN>;
+		}
+		&process_document_header($_);
+	    }
+	}
+	elsif ($opt{unsegment} && /^\s*\\segment(\*?)\s*$options_rx\s*$arg_rx\s*$arg_rx\s*/) {
+	    # We found a segmenting command which must vanish.
+	    # Therefore, mutate the \segment into the section command specified
+	    # by $4 (section, subsection, ...) and $1 (* or empty) followed by
+	    # the section text, and an \input statement with filename $3.
+	    # To obtain the section text, we need to take a preview to the next
+	    # lines, as it might be truncated with %'s.
+	    # Line truncations between the regex above (like \segment%\n) are
+	    # not recognized.
+	    # There are as much lines fetched as required to satisfy the equality
+	    # of the amounts of left and right braces, since we aren't able to
+	    # handle nested brace pairs.
+	    # If this strategy fails, texexpand is terminated, thereby satisfying
+	    # the 'all or nothing' requirement.
+
+	    local($file) = $3;
+	    print OUT "\\$4$1";
+	    $after = $_ = $'; #get tail
+	    local($left,$right) = (tr/\{/\{/,tr/\}/\}/);
+	    while (($left != $right) || !$left) {
+		#braces not balanced or no opening brace at all, get next line
+		$_ = <IN>;
+		die "$prompt arguments to \\segment are too complex\n"
+		    unless length($_) && length($after) < 500;
+		# strip comments
+		s/(^|[^\\])(\\\\)*(%.*)/$1$2/;
+		$left += tr/\{/\{/; $right += tr/\}/\}/;
+		$after .= $_;
+	    }
+	    $after =~ /\}([^\}]*)$/;
+	    $after = $1;
+	    $_ = $`;
+	    # Ok we have it. $_ should carry the whole section title plus
+	    # opening brace, the original lines squeezed into one.
+	    print OUT $_,"}\n";
+
+	    # set this globally to control behavior of next &process_file
+	    $segmentfile = 1;
+	    die "$prompt segment file <$file> could not be merged"
+		unless &process_input_include_file("\\input\{$file\}$after");
+	}
+	# Print the first /end{document}, only.  Truncate anything after it.
+	elsif (/^(.*\\end\{document\})/) {
+	    $before = $1;
+	    if ($before =~ /$ignore_cmd_rx/o) {
+		print OUT $line;
+	    }
+	    else {
+		print OUT "$before\n";
+		$end_document++;
+	    }
+	}
+	elsif (/\\endinput/) {
+	    $before=$`;
+	    return(0)	#stop this file
+		if ($includelevel > 1 && $before !~ /$ignore_cmd_rx/o);
+	}
+	elsif (/\\(in|ex)cludecomment\s*$arg_rx/o) {
+	    local($mode,$env) = ($1,$2);
+
+	    $env =~ s/\s//g; #strip space
+	    # escape special chars (such as "*"), but reject "|"
+	    $env =~ s/(\W)/\\$1/g;
+	    unless ($env =~ /\|/) {
+		$fakeenv_rx =~ /\((.*)\)/;
+		# might also be empty
+		local(@envs) = split(/\|/,$1);
+
+		if ($mode eq "ex") {
+		    push(@envs,$env);
+		}
+		else {
+# a dumb try to forget the comment environment if redefined
+		    $env =~ s/\\/\\\\/g;
+		    #must not use $_ inside grep pattern!
+		    @envs = grep(!/$env/,@envs);
+		}
+		$fakeenv_rx = "\(".join("|",@envs)."\)";
+	    }
+	}
+	else {
+	    print OUT $line;
+	}
+    }
+    elsif (! $mute) {
+	# print line if in verbatim/comment mode
+	print OUT $line;
+    }
+    return(1);		#continue if not $end_document
+}
+
+
+sub process_input_include_file {
+    local($_) = @_;
+    local($before,$after,$class,$styles);
+    $_ =~ s/\n$//;
+
+    print STDERR "$prompt %--- Found include at level $includelevel: $_"
+	if($debug);
+
+# Get filename
+    local($filename) = "";
+
+    # $class serves as temporary storage
+    if (/(\\input|\\include)\s*$arg_rx/o) {
+	($before,$after,$class,$filename) = ($`, $', $&, $2);
+	$filename =~ s/\s//g;
+    }
+    elsif (/(\\input|\\include)\s+(\S+)(?=\s|$)/o) {
+	($before,$after,$class,$filename) = ($`, $', $&, $2);
+	$filename =~ s/\s//g;
+    }
+    else {
+	print STDERR "$prompt %--- COULDN'T FIND FILENAME\n" if($debug);
+    }
+
+    if ($filename) {
+	# Get base name
+	$styles = $filename;
+	$styles =~ s|.*\Q$dd\E||; # strip path
+	$styles =~ s/\.[^.]*$//; # strip extension
+
+	# Sorry for the next if-statement... (hmm,ok)
+	if ($styles !~ /^($do_include_rx)$/o &&
+	    $filename !~ /\.($do_include_ext_rx)$/o &&
+	    ($styles =~ /^($dont_include_rx)$/o || 
+	     ($opt{auto_exclude} && $filename =~ /\.($dont_include_ext_rx)$/o))) {
+	    print STDERR "$prompt %--- ignoring $filename" if($debug);
+	    print STYLES "$styles\n" if($opt{save_styles});
+	}
+	else {
+	    local($fname) = &find_file($filename);
+
+	    # notify anyway that a file is found, to allow a Perl
+	    # module loaded for this specific file
+#	    print STYLES "$styles\n" if($opt{save_styles});
+
+	    if($fname) {
+		print OUT "$before";
+
+		# recursive call
+		&process_file($fname);
+
+		print OUT $after if($after =~ /\S+/);
+		print STDERR "$prompt %--- successfully included $filename"
+		    if($debug > 1);
+
+		return(1); #merge
+	    }
+	    else {
+		print STDERR "$prompt include $filename failed. Reinserting $before command\n";
+	    }
+	}
+    }
+    return(0);		#no merge
+}
+
+
+sub process_document_header {
+    local($_) = @_;
+    local(%style_include,@print_styles,$key,$isclass);
+
+    local($before, $latextype, $styles, $class, $after);
+    if(/\\document(class|style)\s*$options_rx\s*$arg_rx/o) {
+        ($before, $latextype, $styles, $class, $after) =
+            ($`, $1, $2 || '', $3, $');
+	if ($latextype =~ /class/) { $isclass = 1; }
+    } else {
+        print OUT $_;
+        return;
+    }
+
+    $_ =~ s/\n$//;
+    print STDERR "$prompt %--- Found $latextype: $_\n" if($debug);
+    $styles =~ s/\[(.*)\]/$1/; # Strip braces
+    $class =~ s/\s//g;	# Strip spaces
+    # the class cannot be included, so stuff it in the style file
+    print STYLES "$class".($isclass ? '':"\n") if($opt{save_styles});
+
+    foreach $key (split(/,/, $styles)) {
+	$key =~ s/\s//g; # strip spaces
+	push(@print_styles,$key);
+	if (&should_include($key)) {
+# mark the style for inclusion and search for the
+# corresponding .clo (LaTeX2e) or .sty (LaTeX209)
+# &find_file gives the filename or undef.
+	    $style_include{$key} =
+		&find_file($key . (($latextype =~ /class/) ? '.clo' : '.sty'));
+	}
+    }
+    $styles = '';
+    foreach $key (@print_styles) {
+	if(!$style_include{$key}) {
+# put style back into command and save it to the style file
+	    print STYLES ($isclass ? " $key," : "$key\n") if($opt{save_styles});
+	    $styles .= ',' . $key;
+	}
+    }
+    if ($styles) {
+	$styles =~ s/^,//;
+	$styles = '[' . $styles . ']';
+    }
+    print OUT join('', $before, "\\document", $latextype, $styles,
+		   '{', $class, '}', $after);
+    # Include styles after the \document(class|style) command
+    foreach $key (@print_styles) {
+	if($style_include{$key}) {
+	    &process_file($style_include{$key});
+	}
+    }
+    print STYLES "\n" if($opt{save_styles} && $isclass);
+}
+
+
+sub process_package_cmd {
+    local($_) = @_;
+    local(%style_include,@print_styles,$key);
+
+    /\\(usepackage|RequirePackage)\s*$options_rx\s*$arg_rx/o;
+    local ($before,$class,$options,$styles,$after) =
+      ($`, $1, $2 || '', $3, $');
+
+    print STDERR "$prompt %--- Found \\$class: $_" if($debug > 1);
+    $options =~ s/\[(.*)\]/$1/o; # strip braces
+
+    foreach $key (split(/,/,$styles)) {
+	$key =~ s/\s//g; # strip spaces
+	# Remember each package and check whether to merge it
+	push(@print_styles,$key);
+	if (&should_include($key)) {
+	    $style_include{$key}=&find_file($key . '.sty');
+	}
+    }
+    $styles = '';
+    foreach $key (@print_styles) {
+	if (!$style_include{$key}) {
+	    # print to style file and reinsert into command
+	    # if package is not to be merged
+	    print STYLES "$key $options\n" if($opt{save_styles});
+	    $styles .= ',' . $key;
+	}
+    }
+    if($styles) {
+	# Reconstruct command
+	$styles =~ s/^,//;
+	$options = '[' . $options . ']' if($options =~ /\S+/);
+	print OUT $before . '\\' . $class . $options .
+	    '{' . $styles . '}' . $after;
+    }
+    else { print OUT $before . $after; }
+    foreach $key (@print_styles) {
+	if($style_include{$key}) {
+			# merge style files
+	    &process_file($style_include{$key});
+	}
+    }
+}
+
+
+sub process_dont_include {
+    my @items = @_;
+    my $item;
+    foreach $item (@items) {
+        if($item =~ s/^\.//) { # starts with `.'? Then it's an extension
+	    $dont_include_ext_rx .= "|\Q$item\E";
+        } else {
+	    push(@dont_include,$item);
+        }
+    }
+    1;
+}
+
+sub process_do_include {
+    my @items = @_;
+    my $item;
+    foreach $item (@items) {
+        if($item =~ s/^\.//) { # starts with `.'? Then it's an extension
+	    $do_include_ext_rx .= (($do_include_ext_rx eq '') ? '' : '|') .
+                "\Q$item\E";
+        } else {
+	    push(@do_include,$item);
+        }
+    }
+    1;
+}
+
+# Returns true if style has to be included, i.e.:
+#  1. The style is found in do_include *or*
+#  2. Automatic exclusion is disabled and the style is *not* found in
+#     dont_include
+#
+sub should_include {
+    my ($style) = @_;
+
+    return($style =~ /^($do_include_rx)$/o ||
+	   (!$opt{auto_exclude} && $style !~ /^($dont_include_rx)$/o ));
+}
+
+
+sub find_file {
+    local($file) = @_;
+    local($fname,$dname);
+    local($found)=0;
+    print STDERR "$prompt %--- checking for $file" if($debug);      
+
+#    if ($file =~ m|^$dd|) {
+    if (L2hos->is_absolute_path($file)) {
+	$fname=$file;
+	if(&file_or_ext) { $found=1; }
+    } else {
+	if ($Web2C) {
+	    $file =~ s/\s+//g;
+            if ($file =~ s/\.([^\.]+)\Z//) {
+		@ext = ($1);
+	    } else {
+		@ext = ('tex', 'ltx', 'sty');
+	    }
+	    foreach $ext (@ext) {
+		chop($fname = `kpsewhich -format=.tex $file.$ext`);
+#RRM: I cannot make this work, to replace the `...` in the line above
+#		$fname = &syswait("kpsewhich -format=.tex $file.$ext");
+#		chop $fname;
+		print STDERR "$prompt    kpsewhich says : $fname" if $debug;
+		$found = 1;
+		last;
+	    }
+	} else {
+	   # search input directories
+	   foreach $dir (@texinputs) {
+		($dname = $dir) =~ s|[\Q$dd\E]+$||; # Remove slashes at the end
+		if (-d $dname) {
+		    if ($fname = &dir_search($dir,$file)) {
+			$found = 1;
+			last;
+		    }
+		} else {
+		print STDERR "$prompt %--- Warning: \"$dname\" is no directory"
+		    if ($debug);
+		}
+	    }
+	}
+    }
+
+    if ($found) {
+	print STDERR "$prompt %--- found $fname" if ($debug);
+	return($fname);
+    } else {
+	print STDERR "$prompt %--- file not found" if ($debug);      
+	return(undef);
+    }
+}
+
+
+sub dir_search {	# search directory recursively
+    local($dir,$file) = @_;
+    local(*SUBDIR);	# make file pointer local
+    local($dname,$found,$recursive) =('',0,0);
+
+    if ($dir =~ m|\Q$dd$dd\E$|) { # does dir end in `//'?
+	$recursive = 1;
+    }
+    $dir =~ s|[\Q$dd\E]+$||; # Remove any slashes at the end
+    local($fname) = join ($dd, $dir, $file);
+
+    print STDERR "$prompt %--- looking for $fname" if($debug);
+    # Does file exist in this directory?
+    if (&file_or_ext) {
+	return($fname);
+    }
+    elsif ($recursive) { # descend into subdirectories?
+	# search directory for subdirectories
+	opendir(SUBDIR,$dir); # open directory
+	while (defined($_=readdir(SUBDIR))) { # read dir-entries
+	    next if(/^\./); # do not check dotfiles
+	    $dname = join ($dd, $dir, $_);
+	    if ((-d $dname) && ($fname = &dir_search($dname.$dd.$dd,$file))) {
+		$found = 1;
+		last;
+	    }
+	}
+	closedir(SUBDIR);
+	if ($found) {
+	    return($fname);
+	}
+    }
+    return(0);
+}
+
+
+sub file_or_ext {
+    # Modifies $fname
+    # if $fname exists return success otherwise
+    # if $fname.tex exists, then bind $fname to $fname.tex and return success
+    # else fail
+
+    return 1 if(!-d $fname && -r $fname); # && -s $fname;
+    return 0 if $fname =~ /\.tex$/;
+    $fname .= ".tex";
+    return 1 if -f $fname && -r $fname;# && -s $fname;
+    return 0;
+}
+

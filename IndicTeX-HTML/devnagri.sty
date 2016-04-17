@@ -1,0 +1,95 @@
+% $Id: devnagri.sty,v 1.3 2001/05/21 10:25:47 RRM Exp $
+%  devnagri.sty by Ross Moore <ross@mpce.mq.edu.au> $
+%  Mathematics Department, Macquarie University, Sydney, Australia.
+% $Log: 
+%
+% LaTeX2e package for typesetting Devanagari script with the:
+%
+%  `devnag'  pre-processor and  dvng  fonts
+%       by Frans J. Velthuis' <velthuis@rc.rug.nl>
+%
+%   and the  dev.sty  LaTeX-2e interface 
+%       by Dominik Wujastyk <D.Wujastyk@ucl.ac.uk>
+%
+%   retaining support for the old  dev2e.sty  LaTeX-2e interface 
+%       by Dominik Wujastyk <D.Wujastyk@ucl.ac.uk>
+%
+% Furthermore it can be used with the transcription scheme
+% devised by Jeroen Hellingman, for his  `patc' pre-processor
+% requiring macro files:  dnmacs.tex  and  dntrmacs.tex
+%
+%
+% These resources are *not* included with this package.
+% Obtain them from CTAN:  http//ctan.tug.org/ctan
+%
+% ===================================================================
+% This package has a corresponding implementation for  LaTeX2HTML 
+% called:  devnagri.perl .
+% With LaTeX2HTML the options on the \usepackage line specify which
+% pre-processor and transcription mode to use.
+%
+% Usage:
+%
+%  \usepackage[devnag]{devnagri}     %|  uses Velthuis' pre-processor
+%  \usepackage[hindi]{devnagri}      %|    patc -p <option>.pat
+%  \usepackage[marathi]{devnagri}    %|  with language options, and macros:
+%  \usepackage[nepali]{devnagri}     %|   dngmacs.tex  dntrmacs.tex
+%  \usepackage[sanskrit]{devnagri}   %|  
+%
+%  \usepackage{devnagri}             %|  source already pre-processed
+%  \usepackage[preprocess]{devnagri} %|  same as  \usepackage[devnag]{devnagri}
+%
+%  \usepackage[dev209]{devnagri}       %|  old LaTeX-209 version
+%  \usepackage[olddevnag]{devnagri}    %|  old LaTeX-209 version
+%  \usepackage[old,...]{devnagri}      %|  uses LaTeX-209 version with others
+%
+%  \usepackage[patc]{devnagri}         %|  also uses Jeroen Hellingman's 
+%  \usepackage[patc,hindi]{devnagri}   %|    patc -p <option>.pat
+%  \usepackage[patc,marathi]{devnagri} %|  with language options, and macros:
+%  \usepackage[patc,nepali]{devnagri}  %|   dngmacs.tex  dntrmacs.tex
+%  \usepackage[patc,sanskrit]{devnagri}%|  
+%
+%
+% ===================================================================
+%
+\ProvidesFile{devnagri.sty}[2000/10/04]
+%
+\NeedsTeXFormat{LaTeX2e}
+%%\RequirePackage{dev2e}
+\def\devnag@package{dev}
+%
+\DeclareOption{preprocess}{\ds@devnagri}
+\DeclareOption{devnag}{\ds@devnag}
+\DeclareOption{patc}{\ds@devnagri}
+\DeclareOption{hindi}{\ds@devnag}
+\DeclareOption{marathi}{\ds@devnag}
+\DeclareOption{nepali}{\ds@devnag}
+\DeclareOption{sanskrit}{\ds@devnag}
+\DeclareOption{old}{\ds@olddevnag}
+\DeclareOption{dev209}{\ds@olddevnag\ds@devnag}
+\DeclareOption{olddevnag}{\ds@olddevnag\ds@devnag}
+\DeclareOption*{\@latexerr{%
+ \CurrentOption is an invalid option, using `preprocess' instead.}{}%
+ \ds@devnagri}
+
+\def\ds@olddevnag{\def\devnag@package{dev209}}
+
+%%  for output from   `patc'  pre-processor
+\def\ds@devnagri{\def\devnagriloaded{}%
+ \IfFileExists{dnmacs}{\AtBeginDocument{\input{dnmacs}}}{\typeout{ *** %
+ The Devanagari language options require  dnmacs.tex  and the  dvng fonts.}}}
+%%
+%%
+%%\let\ds@devnag=\ds@devnagri
+\def\ds@devnag{\def\devnagriloaded{}}
+%
+\def\@loaddevnagri{\IfFileExists{dntrmacs}{\AtBeginDocument{\input{dntrmacs}}}%
+{\typeout{ *** The file  dntrmacs.tex  could not be found; transcriptions may fail.}}}
+
+\ProcessOptions*
+
+\RequirePackage{\devnag@package}%
+
+\expandafter\ifx\csname devnagriloaded\endcsname\relax\expandafter\ds@devnag\fi
+\endinput
+

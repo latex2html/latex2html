@@ -1,0 +1,414 @@
+%******************************************************************
+% $Id: htcweb.sty,v 1.2 1999/04/09 19:25:34 JCL Exp $
+%******************************************************************
+%
+% Copyright 1998-1999 by Jens Lippmann (lippmann@rbg.informatik.tu-darmstadt.de)
+%
+% Permission to use, copy, modify, and distribute this software for any
+% purpose and without fee is hereby granted, provided that the above
+% copyright notice appears in all copies. This software is provided "as is"
+% and without any express or implied warranties.
+%
+%******************************************************************
+% htcweb.tex, htcweb.sty
+% Macros for alternative CWEB listings to use with LaTeX2HTML
+% extends original file: hywebmac.tex or cwebmac.tex, depending
+% on \HTCwebmode value which is preset at the beginning of the document.
+% See also htcweb.perl, the perl translation of this file's and
+% hywebmac.tex's resp. cwebmac.tex's macros.
+% See also ProcessCwebTex, the Perl script to convert weaved documents
+% into parsable shape for LaTeX2HTML.
+%******************************************************************
+
+%% Prevent multi-input
+\ifx\HTCwebstyloaded\relax\endinput\else\let\HTCwebstyloaded\relax\fi
+
+\def\HTCwebmodecweb{cweb}
+\def\HTCwebmodehyweb{hyweb}
+\expandafter\ifx\csname HTCwebmode\endcsname\relax
+  \expandafter\ifx\csname HyTeXSetUp\endcsname\relax
+    \def\HTCwebmode{cweb}\else
+    \def\HTCwebmode{hyweb}\fi\fi
+\ifx\HTCwebmode\HTCwebmodecweb
+% We are able to work with Schrod's cweb-sty only.
+% CWEB's cwebmac does exactly nothing with LaTeX, but let's input it.
+% Schrod defines CWEB's bindings elsewhere (in cweb.sty resp.
+% cweb.cls), and doesn't set CWEB's special chars. We do it here.
+\input cwebmac
+\chardef\AM=`\& % ampersand character in a string
+\chardef\BS=`\\ % backslash in a string
+\chardef\LB=`\{ % left brace in a string
+\chardef\RB=`\} % right brace in a string
+\def\SP{{\tt\char`\ }} % (visible) space in a string
+\chardef\TL=`\~ % tilde in a string
+\chardef\UL=`\_ % underline character in a string
+\chardef\CF=`\^ % circumflex character in a string
+\def\oct{\hbox{$^\circ$\kern-.1em\it\aftergroup\?\aftergroup}}% CWEB style
+\def\hex{\hbox{$^{\scriptscriptstyle\#}$\tt\aftergroup}} % CWEB style
+\fi
+\ifx\HTCwebmode\HTCwebmodehyweb
+% Get the original LaTeX macros, then introduce simpler macro names.
+% The \sbox stuff is a workaround to get LaTeX 2e run with hywebmac.tex
+\let\HTCwebsavesbox\sbox
+\input hywebmac
+\let\HTCwebsaveoldsbox\sbox
+\let\sbox\HTCwebsavesbox
+\fi
+\makeatletter
+
+
+% Name: @HTCwebnoderef @HTCwebpretty
+% Interface: internal
+% Synopsis:
+%     @HTCwebnoderef <label> <no>
+%     @HTCwebpretty <name>
+% Description:
+%     Depending on Cweb or Hyweb mode, leave <no> or \noderef <label> <no>.
+%     In Hyweb mode, use @HTCwebpretty to nice up the refinement <name> a bit.
+%
+\ifx\HTCwebmode\HTCwebmodecweb
+  \def\@HTCwebnoderef#1#2{#2}%
+  \def\@HTCwebpretty#1{#1}%
+\fi
+\ifx\HTCwebmode\HTCwebmodehyweb
+  \def\@HTCwebnoderef#1#2{\noderef{#1}{#2}}%
+  \def\@HTCwebpretty#1{\underline{\HTCwebidbo{#1}}}%
+\fi
+
+
+\let\@HTCweblabelson=0
+
+\def\@HTCwebverb{\def\do##1{\catcode`##1=12}%
+\do\#\do\_\do\{\do\}\do\$\do\^\do\&\do\%\do\\\relax}
+
+\def\@HTCwebspch{\catcode`_=13\relax}
+
+\def\@HTCwebnextfile#1,#2\\{\edef\@HTCwebfilename{#1}\def\@HTCwebfilelist{#2}}
+\newif\if@HTCwebfileok
+\newread\@HTCwebfilein
+\def\@HTCwebreadfile{\openin\@HTCwebfilein=\@HTCwebfilename.lbl %<- space
+  \ifeof\@HTCwebfilein\typeout{No labels from \@HTCwebfilename.lbl, ignored}\else
+    \typeout{Reading label file \@HTCwebfilename.lbl}%
+    {\@HTCwebfileoktrue\loop
+      {\@HTCwebverb\global\read\@HTCwebfilein to \@HTCwebfilelinea}
+      \ifeof\@HTCwebfilein\@HTCwebfileokfalse\else
+        \expandafter\@HTCwebauxa\@HTCwebfilelinea::: :\\%
+        {\@HTCwebspch\global\read\@HTCwebfilein to \@HTCwebfilelineb}
+        \ifeof\@HTCwebfilein\@HTCwebfileokfalse
+          \errmessage{Corrupted label file \@HTCwebfilename.lbl}\else
+          \expandafter\@HTCwebauxb\@HTCwebfilelineb::: :\\%
+  \fi\fi\if@HTCwebfileok\repeat}%
+  \closein\@HTCwebfilein\fi}
+
+% A fake \HTCweblabels is defined in htcweb.tex which expands to this macro
+\def\HTCweblabelsEnv#1#2{\if1\@HTCweblabelson\else
+  \global\let\@HTCweblabelson=1\@HTCwebmakelabels\fi
+  \def\@HTCwebfilelist{#1,}{\loop
+    \expandafter\@HTCwebnextfile\@HTCwebfilelist\\%
+    \def\nope{}\ifx\@HTCwebfilename\nope\else
+    \ifx\@HTCwebfilename\jobname\else\@HTCwebreadfile\fi\fi
+    \ifx\@HTCwebfilelist\nope\else\repeat}}
+
+\def\endHTCweblabelsEnv{}
+
+\def\@HTCwebauxa#1:#2:#3:#4 :#5\\{\gdef\HTCwebaux{#4}% must not use xdef
+\expandafter\gdef\csname HTCweblabelfile\HTCwebaux\endcsname{#1}%
+\expandafter\gdef\csname HTCweblabelname\HTCwebaux\endcsname{#2}%
+\expandafter\gdef\csname HTCweblabelno\HTCwebaux\endcsname{#3}}
+
+{\catcode`+=8 \catcode`_=13
+\gdef\@HTCwebauxb#1:#2:#3:#4 :#5\\{%
+% Do not use \xdef, cause \_ somehow goes haywire if flattened.
+% Let active _ be local in any case
+\expandafter\gdef\csname HTCweblabelftext\HTCwebaux\endcsname{{%
+\catcode`_=13 \def_{\ifmmode+\else\_\fi}\relax #1.w}}%
+\expandafter\gdef\csname HTCweblabelntext\HTCwebaux\endcsname{{%
+\catcode`_=13 \def_{\ifmmode+\else\_\fi}\relax #2}}%
+% We must care here for _'s in math at least.
+\expandafter\gdef\csname HTCweblabeltext\HTCwebaux\endcsname{{%
+\catcode`_=13 \def_{\ifmmode+\else\_\fi}\relax #4}}%
+\global\expandafter\let\csname HTCweblabelon\HTCwebaux\endcsname=1}}
+
+\def\@HTCwebmakelabels{\if@filesw \newwrite\@HTCweblabelfile
+  \immediate\openout\@HTCweblabelfile=\jobname.lbl
+  \typeout{Writing label file \jobname.lbl}
+% Provide a way to cite a complete cweb file
+  \expandafter\@HTCwebauxa\jobname:section_1:1:\jobname.w :\\%
+  {\@HTCwebspch\relax% this doesn't flip catcodes in \jobname XXX.
+  \expandafter\@HTCwebauxb\jobname:section_1:1:\jobname.w :\\}
+  \write\@HTCweblabelfile{\jobname:section_1:1:\jobname.w}%
+  \write\@HTCweblabelfile{\jobname:section_1:1:\jobname.w}%
+\fi}
+ 
+\def\@HTCwebwrlabel#1#2#3{\relax
+  \write\@HTCweblabelfile{\jobname:#1:#2:#3}\relax
+  \write\@HTCweblabelfile{\jobname:#1:#2:#3}\relax}
+
+
+% Description of extern ref feature \HTCwebX..\HTCwebX, which replaces
+% the original \X0..\X of CWEB.
+% We have to be careful with math mode, since the outer math chars of
+% \X0..\X have been removed during conversion to HTCweb macros.
+%
+% a) if HTCweblabelson:
+%    HTCwebX goes verbatim and makes ~ the escape char.
+%    It defines \\ (~\ in input line) locally, such that
+%    \HTCwebX~\HTCwebNodeRefExt{bubble name}~\HTCwebX ->
+%           \\HTCwebNodeRefExt{#1         }\\HTCwebX
+%    and #1 holds the bubble name in verbatim chars.
+%    This macro first terminates the verbatim group.
+%    Then, with #1 as bubble name
+% a1)  if HTCweblabelon<bubble name> is 1:
+%      The textual bubble name, the external file name and section no
+%      are displayed using the original \X..\X macro.
+% a2)  else
+%      The *verbatim* bubble name is displayed together with \X0..\X.
+%      This is a slight deficiency against CWEB, but we have no workaround
+%      here cause we must scan bubble name at least verbatim.
+%    Note: We have to go completely into verbatim mode. This affects the
+%      open/close group brace, too. Thus, we can't use {,} as macro arg
+%      delimiter in \\. Left hand of #1, we have the (verbatim)
+%      delimiter 'HTCwebNodeRefExt{ ', right hand we have '}\\HTCwebX'.
+%      We will take care of this at the place we define HTCwebX.
+% b) else
+% b1) if doc part
+%     HTCwebX does nothing.
+%     The ~ has its normal meaning. It will add extra space before
+%     and after the bubble brackets, this is neglected.
+%     HTCwebNodeRefExt gives #1, the textual bubble name, to \X0..\X.
+%     We have no math mode. \X will handle this.
+% b2) if code part
+%     Behaviour like b1), but the two ~'s act like math signs,
+%     this means \X0..\X is called within math mode.
+% 
+{\catcode`]=2 \catcode`\}=12 \catcode`[=1 \catcode`\{=12
+\gdef\HTCwebX[\if1\@HTCweblabelson\begingroup
+  \def\\HTCwebNodeRefExt{##1}\\HTCwebX[\endgroup
+    \expandafter\if1\csname HTCweblabelon##1\endcsname
+    \PB[$\X\csname HTCweblabelftext##1\endcsname\ \csname HTCweblabelno##1\endcsname:%
+    \@HTCwebpretty[\csname HTCweblabeltext##1\endcsname]\X$]\typeout[+ @<##1@>]%
+    \else\PB[$\X0:\@HTCwebpretty[\ ##1]\X$]\typeout[- @<##1@>]\fi]%
+  \catcode`\~=0\@HTCwebverb\fi]]
+
+
+% Name: HTCwebNodeRef
+% Interface: machine
+% Synopsis:
+%     HTCwebNodeRef <labellist> <name>
+%     labellist ::= {<label>}{<no>}(, {<label>}{<no>})*
+% Equal to Cweb:
+%     \X<labelnolist>:<name>\X
+%     labelnolist ::= <no>(, <no>)*
+% Equal to Hyweb:
+%     \X<nodelabellist>:<name>\X
+%     nodelabellist ::= \noderef{<label>}{<no>}(, \noderef{<label>}{<no>})*
+% Description:
+%     Typeset <name> as refinement reference using \X.
+%     <no> is the number of the first refinement, <label> its label.
+%     If a refinement consists one multiple parts (+=), <labellist> is a comma
+%     separated list of <label><no> pairs.
+%     The data \jobname, <label>, <no>, and <name> is written once to the
+%     label file.
+%     Leaves the \X...\X sequence to render the output.
+% Preconditions:
+%     <labellist> must contains at least one <label><no> pair.
+%
+\def\@HTCwebgetnext#1, #2\\{\def\@HTCweblist{#2}\def\@HTCwebnext{#1}}
+\def\HTCwebNodeRef#1#2{%
+  %%%
+  %%% Get first <label><no> pair.
+  %%%
+  \@HTCwebgetnext #1, \\%<-- space
+  % define help macro to split <label><no> into <label> and <no>
+  \def\@HTCwebtmpa##1##2{\def\@HTCwebtmpb{{##1}}\def\@HTCwebtmpc{{##2}}%
+    \def\@HTCwebtmpd{@HTCwebsection##2}}%
+  \expandafter\@HTCwebtmpa\@HTCwebnext
+  %%%
+  %%% If external labels are wanted, write data to label file.
+  %%%
+  \if1\@HTCweblabelson
+    % did label for refinement numbered <no> been written?
+    \expandafter\if1\csname\@HTCwebtmpd\endcsname
+    \else
+      % no, write <label>, <no>, <name> and remember this
+      \expandafter\@HTCwebwrlabel\@HTCwebnext{#2}%
+      \global\expandafter\let\csname\@HTCwebtmpd\endcsname=1%
+    \fi
+  \fi
+  %%%
+  %%% Parse the comma separated <labellist> and compute a list
+  %%% \@HTCwebnoderef{<label>}{<no>}(, \@HTCwebnoderef{<label>}{<no>})*
+  %%% which is named \@HTCwebtmpoutlist. It will appear after the first \X.
+  %%% \@HTCwebnoderef cares for its arguments in respect of the mode (see above).
+  %%%
+  % initialize out list. must be global because the loop defines it in
+  % some deeper group nesting level.
+  % the \expandafters assure that the contents of \@HTCwebnext is
+  % taken, not \@HTCwebnext itself
+  \expandafter\gdef
+  \expandafter\@HTCwebtmpoutlist
+  \expandafter{%
+  \expandafter\@HTCwebnoderef\@HTCwebnext}%
+  % parse rest of list and append it to out list
+  \def\@HTCwebtmpe##1##2{\expandafter\gdef\expandafter\@HTCwebtmpoutlist
+    \expandafter{\@HTCwebtmpoutlist, \@HTCwebnoderef{##1}{##2}}}%
+  {\loop\def\nope{}%
+  \ifx\@HTCweblist\nope\else
+    \expandafter\@HTCwebgetnext\@HTCweblist\\%
+    \expandafter\@HTCwebtmpe\@HTCwebnext
+  \repeat}%
+  % pass \X's, out list and refinement name to TeX
+  % let out list expand first
+  \expandafter\PB
+  \expandafter{%
+  \expandafter\X\@HTCwebtmpoutlist:\@HTCwebpretty{#2}\X
+  }%
+}
+
+
+% \HTCwebNodeRefExt is defined in htcweb.tex
+% We introduced a fake \HTCwebNodeRefExt in such a way that its argument
+% appears in an environment.
+% In l2h, this enables us to slurp the arg before it gets expanded, to
+% wield the original (almost raw) expression of the bubble name.
+\def\HTCwebNodeRefExtEnv#1{\PB{\X0:\@HTCwebpretty{#1}\X}}
+\def\endHTCwebNodeRefExtEnv{}
+
+
+% The .idx (list of identifiers) and .scn (list of refinements) are processed
+% after \end{document}.
+% To let l2h go beyond this, we hide the \end{document} away.
+% Also we have to reset the fake \HTCwebNodeRefExt to its original, because
+% LaTeX environments are not allowed anymore after the document ended.
+\def\HTCwebdocumentend{\gdef\HTCwebNodeRefExt{\HTCwebNodeRefExtEnv}\end{document}}
+
+\def\HTCwebpar{\egroup\par} %JL 14.2. see \B
+
+\def\HTCwebidit{\\}% italic type for identifiers
+\def\HTCwebidma{\|}% one-letter identifiers
+\def\HTCwebidbo{\&}% boldface type for reserved words
+\def\HTCwebidtt{\.}% typewriter type for strings
+\def\HTCwebdiscr{\)}% discretionary
+
+\def\HTCweboneright{\1}% indent one more notch
+\def\HTCweboneleft{\2}% indent one less notch
+\def\HTCweboptbreak{\3}% optional break within a statement
+\def\HTCwebthisleft{\4}% backspace one notch
+\def\HTCwebbigoptbreak{\5}% optional break
+\def\HTCwebbreak{\6}% forced break
+\def\HTCwebbigbreak{\7}% forced break and a little extra space
+\def\HTCwebclearleft{\8}% no indentation
+\def\HTCwebempty{\9}% do nothing (eats its arg)
+
+\def\HTCwebmathque{\?}% relation sign
+
+%\let\@HTCweboldB=\B
+\def\HTCwebB{\B\bgroup\catcode`~=3\relax}% uses new math mode
+
+\def\HTCwebsmllspc{\,}
+
+\makeatother
+\endinput
+
+%******************************************************************
+#
+# $Log: htcweb.sty,v $
+# Revision 1.2  1999/04/09 19:25:34  JCL
+# changed my e-Mail address
+#
+# Revision 1.1  1998/02/24 02:29:51  latex2html
+# for 98.1
+#
+# Revision 1.1  1998/02/24 02:15:58  latex2html
+# ready for 98.1
+#
+# Revision 1.10  1997/11/10 09:24:33  zohar
+# th-darmstadt -> tu...
+#
+# Revision 1.9  1997/09/13 01:09:31  lippmann
+# minor change
+#
+# Revision 1.8  1997/06/01 11:56:09  lippmann
+# o changed name from htmlmac to htcweb
+# o htcweb.perl takes different actions depending on $HTCwebmode
+#   (\U, \Us, \Q, \Qs string translation currently)
+#
+# Revision 1.7  1997/06/01 08:18:24  lippmann
+# Introduced the name space HTCweb, which will be used both in TeX and Perl
+# packages and for mapping to some CWEB internals hidden from LaTeX2HTML.
+#
+# HTmode, HTpretty, HTnoderef -> HTCweb...
+# HTweb -> HTCweb
+# \ciao -> \HTCwebdocumentend
+# 1 -> HTCweboneright
+# 2 -> HTCweboneleft
+# 3 -> HTCweboptbreak
+# 4 -> HTCwebthisleft
+# 5 -> HTCwebbigoptbreak
+# 6 -> HTCwebbreak
+# 7 -> HTCwebbigbreak
+# 8 -> HTCwebclearleft
+# 9 -> HTCwebempty
+# idit -> HTCwebidit
+# idma -> HTCwebidma
+# idbo -> HTCwebidbo
+# idtt -> HTCwebidtt
+# discr -> HTCwebdiscr
+# mathque -> HTCwebmathque
+# smllspc -> HTCwebsmllspc
+#
+# Revision 1.6  1997/05/31 01:56:38  lippmann
+# o new face for \HTwebNodeRef to parse a list of <label><no> pairs occurring
+#   in multi-part refinement citations in the list of refinements
+# o more documentation
+# o small enhancements
+#
+# Revision 1.5  1997/02/11 01:52:56  lippmann
+# \HTlabels... macros may now occur multiply
+#
+# Revision 1.4  1997/02/04 20:08:22  lippmann
+# changed local newread, newif to be global
+#
+# Revision 1.3  1996/12/11 11:00:43  lippmann
+# introduced macros to handle Schrod's LaTeX CWEB
+#
+# Revision 1.2  1996/11/04 14:39:33  lippmann
+# provides now linkage to complete web file:
+#
+# use |@<foo.w@>| to link to file foo.w (exactly: to section 1 of it)
+#
+# Revision 1.1.1.1  1996/07/08 15:46:25  liefke
+# initial version for Darmstadt
+#
+# Revision 1.1.1.1  1996/07/08 15:35:41  liefke
+# initial version for Darmstadt
+#
+# Revision 1.9  1996/06/25 20:54:51  lippmann
+# percent was missing after numerical constant, which affected alignment
+# of bubble names in DVI
+#
+# Revision 1.8  1996/06/20  02:28:35  lippmann
+# added \relax in \B
+#
+# Revision 1.7  1996/06/20  02:17:50  lippmann
+# first intensive tested revision with external bubble referencing
+# - HTweblabels{<dvi label files list>}{<html dir list>} to switch it on
+#   (list comma separated)
+# - writes its \jobname.lbl file when TeX'ed
+# - reads external dvi label files
+# - external bubble references are solved into <bubble_name file section_no>
+#   if possible, else <bubble_name 0>, the old behaviour
+# - supports LaTeX2HTML (together with htmlmac.tex)
+# - narrative comment explanations
+# - bubble names may be complex TeX and filenames may contain underscores
+#
+# Caveat:
+# The contents is pure death to someone who isn't fertile in plain TeX.
+#
+# Revision 1.6  1996/05/27  22:06:23  lippmann
+# moved nasty cvs logging after \endinput
+#
+# Revision 1.5  1996/05/23  00:45:02  lippmann
+# supports now LaTeX 2e
+#
+%******************************************************************

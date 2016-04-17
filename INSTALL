@@ -1,0 +1,442 @@
+LaTeX2HTML 99.2 Installation Manual
+===================================
+
+The installation procedure has changed substantially from version 98.3 on.
+It now resembles more closely the GNU installation scheme, while providing
+alternatives for Win32 and OS/2 users.
+
+Step by step cookbook
+=====================
+
+A. UNIX
+-------
+
+(Win 95, 98, NT and OS/2 users see below)
+
+0. Unpacking
+
+Unpack the tar file into a temporary area. This has changed: Do not unpack
+the tar file to the final desired location (e.g. /usr/local/latex2html).
+Read the INSTALL file. Oops, you are already here...
+
+1. Configuring
+
+You may have a look at the prefs.pm preferences file. It is preset with 
+reasonable defaults. Edit it to adapt the configuration procedure, e.g. if
+your executables like latex, gs etc. have "strange" names (e.g., "LaTeX").
+
+Run
+
+   ./configure --help
+
+This gives you a brief overview of configuration options. Note that for
+each --enable-someting there is also a --disable-something. Anyway, the
+defaults are reasonable and robust, so you should give it a first try
+with only specifying the --prefix (see below) if you don't like /usr/local.
+
+configure looks also at the environment, so that you could hardcode the path
+to your Ghostscript executable by e.g. (on bourne shell!)
+
+  GS=/opt/ghostscript/bin/gs ./configure 
+
+Alternatively you could say (works on all shells)
+
+  ./configure --with-gs=/opt/ghostscript/bin/gs
+
+Note for --prefix: The final directory structure depends on the name of the
+prefix:
+
+- if prefix contains the string "latex2html" or "l2h":
+  Then binaries go into $prefix/bin, while the rest goes into $prefix
+
+- prefix does *not* contain the above strings:
+  Then binaries go into $prefix/bin and the rest into $prefix/lib/latex2html
+
+You can override the settings by specifying --bindir and/or --libdir.
+Note that currently no other path/installation options in configure (e.g.
+--exec-prefix, --sbindir, --datadir, ...) are recognized. This may change
+in the future.
+
+After configure has completed, you may check the cfgcache.pm file if 
+everything is ok. It contains all the information gathered from your system
+and there should be no need to change anything. Exceptions from this rule
+can be considered bugs in the configuration procedure. :-)
+
+Note: The GNU autoconf-generated configure script hands execution over
+to a Perl script. This of course isn't the "clean" way. I know that, but
+the configure procedure should work also on native Win/OS2/Mac systems that
+(by default) lack sh, make, etc.
+
+2. Building
+
+Run "make". The distribution files (extension .pin) are turned into the
+locally adapted scripts, using the configuration from cfgcache.pm. If you
+need to change things, then re-run the configuration step with the 
+appropriate options (preferred) or edit the cfgcache.pm file and run "make"
+again.
+
+3. Testing
+
+Do a plausibility check: "make check". The perl scripts are checked for
+syntax correctness. For compiling a small test document, type "make test".
+The test example is located in the "tests" subdirectory. You may specify
+additional command line arguments by saying "make test ARGS='...'".
+You may test LaTeX2HTML manually on one of your documents by setting the
+LATEX2HTMLDIR environment to the path where "Makefile" is located and 
+running latex2html with the option -test_mode.
+Alternatively, you may put your document in the tests/ directory and run
+"make test TESTCASE=yourfile.tex"
+
+4. Installing
+
+Install LaTeX2HTML in its final location by saying "make install".
+Before doing that you might want to edit l2hconf.pm to reflect your 
+site-wide needs. If you do a system installation for many users, only 
+care for general aspects. Note that at any time these settings are easily
+overridden by specifying command line options to the latex2html script
+or by installing a .latex2html-init file in the HOME directory.
+Read the instructions about ICONSERVER carefully to make sure your
+HTML documents will be displayed right via the Web server.
+While you're at it you may want to change some of the default
+options in the same file. 
+
+5. Cleaning up
+
+You may remove the temporary directory to which you unpacked the
+distribution after installation.
+
+6. Bug reports
+
+When reporting bugs, it may be a good idea to send the cfgcache.pm file
+as a reference of your local setup. Re-run the configuration procedure
+if you don't have the file any more. See also the BUGS file.
+
+See below "Further General Aspects" for information on useful site-wide
+configuration.
+
+
+B. DOS, Win32, OS/2
+-------------------
+
+0. Unpacking
+
+Unpack the tar file into a temporary area. This has changed: Do not unpack
+the tar file to the final desired location (e.g. /usr/local/latex2html).
+Read the INSTALL file. Oops, you are already here...
+
+On OS/2, rename CONFIG.BAT to CONFIG.CMD and modfify the PERL environment
+setting (in CONFIG.CMD) in the following way:
+
+set PERL=perl_
+
+This is needed because this "version" of the Perl executable has some
+additional features that are required by LaTeX2HTML.
+If you want to make use of the Makefiles on OS/2 (this works if you have
+the GNU utilities installed), then you should include a line
+
+SHELL=.../sh.exe
+
+with ... being the path to the bourne shell executable. Thanks to 
+Uli Wortmann for this hint.
+
+1. Configuring
+
+Edit the prefs.pm file to adapt the configuration for your site. You
+should not have to change much apart from the path where LaTeX2HTML should
+be installed on your system. The executables are found automatically if
+located in the directories specified in your PATH environment. If your perl
+interpreter is not named "perl" or if you have more than one perl installed,
+you should edit CONFIG.BAT (or CONFIG.CMD on OS/2, in the following CONFIG.*
+is used for brevity) and specify the exact path to your (desired) perl
+interpreter.
+If you have just installed some of the required external utilities and
+have not yet added the paths to the PATH environment, you may specify
+the argument EXTRAPATH+... (e.g. EXTRAPATH+C:\tex\bin;C:\netpbm\bin) on
+the CONFIG.* command line to indicate additional search paths.
+
+Now you may run CONFIG.*
+Example that also sets the installation root directory without editing 
+prefs.pm:
+
+   CONFIG.BAT PREFIX+C:\latex2html
+
+You can also say PREFIX=C:\latex2html but my COMMAND.COM eats the `=' :-(
+
+Make sure that you have enough space for the environment. If you get
+error messages "no space left in environment" or the like, either increase
+the space for the environment in your CONFIG.SYS or (temporarily) run
+a new shell with "command /e:2000" (for 2k space for environment).
+After configure has completed, you may check the cfgcache.pm file (if
+you are curious).
+
+2. Building
+
+Not really an extra step. After successful configuration the distribution files
+(extension .pin) are automatically turned into the locally adapted scripts
+automatically, using the settings found in the previous step.
+
+3. Testing
+
+The CONFIG.* script created a TEST.BAT (TEST.CMD on OS/2) file that
+compiles a small test document located in the "tests" subdirectory.
+You may specify additional LaTeX2HTML options (up to arguments) on the
+TEST.* command line.
+
+You can test LaTeX2HTML yourself with your own documents by setting the
+LATEX2HTMLDIR environment to the path where CONFIG.* is located and running
+latex2html by saying "latex2html -test_mode <filename>.tex". It may be
+necessary that that you need to add the directory where latex2html.bat is
+stored to your PATH environment.
+
+4. Installing
+
+Install LaTeX2HTML in its final location by running INSTALL.BAT 
+(INSTALL.CMD on OS/2).
+
+5. Cleaning up
+
+You may remove the temporary directory to which you unpacked the
+distribution. All required files have been copied to the installation
+directory.
+
+6. Bug reports
+
+When reporting bugs, it may be a good idea to send the cfgcache.pm file
+as a reference of your local setup. Re-run the configuration procedure
+if you don't have the file any more. See the BUGS file for more details.
+
+Further General Aspects
+=======================
+
+This is enough for the main installation but you may also want to do some of
+the following: 
+
+ o If your system supports both GIF and PNG generation (this is if you have 
+   both pnmtopng and ppmtogif), then the default image format will be PNG.
+   This is because of legal limitations on the GIF format. To set the
+   site-wide default to GIF, modify the order of the image formats in
+   l2hconf.pm *before* you install:
+
+     @IMAGE_TYPES = qw(gif png); # GIF is now default
+
+   Alternatively, you may say "-image_type gif" on the command line or
+   $IMAGE_TYPE = 'gif' in your .latex2html-init file.
+
+ o To use the new LaTeX commands which are defined in html.sty: 
+   Make sure that LaTeX knows where the html.sty file is, either by
+   putting it in the same place as the other style files on your system, or
+   by changing your TEXINPUTS shell environment variable, or by
+   copying html.sty in the same directory as as your LaTeX source file. 
+   The installation procedure tries to install these files into your TeX
+   directory tree if present.
+
+ o If you are a LaTeX 2.09 user, you will not be able to use
+   the document segmentation feature, or the optional arguments to
+   \htmladdimg, until you upgrade to LaTeX2e.
+   (This will also rule out many of the HTML3/HTML4 features!)
+   To determine which version you have, type just 'latex'.
+   If it prompts with '(C version 6.1)', you have LaTeX2e. Anyway, if you're
+   not sure, ask the people who installed it.
+   However you *mustn't* upgrade LaTeX just to have the features, lots of
+   documents do fine without them.
+   You should not try to translate manual.tex with LaTeX 2.09. Instead,
+   invoke LaTeX2HTML with manual.tex directly.
+
+ o On some systems, the command ``latex'' is really a shell script which sets
+   some environment variables and calls the real LaTeX. If this is so, make
+   sure that this shell script has '.' and '..' set for TEXINPUTS.
+   This environment variable is not to be confused with the LaTeX2HTML
+   installation variable $TEXINPUTS described next.
+
+ o The installation variable HTML_VERSION in latex2html.config causes
+   LaTeX2HTML to generate table in HTML and supports textual font
+   size changes if it is set to 3.0.  Otherwise, tables will be
+   processes in LaTeX and come out as GIF files.
+
+ o There is an installation variable in l2hconf.pm
+   called $TEXINPUTS, which tells LaTeX2HTML where to
+   look for LaTeX input files to process. This variable is
+   appended to the TEXINPUTS environment variable to make sure the
+   translator finds all your files.
+
+ o The installation variable $PK_GENERATION specifies which
+   fonts are used in the generation of mathematical equations.  A value
+   of ``0'' causes the same fonts to used as those for the default
+   printer.  Because they were designed for a printer of much greater
+   resolution than the screen, equations will generally appear to be
+   of a lower quality than is possible.  To cause LaTeX2HTML to
+   dynamically generate fonts that are designed specifically for the
+   screen, you should specify a value of ``1'' for this variable.
+   If you do, then check to see whether your version of dvips
+   supports the command line option -mode.  If it does,
+   then also set the installation variable $DVIPS_MODE to
+   a low resolution entry from modes.mf, such as `toshiba'.
+   If dvips does not support the -mode switch, then leave $DVIPS_MODE
+   undefined, and verify that the .dvipsrc file points to the
+   correct screen device and its resolution.
+
+ o The makemap script also has a configuration variable,
+   $SERVER, which must be set to either "CERN" or "NCSA", depending
+   on the type of web server you are using.
+
+ o To set up different initialisation files: 
+   For a ``per user'' initialisation file, copy the file 
+   dot.latex2html-init in the home directory of any user that
+   wants it, modify it according to her preferences and rename it as 
+   .latex2html-init. At runtime, both the 
+   latex2html.config file and $HOME/.latex2html-init
+   file will be loaded, but the latter will take precedence. 
+
+   You can also set up a ``per directory'' initialisation file by copying a
+   version of .latex2html-init in each directory you would like it
+   to be effective. An initialisation file 
+   /X/Y/Z/.latex2html-init will take precedence over all
+   other initialisation files if /X/Y/Z is the ``current directory'' when 
+   LaTeX2HTML is invoked. 
+
+ o To find the LaTeX2HTML icons:
+   The LaTeX2HTML icons are fetched through $ICONSERVER. This variable
+   should point to a global URL on your system. The icons are installed in
+   $LATEX2HTMLDIR/icons, but you must configure your HTTP daemon to find
+   them. You can configure an alias in HTTPd's config files or you may
+   set up a symbolic link. Whatever you do, make sure that $ICONSERVER
+   is the URL below which the server finds the icons.
+   Make sure they can be *read* by your HTTP daemon, ie. set the directory
+   world-wide readable/executable and the icons world-wide readable and
+   the HTTP daemon finds the icons under the $ICONSERVER URL.
+   If $LATEX2HTMLDIR is something private for you, copy the icons to a
+   global place, say /usr/local/lib/latex2html/icons, and set $ICONSERVER
+   accordingly. Note that by setting $LOCAL_ICONS or using the
+   -local_icons command line switch you can force LaTeX2HTML to copy the
+   icons to the document directory, thus resulting in a self-contained
+   document tree that can be dropped into any existing directory
+   structure.
+
+ o To make your own local copy of the LaTeX2HTML documentation: 
+   This will also be a good test of your installation. To do it run
+   LaTeX2HTML on the file doc/manual.tex. You will get better results if
+   you run LaTeX first on the same file in order to create some auxiliary
+   files. 
+
+
+Common Pitfalls, FAQ
+====================
+
+1. Q: What versions of the external programs are recommended?
+
+   A: General remark: The config procedure automatically checks all your
+      PATH for the required executables. You'll have only to take action if
+      some components are not recognized. As far as Linux is concerned,
+      the major distributions (SuSE, Red Hat, Debian, Slackware) all have
+      packages with the following tools. Just install them and LaTeX2HTML
+      should be happy.
+
+      Perl        : 5.00305 or higher (5.00503 recommended)
+      TeX, LaTeX  : teTeX 0.4 or higher (1.0 recommended), Web2C
+      Ghostscript : 4.03 or higher (5.x recommended)
+      Netpbm      : 1mar1994p1
+                    The "p1" *is* important: This version fixes a bug in
+                    pnmcrop that makes pstoimg leave black bars around the
+                    images. The configure procedure tests automatically for
+                    this feature.
+      Pnmtopng    : 2.31 or higher (for PNG image generation)
+
+2. Q: Where can I get all those external programs?
+
+   A: Perl        : http://www.perl.com (all platforms)
+      TeX, LaTeX  : any CTAN site, see XXX for a list of sites
+      Ghostscript : http://www.cs.wisc.edu/~ghost/index.html
+      Netpbm      : http://ftp.x.org/contrib/utilities/
+      Pnmtopng    : http://www.graphicswiz.com/png/index.html
+
+      Win32 users will find all they need at Fabrice Popineau's fine
+      TeX site ftp://ftp.ese-metz.fr/pub/TeX/win32
+
+3. Q: What about perl 4 compatibility and perl 5 versions less than
+      5.00305?
+
+   A: Forget perl 4. Perl 5 is out for years now, it is available for
+      more platforms than perl 4 ever was and it is stable and it is
+      being maintained.
+      The early perl 5 versions (esp. 001 and 002) are known to have nasty
+      bugs that cause severe problems with LaTeX2HTML. Update to a more
+      recent version (5.00503 recommended).
+
+4. Q: I've installed the external programs, but the configure procedure
+      doesn't recognize that.
+
+   A: You either have not sufficient access rights or - more probably -
+      you need to add some paths to your PATH environment. You may do that
+      on the fly, i.e. set PATH manually and run the configure step again.
+      The absolute paths are saved, so that LaTeX2HTML will run ok even if
+      you don't have all the additional PATH settings coded into your 
+      .profile, .bashrc, .(t)cshrc, AUTOEXEC.BAT, etc...
+      Finally there is the --with-extrapath=... configure option or
+      EXTRAPATHH+... for CONFIG.BAT
+
+5. Q: On Win/DOS/OS2 I get messages of the type "no more space in
+      environment". What's wrong?
+
+   A: Your command interpreter (COMMAND.COM) does not provide sufficient
+      space for environment variables. Try to run a new one with:
+
+      COMMAND.COM /e:2000
+
+      Now you should have 2k space for environment variables. You may
+      specify this value in CONFIG.SYS:
+
+      SHELL=<path>COMMAND.COM /e:2000
+
+      (or somehow using
+
+      COMSPEC=<path>COMMAND.COM /e:2000
+
+      Sorry for that, maybe some can supply the correct answer?!?)
+
+6. Q: What is this "EPS support" with dvips all about?
+
+   A: Recent versions of dvips(k) (5.60 and higher) have the possibility
+      to create many EPS files out of one multi-page DVI file by exploiting
+
+                  -E (EPSF generation)
+                  -i (separate file for every section)
+                  -S 1 (section size is one page)
+
+      The idea behind it is that once dvips has produced EPS files with a
+      proper bounding box, Ghostscript's memory requirements are reduced
+      noticeably.
+
+      CAVEAT: dvips does not handle specials (like psfig, includegraphics)
+      perfectly in the context of EPS, see also the dvips texinfo. You may
+      experience difficulties when you process a document that includes
+      EPS images. In this case, don't use the `-E' switch and/or reconfigure
+      latex2html with --disable-eps
+
+7. Q: I get "out of memory" messages although I have plenty of RAM and/or
+      swap space (virtual memory) - what's wrong?
+
+   A: Unfortunately LaTeX2HTML is quite hungry for memory. This is one of
+      the main areas of improvement that is being worked upon constantly.
+      In order to run LaTeX2HTML anyway, be sure to close any other 
+      applications before starting LaTeX2HTML.
+      Another possible problem is that your system has a hard per-process
+      memory limit. If so, ask the system administrator to relax this
+      value. Note: On HP-UX, this is done by setting the MAXDSIZ, MAXSSIZ, 
+      MAXTSIZ kernel parameters (thanks Andre Konopka <ak@presse-data.de>).
+
+8. Q: What's the problem with the GIF image format?
+
+   A: Unisys holds a patent on the LZW compression algorithm that is used
+      to make GIF images smaller in size. It's a long story how LZW became
+      part of GIF and it is not clear who violated the LZW patent in the
+      first place. Anyway, recently Unisys announced that they consider
+      lawsuits against those using the GIF format (i.e. software generating
+      GIFs, not reading!) without a license from Unisys. LaTeX2HTML itself
+      does not have a problem, because it merely uses ppmtogif and can
+      easily do without if it's not there. I don't know whether it is 
+      illegal or not to use ppmtogif in non-commercial environments. The
+      "safe" solution is definitely to use PNG images; unfortunately
+      there is AFAIK no browser available yet that displays transparent PNGs
+      correctly.
+
+

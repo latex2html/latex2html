@@ -1,0 +1,63 @@
+% -*- latex -*-
+% read by l2htest.tex
+
+\section{Some basic stuff}
+
+This is some simple text, containg ``a quote'' and
+some \verb+verbatim text !"$ $%&/+
+
+\subsection{Fonts}
+
+This sections has text in several font styles: This is
+\textbf{boldface} and this is \emph{emphasized}. The
+same with old syntax {\bf boldface} and {\em emphasized}.
+
+Now we'll come to some mixed ones: {\bf boldface with 
+{\em emphasis} back boldface}.
+
+And the sizes:{\large This is large} and {\small this is
+small}. Now here's some {\large large {\bf boldface} and
+{\em emphasis}} and {\small small {\bf boldface} and
+{\em emphasis}}.
+
+Here we include some text, but before we switch on 
+{\Large Large and {\bf boldface
+\input{basicinc}%
+... back again} not boldface}.
+
+This should be some bold stars: {\bf** bold} No more bold here.
+
+\subsection{Lists}
+
+Here's a simple itemized list:
+\begin{itemize}
+\item EMACS stands for Escape Meta Alt Control Shift
+\item GNU's not UNIX
+\item PNG's not GIF
+\end{itemize}
+
+An enumeration:
+
+\begin{enumerate}
+\item Perl is king!
+\item TCL is nice
+\item What is Python?
+\item Real programmers prefer \texttt{/bin/sh}
+\end{enumerate}
+
+End of this section.
+
+\subsection{Table}
+
+This is a tabular environment:
+
+\begin{tabular}{|ll|}
+\hline
+Deutsch & English \\
+\hline\hline
+Ja & Yes \\
+Nein & No \\
+Morgen & morning \\
+\hline
+\end{tabular}
+

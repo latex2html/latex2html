@@ -1,0 +1,17 @@
+%% 
+%% This is file `l2hidx.ist,
+%% by Ross Moore <ross@maths.mq.edu.au> on 7 March 1996.
+%% 
+
+preamble
+"\n \\addcontentsline{toc}{section}{\\protect\\numberline{}Index}
+ \\begin{theindex} \n "
+%% 
+lethead_prefix   "{\\bfseries\\hfil "
+lethead_suffix   "\\hfil}\\nopagebreak\n"
+lethead_flag       1
+heading_prefix   "{\\bfseries\\hfil "
+heading_suffix   "\\hfil}\\nopagebreak\n"
+headings_flag       1
+
+

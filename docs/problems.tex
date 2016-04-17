@@ -1,0 +1,604 @@
+\begin{htmlonly}
+\documentclass[dvips,a4paper]{article}
+\usepackage{html,htmllist,makeidx}
+\input{manhtml.tex}
+%
+\input{problems.ptr}    % Input counters and section
+\end{htmlonly}
+\internal{}%
+\startdocument
+%
+%\section{Known Problems\label{sec:prb}\index{problems|(}}%
+\label{sec:prb}\index{problems|(}%
+\tableofchildlinks*\htmlrule\index{bugs}\html{\\}%
+\noindent
+Here are some of the problems that were known to exist
+with previous versions of \latextohtml. 
+Most of those that were real errors are either fixed completely
+in more recent versions (\textsc{v98.1} and later),
+or are much less likely to occur within correct \LaTeX{} source. 
+(Some are not really errors but indications of poor style
+in the user's choices among
+various ways to organise their source code.)\html{\\} 
+Several are indeed limitations inherent in the way 
+\latextohtml{} currently performs its processing.
+%
+\begin{htmllist}
+\htmlitemmark{PurpleBall}
+\item [Unrecognised Commands and Environments:\index{unrecognised commands} ]
+Unrecognised commands are ignored and any arguments are left in the text. 
+Unrecognised environments are passed to \LaTeX{}  and the result is
+included in the document as one or more inlined images.
+%begin{latexonly}
+\newline\textit
+%end{latexonly}
+{There are very few standard \LaTeX{} commands that are not recognised.
+Many common \TeX{} commands are recognised also,
+even though not explicitly mentioned 
+in the \LaTeX{} \hypercite{blue book}{blue book}{}{lamp:latex}.
+Any aberrant commands should be reported to the \latextohtml{}
+\hyperref{mailing list}{mailing list, see Section~}{}{support}.}
+
+
+\index{index}
+\item [Index: ]
+The translator generates its own index by saving the arguments  of 
+the \Lc{index} command. The contents of the \env{theindex}
+environment are ignored.
+When using the \env{makeidx} package,
+very sophisticated Indexes can be built automatically.
+The Index for this manual is a good example.
+
+
+\item[New Definitions:\index{extensions!definitions} ]
+New definitions (\Lc{newcommand}, \Lc{newenvironment}, 
+\Lc{newtheorem} and \Lc{def}),
+will not work as expected if they are defined more than once.
+Only the last definition will be used throughout the document.
+Stylistically it is bad to declare new
+environments or theorems outside of the document preamble,
+so this should not cause any real problems.\html{\\}
+Changes to commands using \Lc{def} or \Lc{renewcommand}
+should usually be made only locally, within special environments,
+to set a needed parameter; 
+e.g. a basic length in a \env{picture} environment.
+But when such environments force an image to be generated,
+then \LaTeX{} will make the correct redefinition.
+
+\item [Scope of declarations and environments: ]
+If the scope of a declaration or environment crosses section
+boundaries, then the output may not be as expected, because each
+section is processed independently.
+\newline
+\textit{This is inherent to the way \latextohtml{} does its processing. 
+It will not be different unless later versions change this strategy;
+(e.g. if \latextohtmlNG\ ever becomes fully integrated.)}
+
+\item [Math-mode font-size changes: ]  Math-mode font changes
+made outside the math-mode are not honoured.  Thus the two equations
+in \verb|$a_b$| and \verb|{\LARGE $a_b$}|
+would come out looking the same.  The trick is to write
+\verb|$a_b| and \verb|$\mbox{\LARGE $a_b$}$|.
+\end{htmllist}
+
+
+
+\subsection{Troubleshooting}%
+%\section{Troubleshooting}%
+\index{debugging}\index{problems}\index{fixes}%
+Here are some curable symptoms:
+
+\begin{htmllist}
+\htmlitemmark{BlueBall}
+\item [Cannot run any of the \Perl{} programs: ]
+If your \Perl{} installation is such that \Perl{} programs are not allowed 
+to run as shell scripts you may be unable to run  
+\fn{latex2html}, \fn{texexpand}, \fn{pstoimg} and  \fn{install-test}. 
+In this case change the first line in each of these
+programs from
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\begin{verbatim}
+#!/usr/local/bin/perl
+\end{verbatim}
+%begin{latexonly}
+\end{small}%
+%end{latexonly}
+to
+%begin{latexonly}
+\begin{small}%
+%end{latexonly}
+\begin{verbatim}
+: # *-*-perl-*-*
+    eval 'exec perl -S  $0 "$@"'
+    if $running_under_some_shell; 
+\end{verbatim}
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+
+\item [The \fn{install-test} script gives uninformative error messages: ]
+If, for any reason, you have trouble running \fn{install-test},
+do not despair. Most of what it does is to do with checking
+your installation rather than actually installing anything.
+To do a \textit{manual installation} just change the variable
+\fn{\$LATEX2HTMLDIR} in the beginning of the file \fn{latex2html}
+to point to the directory where the \latextohtml{} files can be found.
+
+Also, make sure that the files
+\fn{pstoimg}, \fn{texexpand} and \fn{latex2html} are executable;
+if necessary use the Unix \fn{chmod} command to make them 
+executable.
+
+\item [It just stops. ] Check the style
+files that you are using. It is possible that you are using
+a style file which contains raw \TeX{} commands. In such a case
+start \latextohtml{} with the option 
+\Cs{dont\_include \Meta{style-file name}}. 
+Alternatively, add the name of the style to the variable 
+\fn{\$DONT\_INCLUDE} in your
+\fn{\$HOME/.latex2html-init} file. If you don't have such a file then
+create one and add the lines:
+\begin{quote}
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\verb|$DONT_INCLUDE = "$DONT_INCLUDE" . ":|\Meta{style file name}\verb|";|\\
+\verb|1;        # This must be the last line|
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+\end{quote}
+
+Another reason why \latextohtml{} might stop is that the \LaTeX{} source
+file itself contains raw \TeX{} commands. In this case you may 
+put such commands inside a \env{latexonly}
+\hyperref{environment}{environment (see Section }{)}{sec:latexonly}.
+
+The \fn{\$VERBOSITY} \htmlref{variable}{verbosity}{} can be used 
+to create tracing messages, which may help to locate which command 
+or environment was being processed when everything stopped.
+
+\index{unending loop}\index{looping endlessly}
+\item [It appears to be doing nothing.\label{looping}]
+Perhaps the processor has fallen into an unending loop.
+Usually there will be a bad definition, or other faulty source code,
+which has caused this.
+The \fn{\$VERBOSITY} \hyperref[page]{variable}{variable (see page~}{)}{cs_verbositylevel}%
+can be set to generate tracing messages, which may help to locate which command 
+or environment is being processed repeatedly.
+Try setting a value of `\texttt{3}'; e.g. using the commandline switch \Cs{verbosity 3}.
+This will print command and environment names, as thaey are processed.
+It should soon become apparent where any such looping occurs.
+
+\item [It just fills the endlessly with dots.]
+No `perhaps' here; the processor has definitely fallen into an unending loop.
+See the previous item for how to detect which command or environment
+is causing the problem.
+
+\cbversion{98.1}\begin{changebar}
+%
+\item [\Perl{} cannot parse the \fn{latex2html} script: ]
+If \Perl{} refuses to start \latextohtml{} and issues errors, your
+\Perl{} version is not up to date.
+Update your \Perl{} to 5.003 or later. You can check which version of
+\Perl{} you are using by invoking \Perl{} with the \Cs{v} option.
+
+If \Perl{} issues errors during runtime, this is most probably related
+to bugs within \latextohtml{} or one of its modules.
+In this case you will need help from the developers or experienced users;
+this can be obtained via the discussion list.
+
+
+\item [It crashes (dumps core) as soon as it starts\label{perl}: ]
+Update your \Perl{} to 5.003 or later.
+\end{changebar}
+
+
+\cbversion{98.1}\begin{changebar}
+\item [It does not show any of your images: ]
+  You can't run \latextohtml{} in a subdirectory that contains a dot
+  within the directory name, such as {\tt latex2html-98.1},
+  or in name of any higher directory.
+  This is because \fn{dvips}'s \texttt{-o} option will change 98.1 into 98.001
+  and use that as the resulting output file, instead of image001~.
+  The \PS\ files will be placed higher up in the directory tree.
+
+For instance, if \texttt{ pwd } returns something like:
+\begin{verbatim}
+/usr/people/nelson/files/latex2html-98.1/work/tests
+\end{verbatim}
+and you run \latextohtml, then \fn{dvips} will generate 
+image output files here:
+\begin{verbatim}
+/usr/people/nelson/files
+\end{verbatim}
+  called \texttt{latex2html-98.001}, \texttt{latex2html-98.002}, \dots
+  instead of \texttt{image001}, \texttt{image002}, \texttt{image003}, \dots
+  in the subdirectory where your \texttt{.html} files were created.
+  As a result the images will not show in your documents.
+
+  If you are getting `File Not Found' errors,
+  then reprocess your job using the \Cs{debug} switch,
+  to see what options are passed to \fn{dvips}.
+  If there is a `.' in some parts of any directory name, 
+  then look above that directory
+  to see if files are being generated there.
+
+\medskip
+
+  One obvious fix is to rename the offending directory
+  to remove the `.' from its name.
+
+  If that is not possible, then define an alternative location
+  for image generation to take place; set \texttt{\$TMP} to contain
+  the name for this location. Typically \texttt{\$TMP = '/usr/tmp';}~.
+  (This use of \texttt{\$TMP} is a good thing to do anyway,
+  especially if your Unix account is subject to quota limitations.)
+
+\item [It stops after having run \LaTeX, displaying a message about \fn{dvips}: ]
+  See the previous item for the reason and `fix'. 
+  This version of \latextohtml{} detects the problem 
+  and will not allow images to be generated in the wrong place.
+\end{changebar}
+
+\item [\fn{dvips} complains about incorrect arguments:\label{dvips} ]
+Please use a version which supports the command-line options \Cs{M}, \Cs{S},
+\Cs{o} and \Cs{i}. ``Recent'' versions, at least after 5.516, do support them.
+
+
+\item [It gives an ``\texttt{Out of memory}'' message and dies: ] 
+Try splitting your source file into more than one file,
+using the \LaTeX{} commands \Lc{input} or \Lc{include}. 
+Also, try using the \Cs{no\_images} option.
+
+Perhaps the processor has fallen into an infinite loop.
+Usually there will be a bad definition, or other faulty source code,
+which has caused this. 
+See an \htmlref{earlier problem}{looping} for
+how to set the \fn{\$VERBOSITY} \htmlref{variable}{verbosity} to 
+help locate the bad code leading to this memory exhaustion.
+
+As a last resort you may consider increasing the virtual memory
+(swap space) of your machine.
+
+
+\cbversion{98.1}\begin{changebar}
+\item [\fn{install-test} issues ``dbm'' related error messages: ]\latex{~\\}%
+\latextohtml{} requires a DataBase Management system (\appl{NDBM},
+\appl{GDBM}, or \appl{SDBM}) in order to run.
+This is usually part of each Unix-like operating system and
+\appl{SDBM} is part of \Perl{ 5}, but sometimes this is either missing
+on your operating system or left out in a binary \Perl{} distribution.
+\htmladdnormallinkfoot{Use \appl{Archie}}{http://www.pvv.unit.no/archie/} 
+to find one or (better) update to a complete \Perl{ 5} distribution.
+
+\item [\fn{latex2html} issues ``dbm'' related error messages: ]
+If you get warnings like
+\begin{verbatim}
+ndbm store returned -1, errno 28, key "xyz" at latex2html line 123
+\end{verbatim}
+this is related to an overflow of \latextohtml{} internals.
+You will need help from the list, here.
+\smallskip
+
+If you get real error messages which cause \latextohtml{} to abort,
+run \fn{install-test} to check if your DataBase management works.
+You will probably need to re-install \Perl{ 5} (see above topic).
+\end{changebar}
+
+
+This can happen when an image is being created from a large piece
+of \LaTeX{} source code. The image-reuse mechanism uses the code itself
+to construct a database key. If too long, the key is invalid and may
+crash \appl{DBM} or \appl{NDBM}. (In fact this error should no longer
+occur in \textsc{v97.1}\,, so please advise the \latextohtml{} developers if
+you get error messages of this kind.)\html{\\}
+The message should contain the name of environment which caused the problem,
+along with an identifying number; e.g. \texttt{eqnarray268}.
+To find which exact piece of code this represents, run \latextohtml{}
+again, using the \Cs{debug} switch. Then look at the files
+in the \texttt{TMP} subdirectory of the working directory
+named \texttt{TMP/part001}, \texttt{TMP/part002}, etc.
+Use the unix \fn{grep} command: \texttt{ grep 268 }\Meta{dir}\texttt{/TMP/part* }
+to find that number in these files. 
+This should enable you to locate exactly where the problem occurs.
+
+One solution may be to wrap the whole environment within
+\Lc{begin\char123makeimage\char125} and \Lc{end\char123makeimage\char125}.
+This will still cause the image to be created, 
+but uses just the environment name and number as the database key.
+
+
+
+\item [The \Lc{verb"ABC"} command doesn't work: ]
+This is an unfortunate bug which can be avoided by using 
+any character other than quotes; e.g. \Lc{verb+ABC+}.
+
+\item [Cannot get the ``tilde'' (\~{}) to show: \hfill]
+The trick here is to use \verb|\~{}|.\html{\\}
+Alternatively try using something like:
+\url{\htmladdnormallink{mylink}{http://host/\%7Eme/path/file.html}}. 
+
+\textbf{Warning:} Some browsers may not be able to interpret the \verb|%7E|
+as a ``tilde'' character.
+
+Try using \Lc{char126}~.
+In any case tildes within \Lc{htmladdnormallink} and similar commands
+should be handled correctly.
+
+\item [Macro definitions don't work correctly: ]
+As mentioned in other places, not all plain \TeX{} \Lc{def}-initions 
+can be converted.
+But you may also have problems even when using \LaTeX{} definitions
+(with \Lc{newcommand} and \Lc{newenvironment}) if such definitions
+make use of sectioning or \Lc{verbatim} commands. These are 
+handled in a special way by \latextohtml{} and cannot be used in
+macro definitions. 
+
+
+\item [\Lc{input} commands: ]
+There is a bug in the expansion of \Lc{input} commands which may cause
+a problem when more than one \Lc{input} command appears on the same line.
+There is no quick fix other than suggesting that you put each
+\Lc{input} command on a line by itself, in the \LaTeX{} source files.
+
+\item [\Lc{input} commands in \env{verbatim} environments: ]
+\cbversion{98.1}\begin{changebar}
+These should no longer cause problems (actually since 97.1).
+\Lc{input} commands are also handled correctly within comment environments
+declared using \Lc{excludecomment} 
+and when loading multiple \texttt{.aux} files, 
+due to use of the \Lc{include} command.
+Alternatively you might want to use
+either the \env{verbatim} or the \env{verbatimfiles} package.
+\end{changebar}
+
+\item [Optional arguments in \env{description} environments: ]
+If~you have optional arguments for the \Lc{item} command in 
+a \env{description} environment containing nested ``\texttt{]}'' characters then 
+these may not show up correctly. To avoid the problem enclose them
+in \verb|{}|s;\\ e.g. \ \verb+\item[{[nested [angle [brackets] are ok]]}]+
+
+
+\item [\latextohtml{} behaves differently even when you run it on the
+same file: ]~\\
+If~you notice any strange side-effects from previous runs of \latextohtml{}, 
+try using the option \Cs{no\_reuse} and choose \texttt{(d)} when prompted. 
+This will clear any intermediate files generated during previous runs.
+Note that this option will disable the image-reuse mechanism.
+
+\item [Cannot convert \PS\ images which are included
+in the \LaTeX{} file: ]~\\
+It~is likely that the macros you are using for including \PS\ 
+files (e.g. \Lc{epsffile}) are not understood by \latextohtml.
+To avoid this problem enclose them in an environment which will
+be passed to \LaTeX{} anyway; e.g.
+\begin{quote}
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\Lc{begin}\verb|{figure}|\\
+\Lc{epsffile}\verb|{|\Meta{PostScript file name}\verb|}|\\
+\Lc{end}\verb|{figure}|
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+\end{quote}
+
+Another reason why this might happen is that your shell environment variable 
+\fn{TEXINPUTS} may be undefined. This is not always 
+fatal but if you have problems you can use full
+path-names for included \PS\ files (even when the \PS\
+files are in the same directory as the \LaTeX{} source file).
+Alternatively try setting \fn{TEXINPUTS} to `\texttt{.::}'. 
+With some \TeX{} and \LaTeX{} installations setting \fn{TEXINPUTS} to 
+`\texttt{.::}' may cause problems in the normal operation of \LaTeX.
+If you get errors such as \LaTeX{} complaining that it can no longer find
+any style files then you must set \fn{TEXINPUTS} to 
+\verb|"<path to your LaTeX installation>:."|
+if you want to use both \LaTeX{} and \latextohtml{}.
+
+\item [Some of the inlined images are in the wrong places: ]
+There are several known ways that this may occur.
+\begin{itemize}
+\item
+Perhaps one of the inlined images is more than a page (paper page) long. 
+This is sometimes the case with very large tables
+or large \PS\ images. In this case you can try specifying 
+a larger paper size (e.g. `\texttt{a4}', `\texttt{a3}' or even `\texttt{a0}') 
+instead of the default (`\texttt{a5}') 
+using the \latextohtml{} variable \fn{\$PAPERSIZE} 
+in the file \fn{latex2html.config}.
+
+\smallskip\noindent
+\textit{This error should no longer occur, with \textsc{v97.1}\,.
+Please report it on the mailing-list, if it does.}
+
+\item
+More likely is that some inappropriate \LaTeX{} code 
+has caused an error, resulting in an extra page (or pages) being generated.
+Examine the \fn{images.log} file, to see if it reports any \LaTeX{} errors.
+
+\item
+A much rarer reason is that by default the \fn{dvips} program
+reverses the \PS\ pages it generates. If your \fn{dvips} program
+behaves in this way try changing the line: \html{\\}
+\verb|$DVIPS = "dvips";| \html{\\}
+to: \html{\\}
+\verb|$DVIPS = "dvips -r0";| \html{\\}
+within the file \fn{latex2html.config}.
+
+\item
+Yet another reason for images appearing out of place, especially while
+developing a document, is that the browser's image cache is providing
+out-of-date versions rather than getting the latest version afresh.
+When this occurs there will often be images stretched or shrunk
+to fit the wrong sized imaging area; this symptom is browser-dependent.
+Flushing the cache, then reloading the \texttt{HTML} document, should
+clear up the problem. 
+\end{itemize}
+
+
+\item [\textbf{Unacceptable quality of converted images: }]
+Try changing the size of the image 
+(see \hyperref{image conversion}{Section~}{}{imgcon}).
+
+\item [The bibliographic references are missing: ]
+Run \fn{latex} and then \fn{bibtex} on the original source file in
+order to generate a \texttt{.bbl } file. 
+\latextohtml{} may need the \texttt{.bbl } file in order to generate 
+the references.
+
+
+\item [The labels of figures, tables or equations are wrong: ]
+This can happen if you have used any figures, tables, equations or
+any counters inside conditional text; i.e. in a \env{latexonly} 
+or a \env{htmlonly} environment. 
+
+
+\item [Problems after changing the configuration files: ]
+Please make sure that the last line in the configuration files 
+(i.e. \fn{.latex2html-init} and \fn{latex2html.config}) is:
+\begin{small}
+\begin{verbatim}
+1;      # This is the last line
+\end{verbatim}
+\end{small}
+This is a \Perl{} quirk.
+
+\item [Problems when producing the \texttt{.dvi} version: \label{htmlsty}]
+If you are using any of the new \LaTeX{} commands which are defined in 
+the \fn{html.sty} file make sure that \fn{html.sty} is included;
+e.g. as one of the optional arguments to the \Lc{documentclass} command.
+
+Of course you also have to make sure that \LaTeX{} knows where the \fn{html.sty}
+file is, either by putting it in the same place as the other style-files on
+your system, or by changing your \fn{TEXINPUTS} shell environment variable
+\footnote{If you don't know how to do either of these things, copy (or
+link) \fn{html.sty} to the directory of your \LaTeX{} document.}.
+
+\item [Some of the fonts are translated incorrectly: ]
+There is a fault in way the \LaTeX{} scoping rules have been 
+interpreted in \latextohtml. Consider this:
+\begin{small}
+\begin{verbatim}
+\ttfamily fixed-width font.
+\begin{something}
+nothing here
+\end{something}
+default font.
+\end{verbatim}
+\end{small}
+When processed by \LaTeX, the effect of the \Lc{tt} command is
+delimited by the beginning of the environment ``something'',
+so that ``default font'' will appear in the default font. 
+But \latextohtml{} will not recognise
+``something'' as a delimiter and ``default font'' will appear in the
+wrong font. 
+
+To avoid this problem (until it is fixed) you may delimit the scope of
+some commands explicitly using \verb|{}|'s; i.e.
+\begin{small}
+\begin{verbatim}
+\texttt{fixed-width font}.
+\begin{something}
+nothing here
+\end{something}
+default font.
+\end{verbatim}
+\end{small}
+
+\cbversion{98.1}\begin{changebar}
+Nesting of font changing commands is now handled correctly.
+Such problems should no longer occur, though it always helps
+to use explicitly delimited `pseudo'-environments; e.g.
+\verb|{\bf ... }|, or \LaTeX's commands requiring an explicit argument,
+such as \Lc{textbf}.
+\end{changebar}
+
+\item [Cannot get it to generate inlined images: ]
+Run \latextohtml{} on your document, using the \Cs{debug} switch.
+Look in the directory where the \texttt{HTML} files are generated
+for two files named \fn{images.tex} and \fn{images.log}.
+Examine their contents.
+Do you notice anything unusual in them?
+
+Copy \fn{images.tex} into the directory 
+of your original \LaTeX{} file and run \fn{latex} on \fn{images.tex}.
+Can you see any errors in \fn{images.log}?
+If so, can you fix \fn{images.tex} to get rid of the errors? 
+After fixing \fn{images.tex}
+you can put it back in the directory of \texttt{HTML},
+then run \latextohtml{} on the original document 
+using the \Cs{images\_only} switch. 
+
+However if you make changes or additions to the original source
+then the same problems may occur again. 
+Thus it is better to understand why the changes were required 
+and alter your document's source code appropriately.
+
+\medskip
+
+If you get into a mess delete all the image files and run \latextohtml{}
+again. Often it is sufficient to just delete the file \fn{images.pl}.
+
+If you \emph{still} get into a mess, try running \latextohtml{} with the options
+\Cs{no\_reuse} and \Cs{no\_images}; e.g.
+\begin{small}
+\begin{verbatim}
+cblipca% latex2html -no_reuse -no_images test.tex
+This is LaTeX2HTML Version 95 (Tue Nov 29 1994) by Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+
+OPENING /tmp_mnt/home/cblelca/nikos/tmp/test.tex 
+Cannot create directory /usr/cblelca/nikos/tmp/test: File exists
+(r) Reuse the images in the old directory OR
+(d) *** DELETE *** /usr/cblelca/nikos/tmp/test AND ITS CONTENTS OR
+(q) Quit ?
+:d
+
+Reading ...
+Processing macros ....+.
+Reading test.aux ......................
+Translating ...0/1........1/1.....
+Writing image file ...
+
+Doing section links .....
+
+*********** WARNINGS ***********
+
+If you are having problems displaying the correct images with Mosaic,
+try selecting "Flush Image Cache" from "Options" in the menu-bar 
+and then reload the HTML file.
+
+Done.
+\end{verbatim}
+\end{small}
+Then try to have a look in the file  \fn{images.tex} 
+(as described earlier) and perhaps fix it.
+Once you are happy that \fn{images.tex} is OK, run \latextohtml{}
+again with the option \Cs{images\_only}.
+
+Some problems in displaying the correct inlined images,
+may be due to the image caching mechanisms of your browser.
+With some browsers a simple ``\textbf{Reload Current Document}'' will be enough
+to refresh the images but with others (e.g. \appl{Mosaic}) you may need
+to request for the cache to be refreshed. With \appl{Mosaic} try 
+selecting ``\textbf{Flush Image Cache}'' from ``\textbf{Options}'' in the menu-bar 
+and then reload the \texttt{HTML} file.
+
+
+\item [It cannot do slides, memos, etc. ] 
+If you use Sli\TeX{} you can go a long way just by replacing 
+the \verb|{slides}| argument of the \Lc{documentclass} command with 
+something like \verb|{article}| just before using \latextohtml.
+One problem may be that all your slides will end up in the  same \texttt{HTML} 
+file.
+If you use \fn{lslide.sty} you may get much better results 
+(\htmladdnormallinkfoot{use \appl{Archie}}{http://www.pvv.unit.no/archie/} 
+to find this or any other style files).
+\end{htmllist}
+\index{problems|)}
+

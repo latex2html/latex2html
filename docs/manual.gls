@@ -1,0 +1,439 @@
+\section*{Glossary of variables and file-names}
+ \addcontentsline{toc}{section}%
+  {\protect\numberline{}Glossary of variables and file-names}
+ \newread\glsfile \openin\glsfile=l2hfiles.dat
+ \def\glsreopen{\immediate\closein\glsfile\relax
+	\immediate\openin\glsfile=l2hfiles.dat \relax}
+ \begin{theglossary} 
+	\def\gn#1{\def\glsthis{#1}\texttt{#1}}
+	\def\appl{\textit}\def\gsl{\textsl}
+	\def\glsget{\ifeof\glsfile\glsm\else\expandafter\glsgA\fi}
+	\def\glsgA{\read\glsfile to\glsitem\relax\expandafter
+		\ifx\expandafter\par\glsitem\relax\expandafter\glsget
+		\else\expandafter\glsgB\fi}
+	\def\glsgB{\expandafter\glsgC\glsitem\relax}
+	\def\glsgC\item[\gn#1]#2\relax{\def\tmp{#1}\ifx\tmp\glsthis
+		\def\next{#2}\else\def\next{\glsget}\fi\next}
+	\def\glsm{\glsmA}
+	\def\glsmA{\def\glsm{\glsmB}\glsreopen\glsget}
+	\def\glsmB{\typeout{^^J*** no glossary data for <\glsthis> in l2hfiles.dat^^J}%
+		\def\glsm{glsmA}\glsreopen}
+
+
+  \item[]\gn{.dvipsrc}\quad{\glsget}\pfill 7, 11
+  \item[]\gn{.latex2html-init}\quad{\glsget}\pfill 11, 62, 63, 67, 72, 
+		74, 
+		77, 78, 
+		86, 
+		91
+  \item[]\gn{\$ACCENT\_IMAGES}\quad{\glsget}\pfill 74
+  \item[]\gn{\$ADDRESS}\quad{\glsget}\pfill 67
+  \item[]\gn{\$ALTERNATIVE\_ICONS}\quad{\glsget}\pfill 67, 72
+  \item[]\gn{\$ANTI\_ALIAS}\quad{\glsget}\pfill 69
+  \item[]\gn{\$ANTI\_ALIAS\_TEXT}\quad{\glsget}\pfill 69
+  \item[]\gn{\$ASCII\_MODE}\quad{\glsget}\pfill 68
+  \item[]\gn{\$AUTO\_NAVIGATION}\quad{\glsget}\pfill 70, 75
+  \item[]\gn{\$AUTO\_PREFIX}\quad{\glsget}\pfill 11, 57, 64
+  \item[]\gn{\$BODYTEXT}\quad{\glsget}\pfill 75
+  \item[]\gn{\$BOTTOM\_NAVIGATION}\quad{\glsget}\pfill 70
+  \item[]\gn{\$CHARSET}\quad{\glsget}\pfill 74
+  \item[]\gn{\$CHILDLINE}\quad{\glsget}\pfill 75
+  \item[]\gn{\$CONTENTS}\quad{\glsget}\pfill 79
+  \item[]\gn{\$CONTENTS\_IN\_NAVIGATION}\quad{\glsget}\pfill 70
+  \item[]\gn{\$CRAYOLAFILE}\quad{\glsget}\pfill 74
+  \item[]\gn{\$CUSTOM\_BUTTONS}\quad{\glsget}\pfill 80
+  \item[]\gn{\$CUSTOM\_TITLES}\quad{\glsget}\pfill 63
+  \item[]\gn{\$DEBUG}\quad{\glsget}\pfill 71
+  \item[]\gn{\$DESTDIR}\quad{\glsget}\pfill 63
+  \item[]\gn{\$DISCARD\_PS}\quad{\glsget}\pfill 68
+  \item[]\gn{\$DISP\_SCALE\_FACTOR}\quad{\glsget}\pfill 19--22, 66, 
+		75, 76
+  \item[]\gn{\$DONT\_INCLUDE}\quad{\glsget}\pfill 73, 74, 82, 89
+  \item[]\gn{\$DO\_INCLUDE}\quad{\glsget}\pfill 74
+  \item[]\gn{\$DVIPS}\quad{\glsget}\pfill 73
+  \item[]\gn{\$DVIPS\_MODE}\quad{\glsget}\pfill 11, 66, 73
+  \item[]\gn{\$EXTERNAL\_BIBLIO}\quad{\glsget}\pfill 71
+  \item[]\gn{\$EXTERNAL\_CONTENTS}\quad{\glsget}\pfill 71
+  \item[]\gn{\$EXTERNAL\_DOWN\_LINK}\quad{\glsget}\pfill 71
+  \item[]\gn{\$EXTERNAL\_DOWN\_TITLE}\quad{\glsget}\pfill 71
+  \item[]\gn{\$EXTERNAL\_FILE}\quad{\glsget}\pfill 66
+  \item[]\gn{\$EXTERNAL\_IMAGES}\quad{\glsget}\pfill 68
+  \item[]\gn{\$EXTERNAL\_INDEX}\quad{\glsget}\pfill 71
+  \item[]\gn{\$EXTERNAL\_PREV\_LINK}\quad{\glsget}\pfill 70
+  \item[]\gn{\$EXTERNAL\_PREV\_TITLE}\quad{\glsget}\pfill 70
+  \item[]\gn{\$EXTERNAL\_UP\_LINK}\quad{\glsget}\pfill 70
+  \item[]\gn{\$EXTERNAL\_UP\_TITLE}\quad{\glsget}\pfill 70
+  \item[]\gn{\$EXTN}\quad{\glsget}\pfill 74
+  \item[]\gn{\$EXTRA\_IMAGE\_SCALE}\quad{\glsget}\pfill 22, 23, 75
+  \item[]\gn{\$FIGURE\_SCALE\_FACTOR}\quad{\glsget}\pfill 21, 22, 24, 
+		66, 
+		75
+  \item[]\gn{\$FILE}\quad{\glsget}\pfill 67, 74
+  \item[]\gn{\$FOILCLASS}\quad{\glsget}\pfill 31
+  \item[]\gn{\$FOILHEADLEVEL}\quad{\glsget}\pfill 31
+  \item[]\gn{\$FOILOPTIONS}\quad{\glsget}\pfill 31
+  \item[]\gn{\$FONT\_SIZE}\quad{\glsget}\pfill 66
+  \item[]\gn{\$GS}\quad{\glsget}\pfill 76
+  \item[]\gn{\$GS\_DEVICE}\quad{\glsget}\pfill 76
+  \item[]\gn{\$GS\_LIB}\quad{\glsget}\pfill 76
+  \item[]\gn{\$HOME/.latex2html-init}\quad{\glsget}\pfill 11, 67, 77, 
+		79, 
+		82
+  \item[]\gn{\$HOWTO\_INTERLACE\_GIF}\quad{\glsget}\pfill 76
+  \item[]\gn{\$HOWTO\_TRANSPARENT\_GIF}\quad{\glsget}\pfill 76
+  \item[]\gn{\$HTML\_VERSION}\quad{\glsget}\pfill 65
+  \item[]\gn{\$ICONSERVER}\quad{\glsget}\pfill 10, 11, 74
+  \item[]\gn{\$IMAGES\_ONLY}\quad{\glsget}\pfill 68
+  \item[]\gn{\$IMAGE\_TYPE}\quad{\glsget}\pfill 73
+  \item[]\gn{\$INDEX}\quad{\glsget}\pfill 79
+  \item[]\gn{\$INDEX\_IN\_NAVIGATION}\quad{\glsget}\pfill 70
+  \item[]\gn{\$INFO}\quad{\glsget}\pfill 53, 68
+  \item[]\gn{\$INTERLACE}\quad{\glsget}\pfill 75
+  \item[]\gn{\$LANGUAGE\_TITLES}\quad{\glsget}\pfill 15
+  \item[]\gn{\$LATEX}\quad{\glsget}\pfill 73
+  \item[]\gn{\$LATEX2HTMLDIR}\quad{\glsget}\pfill 10, 67, 72, 82, 91, 
+		94--96, 
+		98, 99
+  \item[]\gn{\$LATEX2HTMLDIR/latex2html.config}\quad{\glsget}\pfill 77, 
+		79
+  \item[]\gn{\$LATEX2HTMLDIR/local.pm}\quad{\glsget}\pfill 76
+  \item[]\gn{\$LATEX2HTMLDIR/styles/german.perl}\quad{\glsget}\pfill 29
+  \item[]\gn{\$LATEX2HTMLSTYLES}\quad{\glsget}\pfill 72, 74
+  \item[]\gn{\$LATEX2HTMLVERSIONS}\quad{\glsget}\pfill 72
+  \item[]\gn{\$LATEX\_DUMP}\quad{\glsget}\pfill 69
+  \item[]\gn{\$LINE\_WIDTH}\quad{\glsget}\pfill 76
+  \item[]\gn{\$LINKNAME}\quad{\glsget}\pfill 64, 74, 92
+  \item[]\gn{\$LINKPOINT}\quad{\glsget}\pfill 64, 74, 92
+  \item[]\gn{\$LOCAL\_ICONS}\quad{\glsget}\pfill 12, 67
+  \item[]\gn{\$LONG\_TITLES}\quad{\glsget}\pfill 63
+  \item[]\gn{\$MATH\_SCALE\_FACTOR}\quad{\glsget}\pfill 19--22, 66, 
+		75, 76, 
+		89
+  \item[]\gn{\$MAX\_LINK\_DEPTH}\quad{\glsget}\pfill 64
+  \item[]\gn{\$MAX\_SPLIT\_DEPTH}\quad{\glsget}\pfill 64, 80
+  \item[]\gn{\$METAFONT\_DPI}\quad{\glsget}\pfill 73
+  \item[]\gn{\$NAV\_BORDER}\quad{\glsget}\pfill 74
+  \item[]\gn{\$NETSCAPE\_HTML}\quad{\glsget}\pfill 75
+  \item[]\gn{\$NEXT}\quad{\glsget}\pfill 79
+  \item[]\gn{\$NEXT\_GROUP}\quad{\glsget}\pfill 79
+  \item[]\gn{\$NEXT\_GROUP\_TITLE}\quad{\glsget}\pfill 79
+  \item[]\gn{\$NEXT\_PAGE\_IN\_NAVIGATION}\quad{\glsget}\pfill 70
+  \item[]\gn{\$NEXT\_TITLE}\quad{\glsget}\pfill 79
+  \item[]\gn{\$NOFORK}\quad{\glsget}\pfill 67
+  \item[]\gn{\$NOLATEX}\quad{\glsget}\pfill 68
+  \item[]\gn{\$NO\_AUTO\_LINK}\quad{\glsget}\pfill 64, 74
+  \item[]\gn{\$NO\_FOOTNODE}\quad{\glsget}\pfill 67
+  \item[]\gn{\$NO\_IMAGES}\quad{\glsget}\pfill 68
+  \item[]\gn{\$NO\_NAVIGATION}\quad{\glsget}\pfill 70, 89, 92, 93
+  \item[]\gn{\$NO\_SIMPLE\_MATH}\quad{\glsget}\pfill 18, 66
+  \item[]\gn{\$NO\_SUBDIR}\quad{\glsget}\pfill 63
+  \item[]\gn{\$NUMBERED\_FOOTNOTES}\quad{\glsget}\pfill 67
+  \item[]\gn{\$PAPERSIZE}\quad{\glsget}\pfill 76, 85
+  \item[]\gn{\$PBMMAKE}\quad{\glsget}\pfill 76
+  \item[]\gn{\$PBMPLUSDIR}\quad{\glsget}\pfill 76
+  \item[]\gn{\$PK\_GENERATION}\quad{\glsget}\pfill 11, 66, 73
+  \item[]\gn{\$PNMCAT}\quad{\glsget}\pfill 76
+  \item[]\gn{\$PNMCROP}\quad{\glsget}\pfill 76
+  \item[]\gn{\$PNMFILE}\quad{\glsget}\pfill 76
+  \item[]\gn{\$PNMFLIP}\quad{\glsget}\pfill 76
+  \item[]\gn{\$PPMQUANT}\quad{\glsget}\pfill 76
+  \item[]\gn{\$PPMTOGIF}\quad{\glsget}\pfill 76
+  \item[]\gn{\$PREFIX}\quad{\glsget}\pfill 63, 64
+  \item[]\gn{\$PREVIOUS}\quad{\glsget}\pfill 79
+  \item[]\gn{\$PREVIOUS\_GROUP}\quad{\glsget}\pfill 79
+  \item[]\gn{\$PREVIOUS\_GROUP\_TITLE}\quad{\glsget}\pfill 79
+  \item[]\gn{\$PREVIOUS\_PAGE\_IN\_NAVIGATION}\quad{\glsget}\pfill 70
+  \item[]\gn{\$PREVIOUS\_TITLE}\quad{\glsget}\pfill 79
+  \item[]\gn{\$PSTOIMG}\quad{\glsget}\pfill 73
+  \item[]\gn{\$PS\_IMAGES}\quad{\glsget}\pfill 68
+  \item[]\gn{\$REUSE}\quad{\glsget}\pfill 68, 69
+  \item[]\gn{\$RGBCOLORFILE}\quad{\glsget}\pfill 74
+  \item[]\gn{\$SCALABLE\_FONTS}\quad{\glsget}\pfill 66
+  \item[]\gn{\$SERVER}\quad{\glsget}\pfill 11
+  \item[]\gn{\$SHORTEXTN}\quad{\glsget}\pfill 63, 74
+  \item[]\gn{\$SHORT\_INDEX}\quad{\glsget}\pfill 33, 67
+  \item[]\gn{\$SHOW\_SECTION\_NUMBERS}\quad{\glsget}\pfill 65
+  \item[]\gn{\$TEXDEFS}\quad{\glsget}\pfill 66
+  \item[]\gn{\$TEXEXPAND}\quad{\glsget}\pfill 73
+  \item[]\gn{\$TEXINPUTS}\quad{\glsget}\pfill 10, 11, 73
+  \item[]\gn{\$TITLE}\quad{\glsget}\pfill 63
+  \item[]\gn{\$TITLES\_LANGUAGE}\quad{\glsget}\pfill 75
+  \item[]\gn{\$TMP}\quad{\glsget}\pfill 76
+  \item[]\gn{\$TOC\_DEPTH}\quad{\glsget}\pfill 64
+  \item[]\gn{\$TOC\_STARS}\quad{\glsget}\pfill 64
+  \item[]\gn{\$TOP\_NAVIGATION}\quad{\glsget}\pfill 70
+  \item[]\gn{\$TRANSPARENT\_FIGURES}\quad{\glsget}\pfill 75
+  \item[]\gn{\$UNSEGMENT}\quad{\glsget}\pfill 65
+  \item[]\gn{\$UP}\quad{\glsget}\pfill 79
+  \item[]\gn{\$UP\_TITLE}\quad{\glsget}\pfill 79
+  \item[]\gn{\$USENETPBM}\quad{\glsget}\pfill 76
+  \item[]\gn{\$VERBOSITY}\quad{\glsget}\pfill 62, 71, 72, 82, 83
+  \item[]\gn{\$WHITE\_BACKGROUND}\quad{\glsget}\pfill 27, 69
+  \item[]\gn{\$WORDS\_IN\_NAVIGATION\_PANEL\_TITLES}\quad{\glsget}\pfill 
+		75, 
+		80
+  \item[]\gn{\$WORDS\_IN\_PAGE}\quad{\glsget}\pfill 70, 75
+  \item[]\gn{\$cb\_version}\quad{\glsget}\pfill 31
+  \item[]\gn{\$dd}\quad{\glsget}\pfill 72
+  \item[]\gn{\$default\_language}\quad{\glsget}\pfill 75
+  \item[]\gn{\$depth}\quad{\glsget}\pfill 67
+  \item[]\gn{\$file}\quad{\glsget}\pfill 67
+  \item[]\gn{\$title}\quad{\glsget}\pfill 67
+
+  \indexspace
+
+  \item[]\gn{amsfonts.perl}\quad{\glsget}\pfill 29
+  \item[]\gn{amstex.perl}\quad{\glsget}\pfill 29
+  \item[]\gn{\textsl  {anonymous ftp}}\quad{\glsget}\pfill 6
+  \item[]\gn{\textsl  {Archie}}\quad{\glsget}\pfill 6, 8, 83, 88
+  \item[]\gn{\textsl  {Arena}}\quad{\glsget}\pfill 15
+  \item[]\gn{article.perl}\quad{\glsget}\pfill 28
+
+  \indexspace
+
+  \item[]\gn{bash}\quad{\glsget}\pfill 8
+  \item[]\gn{bibtex}\quad{\glsget}\pfill 86
+  \item[]\gn{book.perl}\quad{\glsget}\pfill 28
+
+  \indexspace
+
+  \item[]\gn{\textsl  {CERN}}\quad{\glsget}\pfill 55
+  \item[]\gn{changebar.sty}\quad{\glsget}\pfill iii, 12, 31
+  \item[]\gn{Changes}\quad{\glsget}\pfill 7, 13
+  \item[]\gn{chmod}\quad{\glsget}\pfill 82
+  \item[]\gn{color.perl}\quad{\glsget}\pfill 54, 74, 89, 93
+  \item[]\gn{configure-pstoimg}\quad{\glsget}\pfill v, 7, 10, 76, 91, 
+		96
+  \item[]\gn{credits.tex}\quad{\glsget}\pfill 12
+  \item[]\gn{csh}\quad{\glsget}\pfill 8
+
+  \indexspace
+
+  \item[]\gn{\textsl  {DBM}}\quad{\glsget}\pfill 8, 84
+  \item[]\gn{dn.gif}\quad{\glsget}\pfill 12
+  \item[]\gn{docs/}\quad{\glsget}\pfill 7, 12, 98
+  \item[]\gn{docs/foilhtml/}\quad{\glsget}\pfill 7, 31
+  \item[]\gn{dot.latex2html-init}\quad{\glsget}\pfill 7, 11
+  \item[]\gn{dvips}\quad{\glsget}\pfill 8, 11, 59, 63, 73, 83, 85, 89, 
+		95, 
+		97
+  \item[]\gn{dvipsk}\quad{\glsget}\pfill 8, 9
+
+  \indexspace
+
+  \item[]\gn{example/}\quad{\glsget}\pfill 7
+
+  \indexspace
+
+  \item[]\gn{features.tex}\quad{\glsget}\pfill 12
+  \item[]\gn{floatfig.sty}\quad{\glsget}\pfill 31
+  \item[]\gn{foilhtml.sty}\quad{\glsget}\pfill 31, 90
+  \item[]\gn{foils.perl}\quad{\glsget}\pfill 28, 31, 90
+  \item[]\gn{french.perl}\quad{\glsget}\pfill 29
+  \item[]\gn{french.sty}\quad{\glsget}\pfill 95
+  \item[]\gn{\textsl  {ftp}}\quad{\glsget}\pfill 6
+  \item[]\gn{\textsl  {FTP search}}\quad{\glsget}\pfill 6, 8
+
+  \indexspace
+
+  \item[]\gn{\textsl  {GDBM}}\quad{\glsget}\pfill 8, 83
+  \item[]\gn{german.perl}\quad{\glsget}\pfill 29
+  \item[]\gn{german.sty}\quad{\glsget}\pfill 28, 91, 95
+  \item[]\gn{\textsl  {Ghostscript}}\quad{\glsget}\pfill v, x, 8, 9, 20, 
+		100
+  \item[]\gn{ghostscript}\quad{\glsget}\pfill 95
+  \item[]\gn{giftool}\quad{\glsget}\pfill 9
+  \item[]\gn{grep}\quad{\glsget}\pfill 84
+  \item[]\gn{gs}\quad{\glsget}\pfill 9, 11
+  \item[]\gn{\textsl  {GS-Preview}}\quad{\glsget}\pfill 11
+  \item[]\gn{gs\_fonts.ps}\quad{\glsget}\pfill 11
+
+  \indexspace
+
+  \item[]\gn{heqn.perl}\quad{\glsget}\pfill 95
+  \item[]\gn{heqn.sty}\quad{\glsget}\pfill 21
+  \item[]\gn{HTML}\quad{\glsget}\pfill i, vii, 7, 10
+  \item[]\gn{html.perl}\quad{\glsget}\pfill 37, 38, 52
+  \item[]\gn{html.sty}\quad{\glsget}\pfill 1, 9, 10, 12, 22, 26, 37, 38, 
+		49, 
+		52, 
+		86, 
+		95
+  \item[]\gn{htmllist.perl}\quad{\glsget}\pfill 37
+  \item[]\gn{htmllist.sty}\quad{\glsget}\pfill 12, 30, 37
+  \item[]\gn{hypextra.tex}\quad{\glsget}\pfill 12
+
+  \indexspace
+
+  \item[]\gn{icons.gif/}\quad{\glsget}\pfill 7
+  \item[]\gn{icons.png/}\quad{\glsget}\pfill 7
+  \item[]\gn{icons/}\quad{\glsget}\pfill 11
+  \item[]\gn{images.dvi}\quad{\glsget}\pfill 89
+  \item[]\gn{images.log}\quad{\glsget}\pfill 85, 87
+  \item[]\gn{images.pl}\quad{\glsget}\pfill 87
+  \item[]\gn{images.tex}\quad{\glsget}\pfill 31, 37, 47, 69, 87, 90--92, 
+		96
+  \item[]\gn{index.html}\quad{\glsget}\pfill 64, 102
+  \item[]\gn{IndicTeX-HTML/}\quad{\glsget}\pfill 7
+  \item[]\gn{install-test}\quad{\glsget}\pfill 7, 8, 10, 72, 73, 81--84, 
+		105
+
+  \indexspace
+
+  \item[]\gn{justify.perl}\quad{\glsget}\pfill 96
+  \item[]\gn{justify.sty}\quad{\glsget}\pfill 12
+
+  \indexspace
+
+  \item[]\gn{l2hfiles.dat}\quad{\glsget}\pfill 12, 35
+  \item[]\gn{l2hglo.ist}\quad{\glsget}\pfill 12, 35, 97
+  \item[]\gn{l2hidx.ist}\quad{\glsget}\pfill 12, 97
+  \item[]\gn{l2hman.sty}\quad{\glsget}\pfill 12
+  \item[]\gn{labels.pl}\quad{\glsget}\pfill 50--52, 55, 56
+  \item[]\gn{latex}\quad{\glsget}\pfill 8, 11, 12, 59, 73, 86, 87
+  \item[]\gn{\LaTeX  }\quad{\glsget}\pfill i
+  \item[]\gn{\LaTeXe  }\quad{\glsget}\pfill 1
+  \item[]\gn{latex2html}\quad{\glsget}\pfill 7, 10, 38, 59, 60, 63, 
+		71, 72, 
+		77, 
+		81, 82, 
+		84
+  \item[]\gn{\LaTeX  2HTML}\quad{\glsget}\pfill 1
+  \item[]\gn{latex2html-98.1.tar.gz}\quad{\glsget}\pfill 7
+  \item[]\gn{latex2html.config}\quad{\glsget}\pfill 7, 10--12, 16, 19, 
+		64, 65, 
+		67, 
+		72--74, 
+		85, 86
+  \item[]\gn{letter.perl}\quad{\glsget}\pfill 28
+  \item[]\gn{libpng-0.89c.tar.gz}\quad{\glsget}\pfill 9
+  \item[]\gn{libz}\quad{\glsget}\pfill 9
+  \item[]\gn{licence.tex}\quad{\glsget}\pfill 12
+  \item[]\gn{local.pm}\quad{\glsget}\pfill 7, 10, 93
+  \item[]\gn{lslide.sty}\quad{\glsget}\pfill 88
+  \item[]\gn{\textsl  {lynx}}\quad{\glsget}\pfill 9, 68
+
+  \indexspace
+
+  \item[]\gn{make}\quad{\glsget}\pfill 59, 60, 63, 97
+  \item[]\gn{Makefile}\quad{\glsget}\pfill 59, 63, 70, 71, 94, 108
+  \item[]\gn{makeidx.perl}\quad{\glsget}\pfill ii, 34
+  \item[]\gn{makeindex}\quad{\glsget}\pfill 12, 35, 96, 97
+  \item[]\gn{makemap}\quad{\glsget}\pfill 7, 10, 11, 55, 98
+  \item[]\gn{makeseg}\quad{\glsget}\pfill iii, 7
+  \item[]\gn{MakeTeXPK}\quad{\glsget}\pfill 11, 73
+  \item[]\gn{manhtml.tex}\quad{\glsget}\pfill 12
+  \item[]\gn{manual.aux}\quad{\glsget}\pfill 12
+  \item[]\gn{manual.glo}\quad{\glsget}\pfill 34, 35, 97
+  \item[]\gn{manual.gls}\quad{\glsget}\pfill 12, 35
+  \item[]\gn{manual.idx}\quad{\glsget}\pfill 97
+  \item[]\gn{manual.ind}\quad{\glsget}\pfill 12
+  \item[]\gn{manual.tex}\quad{\glsget}\pfill 12
+  \item[]\gn{\textsl  {Metafont}}\quad{\glsget}\pfill 73, 89, 91, 97, 
+		99
+  \item[]\gn{misc/}\quad{\glsget}\pfill 73
+  \item[]\gn{modes.mf}\quad{\glsget}\pfill 11, 73, 97
+  \item[]\gn{\textsl  {Mosaic}}\quad{\glsget}\pfill 88
+  \item[]\gn{mybutton.gif}\quad{\glsget}\pfill 79
+
+  \indexspace
+
+  \item[]\gn{natbib.perl}\quad{\glsget}\pfill 49
+  \item[]\gn{\textsl  {NCSA}}\quad{\glsget}\pfill 55
+  \item[]\gn{\textsl  {NCSA Mosaic}}\quad{\glsget}\pfill 61
+  \item[]\gn{\textsl  {NDBM}}\quad{\glsget}\pfill 8, 83, 84
+  \item[]\gn{netpbm}\quad{\glsget}\pfill x, 8, 9
+  \item[]\gn{\textsl  {Netscape Navigator}}\quad{\glsget}\pfill 9, 15, 
+		61
+
+  \indexspace
+
+  \item[]\gn{Override.pm}\quad{\glsget}\pfill vii, 93
+  \item[]\gn{overview.tex}\quad{\glsget}\pfill 12
+
+  \indexspace
+
+  \item[]\gn{pbmmake}\quad{\glsget}\pfill 92
+  \item[]\gn{pbmplus}\quad{\glsget}\pfill 9, 97
+  \item[]\gn{\textsl  {Perl}}\quad{\glsget}\pfill i
+  \item[]\gn{PNG}\quad{\glsget}\pfill v, 10, 98
+  \item[]\gn{pnmcat}\quad{\glsget}\pfill 92
+  \item[]\gn{pnmcrop}\quad{\glsget}\pfill 8, 9, 92
+  \item[]\gn{pnmfile}\quad{\glsget}\pfill 92
+  \item[]\gn{pnmflip}\quad{\glsget}\pfill 22, 92
+  \item[]\gn{pnmtopng}\quad{\glsget}\pfill 9
+  \item[]\gn{PostScript}\quad{\glsget}\pfill ii, 9, 11, 12, 21, 62, 66, 
+		68, 69, 
+		73, 
+		83, 
+		85, 
+		89, 
+		92, 93, 
+		95, 
+		98, 
+		104
+  \item[]\gn{ppmquant}\quad{\glsget}\pfill 92
+  \item[]\gn{ppmtogif}\quad{\glsget}\pfill 92
+  \item[]\gn{problems.tex}\quad{\glsget}\pfill 12
+  \item[]\gn{psfiles/}\quad{\glsget}\pfill 12
+  \item[]\gn{pstogif}\quad{\glsget}\pfill ii, v, 7, 10
+  \item[]\gn{pstoimg}\quad{\glsget}\pfill v, 7, 10, 73, 76, 81, 82, 90, 
+		92, 93, 
+		96, 
+		98
+  \item[]\gn{pstoppm.ps}\quad{\glsget}\pfill ii
+
+  \indexspace
+
+  \item[]\gn{README}\quad{\glsget}\pfill 7
+  \item[]\gn{report.map}\quad{\glsget}\pfill 55
+  \item[]\gn{report.perl}\quad{\glsget}\pfill 28
+  \item[]\gn{report.ps}\quad{\glsget}\pfill 59
+  \item[]\gn{report.tex}\quad{\glsget}\pfill 58--60, 98
+  \item[]\gn{report/}\quad{\glsget}\pfill 60
+
+  \indexspace
+
+  \item[]\gn{\textsl  {SDBM}}\quad{\glsget}\pfill 83
+  \item[]\gn{sec1.tex}\quad{\glsget}\pfill 58--60
+  \item[]\gn{sec2.html}\quad{\glsget}\pfill 59
+  \item[]\gn{sec2.tex}\quad{\glsget}\pfill 58, 59
+  \item[]\gn{slides.perl}\quad{\glsget}\pfill 28
+  \item[]\gn{styles/}\quad{\glsget}\pfill 7, 16, 28, 72, 91
+  \item[]\gn{support.tex}\quad{\glsget}\pfill 12
+
+  \indexspace
+
+  \item[]\gn{tar}\quad{\glsget}\pfill 6, 7
+  \item[]\gn{tcsh}\quad{\glsget}\pfill 8
+  \item[]\gn{tests/}\quad{\glsget}\pfill 7
+  \item[]\gn{texdefs.perl}\quad{\glsget}\pfill 66, 93
+  \item[]\gn{texexpand}\quad{\glsget}\pfill ii, iv, v, 7, 10, 73, 
+		81, 82, 
+		93
+  \item[]\gn{TEXINPUTS}\quad{\glsget}\pfill 10, 85, 86
+  \item[]\gn{texinputs/}\quad{\glsget}\pfill 7, 10, 31
+  \item[]\gn{toshiba}\quad{\glsget}\pfill 11
+
+  \indexspace
+
+  \item[]\gn{up.gif}\quad{\glsget}\pfill 12
+  \item[]\gn{url.sty}\quad{\glsget}\pfill iii, 12
+  \item[]\gn{urls.bib}\quad{\glsget}\pfill 49
+  \item[]\gn{userman.tex}\quad{\glsget}\pfill 12
+
+  \indexspace
+
+  \item[]\gn{versions/}\quad{\glsget}\pfill 7, 65, 91
+
+  \indexspace
+
+  \item[]\gn{wrapfig.sty}\quad{\glsget}\pfill 31
+
+  \indexspace
+
+  \item[]\gn{xv}\quad{\glsget}\pfill 56
+
+ \end{theglossary}
+
+ \closein\glsfile

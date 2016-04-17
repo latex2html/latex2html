@@ -1,0 +1,83 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Item:
+%% Test suite for l2h bug.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bug description (add references to further descriptive files if possible):
+%%
+%% An incomplete LaTeX command (eg. \theoremstyle{..}) that is
+%% passed to LaTeX through images.tex leads to an absent page in
+%% the resulting DVI file.
+%% See also file 'Changes'.
+%%
+%% Note: The broken \theoremheaderfont, \theoremstyle in images.tex
+%% indicate another bug, not directly related to this one.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bug caused this behaviour (may be several descriptions):
+%%
+%% The images following the absent page in images.tex get out of sync
+%% (the amount of absent pages earlier than expected).
+%% This flaw is not detected by latex2html and hence not indicated to the user!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bug severity (low|bothers|problematic|urgent -- fixed|open -- message):
+%% problematic -- fixed --
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bug fix identification
+%% (id -- l2h release (or releases for multiple fixes) -- location in file(s)):
+%% jcl(pag) -- 96.1h -- latex2html
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Author: Jens Lippmann <http://www-jb.cs.uni-sb.de/~www/people/lippmann>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Change log (Mon/DD/YY -- author -- message):
+%% jcl = Jens Lippmann
+%%
+%% Aug/25/96 -- jcl -- created
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Test suite decription:
+%%
+%% Some theorem stuff is used in the beginning to provide some broken
+%% statements (incomplete LaTeX commands) in images.tex.
+%% The document contains two equations, which must be translated into pictures
+%% by l2h, no `simple math' (This is a requirement for this suite).
+%% The equations are embedded in a section to assure the incomplete LaTeX
+%% commands precede them in images.tex.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Expected output of this suit:
+%% The html output must look like the dvi output (also watch the hints
+%% given in the output itself).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\documentstyle[12pt,theorem]{article}
+\documentclass[12pt]{article}
+\usepackage{theorem}
+\usepackage[dvips]{color}
+\begin{htmlonly}
+\pagecolor{#fffffc}
+\end{htmlonly}
+
+\theoremstyle{plain}
+\newtheorem{Defi}[equation]{Definition}
+\newtheorem{Theo}[equation]{Theorem}
+
+\theoremstyle{break}
+\newtheorem{Pb}[equation]{Problem}
+\theoremheaderfont{\scshape}
+
+
+\begin{document}
+
+Please look at next section.
+
+\section{Section}
+This section is needed to have the fake entries *before*
+the math in images.tex.
+
+The contents of math here is randomly chosen, but to assure at
+least its translation into pictures.
+
+Below an equation with Omega=... should occur:
+$$\Omega=(\bar{{\cal D}^-}\cup\bar{{\cal D}^+})$$
+
+Below an equation with V=... should occur:
+$$ V={\cal E}+ZI $$
+
+\end{document}

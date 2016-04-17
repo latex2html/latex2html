@@ -1,0 +1,1793 @@
+
+\begin{htmlonly}
+\documentclass{article}
+\usepackage{html,htmllist,makeidx}
+\usepackage{longtable}
+\input{manhtml.tex}
+%
+\input{userman.ptr}             % Input counters and section
+\label{sec:man}\index{manual}
+\end{htmlonly}
+\startdocument
+%
+%\section{User Manual\label{sec:man}\index{manual}}
+\label{sec:man}
+\index{customised layout}
+\index{getting started}
+\html{\\}\noindent
+\latextohtml{} is a program for creating hyperlinked sets of \texttt{HTML} pages
+from a document marked-up using \LaTeX{} commands.
+Previous sections have discussed the results of specific \LaTeX{} commands.
+In this section we discuss instead the extensive range
+of command-line switches and options, and other aspects of \Perl{} code,
+that affect the way the translation is performed.
+
+\medskip\noindent
+To use \latextohtml{} to translate a file~\Meta{file}\texttt{.tex }
+containing \LaTeX{} commands, type:
+\begin{quote}
+\texttt{latex2html} \Meta{file}\texttt{.tex} 
+\end{quote}
+
+\index{browser@browser\label{IIIbrowser}}%
+\index{viewer|see{\htmlref{browser}{IIIbrowser}}}%
+\index{browser!NCSA Mosaic@\textsl{NCSA Mosaic}}%
+\index{browser!Netscape Navigator@\textsl{Netscape Navigator}}\html{\\}%
+\noindent
+This will create a new directory called \Meta{file} which will contain 
+the generated \texttt{HTML} files, some log files and possibly some images.
+To view the result use an \texttt{HTML} browser, such as 
+\appl{NCSA Mosaic} or \appl{Netscape Navigator},
+on the main \texttt{HTML} file which is \texttt{\Meta{file}/\Meta{file}.html}\,. 
+The file will contain navigation links 
+to the other parts of the generated document.
+%
+\index{file suffix!optional}%
+\index{file suffix!.tex@\texttt{.tex} or\texttt{.doc}}%
+The \texttt{.tex} suffix is optional and will be supplied
+by the program if it is omitted by the user.
+Other suffixes are acceptable also, such as \texttt{.doc}\,.
+
+\medskip
+\index{options!command-line options}\html{\\}\noindent
+It is possible to customise the output from \latextohtml{} using a number of 
+\hyperref{command-line options}{command-line options (see Section~}{)}{options}
+with which you can specify:
+\begin{itemize}
+\item
+how to break up the document; 
+\item
+where to put the generated files, and what are their names;
+\item
+the title for the whole document; 
+\item
+the signature at the end of each page is; 
+\item
+how many navigation panels to provide, what links to put in them;
+\item
+what other documents this one links to;
+\item 
+extra information to include about the document;
+\item 
+whether to retain the original \LaTeX{} section-numbering scheme;
+\item
+and many other things that affect how the information is obtained,
+processed or displayed in the resulting \texttt{.html} files and images.
+\end{itemize}
+
+\medskip
+\index{manual!short on-line}\html{\\}\noindent
+The \latextohtml{} script includes a short manual
+which can be viewed with the command: 
+\begin{verbatim}
+  perldoc latex2html
+\end{verbatim}
+
+
+\subsection{Developing Documents using \latextohtml{}\label{devel}}
+%\section{Developing Documents using \latextohtml{}\label{devel}}
+%
+Although any document containing \LaTeX{} commands can be translated
+by the \latextohtml{} translator, the best results are obtained when
+that document is itself a valid \LaTeX{} document.
+Indeed it is generally a good idea to develop documents so that
+they produce good readable results in both the \LaTeX{} typeset
+version as well as a set of \texttt{HTML} pages.
+This is not just a nicety; 
+there are several good practical reasons for doing this.
+
+\begin{htmllist}\htmlitemmark{BlueBall}
+%
+\item[\LaTeX{} macros: ]
+The macro commands that \latextohtml{} recognises are based upon
+corresponding commands for \LaTeX. If one tries to use syntax that is
+incorrect for \LaTeX{} then there is no reason why \latextohtml{} should
+be able to ``get it right'', by somehow recognising the true intent.
+
+
+\index{error checking!using LaTeX@using \LaTeX}%
+\item[error checking: ]
+Processing the document first using \LaTeX{} is the easiest, 
+and quickest, way to check for valid syntax.\html{\\}
+Whereas \LaTeX{} stops at each error (when run in interactive mode),
+allowing a fix to be made ``on the spot'' or a ``stop-fix-restart'',
+\latextohtml{} does not stop when it detects an error in \LaTeX{} syntax.
+Useful messages are given concerning missing or unmatched braces,
+but other apparent anomalies generate only warning messages, 
+which are saved to the end. 
+(Some warnings are also shown immediately when the \fn{\$VERBOSITY} 
+\htmlref{variable}{verbosity} is set to at least 3.)\html{\\}
+In practice it can be much quicker to test for invalid syntax using \LaTeX{} before 
+attempting to use the \latextohtml{} translator.
+
+Furthermore, \LaTeX{} warns of cross-reference labels that have not been defined. 
+This is useful to help avoid having hyperlinks which point to nowhere.
+
+\index{error checking!missing braces}%
+\index{error checking!unmatched brace}\html{\\}\noindent
+The case of missing braces, or an unmatched opening brace, 
+is an error that \latextohtml{} actually handles better than \LaTeX{} 
+(or rather, the underlying \TeX{} processor).
+Whereas \TeX{} only detects an error when something else goes wrong
+later in the processing, \latextohtml{} shows where the
+unmatched brace itself occurs. 
+
+
+\index{auxiliary file}
+\item[auxiliary file: ]
+Some information that \latextohtml{} might need is normally
+read from the \texttt{.aux} file for the document being processed;
+or perhaps from the \texttt{.aux} file of a different document,
+of which the current document is just a portion. 
+Clearly a valid \LaTeX{} run is required to produce the \texttt{.aux} file.
+
+\html{\\}\noindent
+Of course if no information in the \texttt{.aux} file is actually used,
+then this \LaTeX{} run can be neglected.
+Also, if the \texttt{.aux} file has already been created, and edits
+are made on the source which do not alter the information stored
+within the \texttt{.aux} file, then there is no need for a fresh
+\LaTeX{} run (except for the purposes of error-checking).
+
+
+\index{bibliography}
+\item[bibliography: ]
+Suppose the document requires a bibliography, or list of references,
+which is to be prepared using Bib\TeX.
+\latextohtml{} reads citation information from the \texttt{.aux} file,
+and can import the bibliography itself from the \texttt{.bbl} file.
+However these must first be created using \LaTeX.
+
+
+
+\index{document segmentation}
+\item[document segmentation: ]
+With the document segmentation technique, 
+discussed fully in \hyperref{a later section}{Section~}{}{Segmentation},
+it is vitally important that the full document processes correctly
+in \LaTeX. The desired effect is that of a single large document,
+whereas the pieces will actually be processed separately.
+To achieve this, \LaTeX{} writes vital information into special
+\texttt{.ptr} files. Like the \texttt{.aux} file, these files
+are read by \latextohtml{} to get section-numbering and other
+information to be used while processing each segment.
+
+
+\index{printing!hyperlink to typeset version}%
+\index{printing}\html{\\}\noindent
+\item[print quality: ]
+When a document contains automatically-generate images, these images
+are usually bitmaps designed for viewing on-screen. In general the 
+resolution of these is too poor to give a good result when printed
+on a high-resolution laser-printer.
+Thus if it is likely that the reader will want to obtain
+a printed version of your document, then it is best to include
+a hyperlink to the typeset \texttt{.dvi} version, 
+or to a \PS\ conversion of the \texttt{.dvi} file. 
+(In either case, a link to a compressed version is even better.)
+
+\end{htmllist}
+
+
+
+\subsection{Command-Line Options\label{options}}%
+%\section{Command-Line Options\label{options}}%
+\index{options@options\label{IIIoptions}}%
+\index{switches|see{\htmlref{options}{IIIoptions}}}%
+\index{options|(}%
+\index{options!environment variables}%
+\index{options!set in initialisation file}%
+\html{\\}\noindent
+The command-line options described here can be used to change the
+default behaviour of \latextohtml. 
+Alternatively, often there is a corresponding environment variable
+whose value may be set or changed within a \fn{.latex2html-init} 
+initialisation file, in order to achieve the same result.\html{\\}
+There are so many options that they are listed here in groups, 
+according to the nature of the effects they control.
+When a large number of such options are required for the processing of a document,
+it is usual to store the switches and their desired settings within a \fn{Makefile},
+for use with the Unix \fn{make} utility. Now a simple command such as:
+\begin{verbatim}
+  make mydocument
+\end{verbatim}
+can initiate a call to \fn{latex2html} that would otherwise take many lines of typing.
+Indeed it could instigate several such calls to \latextohtml, or to other programs
+such as \LaTeX{} and Bib\TeX, \fn{dvips} and others.
+The document segmentation feature, discussed in 
+\hyperref{another section}{Section~}{}{Segmentation},
+uses this technique extensively.
+
+
+\subsubsection{Options controlling Titles, File-Names and Sectioning}
+%\subsection{Options controlling Titles, File-Names and Sectioning}
+\index{options!titles}\index{options!file-names}\index{options!sectioning}%
+%
+\index{document!title}%
+%
+\begin{htmllist}\htmlitemmark{PurpleBall}%
+\item [ -t \Meta{top-page-title}\label{cs_toppagetitle}]
+\sameas{\fn{\$TITLE}\texttt{ = \char34}\Meta{top-page-title}\texttt{\char34;}}\\
+Name the document using this title.
+
+\index{filenames!.htm@\texttt{.htm} extension}%
+
+\item [ -short\_extn\label{cs_shortextn}]
+\sameas{\fn{\$SHORTEXTN}\texttt{ = 1;}}\\
+Use a filename prefix of \texttt{.htm } for the produced
+\texttt{HTML} files. This is particularly useful for creating pages
+to be stored on CD-ROM or other media, to be used with 
+operating systems that require a 3-character extension.%
+
+\index{filenames!long names}
+
+\item [ -long\_titles \Meta{num}\label{cs_longtitles}]
+\sameas{\fn{\$LONG\_TITLES}\texttt{ = }\Meta{num}\texttt{;}}\\
+Instead of the standard  names: \texttt{node1.html}, \texttt{node2.html},... 
+the filenames for each \texttt{HTML} page are constructed
+from the first \Meta{num} words of the section heading
+for that page, separated by the `\texttt{\_}' character.\html{\\}
+Commas and common short words (\texttt{a an to by of and for the})
+are omitted from both title and word-count.
+
+\smallskip\noindent
+\textbf{Warning:} Use this switch with great caution.
+Currently there are no checks for uniqueness of names or overall length. 
+Very long names can easily result from using this feature.%
+
+\index{filenames!customised}%
+\index{filenames!custom title hook@\texttt{custom\_title\_hook}}
+
+\item [ -custom\_titles\label{cs_customtitles}]
+\sameas{\fn{\$CUSTOM\_TITLES}\texttt{ = 1;}}\\
+Instead of the standard  names: \texttt{node1.html}, \texttt{node2.html}, ... 
+the filenames for each \texttt{HTML} page are constructed using a \Perl{}
+subroutine named \texttt{ custom\_title\_hook}~. 
+The user may define his/her own version of this subroutine, 
+within a \fn{.latex2html-init} file say, 
+to override the default (which uses the standard names).
+This subroutine takes the section-heading as a parameter 
+and must return the required name, or the empty string (default).
+
+\index{output!redirect to directory}
+
+\item [ -dir \Meta{output-directory}\label{cs_outputdir}]
+\sameas{\fn{\$DESTDIR}\texttt{ = \char34}\Meta{output-directory}\texttt{\char34;}}\\
+Redirect the output to the specified directory.\html{\\}
+The default behaviour is to create (or reuse) a directory having the same
+name as the prefix of the document being processed.%
+
+\index{output!in current directory}%
+\index{output!default directory}
+
+\item [ -no\_subdir\label{cs_nosubdir}]
+\sameas{\fn{\$NO\_SUBDIR}\texttt{ = 1;}}\\
+Place the generated \texttt{HTML} files into the current directory.
+This overrides any \fn{\$DESTDIR} setting.
+
+\index{filenames!prefix}%
+\index{temporary files}%
+
+\item [ -prefix \Meta{filename-prefix}\label{cs_prefix}]%
+\sameas{\fn{\$PREFIX}\texttt{ = \char34}\Meta{filename-prefix}\texttt{\char34;}}\\
+The \Meta{filename-prefix} will be prepended to all 
+\texttt{.gif}, \texttt{.pl} and \texttt{.html} files produced, 
+except for the top-level \texttt{.html} file;  
+it may include a (relative) directory path. 
+This will enable multiple products of \latextohtml{} to
+peacefully coexist in the same directory.
+However, do \emph{not} attempt to \emph{simultaneously} run multiple 
+instances of \latextohtml{} using the same output directory, 
+else various temporary files will overwrite each other.
+
+\index{filenames!auto-prefix}%
+
+\item [ -auto\_prefix\label{cs_autoprefix}]
+\sameas{\fn{\$AUTO\_PREFIX}\texttt{ = 1;}}\\
+Constructs the prefix as `\Meta{title}--'
+to be prepended to all the files produced, 
+where \Meta{title} is the name of the \LaTeX{} file being processed.
+(Note the `--' in this prefix.)\\
+This overrides any \fn{\$PREFIX} setting.
+
+\index{filenames!automatic link to directory name}%
+\index{filenames!index.html@\fn{index.html}}%
+
+\item [ -no\_auto\_link\label{cs_noautolink}]
+\sameas{\fn{\$NO\_AUTO\_LINK}\texttt{ = 1;}}\\
+If \fn{\$NO\_AUTO\_LINK} is empty and variables \fn{\$LINKPOINT} 
+and \fn{\$LINKNAME} are defined appropriately
+(as is the default in the \fn{latex2html.config} file),
+then a hard link to the main \texttt{HTML} page is produced,
+using the name supplied in \fn{\$LINKNAME}. Typically this is \fn{index.html}; 
+on many systems a file of this name will be used, if it exists,
+when a browser tries to view a URL which points to a directory.
+On other systems a different value for \fn{\$LINKNAME} may be appropriate.
+Typically \fn{\$LINKPOINT} has value \texttt{\$FILE.html}, but
+this may also be changed to match whichever \texttt{HTML} page
+is to become the target of the automatic link.\\
+Use of the \Cs{no\_auto\_link} switch \emph{cancels} 
+this automatic linking facility, 
+when not required for a particular document.
+
+\index{sections!in separate files}%
+
+\item [ -split \Meta{num}\label{cs_splitdepth}]
+\sameas{\fn{\$MAX\_SPLIT\_DEPTH}\texttt{ = }\Meta{num}\texttt{;}}
+ (default is \texttt{8})\\
+Stop splitting sections into separate files at this depth.
+Specifying \Cs{split 0} will put the entire document into a 
+single \texttt{HTML} file. See \htmlref{below}{seclevels} for
+the different levels of sectioning. Also see the next item for
+how to set a ``relative'' depth for splitting.%
+
+\item [ -split +\Meta{num}\label{cs_reldepth}]
+\sameas{\fn{\$MAX\_SPLIT\_DEPTH}\texttt{ = }\textrm{-}\Meta{num}\texttt{;}}
+ (default is \texttt{8})\\
+The level at which to stop splitting sections is calculated ``relative to'' 
+the shallowest level of sectioning that occurs within the document.
+For example, if the document contains \Lc{section} commands, but no \Lc{part}
+or \Lc{chapter} commands, then \Cs{split +1} will cause splitting at each \Lc{section}
+but not at any deeper level; whereas \Cs{split +2} or \Cs{split +3} also split down to 
+\Lc{subsection} and \Lc{subsubsection} commands respectively.
+Specifying \Cs{split +0} puts the entire document into a single \texttt{HTML} file.
+
+
+\index{depth!child nodes revealed}%
+\index{components!specify depth}
+
+\index{child-links table}%
+\item [ -link \Meta{num}\label{cs_linkdepth}]
+\sameas{\fn{\$MAX\_LINK\_DEPTH}\texttt{ = }\Meta{num}\texttt{;}}
+ (default is \texttt{4})\\
+For each node, create links to child nodes down to this much 
+deeper than the node's sectioning-level.\html{\\}
+Specifying \Cs{link 0} will show no links to child nodes from that page,\html{\\}
+\Cs{link 1} will show only the immediate descendents, etc.\html{\\}
+A value at least as big as that of the 
+\htmlref{\Cs{split \Meta{num}}}
+{splitdepth} depth will
+produce a mini table-of-contents (when not empty) on each page,
+for the tree structure rooted at that node.%
+
+\index{child-links table!at bottom of page}%
+
+When the page has a sectioning-level less than the \Cs{split} depth,
+so that the a mini table-of-contents has links to other \texttt{HTML} pages, 
+this table is located at the bottom of the page, 
+unless placed elsewhere using the \Lc{tableofchildlinks} command.%
+
+\index{child-links table!at top of page}%
+\index{child-links table!tableofchildlinks@\texttt{tableofchildlinks}}
+
+On pages having a sectioning-level just less than the \Cs{split} depth 
+the mini table-of-contents contains links to subsections etc.
+occurring on the \emph{same} \texttt{HTML} page. 
+Now the table is located at the \emph{top} of this page, 
+unless placed elsewhere using the \Lc{tableofchildlinks} command.
+
+\index{table of contents!depth}%
+
+\item [ -toc\_depth  \Meta{num}\label{cs_tocdepth}]
+\sameas{\fn{\$TOC\_DEPTH}\texttt{ = }\Meta{num}\texttt{;}}
+ (default is \texttt{4})\\
+Sectioning levels down to \Meta{num} are to be included 
+within the Table-of-Contents tree.%
+
+\index{table of contents!star-sections shown}%
+\index{table of contents!star-sections not listed}
+
+\item [ -toc\_stars\label{cs_tocstars}]
+\sameas{\fn{\$TOC\_STARS}\texttt{ = 1;}}\\
+Sections created using the starred-form of sectioning commands
+are included within the Table-of-Contents.
+As with \LaTeX, normally such sections are \emph{not} listed.
+%
+
+\index{sections!show section numbers}%
+\index{sections!numbers not shown}
+
+\item [ -show\_section\_numbers\label{cs_showsecnums}]
+\sameas{\fn{\$SHOW\_SECTION\_NUMBERS}\texttt{ = 1;}}\\
+Show section numbers. By default section numbers are \emph{not} shown, 
+so as to encourage the use of particular sections as stand-alone documents. 
+\strikeout{In order to be shown, 
+section titles must be unique and must not contain inlined graphics.}
+
+\index{segmentation!unsegment}
+
+\item [ -unsegment\label{cs_unsegment}]
+\sameas{\fn{\$UNSEGMENT}\texttt{ = 1;}}\\
+Treat a segmented document (see the section about \htmlref{document
+  segmentation}{Segmentation}) like it were not segmented.
+This will cause the translator to concatenate all segments and process
+them as a whole.
+You might find this useful to check a segmented document for
+consistency.
+%
+\end{htmllist}
+
+\goodbreak
+\index{sectioning levels}\index{levels!sectioning}\label{seclevels}%
+\html{\\}\noindent
+For all documents the sectioning levels referred to above are:\nobreak
+\begin{center}
+\begin{tabular}{ll}
+\textbf{0} & document\\
+\textbf{1} & part\\
+\textbf{2} & chapter\\
+\textbf{3} & section\\
+\textbf{4} & subsection\\
+\textbf{5} & subsubsection\\
+\textbf{6} & paragraph\\
+\textbf{7} & subparagraph\\
+\textbf{8} & subsubparagraph
+\end{tabular}
+\end{center}
+These levels apply even when the document contains no sectioning for
+the shallower levels; e.g. no \Lc{part} or \Lc{chapter} commands is most common,
+especially when using \LaTeX's \env{article} document-class.
+
+
+
+\subsubsection{Options controlling Extensions and Special Features}
+\index{extensions|(}%
+\index{options!extensions}\index{options!special features}%
+\html{\\}\noindent
+The switches described here govern the type of \texttt{HTML} code that
+can be generated, and how to choose between the available options 
+when there are alternative strategies for implementing portions of \LaTeX{} code. 
+
+\begin{htmllist}\htmlitemmark{PurpleBall}%
+%
+\index{HTML version@\texttt{HTML} version}%
+\index{HTML@\texttt{HTML}!non-standard extensions}%
+\item [ -html\_version \texttt{(2.0|3.0|3.2)[,(math|i18n|table)]*}\label{cs_htmlversion}]
+~\\\sameas{\fn{\$HTML\_VERSION}\texttt{ = \char34 ... \char34;}}\\
+This specifies both the \texttt{HTML}~\htmlref{version}{version} to generate, 
+and any extra (non-standard) \texttt{HTML} features that may be required.\html{\\}
+The version number corresponds to a published DTD for an \texttt{HTML} standard
+(although 3.0 was never accepted and subsequently withdrawn).
+A corresponding \Perl{} file in the \fn{versions/} subdirectory is loaded;
+these files are named `\texttt{html}\Meta{num}\texttt{.pl}'.
+
+Following the version number, a comma-separated list of extensions
+can be given. Each corresponds to a file `\Meta{name}\texttt{.pl}' 
+also located in the \fn{versions/} subdirectory. 
+When such a file is loaded the resulting \texttt{HTML} code 
+can no longer be expected to validate with the specified DTD. 
+An exception is \Ve{math} when the \htmlref{\Cs{no\_math}}{nomath} 
+switch is also used, which should still validate.
+
+Currently, versions 2.0, 3.2 and 4.0 are available.
+(and also 2.1, 2.2, 3.0 and 3.1, for hoistorical reasons). 
+The extensions \Ve{i18n}, \Ve{tables}, \Ve{math}
+correspond roughly to what used to be called versions `2.1', `2.2', `3.1'
+respectively, in releases of \latextohtml{} up to 1996.
+Now these extensions can be loaded with any of `2.0', `3.2' or `4.0' 
+as the specified standard.\\  
+The default version is usually set to be `3.2', within \fn{latex2html.config}\,.%
+
+\index{extensions!disabled}%
+\index{extensions!TeX defs@\TeX definitions}%
+
+\item [ -no\_tex\_defs\label{cs_notexdefs}]
+\sameas{\fn{\$TEXDEFS}\texttt{ = 0;}} (default is 1)\\
+When \fn{\$TEXDEFS} is set (default) the file \fn{texdefs.perl} will be read.
+This provides code to allow common \TeX{} commands like \Tc{def}, \Tc{newbox},
+\Tc{newdimen} and others, to be recognised, especially within the document preamble.
+In the case of \Tc{def}, the definition may even be fully interpreted,
+but this requires the pattern-matching to be not too complicated.
+
+If \fn{\$TEXDEFS} is `\texttt{0}' or empty, then \fn{texdefs.perl} will not be loaded;
+the translator will make no attempt to interpret any raw \TeX{} commands.  
+This feature is intended to enable sophisticated authors the ability to insert 
+arbitrary \TeX{} commands in environments that are destined 
+to be processed by \LaTeX{} anyway; 
+e.g. \env{figure}s, \strikeout{\env{theorem}s}, \env{picture}s, etc.
+However this should rarely be needed, as now there is better support for these
+types of environment. There are now other methods to specify which chunks of code 
+are to be passed to \LaTeX{} for explicit image-generation; 
+see the discussion of the \env{makeimage} 
+\hyperref[page]{environment}{environment on page~}{}{makeimage}.
+
+
+\index{auxiliary file!which to read}%
+
+\item [ -external\_file \Meta{filename}\label{cs_externalfile}] 
+\sameas{\fn{\$EXTERNAL\_FILE}\texttt{ = \char34}\Meta{filename}\texttt{\char34;}}\\
+Specifies the prefix of the \texttt{.aux} file that this document should read.
+The \texttt{.aux} extension will be appended to this prefix 
+to get the complete filename, with directory path if needed.\html{\\}  
+This file could contain necessary information 
+regarding citations, figure, table and section numbers from \LaTeX{} 
+and perhaps other information also.
+Use of this switch is vital for \htmlref{document segments}{Segmentation}, 
+processed separately and linked to appear as if generated 
+from a single \LaTeX{} document.%
+
+\index{font size!for image generation}%
+\index{font-size!in environments}\index{font-size!magnification}%
+
+\item [ -font\_size \Meta{size}\label{cs_fontsize}]
+\sameas{\fn{\$FONT\_SIZE}\texttt{ = \char34}\Meta{size}\texttt{\char34;}}\\
+This option provides better control 
+over the font size of environments made into images using \LaTeX.  
+\Meta{size} must be one of the font sizes that \LaTeX{} recognizes; 
+i.e. `\texttt{10pt}', `\texttt{11pt}', `\texttt{12pt}', etc.  
+Default is `\texttt{10pt}', or whatever option may have been specified on the 
+\Lc{documentclass} or \Lc{documentstyle} line.\html{\\}
+Whatever size is selected, it will be magnified by the installation variables
+\fn{\$MATH\_SCALE\_FACTOR}, \fn{\$FIGURE\_SCALE\_FACTOR}
+and \fn{\$DISP\_SCALE\_FACTOR} as appropriate.
+
+\smallskip\noindent
+\textbf{Note: }This switch provides no control over the size of text
+on the \texttt{HTML} pages. 
+Such control is subject entirely to the user's choices
+of settings for the browser windows.
+
+\index{font size!scalable}%
+
+\item [ -scalable\_fonts\label{cs_scalefonts}]
+\sameas{\fn{\$SCALABLE\_FONTS}\texttt{ = 1;}}\\
+This is used when scalable fonts, such as \PS\ versions
+of the \TeX{} fonts, are available for image-generation.\html{\\}
+It has the effect of setting \fn{\$PK\_GENERATION} to `\texttt{1}',
+and \fn{\$DVIPS\_MODE} to be empty, 
+overriding any \htmlref{previous settings}{pkgen} for these variables.
+
+\index{simple math!cancelled}%
+
+\item [ -no\_math\label{cs_nomath}]
+\sameas{\fn{\$NO\_SIMPLE\_MATH}\texttt{ = 1;}}\\
+Ordinarily simple mathematical expressions are set using the ordinary text font, 
+but italiced. When part of the expression can not be represented this way,
+an image is made \emph{of the whole formula}. 
+This is called ``simple math''.
+When \fn{\$NO\_SIMPLE\_MATH} is set, 
+then \emph{all} mathematics is made into images, whether simple or not.
+
+However, if the \Ve{math} extension is loaded, 
+using the \Cs{html\_version} switch described \htmlref{earlier}{cs_htmlversion},
+then specifying \Cs{no\_math} produces a quite different effect.
+Now it is the special \HTMLtag{MATH} tags and entities which are cancelled. 
+In their place a sophisticated scheme for parsing mathematical expressions 
+is used. Images are made of those sub-parts of a formula which cannot be 
+adequately expressed using (italiced) text characters and \HTMLtag{SUB} and
+\HTMLtag{SUP} tags.
+See \hyperref{the subsection on mathematics}{Section~}{}{maths} for more details.
+
+\index{icons!copied to local directory}%
+
+\item [-local\_icons\label{cs_localicons}]
+\sameas{\fn{\$LOCAL\_ICONS}\texttt{ = 1;}}\\
+A copy of each of the icons actually used within the document is placed in the
+directory along with the \texttt{HTML} files and generated images.
+This allows the whole document to be fully self-contained, within this directory;
+otherwise the icons must be retrieved from a (perhaps remote) server.
+
+\index{icons!alternative set}\index{icons!customised images}%
+The icons are normally copied from a subdirectory of the \fn{\$LATEX2HTMLDIR},
+set within \fn{latex2html.config}. An alternative set of icons can be used
+by specifying a (relative) directory path in \fn{\$ALTERNATIVE\_ICONS}
+to where the customised images can be found.
+
+
+\index{initialisation!init file@\texttt{-init\_file}}%
+\index{initialisation file!specified}%
+
+\item [ -init\_file \Meta{file}\label{cs_initfile}]
+Load the specified initialisation file. This \Perl{} file will be loaded after loading 
+\fn{\$HOME/.latex2html-init}\,, or \fn{.latex2html-init} in the local
+directory, if either file exists. It is read at the time the switch is processed,
+so the contents of the file may change any of the values of any of the
+variables that were previously established, as well as any default options.
+More than one initialisation file can be read in this way.%
+
+\index{index!codified links}%
+
+\cbversion{98.1}\begin{changebar}
+\index{forking!prevent}%
+\item [ -no\_fork\label{cs_no_fork}]
+\sameas{\fn{\$NOFORK}\texttt{ = 1;}}\\
+When set this disables a feature in the early part of the processing
+whereby some memory-intensive operations are performed by `forked'
+child processes. Some single-task operating systems, such as \texttt{DOS},
+do not support this feature. Having \fn{\$NOFORK} set then ensures
+that unnecessary file-handles that are needed with the forked processes,
+are not consumed unnecessarily, perhaps resulting in a fatal \Perl{} error.
+
+\index{languages!dtd isolanguage}
+\index{character set!dtd isolanguage}
+\item [ -iso\_language \Meta{type}\label{cs_iso_language}]
+This enables you to specify a different language type than
+\texttt{'EN'} to be used in the DTD entries of the \texttt{HTML}
+document, e.g. \texttt{'EN.US'}.
+\end{changebar}%
+
+\item [ -short\_index\label{cs_shortindex}]
+\sameas{\fn{\$SHORT\_INDEX}\texttt{ = 1;}}\\
+Creates shorter Index listings, using codified links; 
+this is fully compatible with the \env{makeidx} \htmlref{package}{makeidx}.
+
+\index{footnotes!on separate page}%
+\index{footnotes!on same page}%
+\index{footnotes!marker style}
+
+\item [ -no\_footnode\label{cs_nofootnode}]
+\sameas{\fn{\$NO\_FOOTNODE}\texttt{ = 1;}}\\
+Suppresses use of a separate file for footnotes;
+instead these are placed at the bottom of the \texttt{HTML} pages 
+where the references occur.
+
+When this option is used, it is frequently desirable to change the 
+style of the marker used to indicate the presence of a footnote. 
+This is done as in \LaTeX, using code such as follows.
+\begin{quote}
+\verb|\renewcommand{\thefootnote}{\arabic{footnote}}|
+\end{quote}
+All the styles \Lc{arabic}, \Lc{alph}, \Lc{roman}, \Lc{Alph} and \Lc{Roman}
+are available.
+
+\index{footnotes!numbering}
+\cbversion{98.1}\begin{changebar}
+\item [ -numbered\_footnotes\label{cs_numbered_footnotes}]
+\sameas{\fn{\$NUMBERED\_FOOTNOTES}\texttt{ = 1;}}\\
+If this is set you will get every footnote applied with a subsequent
+number, to ease readability.
+\end{changebar}
+
+\index{address!signature}%
+\index{address!using a subroutine}%
+
+\item [ -address \Meta{author-address}\label{cs_address}]
+\sameas{\fn{\$ADDRESS}\texttt{ = \char34}\Meta{author-address}\texttt{\char34;}}\\
+Sign each page with this address.\html{\\}
+See \fn{latex2html.config} for an example using \Perl{} code
+to automatically include the date.
+
+A user-defined \Perl{} subroutine called \texttt{\&custom\_address} 
+can be used instead, if defined; it takes the value of \fn{\$ADDRESS} 
+as a parameter, which may be used or ignored as desired.
+At the time when this subroutine will be called, 
+variables named \fn{\$depth}, \fn{\$title}, \fn{\$file}
+hold the sectioning-level, title and filename of the \texttt{HTML} page
+being produced; \fn{\$FILE} holds the name of the filename for the title-page
+of the whole document.
+
+\index{About this@\emph{About this document...}}
+
+\item [ -info \Meta{string}\label{cs_infostring}]
+\sameas{\fn{\$INFO}\texttt{ = \char34}\Meta{string}\texttt{\char34;}}\\
+Generate a new section \emph{``About this document'' } containing information
+about the document being translated. The default is to generate such a section 
+with information on the original document, the date, the user and the translator.
+An empty string (or the value `\texttt{0}') 
+disables the creation of this extra section.\html{\\}
+If a non-empty string is given, it will be placed as the contents of the 
+\emph{``About this document'' } page instead of the default information.
+%
+\end{htmllist}
+
+
+\subsubsection{Switches controlling Image Generation}
+%\subsection[center]{Switches controlling Image Generation}
+%
+These switches affect whether images are created at all, whether
+old images are reused on subsequent runs or new ones created afresh,
+and whether anti-aliasing effects are used within the images themselves.
+
+\begin{htmllist}\htmlitemmark{PinkBall}%
+%
+\index{ascii-mode}% 
+\index{browser!character-based}%
+\item [ -ascii\_mode \label{cs_asciimode}]
+\sameas{\fn{\$ASCII\_MODE}\texttt{ = }\fn{\$EXTERNAL\_IMAGES}\texttt{ = 1;}}\\
+Use only \texttt{ASCII} characters and do not include any images in the final output.
+With \Cs{ascii\_mode} the output of the translator can be used on 
+character-based browsers, such as \appl{lynx},
+which do not support inlined images (via the \HTMLtag{IMG} tag).
+
+
+\index{draft mode}%
+\item [ -nolatex \label{cs_nolatex}]
+\sameas{\fn{\$NOLATEX}\texttt{ = 1;}}\\
+Disable the mechanism for passing unknown environments to \LaTeX{} for processing.
+This can be thought of as ``draft mode'' which allows 
+faster translation of the basic document structure and text, 
+without fancy figures, equations or tables. 
+
+(This option has been superseded by the \Cs{no\_images} option,
+\htmlref{see below}{noimages}.)
+
+
+\index{images!via hypertext links}%
+\item [ -external\_images\label{cs_extimages}]
+\sameas{\fn{\$EXTERNAL\_IMAGES}\texttt{ = 1;}}\\
+Instead of including any generated images inside the document, 
+leave them outside the document and provide hypertext links to them.
+
+
+\index{images!links to PostScript@links to \PS}%
+\item [ -ps\_images\label{cs_psimages}]
+\sameas{\fn{\$PS\_IMAGES}\texttt{ = }\fn{\$EXTERNAL\_IMAGES}\texttt{ = 1;}}\\
+Use links to external \PS\ files rather than inlined images
+in the chosen graphics format.
+
+\index{images!discard PostScript files@discard \PS\ files}%
+\item [ -discard\label{cs_discard}]
+\sameas{\fn{\$DISCARD\_PS}\texttt{ = 1;}}\\
+The temporary \PS\ files are discarded immediately after they
+have been used to create the image in the desired graphics format.
+
+\index{images!disabled}%
+\item [ -no\_images\label{cs_noimages}]
+\sameas{\fn{\$NO\_IMAGES}\texttt{ = 1;}}\\
+Do not attempt to produce any inlined images. 
+The missing images can be generated ``off-line'' by restarting \latextohtml{}
+with the option \Cs{images\_only}.
+
+\index{images!generated off-line}%
+\item [ -images\_only\label{cs_imagesonly}]
+\sameas{\fn{\$IMAGES\_ONLY}\texttt{ = 1;}}\\
+Try to convert any inlined images that were left over from previous
+runs of \latextohtml. 
+
+
+\index{image files!reuse option}%
+\item [ -reuse \Meta{reuse\_option}\label{cs_reuseoptions}]
+\sameas{\fn{\$REUSE}\texttt{ = }\Meta{reuse\_option}\texttt{;}}\\
+This switch specifies the extent to which image files are to be shared
+or recycled.\html{\\}
+There are three valid options:
+%
+\begin{htmllist}\htmlitemmark{OrangeBall}
+\index{image files!not recycled}\index{image-reuse!interactive}%
+\item [\texttt{0}] 
+Do not ever share or recycle image files.\\
+This choice also invokes an interactive session 
+prompting the user about what to do about
+a pre-existing \texttt{HTML} directory, if it exists.
+%
+\index{image files!recycled}%
+\item [\texttt{1}] 
+Recycle image files from a previous run if they are available,\\
+but do not share identical images that must be created in this run.
+%
+\index{image files!shared by default}%
+\item [\texttt{2}] 
+Recycle image files from a previous run and share identical
+images from this run.\\
+This is the default.
+\end{htmllist}
+\hyperref{A later section}{Section~}{}{recycling} provides 
+additional information about image-reuse.
+
+
+\index{image files!not reused}\index{image-reuse!interactive}%
+\item [ -no\_reuse\label{cs_noreuse}]
+\sameas{\fn{\$REUSE}\texttt{ = 0;}}\\
+Do \emph{not} share or recycle images generated during previous translations.
+This is equivalent to \Cs{reuse 0}.
+(This will enable the initial interactive session during which the user is
+asked whether to reuse the old directory, delete its contents or quit.)%
+
+
+\index{images!anti-aliasing}\index{anti-aliasing!in figures}%
+\item [ -antialias\label{cs_aalias}]
+\sameas{\fn{\$ANTI\_ALIAS}\texttt{ = 1;}} (Default is 0.)\\
+Generated images of \env{figure} environments and external \PS\ files
+should use anti-aliasing. By default anti-aliasing is not
+used with these images, since this may interfere with the contents
+of the images themselves.
+
+\index{images!anti-aliasing}\index{anti-aliasing!in math and text}%
+\item [ -antialias\_text\label{cs_aaliastext}]
+\sameas{\fn{\$ANTI\_ALIAS\_TEXT}\texttt{ = 1;}} (Default is 1.)\\
+Generated images of typeset material such as text, mathematical formulas,
+tables and the content of \env{makeimage} \htmlref{environments}{makeimage},
+should use anti-aliasing effects.\html{\\}
+The default is normally to use anti-aliasing for text, 
+since the resulting images are much clearer on-screen. 
+However the default may have been changed locally.
+
+
+\index{images!no anti-aliasing}\index{anti-aliasing!turned off}%
+\item [ -no\_antialias\label{cs_noaalias}]
+\sameas{\fn{\$ANTI\_ALIAS}\texttt{ = 0;}} (Default is 0.)\\
+Generated images of \env{figure} environments and external \PS\ files 
+should not use anti-aliasing with images, 
+though the local default may have been changed to use it.
+
+
+\index{images!no anti-aliasing}\index{anti-aliasing!blurred printing}%
+\item [ -no\_antialias\_text\label{cs_noaaliastext}]
+\sameas{\fn{\$ANTI\_ALIAS\_TEXT}\texttt{ = 0;}} (Default is 1.)\\
+Generated images of typeset material should \emph{not} use anti-aliasing effects.
+Although on-screen images of text are definitely improved using anti-aliasing,
+printed images can be badly blurred, even at 300dpi. 
+Higher resolution printers do a much better job with the resulting grey-scale images.
+
+\cbversion{98.1}\begin{changebar}
+\index{images!white background}%
+\item [ -white\label{cs_white}]
+\sameas{\fn{\$WHITE\_BACKGROUND}\texttt{ = 1;}} (Default is 1.)\\
+Ensures that images of \env{figure} environments have a white
+background. Otherwise transparency effects may not work correctly.
+
+\item [ -no\_white\label{cs_nowhite}]
+\sameas{\fn{\$WHITE\_BACKGROUND}\texttt{ = '';}} (Default is 1.)\\
+Cancels the requirement that \env{figure} environments have a white background.
+
+\index{images!latex dump}%
+\item [ -ldump\label{cs_ldump}]
+\sameas{\fn{\$LATEX\_DUMP}\texttt{ = 1;}} (Default is 0.)\\
+Use this if you want to speed up image processing during the 2nd
+and subsequent runs of \latextohtml{} on the same document.
+The translator now produces a \LaTeX{} format-dump of the preamble to
+\fn{images.tex} which is used on subsequent runs.
+This significantly reduces the startup time when
+\LaTeX{} reads the \fn{images.tex} file for image-generation.
+
+This process actually consumes additional time on the first run, 
+since \LaTeX{} is called twice --- once to create the format-dump,
+then again to load and use it.
+The pay-off comes with the faster loading on subsequent runs. 
+Approximately 1 Meg of disk space is consumed by the dump file.
+\end{changebar}
+%
+\end{htmllist}
+
+
+\subsubsection{Switches controlling Navigation Panels\label{navoptions}}
+%\subsection[center]{Switches controlling Navigation Panels\label{navoptions}}
+%
+The following switches govern whether to include one or more navigation
+panels on each \texttt{HTML} page, 
+also which buttons to include within such a panel.
+
+\begin{htmllist}\htmlitemmark{PinkBall}%
+
+\index{navigation panel!disabled}
+\item [ -no\_navigation\label{cs_nonavig}]
+\sameas{\fn{\$NO\_NAVIGATION}\texttt{ = 1;}}\\
+Disable the mechanism for putting navigation links in each page.\\
+This overrides any settings of the \fn{\$TOP\_NAVIGATION},
+\fn{\$BOTTOM\_NAVIGATION} and \fn{\$AUTO\_NAVIGATION} variables.
+
+\index{navigation panel!at top of page}
+\item [ -top\_navigation\label{cs_topnavig}]
+\sameas{\fn{\$TOP\_NAVIGATION}\texttt{ = 1;}}\\
+Put navigation links at the top of each page.    
+
+\index{navigation panel!at bottom of page}%
+\item [ -bottom\_navigation\label{cs_botnavig}]
+\sameas{\fn{\$BOTTOM\_NAVIGATION}\texttt{ = 1;}}\\
+Put navigation links at the bottom of each page as well as the top.
+
+\index{navigation panel!according to number of words}
+\item [ -auto\_navigation\label{cs_autonavig}]
+\sameas{\fn{\$AUTO\_NAVIGATION}\texttt{ = 1;}}\\
+Put navigation links at the top of each page. 
+Also put one at the bottom of the page, if the page exceeds 
+\fn{\$WORDS\_IN\_PAGE} number of words (default = 450).
+
+\index{navigation panel!next logical page}
+\item [ -next\_page\_in\_navigation\label{cs_nextinnavig}]
+\sameas{\fn{\$NEXT\_PAGE\_IN\_NAVIGATION}\texttt{ = 1;}}\\
+Put a link to the \textsl{next logical page} in the navigation panel.
+
+\index{navigation panel!previous logical page}%
+\item [ -previous\_page\_in\_navigation\label{cs_previnnavig}]~\\%
+\sameas{\fn{\$PREVIOUS\_PAGE\_IN\_NAVIGATION}\texttt{ = 1;}}\\
+Put a link to the \textsl{previous logical page} in the navigation panel.
+
+\index{navigation panel!link to table-of-contents}
+\item [ -contents\_in\_navigation\label{cs_continnavig}]
+\sameas{\fn{\$CONTENTS\_IN\_NAVIGATION}\texttt{ = 1;}}\\
+Put a link to the \textsl{table-of-contents} in the navigation panel if there is one.
+
+\index{navigation panel!link to index}
+\item [ -index\_in\_navigation\label{cs_indexinnavig}]
+\sameas{\fn{\$INDEX\_IN\_NAVIGATION}\texttt{ = 1;}}\\
+Put a link to the \textsl{index-page} in the navigation panel if there is an index.
+%
+\end{htmllist}
+
+
+\subsubsection{Switches for Linking to other documents\label{otherdocs}}
+%\subsubsection[center]{Switches for Linking to other documents\label{otherdocs}}
+%
+When processing a single stand-alone document, the switches described in this
+section should not be needed at all, since the automatically generated navigation panels, 
+described \hyperref{on the previous page}{in Section~}{, }{navoptions}
+should generate all the required navigation links.
+However if a document is to be regarded as part of a much larger document,
+then links from its first and final pages, to locations in other parts
+of the larger (virtual) document, 
+need to be provided explicitly for some of the buttons in the navigation panel.
+
+The following switches allow for such links to other documents,
+by providing the title and URL for navigation panel hyperlinks.
+In particular, the ``Document Segmentation''
+\hyperref{feature}{feature of Section~}{}{Segmentation} 
+necessarily makes great use of these switches.
+It is usual for the text and targets of these navigation hyperlinks
+to be recorded in a \fn{Makefile}, 
+to avoid tedious typing of long command-lines having many switches.
+
+\begin{htmllist}\htmlitemmark{PinkBall}%
+%
+\index{URL!universal resource locator}\index{URL!for UP@for \textsl{UP} button}%
+\item [ -up\_url \Meta{URL}\label{cs_upURL}] 
+\sameas{\fn{\$EXTERNAL\_UP\_LINK}\texttt{ = \char34}\Meta{URL}\texttt{\char34;}}\\
+Specifies a universal resource locator (URL) to associate
+with the \textsl{``UP''} button in the navigation panel(s).
+
+
+\item [ -up\_title \Meta{string}\label{cs_uptitle}] 
+\sameas{\fn{\$EXTERNAL\_UP\_TITLE}\texttt{ = \char34}\Meta{string}\texttt{\char34;}}\\
+Specifies a title associated with this URL.%
+
+
+\index{URL!for PREVIOUS@for \textsl{PREVIOUS} button}%
+\item [ -prev\_url \Meta{URL}\label{cs_prevURL}] 
+\sameas{\fn{\$EXTERNAL\_PREV\_LINK}\texttt{ = \char34}\Meta{URL}\texttt{\char34;}}\\
+Specifies a URL to associate
+with the \textsl{``PREVIOUS''} button in the navigation panel(s).%
+
+
+\item [ -prev\_title \Meta{string}\label{cs_prevtitle}] 
+\sameas{\fn{\$EXTERNAL\_PREV\_TITLE}\texttt{ = \char34}\Meta{string}\texttt{\char34;}}\\
+Specifies a title associated with this URL.%
+
+
+\index{URL!for NEXT@for \textsl{NEXT} button}%
+\item [ -down\_url \Meta{URL}\label{cs_downURL}]
+\sameas{\fn{\$EXTERNAL\_DOWN\_LINK}\texttt{ = \char34}\Meta{URL}\texttt{\char34;}}\\
+Specifies a URL for the \textsl{``NEXT''} button in the navigation panel(s).%
+
+
+\item [ -down\_title \Meta{string}\label{cs_downtitle}] 
+\sameas{\fn{\$EXTERNAL\_DOWN\_TITLE}\texttt{ = \char34}\Meta{string}\texttt{\char34;}}\\
+Specifies a title associated with this URL.%
+
+
+\index{URL!for CONTENTS@for \textsl{CONTENTS} button}%
+\item [ -contents \Meta{URL}\label{cs_contentsURL}] 
+\sameas{\fn{\$EXTERNAL\_CONTENTS}\texttt{ = \char34}\Meta{URL}\texttt{\char34;}}\\
+Specifies a URL for the \textsl{``CONTENTS''} button,
+for document segments that would not otherwise have one.%
+
+
+\index{URL!for INDEX@for \textsl{INDEX} button}%
+\item [ -index \Meta{URL}\label{cs_indexURL}] 
+\sameas{\fn{\$EXTERNAL\_INDEX}\texttt{ = \char34}\Meta{URL}\texttt{\char34;}}\\
+Specifies a URL for the \textsl{``INDEX''} button, 
+for document segments that otherwise would not have an index.
+
+\index{URL!for external Bibliography}%
+\item [ -biblio \Meta{URL}\label{cs_biblioURL}] 
+\sameas{\fn{\$EXTERNAL\_BIBLIO}\texttt{ = \char34}\Meta{URL}\texttt{\char34;}}\\
+Specifies the URL for the bibliography page to be used,
+when not explicitly part of the document itself.
+%
+\end{htmllist}
+\smallskip
+\textbf{Warning: }
+On some systems it is difficult to give text-strings \Meta{string} containing
+space characters, on the command-line or via a \fn{Makefile}.
+One way to overcome this is to use the corresponding variable.
+Another way is to replace the spaces with underscores (\verb|_|).
+
+
+\subsubsection{Switches for Help and Tracing}
+%\subsubsection[center]{Switches for Help and Tracing}
+%
+The first two of the following switches are self-explanatory.
+When problems arise in processing a document, 
+the switches \Cs{debug} and \Cs{verbosity} will each
+cause \latextohtml{} to generate more output to the screen.
+These extra messages should help to locate the cause of the problem.
+
+\begin{htmllist}\htmlitemmark{PinkBall}%
+%
+\index{options!defining temp directory}%
+\item [ -tmp \Meta{path}\label{cs_tmpdir}]
+Define a temporary directory to use for image generation.
+If \Meta{path} is $0$, the standard temporary directory \texttt{/tmp}
+is used.
+%
+\index{options!print option listing}%
+\item [ -h(elp)\label{cs_optionlist}]
+Print out the list of all command-line options.
+
+\index{current version@current version of \latextohtml}%
+\item [ -v\label{cs_showversion}] 
+Print the current version of \latextohtml.
+
+\index{debugging}\index{diagnostic information}%
+\item [ -debug\label{cs_debugmode}]
+\sameas{\fn{\$DEBUG}\texttt{ = 1;}}\\
+Run in debug-mode, displaying messages and/or diagnostic information 
+about files read, and utilities called by \latextohtml.
+Shows any messages produced by these calls.%
+
+\index{debugging!Perl@\Perl{} debugger}%
+
+More extensive diagnostics, from the \Perl{} debugger, 
+can be obtained by appending the string `\texttt{-w-}' 
+to the 1st line of the \fn{latex2html} (and other) \Perl{} script(s).
+
+
+\index{verbosity level}%
+\item [ -verbosity \Meta{num}\label{cs_verbositylevel}] 
+\sameas{\fn{\$VERBOSITY}\texttt{ = \Meta{num};}}\\
+Display messages revealing certain aspects of the processing
+performed by \latextohtml{} on the provided input file(s).
+The \Meta{num} parameter can be an integer in the range 0 to 8.
+Each higher value adds to the messages produced.
+
+\begin{itemize}
+\item[0. ]
+No special tracing; as for versions of \latextohtml{} prior to \textsc{v97.1}\,.
+
+\item[1. ] (This is the default.)
+Show section-headings and the corresponding \texttt{HTML} file names,
+and indicators that major stages in the processing have been completed.
+
+\item[2. ]
+Print environment names and identifier numbers, and new theorem-types.
+Show warnings as they occur, and indicators for more stages of processing.
+Print names of files for storing auxiliary data arrays.
+
+\item[3. ]
+Print command names as they are encountered and processed; also
+any unknown commands encountered while pre-processing.
+Show names of new commands, environments, theorems, counters and
+counter-dependencies, for each document partition.
+
+\item[4. ]
+Indicate command-substitution the pre-process of math-environments.
+Print the contents of unknown environments for processing in \LaTeX,
+both before and after reverting to \LaTeX{} source.
+Show all operations affecting the values of counters.
+Also show links, labels and sectioning keys, at the stages of processing.
+
+\item[5. ]
+Detail the processing in the document preamble.
+Show substitutions of new environments.
+Show the contents of all recognised environments, both before
+and after processing. Show the cached/encoded information for the image keys,
+allowing two images to be tested for equality.
+
+\item[6. ]
+Show replacements of new commands, accents and wrapped commands.
+
+\item[7. ]
+Trace the processing of commands in math mode; both before and after.
+
+\item[8. ]
+Trace the processing of all commands, both before and after.
+
+\end{itemize}
+%
+The command-line option sets an initial value only.
+During processing the value of \fn{\$VERBOSITY} can be set
+dynamically using the \verb|\htmltracing{...}| command, 
+whose argument is the desired value, 
+or by using the more general \Lc{HTMLset} command
+as follows: \verb|\HTMLset{VERBOSITY}{|\Meta{num}\texttt{\char125}\,.
+%
+\end{htmllist}
+\index{options|)}%
+%
+
+\subsubsection{Other Configuration Variables, without switches}
+%\subsection[center]{Other Configuration Variables, without switches}
+%
+The configuration variables described here do not warrant having
+a command-line switch to assign values.
+Either they represent aspects of \latextohtml\ that are specific to the local site,
+or they govern properties that should apply to \emph{all} documents,
+rather than something that typically would change
+for the different documents within a particular sub-directory.
+
+Normally these variables have their value set within the \fn{latex2html.config} file.
+In the following listing the defaults are shown, as the lines of \Perl{} code
+used to establish these values.
+If a different value is required, then these can be assigned from
+a local \fn{.latex2html-init} initialisation file, 
+without affecting the defaults for other users, 
+or documents processed from other directories.
+
+\begin{htmllist}\htmlitemmark{PurpleBall}%
+%
+\index{directory delimiter}%
+\item [\fn{\$dd} ]
+~holds the string to be used in file-names to delimit directories;
+it is set internally to `\texttt{/}', unless the variable has already been given
+a value within \fn{latex2html.config}~.
+
+\noindent
+\textbf{Note:} This value \emph{cannot} be set within a \fn{.latex2html-init} 
+initialisation file, since its value \emph{needs to be known} 
+in order to find such a file.
+
+\index{installation variables!inserted@inserted by \fn{install-test}}%
+\item [\fn{\$LATEX2HTMLDIR}] \latex{ }%
+Read by the \fn{install-test} script from \fn{latex2html.config}, 
+its value is inserted into the \fn{latex2html} \Perl{} script as part
+of the installation process.
+
+\item [\fn{\$LATEX2HTMLSTYLES}\texttt{ = \char34\$LATEX2HTMLDIR/styles\char34;}]
+Read from the \fn{latex2html.config} file by \fn{install-test}\,,
+its value is checked to locate the \fn{styles/} directory.
+
+\item [\fn{\$LATEX2HTMLVERSIONS}\texttt{ = \char34\$LATEX2HTMLDIR/versions\char34;}]
+The value of this variable should be set within \fn{latex2html.config} 
+to specify the directory path where the version and extension files can be found.
+
+\item [\fn{\$ALTERNATIVE\_ICONS}\texttt{ = '';}\label{alticons}]
+This may contain the (relative) directory path to a set of customised icons
+to be used in conjunction with the \htmlref{\Cs{local\_icons}}{cs_localicons} switch.
+
+\index{installation variables!checked@checked by \fn{install-test}}%
+\item [\fn{\$TEXEXPAND}\texttt{  = \char34\$LATEX2HTMLDIR/texexpand\char34;}]
+Read by the \fn{install-test} \Perl{} script from \fn{latex2html.config}, 
+its value is used to locate the \fn{texexpand} \Perl{} script.
+
+\item [\fn{\$PSTOIMG}\texttt{ = \char34\$LATEX2HTMLDIR/pstoimg\char34;}]
+Read by the \fn{install-test} \Perl{} script from \fn{latex2html.config}, 
+its value is used to locate the \fn{pstoimg} \Perl{} script.
+
+\item [\fn{\$IMAGE\_TYPE}\texttt{ = '\Meta{image-type}';}]
+Set in \fn{latex2html.config}, the currently supported \Meta{image-type}s
+are: \texttt{gif} and \texttt{png}.
+
+\item [\fn{\$DVIPS}\texttt{ = 'dvips';}]
+Read from \fn{latex2html.config} by \fn{install-test}, 
+its value is checked to locate the \fn{dvips} program or script.
+
+\smallskip\noindent
+There could be several reasons to change the value here:
+\begin{itemize}
+\item
+add a switch \texttt{-P}\Meta{printer} to load a specific configuration-file;\\
+e.g. to use a specific set of \PS\ fonts, for improved image-generation.
+\item
+to prepend a path to a different version of \fn{dvips} than normally
+available as the system default (e.g. the printing requirements are different).
+\item
+to append debugging switches, in case of poor quality images;\\
+one can see which paths are being searched for fonts and other resources.
+\item
+to prepend commands for setting path variables that \fn{dvips} may need
+in order to locate fonts or other resources.
+\end{itemize}
+
+If automatic generation of fonts is required, using \MF, the following
+configuration variables are important.
+%
+\begin{htmllist}\htmlitemmark{OrangeBall}%
+%
+\item [\fn{\$PK\_GENERATION}\texttt{ = 1;}\label{pkgen}]
+This variable must be set, to initiate font-generation; otherwise fonts
+will be scaled from existing resources on the local system.\\
+In particular this variable must \emph{not} be set, if one wishes to use
+\PS\ fonts or other scalable font resources 
+(see the \Cs{scalable\_fonts} \htmlref{switch}{scalefonts}).
+
+\item [\fn{\$DVIPS\_MODE}\texttt{ = 'toshiba';}]
+The mode given here must be available in the \fn{modes.mf} file,
+located with the \MF\ resource files, perhaps in the \fn{misc/} subdirectory.
+
+\item [\fn{\$METAFONT\_DPI}\texttt{ = 180;}]
+The required resolution, in dots-per-inch, should be listed specifically
+within the \fn{MakeTeXPK} script, called by \fn{dvips} to invoke \MF\ with
+the correct parameters for the required fonts.
+%
+\end{htmllist}
+
+
+\item [\fn{\$LATEX}\texttt{ = 'latex';}]
+Read from \fn{latex2html.config} by \fn{install-test}, 
+its value is checked to locate the \fn{latex} program or script.
+
+\smallskip\noindent
+If \LaTeX{} is having trouble finding style-files and/or packages, then
+the default command can be prepended with other commands 
+to set environment variables intended to resolve these difficulties;\\
+e.g. 
+\verb|$LATEX = 'setenv TEXINPUTS |\Meta{path to search}\verb| ; latex' |.
+
+There are several variables to help control exactly which files are
+read by \latextohtml{} and by \LaTeX{} when processing images:
+
+\begin{htmllist}\htmlitemmark{OrangeBall}%
+\item [\fn{\$TEXINPUTS}]
+This is normally set from the environment variable of the same name.
+If difficulties occur so that styles and packages are not being found, 
+then extra paths can be specified here, to resolve these difficulties.
+
+\item [\fn{\$DONT\_INCLUDE}]
+This provides a list of filenames and extensions to \emph{not} include, 
+even if requested to do so by an \Lc{input} or \Lc{include} command.\\
+(Consult \fn{latex2html.config} for the default list.)
+
+\item [\fn{\$DO\_INCLUDE}\texttt{ = '';}]
+List of exceptions within the \fn{\$DONT\_INCLUDE} list.
+These files \emph{are} to be read if requested by an \Lc{input}
+or \Lc{include} command.
+\end{htmllist}
+
+
+\item [\fn{\$ICONSERVER}\texttt{ = '\Meta{URL}';}]
+This is used to specify a URL to find the standard icons, as used for the
+navigation buttons.\html{\\}
+Names for the specific images size, as well as size information, 
+can be found in \fn{latex2html.config}. The icons themselves can be replaced
+by customised versions, provided this information is correctly updated
+and the location of the customised images specified as the value
+of \fn{\$ICONSERVER}.\\
+When the \htmlref{\Cs{local\_icons}}{cs_localicons} switch is used,
+so that a copy of the icons is placed with the \texttt{HTML} files and other
+generated images, the value of \fn{\$ICONSERVER} is not needed within
+the \texttt{HTML} files themselves. However it \emph{is} needed to find
+the original icons to be copied to the local directory.
+
+\item [\fn{\$NAV\_BORDER}\texttt{ = }\Meta{num}\texttt{;}]
+The value given here results in a border, measured in points, around each icon.\html{\\}
+A value of `\texttt{0}' is common, to maintain strict
+alignment of inactive and active buttons in the control panels.
+
+
+\item [\fn{\$LINKNAME}\texttt{ = '\char34index.\$EXTN\char34';}]
+This is used when the \fn{\$NO\_AUTO\_LINK} \htmlref{variable}{noautolink} is empty, 
+to allow a URL to the working directory to be sufficient to reach the main page 
+of the completed document. 
+It specifies the name of the \texttt{HTML} file which will be automatically
+linked to the directory name.\html{\\}
+The value of \fn{\$EXTN} is \texttt{.html} unless \fn{\$SHORTEXTN} is set, 
+in which case it is \texttt{.htm}~. 
+
+\item [\fn{\$LINKPOINT}\texttt{ = '\char34\$FILE\$EXTN\char34';}]
+This specifies the name of the \texttt{HTML} file to be duplicated, or symbolically
+linked, with the name specified in \fn{\$LINKNAME}.\\
+At the appropriate time the value of \fn{\$FILE} is the document name, 
+which usually coincides with the name of the working directory.
+
+\index{character set}%
+\index{character set!iso-latin@\texttt{\char34iso\_8859\_1\char34}}%
+\item [\fn{\$CHARSET}\texttt{ = 'iso\_8859\_1';}\label{charset}]
+This specifies the character set used within the \texttt{HTML} pages
+produced by \latextohtml. If no value is set in a configuration
+or initialisation file, the default value will be assumed.
+The lowercase form \texttt{\$charset} is also recognised, but
+this is overridden by the uppercase form.
+
+\index{images!strange accents}%
+\item [ \fn{\$ACCENT\_IMAGES}\texttt{ = 'large'};]
+Accented characters that are not part of the ISO-Latin fonts
+can be generated by making an image using \LaTeX.
+This variable contains a (comma-separated) list of \LaTeX{} commands
+for setting the style to be used when these images are made. 
+If the value of this variable is empty then the accent is simply
+ignored, using an un-accented font character (not an image) instead.
+%
+\end{htmllist}
+
+\bigskip\noindent
+Within the \fn{color.perl} package, the following variables are used to
+identify the names of files containing specifications for named colors.
+Files having these names are provided, in the \fn{\$LATEX2HTMLSTYLES}
+directory, but they could be moved elsewhere, 
+or replaced by alternative files having different names.
+In such a case the values of these variables should be altered accordingly.
+%
+\begin{itemize}
+\item []\fn{\$RGBCOLORFILE}\texttt{ = 'rgb.txt';}
+\item []\fn{\$CRAYOLAFILE}\texttt{ = 'crayola.txt';}
+\end{itemize}
+
+\bigskip\noindent
+The following variables may well be altered from the system defaults,
+but this is best done using a local \fn{.latex2html-init} initialisation file,
+for overall consistency of style within documents located at the same site,
+or sites in close proximity.
+
+\begin{htmllist}\htmlitemmark{PurpleBall}%
+%
+\item [\fn{\$default\_language}\texttt{ = 'english';}\label{isolanguage}]
+This establishes which language code is to be placed within
+the \HTMLtag{!DOCTYPE ... } tag that may appear at the beginning
+of the \texttt{HTML} pages produced. Loading a package for
+an alternative language can be expected to change the value of this variable.\html{\\}
+See also the \fn{\$TITLES\_LANGUAGE} variable, described \htmlref{next}{doclanguage}.
+
+
+\item [\fn{\$TITLES\_LANGUAGE}\texttt{ = 'english';}\label{doclanguage}]
+This variable is used to specify the actual strings used for standard document
+sections, such as ``Contents'', ``References'', ``Table of Contents'', etc.\html{\\}
+Support for French and German titles is available in corresponding packages.
+Loading such a package will normally alter the value of this variable, as well as 
+the \fn{\$default\_language} variable described \htmlref{above}{isolanguage}.
+
+
+\item [\fn{\$WORDS\_IN\_NAVIGATION\_PANEL\_TITLES}\texttt{ = 4;}]
+Specifies how many words to use from section titles,
+within the textual hyperlinks which accompany the navigation buttons.
+
+
+\item [\fn{\$WORDS\_IN\_PAGE}\texttt{ = 450;}]
+Specifies the minimum page length required before a navigation panel
+is placed at the bottom of a page,
+when the \fn{\$AUTO\_NAVIGATION} variable is set.
+
+
+\item [\fn{\$CHILDLINE}\texttt{ = \char34<BR><HR>\char92n\char34;}]
+This gives the \texttt{HTML} code to be placed between the child-links
+table and the ordinary contents of the page on which it occurs.
+
+
+\item [\fn{\$NETSCAPE\_HTML}\texttt{ = 0;}]
+When set, this variable specifies that \texttt{HTML} code may be present which
+does not conform to any official standard. 
+This restricts the contents of any \HTMLtag{!DOCTYPE ... } tag which may be placed
+at the beginning of the \texttt{HTML} pages produced.
+
+
+\item [\fn{\$BODYTEXT}\texttt{ = '';}]
+The value of this variable is used within the \HTMLtag{BODY ... } tag;
+e.g. to set text and/or background colors.\html{\\}
+It's value is overridden by the \verb|\bodytext| command, 
+and can be added-to or parts changed using the \Lc{htmlbody} command
+or \Lc{color} and \Lc{pagecolor} from the \env{color} package.
+
+
+\item [\fn{\$INTERLACE}\texttt{ = 1;}\label{interlace}]
+When set, interlaced images should be produced.\\
+This requires \htmlref{graphics utilities}{graphicsutils} to be available 
+to perform the interlacing operation.
+
+
+\item [\fn{\$TRANSPARENT\_FIGURES}\texttt{ = 1;}\label{transfigs}]
+When set, the background of images should be made transparent;
+otherwise it is white.\html{\\}
+This requires \htmlref{graphics utilities}{graphicsutils} %
+to be available which can specify the color to be made transparent.
+
+
+\item [\fn{\$FIGURE\_SCALE\_FACTOR}\texttt{ = 1.6;}\label{figscale}]
+Scale factor applied to all images of \env{figure} and other environments, 
+when being made into an image.
+
+\smallskip\noindent
+Note that this does not apply to recognised mathematics environments, 
+which instead use the contents of \fn{\$MATH\_SCALE\_FACTOR} 
+and \fn{\$DISP\_SCALE\_FACTOR} to specify scaling.
+
+
+\item [\fn{\$MATH\_SCALE\_FACTOR}\texttt{ = 1.6;}\label{mathscale}]
+Scale factor applied to all images of mathematics, both inline
+and displayed. 
+A value of 1.4 is a good alternative, with anti-aliased images.
+
+
+\item [\fn{\$DISP\_SCALE\_FACTOR}\texttt{ = 1;}\label{dispscale}]
+Extra scale factor applied to images of displayed math environments.\html{\\}
+When set, this value multiplies \fn{\$MATH\_SCALE\_FACTOR}
+to give the total scaling. 
+A value of `1.2' is a good choice to accompany \verb|$MATH_SCALE_FACTOR = 1.4;|\,.
+
+
+\item [\fn{\$EXTRA\_IMAGE\_SCALE}\label{ximagescale}]
+This may hold an extra scale factor that can be applied to all generated images.\html{\\}
+When set, it specifies that a scaling of \fn{\$EXTRA\_IMAGE\_SCALE} be applied 
+when images are created, but to have their height and width recorded 
+as the un-scaled size. This is to coax browsers into scaling the (usually larger) 
+images to fit the desired size; when printed a better quality can be obtained.
+Values of `1.5' and `2' give good print quality at 600dpi.
+
+
+\item [\fn{\$PAPERSIZE}\texttt{ = 'a5';}\label{papersize}]
+Specifies the size of a page for typesetting figures
+or displayed math, when an image is to be generated.\\
+This affects the lengths of lines of text within images.
+Since images of text or mathematics should use larger sizes than
+when printed, else clarity is lost at screen resolutions,
+then a smaller paper-size is generally advisable.
+This is especially so if both the \fn{\$MATH\_SCALE\_FACTOR}
+and \fn{\$DISP\_SCALE\_FACTOR} scaling factors are being used,
+else some images may become excessively large, including a lot
+of blank space.
+
+
+\item [\fn{\$LINE\_WIDTH}\texttt{ = 500;}\label{linewidth}]
+Formerly specified the width of an image, when the contents were
+to be right- or center-justified. (No longer used.)
+
+\end{htmllist}
+
+\bigskip
+
+\noindent
+The following variables are used to access the utilities required during image-generation. 
+File and program locations on the local system are established by the \fn{configure-pstoimg} 
+\Perl{} script and stored within \fn{\$LATEX2HTMLDIR/local.pm} as \Perl{} code, 
+to be read by \fn{pstoimg} when required.
+
+After running the \fn{configure-pstoimg} \Perl{} script it should not be necessary 
+to alter the values obtained. Those shown below are what happens on the author's system;
+they are for illustration only and do \emph{not} represent default values.
+%
+
+\begin{itemize}\label{graphicsutils}%
+\item  \fn{\$GS\_LIB}\texttt{ = '/usr/local/share/ghostscript/4.02';}
+\item  \fn{\$PNMCAT}\texttt{ = '/usr/local/bin/pnmcat';}
+\item  \fn{\$PPMQUANT}\texttt{ = '/usr/local/bin/ppmquant';}
+\item  \fn{\$PNMFLIP}\texttt{ = '/usr/local/bin/pnmflip';}
+\item  \fn{\$PPMTOGIF}\texttt{ = '/usr/local/bin/ppmtogif';}
+\item  \fn{\$HOWTO\_TRANSPARENT\_GIF}\texttt{ = 'netpbm';}
+\item  \fn{\$GS\_DEVICE}\texttt{ = 'pnmraw';}
+\item  \fn{\$GS}\texttt{ = '/usr/local/bin/gs';}
+\item  \fn{\$PNMFILE}\texttt{ = '/usr/local/bin/pnmfile';}
+\item  \fn{\$HOWTO\_INTERLACE\_GIF}\texttt{ = 'netpbm';}
+\item  \fn{\$PBMMAKE}\texttt{ = '/usr/local/bin/pbmmake';}
+\item  \fn{\$PNMCROP}\texttt{ = '/usr/local/bin/pnmcrop';}
+\item  \fn{\$TMP}\texttt{ = '/usr/var/tmp';}
+\end{itemize}
+
+\noindent
+The following variables are no longer needed, having been replaced by the
+more specific information obtained using the \Perl{} script \fn{configure-pstoimg}.
+\begin{itemize}
+\item [] \fn{\$USENETPBM}\texttt{ = 1;}
+\item [] \fn{\$PBMPLUSDIR}\texttt{ = '/usr/local/bin';}
+\end{itemize}
+
+
+%\filbreak
+\subsection{Extending the Translator\label{sec:ext}}%
+%\section{Extending the Translator\label{sec:ext}}%
+\tableofchildlinks*\htmlrule
+%
+In \hyperref{an earlier section}{Section~}{}{sec:sty} is was seen how
+the capabilities of \latextohtml{} can be extended to cope with
+\LaTeX{} commands defined in packages and style-files.
+This is in addition to defining simple macros and environments,
+using \Lc{newcommand} and \Lc{newenvironment}.
+The problem however, is that writing such extensions for packages 
+requires an understanding of \Perl{} programming 
+and of the way the processing in \latextohtml{} is organised. 
+
+\index{new commands!ignore arguments}%
+\index{new commands!arguments remain}%
+\index{extensions!in initialisation file}
+\smallskip
+
+The default behaviour for unrecognised commands is 
+for their arguments to remain in the \texttt{HTML} text,
+whereas the commands themselves are passed on to \LaTeX,
+in an attempt to generate an image. This is far from ideal,
+for it is quite likely to lead to an error in \LaTeX{}
+due to not having appropriate arguments for the command.
+
+Currently there are several related mechanisms whereby a user 
+can ask for particular commands and their arguments to be either 
+\begin{itemize}
+\item
+\htmlref{ignored}{ignore} (via: \texttt{\&ignore\_commands}\,);
+\item
+passed on to \LaTeX{}  for processing \htmlref{as an image}{pass}\\
+(via: \texttt{\&process\_commands\_in\_tex}\,);
+\item
+passed to \LaTeX{}  for processing as an image, 
+\htmlref{as if an environment}{sensit}\\
+(via: \texttt{\&process\_commands\_inline\_in\_tex}\,);
+\item
+passed on to \LaTeX, \htmlref{setting parameters}{setparam} 
+to be used in subsequent images\\
+(via: \texttt{\&process\_commands\_nowrap\_in\_tex}\,);
+\item
+processed as ``order-sensitive'', \htmlref{as if an environment}{wrapdef} 
+rather than a command\\
+(via: \texttt{\&process\_commands\_wrap\_deferred}\,);
+\end{itemize}
+The string beginning \texttt{\&.... } is the name of the \Perl{} subroutine 
+that controls how the \LaTeX{} commands are to be subsequently treated during
+processing by \latextohtml.
+Towards the end of the \fn{latex2html} script, one finds a list
+of \LaTeX{} commands to be handled by each of these subroutines.
+These lists even include some common \TeX{} commands.
+
+Analogous lists occur in most of the package extension files.
+In many cases the commands are for fine-tuning the layout on
+a printed page. They should simply be ignored; but any parameters
+must not be allowed to cause unwanted characters to appear on
+the \texttt{HTML} pages.
+Customised extensions using these mechanisms may be included in the 
+\fn{\$LATEX2HTMLDIR/latex2html.config} file, or in a personal 
+\fn{\$HOME/.latex2html-init} initialisation file, 
+as described \htmlref{next}{ignore}.
+
+
+
+\subsubsection{Asking the Translator to Ignore Commands\label{ignore}}
+%\subsection{Asking the Translator to Ignore Commands\label{ignore}}
+\index{new commands!command ignored}\html{\\}%
+Commands that should be ignored may be specified in the \fn{.latex2html-init}
+file as input to the \verb|&ignore_commands| subroutine. 
+Each command which is to be ignored should be on a separate line 
+followed by compulsory or optional argument markers separated by 
+{\verb|#|}'s e.g.\footnote{It is possible to add arbitrary(?) \Perl{} code
+between any of the argument markers which will be executed when 
+the command is processed. For this however a basic understanding of
+how the translator works and of course \Perl{} is required.}:
+\begin{quote}
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\verb|<cmd_name1> # {} # [] # {} # [] ...|\\
+\verb|<cmd_name2> # |\texttt{<<\emph{pattern}>>}\verb| # [] ...|
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+\end{quote}
+\verb|{}|'s mark compulsory arguments and \verb|[]|'s optional ones,
+while \texttt{<<\emph{pattern}>>} denotes matching everything up to the
+indicated string-pattern, given literally (e.g. \verb|\\endarray|);
+spaces are ignored. Special characters
+such as \verb|$|\,, \verb|&|\,, \verb|\| itself and perhaps some others,
+need to be ``escaped'' with a preceding \verb|\|\,.
+
+
+\index{new commands!arguments remain}\html{\\}%
+
+Some commands may have arguments which should be left as text even
+though the command should be ignored 
+(e.g. \Lc{hbox}, \Lc{center}, etc.). 
+In these cases arguments should be left unspecified.
+Here is an example of how this mechanism may be used:
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\begin{verbatim}
+&ignore_commands( <<_IGNORED_CMDS_);
+documentstyle # [] # {}
+linebreak # []
+mbox
+<add your commands here>
+_IGNORED_CMDS_
+\end{verbatim}
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+
+
+\subsubsection{Asking the Translator to Pass Commands to \LaTeX\label{pass}}%
+%\subsection{Asking the Translator to Pass Commands to \LaTeX\label{pass}}%
+\index{new commands!processed in LaTeX@processed in \LaTeX}\html{\\}%
+Commands that should be passed on to \LaTeX{}  for processing because
+there is no direct translation to \texttt{HTML} may be specified in the 
+\fn{.latex2html-init}
+file as input to the \verb|process_commands_in_tex| subroutine.
+The format is the same as that for specifying commands to be ignored.
+Here is an example:
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\begin{verbatim}
+&process_commands_in_tex (<<_RAW_ARG_CMDS_);
+fbox # {}
+framebox # [] # [] # {}
+<add your commands here>
+_RAW_ARG_CMDS_
+\end{verbatim}
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+
+
+\subsubsection{Handling ``order-sensitive'' Commands\label{sensit}}%
+%\subsection{Handling ``order-sensitive'' Commands\label{sensit}}%
+\index{new commands!order-sensitive}%
+\index{new commands!order-sensitive!processed in LaTeX@processed in \LaTeX}%
+\index{new commands!processed in LaTeX@processed in \LaTeX!order-sensitive}%
+Some commands need to be passed to \LaTeX, but using the 
+\verb|&process_commands_in_tex| subroutine gives incorrect results. 
+This may occur when the command is ``order-sensitive'',
+using information such as the value of a counter or a boolean expression 
+(or perhaps requiring a box to have been constructed and saved).
+Try using the \verb|&process_commands_inline_in_tex| subroutine instead.
+Commands declared this way are first ``wrapped'' within a dummy environment,
+which ensures that they are later processed in correct order with other 
+environments and order-sensitive commands.
+
+\index{order-sensitive!setting parameters}\label{setparam}\html{\\}%
+
+Other commands may need to be passed to \LaTeX, not to create an image
+themselves, but to affect the way subsequent images are created.
+For example a color command such as \verb|\color{red}| should set the
+text-colour to `red' for all subsequent text and images. This must
+be sent to \LaTeX{} so that it is processed at exactly the right time;
+i.e. before the first image required to be `red' but following any
+images that are not intended to be affected by this colour-change.\html{\\}
+The subroutine \verb|process_commands_nowrap_in_tex| is designed
+specifically to meet such requirements.
+
+\index{order-sensitive!wrap-deferred}\label{wrapdef}\html{\\}%
+
+Commands can be order-sensitive without having to be passed to \LaTeX.
+Indeed even if a \Perl{} subroutine has been carefully written to process
+the command, it may still give wrong results if it is order-sensitive,
+depending on the values of counters, say.
+To handle such cases there is the \verb|&process_commands_wrap_deferred|
+subroutine. This also ``wraps'' the command within a dummy environment,
+but when that environment is processed the contents are not sent to \LaTeX,
+as in the previous case. All of the standard \LaTeX{} commands to change, 
+set or read the values of counters are handled in this way.
+
+
+
+\subsection{Customising the Navigation Panels\label{sec:navpanel}}%
+%\section{Customising the Navigation Panels\label{sec:navpanel}}%
+\index{navigation panel|(}%
+\index{navigation panel!customisable}\html{\\}%
+The navigation panels are the strips containing ``buttons'' and text 
+that appears at the top and perhaps at the bottom 
+of each generated page and provides hypertext links 
+to other sections of a document. 
+Some of the options and variables that control whether and 
+where it should appear are presented in \hyperref{an earlier section}%
+{Section~}{}{navoptions}. 
+
+\index{navigation panel!customised buttons}%
+\index{htmladdtonavigation@\Lc{htmladdtonavigation}}\html{\\}%
+A simple mechanism for appending customised buttons to the navigation
+panel is provided by the command \Lc{htmladdtonavigation}. 
+This takes one argument which \latextohtml{} appends to the navigation panel. 
+For example,
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\begin{verbatim}
+\htmladdtonavigation{\htmladdnormallink
+   {\htmladdimg{http://server/mybutton.gif}}{http://server/link}}
+\end{verbatim}
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+will add an active button \fn{mybutton.gif} pointing to the specified location.
+
+\index{navigation panel!order of buttons}\html{\\}\noindent
+Apart from these facilities it is also 
+possible to specify completely what appears in the navigation panels
+and in what order. As each section is processed, \latextohtml{}
+assigns relevant information to a number of global variables.
+These variables are used by the
+subroutines \texttt{top\_navigation\_panel} and
+\texttt{bottom\_navigation\_panel},
+where the navigation panel is constructed as a string consisting of
+these variables and some formatting information. 
+
+\index{navigation panel!Perl subroutines@\Perl{} subroutines}\html{\\}\noindent
+These subroutines can be redefined in a system- 
+or user-configuration file (respectively, 
+\fn{\$LATEX2HTMLDIR/latex2html.config} and \fn{\$HOME/.latex2html-init}). 
+Any combination of text, \texttt{HTML} tags, 
+and the variables mentioned below is acceptable.
+
+\medskip\noindent
+The control-panel variables are:\nobreak
+
+\medskip\nobreak
+\index{navigation panel!buttons}%
+\index{navigation panel!iconic links}\html{\\}
+\noindent
+\textbf{Iconic links (buttons):}
+\begin{htmllist}\htmlitemmark{RedBall}\addtolength{\leftskip}{15pt}%
+\item [\fn{\$UP}]  Points up to the ``parent'' section;
+\item [\fn{\$NEXT}] Points to the next section;
+\item [\fn{\$NEXT\_GROUP}] Points to the next ``group'' section;
+\item [\fn{\$PREVIOUS}] Points to the previous section;
+\item [\fn{\$PREVIOUS\_GROUP}] Points to the previous ``group'' section;
+\item [\fn{\$CONTENTS}] Points to the contents page if there is one;
+\item [\fn{\$INDEX}] Points to the index page if there is one.
+\end{htmllist}
+
+\index{navigation panel!section titles}%
+\index{navigation panel!textual links}\html{\\}\noindent
+\textbf{Textual links (section titles):}
+\begin{htmllist}\htmlitemmark{PinkBall}\latex{\addtolength{\leftskip}{15pt}}%
+\item [\fn{\$UP\_TITLE}]  Points up to the ``parent'' section;
+\item [\fn{\$NEXT\_TITLE}] Points to the next section;
+\item [\fn{\$NEXT\_GROUP\_TITLE}] Points to the next ``group'' section;
+\item [\fn{\$PREVIOUS\_TITLE}] Points to the previous section;
+\item [\fn{\$PREVIOUS\_GROUP\_TITLE}] Points to the previous ``group'' section.
+\end{htmllist}
+If the corresponding section exists, each iconic button will contain an
+active link to that section. If the corresponding section does
+not exist, the button will be inactive. If the section corresponding
+to a textual link does not exist then the link will be empty.
+
+The ``next group'' and ``previous group'' are rarely used, 
+since it is usually possible to determine
+which are the next/previous logical pages in a document.
+However these may be needed occasionally with segmented documents,
+when the segments have been created with different values
+for the \fn{\$MAX\_SPLIT\_DEPTH} variable. 
+This is quite distinct from the segmented document effect 
+in which the first page of one segment may have its `\emph{PREVIOUS}'
+button artificially linked to the first page of the previous segment, 
+rather than the last page.
+
+
+\index{navigation panel!number of words}\html{\\}\noindent
+The number of words that appears in each textual link
+is controlled by the variable \fn{\$WORDS\_IN\_NAVIGATION\_PANEL\_TITLES}
+which may also be changed in the configuration files.
+
+\index{navigation panel!example}\html{\\}\noindent
+Below is an example of a navigation panel for the bottom of \texttt{HTML} pages.
+(Note that the ``\texttt{.}'' is \Perl{}'s string-concatenation operator 
+and ``\texttt{\#}'' signifies a comment.)
+%begin{latexonly}
+\begin{small}
+%end{latexonly}
+\begin{verbatim}
+sub bot_navigation_panel {
+    #  Start with a horizontal rule and descriptive comment
+    "<HR>\n" . "<!--Navigation Panel-->".
+    # Now add a few buttons, with a space between them
+       "$NEXT $UP $PREVIOUS $CONTENTS $INDEX $CUSTOM_BUTTONS" . 
+    # Line break    
+       "\n<BR>" .       
+    # If ``next'' section exists, add its title to the navigation panel
+       ($NEXT_TITLE ? "\n<B> Next:</B> $NEXT_TITLE" : undef) .   
+    # Similarly with the ``up'' title ...
+       ($UP_TITLE ? "\n<B>Up:</B> $UP_TITLE\n" : undef) . 
+    # ... and the ``previous'' title
+       ($PREVIOUS_TITLE ? "\n<B> Previous:</B> $PREVIOUS_TITLE\n" : undef) . 
+}
+\end{verbatim}
+%begin{latexonly}
+\end{small}
+%end{latexonly}
+Note that extra buttons may be included by defining suitable code for the container
+\fn{\$CUSTOM\_BUTTONS}\,. 
+The use of explicit `newline' (\verb|\n|) characters is not necessary for the
+on-screen appearance of the navigation panel within a browser window. However 
+it maintains an orderly organisation within the \texttt{.html} files themselves,
+which is helpful if any hand-editing is later required, 
+or simply to read their contents.
+The corresponding subroutine for a navigation-panel at the top of a page
+need not use the rule \HTMLtag{HR}, and would require a break (\HTMLtag{BR})
+or two at the end, to give some visual separation from the following material.
+\index{navigation panel|)}
+\index{extensions|)}
+
+
+
+

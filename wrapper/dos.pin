@@ -1,0 +1,91 @@
+@rem = '--*-Perl-*--
+#-
+#- This is a wrapper for the Perl scripts. Allows execution of
+#- the same script on different platforms. Mainly used for
+#- TeXlive.
+#-
+#- When running TeXlive, "perl" must be available in the PATH
+#-
+@echo off
+set arg=
+set prog=%0
+:one
+if "%1"=="" goto two
+set arg=%arg% %1
+shift
+goto one
+:two
+#if @TEXLIVE@
+perl -x -S %prog% %arg%
+#else
+@PERL@ -x -S %prog% %arg%
+#fi
+set arg=
+set prog=
+goto endofperl
+@rem ';
+#! perl -w
+# line 21
+# Here we are in the perl script, finally. The stuff above
+# collects command line arguments and starts up perl and this
+# script
+
+package main;
+require 5.00305;
+use strict;
+use vars qw($LATEX2HTMLDIR $SCRIPT $TEXLIVEROOT);
+
+# Set LATEX2HTMLDIR
+
+my $tool = $0;
+$tool =~ s:^.*[\\/]::; # strip path
+$tool =~ s:[.][^\\/.]*$::; # strip extension
+
+BEGIN {
+    unless($LATEX2HTMLDIR = $ENV{'LATEX2HTMLDIR'}) {
+#if @texlive@
+        my $root = try($0) || ( -s $0 ?
+        do {
+            use Cwd;
+            my $path = join('\\',cwd(),$0);
+            1 while($path =~ s|[/\\]\.?[/\\]|\\|g); # simplify
+            try($path);
+        } :
+        do {
+            my $path = '';
+            foreach(split(/;/, $ENV{PATH} || '')) {
+                s:[\\/]+$::; # strip trailing path delims
+                $path = "$_\\$0";
+                last if(-s $path);
+                $path = '';
+            }
+            try($path);
+        }) || die "Cannot determine TeXlive root path\n";
+
+        $TEXLIVEROOT   = $root;
+        $LATEX2HTMLDIR = $ENV{'LATEX2HTMLDIR'} = "$root\\latex2html";
+#else
+        $LATEX2HTMLDIR = $ENV{'LATEX2HTMLDIR'} = '@LATEX2HTMLDIR@';
+#fi
+    }
+    sub try {
+        my ($path) = @_;
+        $path =~ m:^(.*)[/\\]bin[/\\][^/\\]*[/\\]([^/\\]*)(\.bat|)$:i ?
+            $1 : '';
+    }
+}
+
+if(-d $LATEX2HTMLDIR) {
+    push(@INC,$LATEX2HTMLDIR);
+} else {
+    die qq{Fatal: Directory "$LATEX2HTMLDIR" does not exist.\n};
+}
+
+# now start the main script!
+$SCRIPT = "$LATEX2HTMLDIR\\$tool.pl";
+
+require $SCRIPT
+    || die "Fatal: Cannot load script $SCRIPT\n";
+
+__END__
+:endofperl

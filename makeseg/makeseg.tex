@@ -1,0 +1,593 @@
+
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{natbib}
+\usepackage{html}
+\usepackage{latexsym}
+\usepackage{makeidx}
+
+\makeindex
+\citeindextrue
+
+\newcommand{\htm}{{\tt HTML}}
+\newcommand{\lhh}{{\rm \LaTeX2}\htm}
+\newcommand\bef{\begin{figure}}
+
+\begin
+{document}
+\sloppy
+
+\title{Makesegments - a segmentation tool for \lhh}
+\author{Martin Wilck}
+
+\date{Institut f{\"u}r Troposph{\"a}renforschung \\
+  04303 Leipzig, Germany}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+\label{intro}
+
+\lhh\ \index{latex2html@\lhh} is a powerful tool for translating \LaTeX\ documents into a
+hierarchy of linked \htm\ documents suitable for presentation on the
+World Wide Web \cite[]{drakos:l2h}. Users of \lhh\ will encounter
+problems if their \LaTeX\ documents are very large
+\index{document!large}
+--- the translation
+process will eventually fail due to lack of memory. Therefore the
+document segmentation mechanism\index{segmentation}, described in detail by
+\citeauthor{drakos:l2h}, was developed. It serves to split the
+document into peaces called ``segments'', which may be translated by
+\lhh\ seperately. Makesegments is a utility to produce a suitably
+segmented document from a non-segmented \LaTeX\ file.
+
+\subsection{Features}
+\label{features}
+
+Makesegments 
+\begin{itemize}
+\item takes care to preserve the \LaTeX\ structure of your document,
+\item reads \verb:\input: files and inserts their
+  contents,\index{input@\verb+\input+}\index{input files}
+\item handles already segmented documents, eventually improving their
+  segment structure or changing the level of it,
+\item Handles \verb:\verb: statements and \verb+verbatim+ environments
+  correctly,
+\item automatically inserts the preamble into all segments, stripping
+  off useless \verb+\internal+ statements and \verb+htmlonly+ environments,
+\item cares for the passing of \lhh\ internal information by inserting
+  appropriate \verb:\internal: statements,
+\item places special sections like \verb:\tableofcontents: or
+  \verb:\bibliography: in the master file (unless the
+  \hyperref{\texttt{ -e} option}{\texttt{-e} option, see }{}{options}
+  is given),
+  \index{special sections}
+\item generates a Makefile for the segmented document, which may be
+  \index{Makefile}
+  edited for customization of \htm\ titles etc. (see \ref{makefile}),
+\item allows for unconventional \LaTeX\ coding, e.~g. sections that
+  are enclosed (or even irregularly devided) by \LaTeX\ blocks (see
+  \ref{caveats} and \ref{blocks}), \index{latex blocks@\LaTeX blocks}
+\item copies (or links) input files to the target directory
+  automatically, \index{input files!copying}
+\item optionally checks if requested \LaTeX\ style files can be found.
+\end{itemize}
+
+\section{Usage}
+\label{usage}
+
+If you have written a long \LaTeX\ document, which you would like to
+translate into \htm, you may use Makesegments to produce a segmented
+version of this document that can be comfortably processed by \lhh.
+It moves the text of each section to a seperate file, leaving only
+the preamble, the \verb:\segment:
+commands\index{segment@\verb+\segment+}, and necessary global 
+information in the main file.
+
+\subsection{Arguments and command line options}
+
+Makesegments is called in the following way:\index{usage}
+
+\begin
+{quote}
+
+\begin{verbatim}
+$ makesegments [options] inputfile
+\end{verbatim}
+\end{quote}
+
+Note that you shold change to the directory containig the input file
+before calling Makesegments.
+The \verb:.tex: extension may be ommited from filenames.
+
+\subsubsection{Options}
+\label{options}\index{command line options}\index{invocation}\index{options}
+
+\begin{description}
+\item[\texttt{ -level sectioning-level} (short \texttt{ -l})] 
+ \index{options!level@\texttt{ -level/-l}}
+  specifies the level of sectioning commands down to that segmentation is
+  carried out. Possible values are 
+  \verb+document+, \verb+part+, \verb+chapter+, \verb+section+,
+  \verb+subsection+, and \verb+subsubsection+. If you specify 
+  \verb+-l document+, Makesegments will --- against its usual purpose
+  --- merge all input files and predefined segments into one big file.
+\item[\texttt{ -dir directory} (short \texttt{ -d})]  specifies the
+\index{options!dir@\texttt{ -dir/-d}}
+  target directory, where all segments and all other necessary files
+  are going to be written. Default is \verb+./segmented.+
+\item[\texttt{ -output output-file} (short \texttt{ -o})] 
+  \index{options!dir@\texttt{ -dir/-d}}
+  specifies the name of the master file for output (usually without
+  \verb+.tex+ extension).
+\item[\texttt{ -config configuration-file} (short \texttt{ -c})] 
+  \index{options!config@\texttt{-config/-c}}
+  is the name of a \hyperref{configuration file}{configuration file
+    (see }{)}{config} for
+  Makesegments. This file may \index{configuration file}
+  define several configuration variables. 
+\item[\texttt{ -zero string} (short \texttt{ -z})] 
+  \index{options!zero@\texttt{ -zero/-z}} is the name of the ``segment
+  zero''. Makesegments will increment this string in order to obtain
+  segment names. That is, if you specify \texttt{ -z seg00}, the
+  segments will be named \texttt{ seg01.tex}, \texttt{ seg02.tex}, and so
+  forth. If you specify \texttt{ -z master}, the segment names will be
+  \texttt{ mastes}, \texttt{ -mastet}, \ldots, \texttt{ mastez},
+  \texttt{ mastfa}, \ldots. See the \verb+perlop+ Manpage for details
+  on string incrementation.
+\item[\texttt{ -no\_makefile} (short \texttt{ -n})] suppresses
+  Makefile generation.\index{options!nomakefile@\texttt{ -no\_makefile/-n}}\index{Makefile}
+\item[\texttt{ -check\_latex\_styles} (short \texttt{ -s})] 
+  \index{options!check latex@\texttt{ -check\_latex\_styles/-s}}
+  causes Makesegments to look for \LaTeX\ style files. This requires
+  the correct setting of the environment variables for \LaTeX\ input
+  file paths (mainly \texttt{ TEXINPUTS}) or the related
+  \hyperref{configuration variables}{configuration variables
+  (see }{)}{texinputs}. Setting this variable has two side effects: 
+  1.~\verb+\usepackage+ commands requesting a \LaTeX\ package that
+  can't be found are deleted; 2.~``local'' style files that are in the
+  current directory are copied or linked to the target directory.
+\item[\texttt{ -ignore\_inputs} (short \texttt{ -i}):]   \index{input@\verb+\input+}
+  \index{options!ignore@\texttt{ -ignore\_inputs/-i}} With
+  this option, Makesegments will keep \verb+\input+ and
+  \verb+\include+ statements in their place rather than repacing them
+  with the contents of the input files (of course, sectioning commands
+  inside the input files won't be found!)
+\item[\texttt{ -use\_links} (short \texttt{ -u}):] 
+  \index{options!use@\texttt{ -use\_links/-u}} Usually, Makesegments
+  copies input files to the target directory unless it is the same as
+  the current. This holds for files included with \verb+\input+ and
+  \verb+\include+ if the \verb+-i+ option is set, for ``local'' style
+  files if the \verb+-s+ option is set, for bibliography files
+  (\verb+.bib+, \verb+.bst+) and 
+  \hyperref{image files}{image files(see }{)}{epsfig}
+  as long as they are given
+  by a path {\em relative to the current directory}\/. The reason is
+  that these input files will not be found by \LaTeX\ or \lhh\ in the
+  target directory. With the \verb+-u+ option, Makesegments creates
+  symbolic links in the target directory instead.
+\item[\texttt{ -dont\_copy} (short \texttt{ -y}):] 
+  \index{options!dontcopy@\texttt{ -dont\_copy/-y}} If this flag is set,
+  Makesegments will neither copy nor link the input files to the
+  target directory.
+\item[\texttt{ -specialsegments} (short \texttt{ -e}):] 
+  \index{options!specialsegments@\texttt{ -specialsegments/-e}}
+  \index{special sections}
+  Normally Makesegments places all ``special sections'' of \LaTeX in
+  the master segment. With the \verb+-e+ option, it will create extra
+  files for them. If \verb+-e+ is set, the configuration variable
+  \hyperref{\texttt{\%SPECIALNAMES}}{\texttt{\%SPECIALNAMES} (see
+    }{)}{config}\ 
+  determines which of the special sections will
+  be treated this way, and which file names they'll get. 
+
+  Doing this is
+  useful especially for the table of contents
+  (\verb+\tableofcontents+) and the index (\verb+\printindex+), since
+  in the \htm\ version 
+  these may be linked to the other segments by the ``Contents'' and
+  ``Index'' buttons in the navigation panel. If \verb+-e+ is not
+  specified, Makesegments can't figure out the URL's of the contents
+  and index pages, and therefore can't include this information in the
+  Makefile; with \verb+-e+, the URL's are determined before Makefile
+  generation, and Makesegments is able to set the \verb+-contents+ and
+  \verb+-index+ switches for the segments correctly.
+\index{latex2html@\lhh!prev@\verb+-contents+ option} 
+\index{latex2html@\lhh!prev@\verb+-index+ option} 
+\item[\texttt{ -help} (short \texttt{ -h} or \texttt{ -?}):] 
+  \index{options!help@\texttt{ -help/-h/-?}} Display a help message
+  with overview over the options.
+
+\end{description}
+
+\subsection{Caveats}
+\label{caveats}
+
+What you should avoid:
+
+\begin{itemize}
+\item misaligned \LaTeX\ blocks, such as \verb:{\small \begin{figure}...}:. 
+    (\LaTeX
+    will also complain about this!)\index{latex blocks@\LaTeX blocks}
+\item use of plain \TeX\ commands such as \verb+\def+. 
+\index{tex commands@\TeX\ commands}
+\end{itemize} 
+
+The more ``structured'' your \LaTeX\ document, the easier and better
+the outcome of Makesegments will be.
+
+The \verb+\segment+\index{segment@\verb+\segment+} command, that is
+defined in the \lhh\ file \verb+html.sty+, does not account for the
+optional argument to sectioning commands (short version of the section
+title). \index{sectioning commands!optional argument} These arguments are
+therefore discarded by Makesegments. 
+
+\subsection{After using Makesegments}
+\label{after}
+
+Ideally, after the segmentation procedure has successfully completed,
+you just need to change to your target directory and type
+\verb:make:.\index{make@\verb+make+} This will produce the complete
+set of \htm\ pages. Type \verb:make all: if you want DVI and
+PostScript output, too.\index{DVI output}
+\index{PostScript output} Then change to the
+subdirectory called \verb:inputfile: (without \verb:.tex: extension),
+and start your \htm\ browser on \verb:inputfile.html:\index{html
+  output@\htm\ output}. In reality,
+you will probably need to edit the \index{Makefile} 
+\hyperref{Makefile}{Makefile (see }{)}{makefile} and perhaps even some of
+the segments to obtain the desired \htm\ output. 
+
+\section{Internals}
+\label{internals}
+
+Makesegments, as well as \lhh\ itself, is written in Perl. That is, it
+is easy to customize for people with a basic knowledge of Perl.
+\index{Perl} This section gives a brief overview of how Makesegments works.
+
+\subsection{Block structure}
+\label{blocks}
+
+As mentioned in \ref{features}, Makesegment takes special care to
+avoid confusion by intermediate \LaTeX\ blocks.
+Consider the following file:
+\index{latex blocks@\LaTeX blocks}
+
+\begin{verbatim}
+\documentclass{article}
+<preamble>
+{
+  \begin{document}
+    <leading text>
+  \section{1}
+    <text of 1>
+    {\small
+      <more text of 1> 
+      \section{2}
+        <text of 2>
+        \texttt{
+          <more text of 2>
+          \listoffigures
+        }
+    }
+  \end{document}
+}
+\end{verbatim}
+
+How should this be divided reasonably into segments? Makesegments will
+produce the following master file:
+
+\begin{verbatim}
+\documentclass{article}
+<preamble>
+{
+  \begin{document}
+    <leading text>
+  \segment{a1}{1}        %  -> that's where <text of 1> goes
+    {\small
+      <more text of 1> 
+      \segment{a2}{2}    %  -> that's where <text of 2> goes
+        \texttt{
+          <more text of 2>
+          \listoffigures
+        }
+    }
+  \end{document}
+}
+\end{verbatim}
+
+Note that all blocks that contain a command that is relevant to
+segmentation (\verb+\section+ and \verb+\listoffigures+) have been
+moved to the master segment. This ensures that the \LaTeX\ block
+structure is unharmed and that \LaTeX\ will produce the same DVI output
+from the segmented file as from the original document. \index{DVI output}
+
+But it is also clear that \lhh\ will not see the \verb+\small+
+command when it processes segment 1. 
+Also, the text of both sections is divided between the segments and
+the master file, leading to a strange structure in the \htm\ document.
+
+Thus, even though Makesegments
+can still produce a fairly reasonable segmentation from such a file,
+it is not recommended to write \LaTeX\ code this way (if it is
+supposed to be segmented, at least).
+
+\subsection{Makefile}
+\label{makefile}
+
+The Makefile defines several variables that may be customized.
+For each segment there is a variable that specifies the title of the
+corresponding URL (\verb+A3TITLE+ for segment \verb:a3.tex:) and one
+that determines the command options for \lhh\ when it is invoked on
+this segment (\verb:L2HA3:).  Segment titles are derived from the
+section titles they were made of, with all \LaTeX\ commands and their
+arguments stripped, so it's likely that the URL titles are not what
+you desire.
+
+Makesegments tries to guess the correct 
+neighbour segments and link them with the \verb+-prev_url+, \verb+-up_url+ and
+\verb+-down_url+ options to \lhh.\index{latex2html@\lhh!down@\verb+-down_url+ option}
+\index{latex2html@\lhh!up@\verb+-up_url+ option} 
+\index{latex2html@\lhh!prev@\verb+-prev_url+ option} 
+
+This may easily be modified by changing the corresponding variables.
+Note that Makesegments can only set the \verb+-index+ and \verb+-contents+ options
+\index{latex2html@\lhh!prev@\verb+-contents+ option} 
+\index{latex2html@\lhh!prev@\verb+-index+ option} 
+in the Makefile correctly if the file is processed
+with the \verb+-e+ option. Otherwise, you'll have to find out the
+URL's of these sections ``by hand'' using a \htm\ browser.
+
+\subsection{The configuration file}
+\label{config}\index{configuration file}
+
+Makesegments looks for configuration files in three places:
+\begin{itemize}
+\item in the file specified with the \verb:-c: option,
+\item in the file \verb:.makesegments.cnf: in the current directory,
+\item in \verb:$HOME/.makesegments.cnf:.
+\end{itemize}
+
+If no configuration file is found, Makesegments sets its own defaults.
+
+The files are executed in the order specified above, so if you build a
+configuration file in your home directory, take care that it doesn't
+override settings that have been made before. The same holds for
+system operators that want to change Makesegents' behaviour by editing
+the makesegments script itself.
+
+The easiest way to create a config file is copying the configuration
+part of makesegments (from ``Site configuration'' to ``End of
+configuration options'') to a seperate file and edit.
+
+\subsubsection{Path variables for \LaTeX\ inputs}
+\label{texinputs}\index{path!latex@\LaTeX inputs}
+
+Setting these is very impotant if you want to use the \texttt{
+  -check\_latex\_styles} command line option.
+  \index{options!check latex@\texttt{ -check\_latex\_styles/-s}}
+Makesegments tries to read the environment variables \verb+TEXINPUTS+
+(for style files as well as text inluded with \verb+\input+ and
+\verb+\include+ statements), \verb+BIBINPUTS+ (for bibliography
+databases) and \verb+BSTINPUTS+ (for bibliography styles). But on many
+Unix systems these environment variables aren't set, since they have
+been compiled into the \verb+kpathsea+ library, that searches files
+for \TeX. If you work on such a system, set the corresponding Perl
+variables \verb+$TEXINPUTS+ etc.
+
+\subsubsection{Path variables for executables}
+\label{executables}\index{path!executables}
+
+These variables are only needed for Makefile
+generation\index{Makefile}. You should set them if your executables
+for \LaTeX, Bib\TeX, Makeindex, dvips, \lhh, make or touch are
+different then usual. The variable names are \verb+$LATEX+,
+\verb+$BIBTEX+ etc. Additionally, Makesegments defines two variables
+\verb+$TEXENV+ and \verb+$DVIPSENV+ for environment information that should
+be passed explicitly to these programs, e.~g.: 
+\begin{verbatim}
+$TEXENV="TEXINPUTS=$TEXINPUTS:/home/myname/mylatex/inputs/ ". 
+        "PKFONTS=/home/myname/mylatex//pk//";
+$LATEX="$TEXENV /home/myname/bin/latex";
+\end{verbatim}
+This will produce a command line in the Makefile that sets the desired
+environment variables (note that the above example just {\em adds} a
+directory to the Perl variable \verb+$TEXINPUTS+) and calls the special
+executable.
+
+\subsubsection{Variables corresponding to command line options}
+\index{options}
+
+Those settings in the configuration files that correspond to command
+line options are always {\em overriden} by the latter. But be aware
+that some command line options can only switch a feature {\em on}. For
+example, if you specify \verb+$DONTCOPY=1;+ Makesegments will not copy
+any input files and there's no command line option to override this.
+
+\index{options!specialsegments@\texttt{ -specialsegments/-e}}
+The configuration variable \verb+$SPECIAL+ corresponds to the
+\verb+-specialsegments+ option. However, if this is set, you have
+further customization possibilities. The hash table
+\verb+%SPECIALNAMES+ contains the default file names (without
+extension) for the \LaTeX\ commands that you'd like to have a special
+segment for. The Makesegments script defines
+\begin{verbatim}
+%SPECIALNAMES=(
+    "tableofcontents" => "toc",
+    "printindex" => "ind",
+#    "listoffigures" => "lof",
+#    "listoftables" => "lot",
+#    "bibliography" => "bbl",
+#    "thebibliography" => "tbl",
+               );
+\end{verbatim}
+Note that the last four entries are commented out: no entries are set
+here (this is different from setting one of those entries to an empty
+string!). With this (default) setting, Makesegments will only create 
+special segments for the index and for the table of contents.
+The hash table \verb+%SPECIALTITLES+ takes the same keys as 
+\verb+%SPECIALNAMES+; the values are the URL titles that you'd like
+for these segments. This is mainly intended for language
+customization.
+
+\subsubsection{Adding support for \LaTeX\ commands}
+\label{commands}\index{adding new \LaTeX\ commands}
+
+The ``Experts only'' section of the configuration section in
+Makesegments is intended to help users to add support for special
+\LaTeX\ commands. This may be helpful e.~g. for
+\begin{itemize}
+\item commands that take file arguments that you'd like to have
+  copied;
+\item commands that take weird arguments that should not be parsed
+  (Makesegment parses command arguments with a simpler algorithm than
+  the normal text: commands and environments are not recognized inside
+  these arguments. This is useful for the \verb+\newcommand+ command,
+  for example, because Makesegments would usually complain about a
+  construct like
+\begin{verbatim}
+       \newcommand\beq{\begin{equation}}
+\end{verbatim}
+\index{newcommand@\verb+\newcommand+}
+since it would think that the \verb+equation+ environment wasn't regularly
+closed); 
+\item commands that should initiate any special operation by makesegments.
+\end{itemize}
+
+If you want Makesegments to recognize a command, you have to add it to
+the table of known commands. This may be done by adding entries to the
+hash table \verb+%USER_CMDS+. The syntax is as follows:
+\begin{verbatim}
+    %USER_CMDS=(
+                "command1" => [argument-list],
+                "command2" => [argument-list],
+                ...
+                );
+\end{verbatim}
+\index{usercmds@\verb+%USER_CMDS+}
+The command names should be given without the leading backslash.
+\verb+argument-list+ is a comma-separated list of the two items
+\verb+$m+ for mandatory and \verb+$o+ for optional arguments.
+Example: 
+\begin{verbatim}
+    %USER_CMDS=(
+                "parbox" => [$o, $m, $m],
+                "newpage" => [],
+                );
+\end{verbatim}
+See \htmlref{the next section}{example} for another example. If a command
+takes no arguments, specify an empty array. See also the
+Makesegments script and look at the definition of \verb+%misc_cmds+.
+
+Usually one entry in the hash suffices for both the normal and the
+starred version of the command (if there is one). You only need to add
+an extra entry for the starred version if it takes other arguments (or
+in different order) than the unstarred one.
+
+Adding a command to \verb+%USER_CMDS+ suffices if you just want
+Makesegments to ignore this command's arguments (such as in the
+\verb+\newcommand+ example above).
+
+If you want Makesegments to do anything special when the command is
+encountered, you must define a subroutine called \verb+do_mycommand+
+(but you {\em always} need  the  \verb+%USER_CMDS+ entry!).
+
+All routines of the type \verb+do_mycommand+ have access to the
+following local variables:
+\begin{description}
+\item[\texttt{\$command}] contains the command name, without backslash
+  and (eventual) star.
+\item[\texttt{\$star}] contains "\verb+*+" if the command was starred.
+\item[\texttt{@arg}] is the array of arguments in the order given, with
+  brackets.
+\item[\texttt{@mand}] is the array of mandatory arguments in given order,
+  brackets stripped.
+\item[\texttt{@opt}] is the array of optional arguments. 
+\end{description}
+
+You may delete the
+command from the text output of Makesegments by setting
+\verb+$command=""; @arg=();+  
+
+\subsubsection{An example}\label{example}
+\label{epsfig}
+\index{adding new \LaTeX\ commands}
+\index{epsfig@\verb+\epsfig+}
+
+As an example, the following code shows how to add support for the
+\verb+\epsfig+ command. The only graphics command that is supported by
+default by Makesgements is \verb+\includegraphics+. But a user might
+wish that Makesegments copy the graphics file specified by an
+\verb+\epsfig+ command to the target directory.
+
+\begin{verbatim}
+# First, add epsfig to %USER_CMDS
+
+    %USER_CMDS=(
+# epsfig takes only one mandatory argument 
+                "epsfig" => [$m],
+                ...
+                );
+
+# Now the subroutine definition
+    sub do_epsfig {
+
+# Check if the epsfig package was loaded
+# If not, do nothing
+
+        if (defined $packages{"epsfig"}) {
+
+# Do a pattern match with the (first and only) mandatory
+# argument to retrieve the filename
+
+            $mand[0] =~ /file=\s*([^\s,]+)\s*,/;
+            my $file=$1;
+
+# Use the &find_texinput routine to look where the file 
+# actually is. The routine needs two array references 
+# as input: One for the directories to search,
+# one for possible extensions (if ommitted in the text)
+# It returns the full path name or nothing if the
+# file wasn't found.
+
+            $file=&find_texinput
+                ($file,\@graphicsinputs,\@graphicsextensions);
+            if ($file) {
+
+# If the returned filename is a full pathname 
+# (i.e. starts with / or ~), it shouldn't be copied 
+# (it will be found from the target directory also)
+
+                push @files_to_copy,$file 
+                             unless file=~ m:^(/|~):;
+
+            } else {
+
+# Complain if the file wasn't found
+
+                print STDERR "epsfig input file not found!\n";
+            };
+        };
+    };
+\end{verbatim}
+
+\subsection{Support}\label{support}
+
+If you have trouble with makesegments, mail me 
+    (\htmladdnormallink{martin@tropos.de}{mailto:martin@tropos.de}).
+
+\section*{Acknowledgements}
+
+The segmentation mechanism of \lhh\ has been invented an programmed by
+Herb Swan and Ross Moore. Thanks to them, to Nikos Drakos and all the
+others who made \lhh. \index{Moore, Ross}\index{Drakos,
+  Nikos}\index{Swan, Herb}
+
+\printindex
+
+\bibliographystyle{plainnat}
+\bibliography{rep,harvard}
+
+\end{document}

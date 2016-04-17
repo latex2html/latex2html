@@ -1,0 +1,47 @@
+%
+%  This is the first document segment input by report.tex.
+%  It can be independently processed by latex2html.  (Note
+%  that latex2html do not requre a \begin{documentclass}.
+%
+
+\begin{htmlonly}
+\documentclass{article}
+\usepackage{html,color,makeidx}
+\input{sec1.ptr}		% Input counters and section
+				%    information from sec1.ptr
+
+\end{htmlonly}
+%
+%  The following command is ignored by LaTeX:
+%
+
+\internal{s2}			% Input \label information from
+				%    the second segment of this
+				%    report, found in
+				%    report/s2internals.pl
+
+\startdocument			% Mark the end of the preamble
+				% (Serves the role of \begin{document})
+%
+%  Here is the body of this segment:
+%
+
+Here is some text.
+Here is some more text.
+
+\subsection{First subsection}
+Here is section 1 \label{first}.
+\begin{figure}
+\colorbox{red}{Some colored text\index{Color text}}
+\caption[List of figure caption]{Figure 1 caption}
+\end{figure}
+
+%
+%  This reference is defined in sec2.tex.
+%
+
+Reference\index{Reference} to \ref{second}.
+
+%
+%  Note that it does not have to end with \end{document}.
+%

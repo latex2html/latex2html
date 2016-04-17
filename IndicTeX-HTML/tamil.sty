@@ -1,0 +1,127 @@
+% tamil.sty by Ross Moore <ross@mpce.mq.edu.au> $
+%% $Log: 
+%
+% LaTeX2e package for typesetting Tamil script with EITHER:
+%
+%      1.  Jeroen Hellingman's  preprocessor: patc
+% OR
+%      2.  University of Washington  preprocessors: 
+%		 tamilize  and  tmilize
+%
+% and the  wntml10  Tamil font, from the University of Washington.
+%
+% OR
+%      3.  Indica pre-processor, and sinhala fonts:  sinha, sinhb, sinhc
+%          by Yannis Haralambous <Yannis.Haralambous@univ-lille1.fr>
+%
+%          and the  sinhala.sty  package for LaTeX-2e,
+%          by Dominik Wujastyk <D.Wujastyk@ucl.ac.uk>
+%
+%          extended for Prasad Dharmasena's <pkd@isr.umd.edu>
+%          `samanala'  transliteration scheme
+%          by Vasantha Saparamadu <vsaparam@ocs.mq.edu.au>
+%
+%
+% These resources are *not* included with this package.
+% Obtain them from CTAN:  http//ctan.tug.org/ctan
+%
+% ===================================================================
+% This package has a corresponding implementation for  LaTeX2HTML 
+% called:  tamil.perl .
+% With LaTeX2HTML the options on the \usepackage line specify which
+% preprocessor and transcription mode to use.
+%
+% usage:
+%
+%  \usepackage[tamilize]{tamil}   %|  uses Univ. of Washington preprocessor
+%  \usepackage[tmilize]{tamil}    %|    tamilize  or  tmilize , resp.
+%                                 %|  loads macros:  tamilmax.tex
+%
+%  \usepackage[tamil]{tamil}      %|  uses Jeroen Hellingman's preprocessor
+%  \usepackage[wntml]{tamil}      %|    patc -p <option>.pat  
+%  \usepackage[adami]{tamil}      %|  macros:  tmlmacs.tex  mmtrmacs.tex
+%
+%  \usepackage[preprocess]{tamil} %|  same as  \usepackage[tamil]{tamil}
+%  \usepackage{tamil}             %|  same as  \usepackage[tamil]{tamil}
+%
+%
+% for the Indica pre-processor:
+%
+%  \usepackage[indica]{tamil}     %|  uses #ALIAS TAMIL T
+%  \usepackage[tam]{tamil}        %|  uses #ALIAS TAMIL TAM
+%  \usepackage[7bit]{tamil}       %|  Velthuis' Hindi/Sanskri transcription
+%  \usepackage[csx]{tamil}        %|  8-bit Sanskrit extension of ISO 646
+%  \usepackage[latex]{tamil}      %|  standardized LaTeX transcription form
+%  \usepackage[unicode]{tamil}    %|  ISO 10646-1 + Sinhalese extension
+%  \usepackage[samanala]{tamil}   %|  Prasad Dharmasena's transliteration
+%
+% ===================================================================
+% Warning:Error
+%   On some systems the line  \catcode`^^A=0  in  tamilmax.tex
+%   should be edited to read  \catcode`\^^A=0 .
+% ===================================================================
+%
+\ProvidesFile{tamil.sty}[1998/1/10]
+%
+\NeedsTeXFormat{LaTeX2e}
+%
+\def\LoadIndica{\RequirePackage{indica}}
+%
+\DeclareOption{preprocess}{\ds@tamil}
+\DeclareOption{tamil}{\ds@tamil}
+\DeclareOption{wntml}{\ds@wntml}
+\DeclareOption{adami}{\ds@adami}
+\DeclareOption{tamilize}{\ds@tamilize}
+\DeclareOption{tmilize}{\ds@tamilize}
+
+\DeclareOption{indica}{\ds@indica}
+\DeclareOption{7bit}{\ds@sevenbit}
+\DeclareOption{csx}{\ds@csx}
+\DeclareOption{latex}{\ds@latex}
+\DeclareOption{samanala}{\ds@samanala}
+\DeclareOption{unicode}{\ds@unicode}
+\DeclareOption{tam}{\ds@tam}
+
+\DeclareOption*{\@latexerr{%
+ `\CurrentOption' is an invalid option, using `preprocess' instead}%
+ {Available Options:^^J^^J* Hellingman's patc^^J
+  preprocess,tamil,wntml,adami^^J^^J* Tamilize^^J
+  tamilize,tmilize^^J^^J* Indica^^J
+  indica,7bit,csx,latex,unicode,samanala,tam^^J}\ds@tamil}
+
+\def\ds@indica{\@loadindica{tamil}}
+\def\ds@sevenbit{\@loadindica{tamil,7bit}}
+\def\ds@csx{\@loadindica{tamil,csx}}
+\def\ds@latex{\@loadindica{tamil,latex}}
+\def\ds@samanala{\@loadindica{tamil,samanala}}
+\def\ds@unicode{\@loadindica{tamil,unicode}}
+\def\ds@tam{\@loadindica{tamil,tam}}
+\def\@loadindica#1{\def\NeedsIndica{}\PassOptionsToPackage{#1}{indica}}
+
+
+%%  for output from   `tamilize' or `tmilize'  preprocessors
+\def\ds@tamilize{\IfFileExists{tamilmax}{\AtBeginDocument{\input{tamilmax}}%
+ \def\tamilloaded{}}{\@latexerr{%
+ The `tamilize' option requires  tamilmax.tex  and the  wntml10  font.}{}}}
+%%
+%%
+\def\ds@tamil{\IfFileExists{tmlmacs}{\AtBeginDocument{\input{tmlmacs}\@loadtamil}}%
+{\@latexerr{The `tamil',`adami',`wntml' options require the  tmlmacs.tex  macro file.^^J
+ They also use the  mmtrmacs.tex  macro file and the  wntml10  font.}{}}}
+\let\ds@wntml=\ds@tamil
+\let\ds@adami=\ds@tamil
+%
+\def\@loadtamil{\def\tamilloaded{}\InputIfFileExists{mmtrmacs}{}{\@latexerr{%
+ The file  mmtrmacs.tex  could not be found; transcriptions may fail.}{}}%
+ \font\sevenrm=cmr7
+ \font\twelvesl=cmsl12
+ \font\twelvebf=cmbx12
+ \font\seventeenbf=cmbx12 at 17pt 
+}
+
+\ProcessOptions*
+\expandafter\ifx\csname NeedsIndica\endcsname\relax
+  \else\expandafter\LoadIndica\expandafter\endinput\fi
+\expandafter\ifx\csname tamilloaded\endcsname\relax\expandafter\ds@tamil\fi
+\endinput
+

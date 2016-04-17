@@ -1,0 +1,301 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Item:
+%% Test suite for l2h image generation.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bug description (add references to further descriptive files if possible):
+%%
+%% Image generation in l2h is known to be sensitive to handle and error-prone.
+%% The test suite should cover the coarsest aspects of this task, see
+%% description below.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bug caused this behaviour (may be several descriptions):
+%%
+%% The images following the absent page in images.tex get out of sync
+%% (the amount of absent pages earlier than expected).
+%% This flaw is not detected by latex2html and hence not indicated to the user!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bug severity (low|bothers|problematic|urgent -- fixed|open -- message):
+%% problematic -- fixed --
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bug fix identification
+%% (id -- l2h release (or releases for multiple fixes) -- location in file(s)):
+%% jcl(pag) -- 96.1h -- latex2html
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Author: Jens Lippmann <http://www-jb.cs.uni-sb.de/~www/people/lippmann>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Change log (Mon/DD/YY -- author -- message):
+%% jcl = Jens Lippmann
+%%
+%% Aug/25/96 -- jcl -- created
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Test suite decription:
+%%
+%% 0. Requirements for running this suite
+%%
+%% Besides the basic styles, it needs theorem.sty.
+%% Use the styles of your site to get sure the suite runs with best fitting
+%% version.
+%%
+%% 1. Introduction
+%%
+%% Image generation is done the following way:
+%% There are TeX parts which l2h considers to be translated into an image,
+%% eg. unknown environments, math, etc.
+%% Therefore, at the end of its pass l2h generates the file images.tex, which
+%% contains all those parts separated by a forced pagebreak.
+%% Any metacommands encountered during the pass, and the used documents styles,
+%% are put in front of that images.tex.
+%% This file is translated to images.dvi using LaTeX in batch mode.
+%% Then, dvips is called to convert every page to its own postscript file,
+%% which is in turn converted to the apropriate image.
+%%
+%% 2. Requirements of Image Generation
+%%
+%% Due to the current implementation it is essentially necessary that
+%% every TeX part evaluates to a dvi page of a known and fix page number.
+%% This page number (also called image number) is used to process each
+%% image on its own.
+%% 
+%% The conversion must handle several requirements:
+%% a) Header of images.tex
+%% - The same styles as known from the source document must be used.
+%% - Any metacommand (\def,\newenvironment,etc.) which has been parsed by
+%%   l2h must recur in the header
+%% b) From HTML part to TeX part
+%% - Contents of already digested TeX parts must be restored from HTML
+%%   to TeX in a sufficient way
+%% c) From TeX part to dvi file
+%% - Any counter commands must recur in images.tex, located at the same
+%%   context
+%% - A TeX part which takes more space than one page (eg. long tables,
+%%   huge images)
+%%   This could result in an unwanted pagebreak which *messes up*  the
+%%   image order. Such an event must be detected during image conversion.
+%%   Currently, a warning will be printed if the amount of generated
+%%   postscript pages exceeds the amount of expected pages.
+%% - A TeX part which evaluates to no visible space (eg. broken commands)
+%%   This must result in an *empty* page. See also jcl(pag).
+%%   An absent page would mess up the image order.
+%% - A TeX part which evaluates to visible space fitting on one page
+%%   Trivial.
+%% ... (to be completed)
+%% d) From dvi file to postscript
+%% - dvips must convert the pages into postscript files
+%%   Assure correct system call.
+%% ... (to be completed)
+%% e) From postscript to the image
+%% - The filter commands must be called to generate the apropriate
+%%   image format as referenced from the HTML output
+%%   Assure correct system calls.
+%% ... (to be completed)
+%% f) From the image to the HTML output
+%% - Each image must be bound to its HTML reference
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Expected output of this suit:
+%% The images of the html output must match the dvi images in a sufficing way.
+%% Assure correct image order.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentstyle[12pt,theorem,epsf]{article}
+
+\parindent 0mm
+
+% Macro to handle figures
+\newcommand{\postscript}[3]{\begin{figure}[ht]%
+  \begin{center}\epsfbox{#1.eps}\leavevmode
+  \caption{#2}\label{#1}{\em #3}\end{center}\end{figure}}
+
+% The next macros produce three fake page entries in images.tex
+\theoremstyle{plain}
+\newtheorem{Defi}[equation]{Definition}
+\newtheorem{Theo}[equation]{Theorem}
+
+\theoremstyle{break}
+\newtheorem{Pb}[equation]{Problem}
+\theoremheaderfont{\scshape}
+
+
+\begin{document}
+
+Please look at next section.
+
+\section{Empty DVI Page Test}
+
+{\bf Unwanted empty DVI page test:}
+
+This section is needed to have some fake entries *before*
+this math equation in images.tex. These fake entries result in an
+empty DVI page and, with former versions of l2h, to an *absent*
+DVI page (see also jcl(pag)).
+However, an absent DVI page will cause the next math equation
+(and the following images) to be misordered.
+
+The contents of math here is randomly chosen, but to assure at
+least its translation into pictures.
+
+Below an equation with Omega=... should occur:
+$$\Omega=(\bar{{\cal D}^-}\cup\bar{{\cal D}^+})$$
+
+{\bf Explicit empty DVI page test:}
+
+Below a non-visible enviroment which is passed to images.tex.
+
+\begin{figure}\null\end{figure}
+
+
+\section{Normal DVI Page and Counter Test}
+
+Below a figure numbered 14.
+\setcounter{figure}{13}
+\setcounter{equation}{38}
+
+\begin{figure}[hb]
+\begin{center}
+\framebox{\hbox{\sl A $\leftrightarrow$ B}}
+\end{center}\caption{An framed box}
+\end{figure}
+
+Below an equation numbered 39.
+\begin{equation}
+e(z)=\frac{1}{\sqrt{1-(z/L)^2}}
+\end{equation}
+
+\section{Overfull DVI Page Test}
+
+Next page an overfull figure:
+
+\clearpage
+\postscript{pages1}{{\bf Test figure} -- Running LiPS: An Overview}
+{{\bf Test text} --
+This figure gives an overview on the layers constituting the LiPS-system.
+
+The LiPS system provides the application programmer with the 
+{\tt tuplespace} paradigm of distributed 
+computing, where the processes of a distributed application communicate
+through a virtual shared memory called {\tt tuplespace}.
+The tuplespace is implemented within Serverprocesses called MessageServer.
+}
+\clearpage
+Anything up to this point belongs to the previous figure example.
+
+
+Next page an overfull self-defined environment. It should end with
+'end of prefix type description'. The numbers make the entries unique
+to ease comparation, the list should about 3 DVI pages long.
+
+{\bf Known bug}: The dvips command itself shortens the page.
+
+\clearpage
+\def\mylist{\small\bf\tt}
+
+\begin{mylist}
+prefix  type  description \\     \hrule
+1c        char                    a character or byte\\
+1uc       unsigned char           an unsigned character or byte\\
+1i        int                     an integer\\
+1ui       unsigned int            an unsigned integer\\
+1l        long                    a long integer\\
+1ul       unsigned long           an unsigned long integer\\
+1f        float                   a floating point number\\
+1d        double          float with double precision\\
+1s        struct          a user defined structure\\
+1t        type                    a user defined type\\
+1pc       char *          pointer to character or byte\\
+1pi       int *                   pointer to integer\\
+1pl       long *          pointer to long integer\\
+1pul      unsigned long *         \dots\\
+1pF       FILE *          pointer to file\\
+1ps       struct *                pointer to user-def'd struct\\
+1ts       type struct             used-def'd type of struct\\
+1ac       char []                 array of character or byte\\
+1ai       int []          array of integer\\
+1aul      unsigned long []        array of unsigned long\\
+1as       struct []               array of struct\\
+1pac      char [] *               pointer to char array\\
+1ppc      char **                 pointer to char pointer\\
+1.          .                     . \\
+2c        char                    a character or byte\\
+2uc       unsigned char           an unsigned character or byte\\
+2i        int                     an integer\\
+2ui       unsigned int            an unsigned integer\\
+2l        long                    a long integer\\
+2ul       unsigned long           an unsigned long integer\\
+2f        float                   a floating point number\\
+2d        double          float with double precision\\
+2s        struct          a user defined structure\\
+2t        type                    a user defined type\\
+2pc       char *          pointer to character or byte\\
+2pi       int *                   pointer to integer\\
+2pl       long *          pointer to long integer\\
+2pul      unsigned long *         \dots\\
+2pF       FILE *          pointer to file\\
+2ps       struct *                pointer to user-def'd struct\\
+2ts       type struct             used-def'd type of struct\\
+2ac       char []                 array of character or byte\\
+2ai       int []          array of integer\\
+2aul      unsigned long []        array of unsigned long\\
+2as       struct []               array of struct\\
+2pac      char [] *               pointer to char array\\
+2ppc      char **                 pointer to char pointer\\
+2.          .                     . \\
+3c        char                    a character or byte\\
+3uc       unsigned char           an unsigned character or byte\\
+3i        int                     an integer\\
+3ui       unsigned int            an unsigned integer\\
+3l        long                    a long integer\\
+3ul       unsigned long           an unsigned long integer\\
+3f        float                   a floating point number\\
+3d        double          float with double precision\\
+3s        struct          a user defined structure\\
+3t        type                    a user defined type\\
+3pc       char *          pointer to character or byte\\
+3pi       int *                   pointer to integer\\
+3pl       long *          pointer to long integer\\
+3pul      unsigned long *         \dots\\
+3pF       FILE *          pointer to file\\
+3ps       struct *                pointer to user-def'd struct\\
+3ts       type struct             used-def'd type of struct\\
+3ac       char []                 array of character or byte\\
+3ai       int []          array of integer\\
+3aul      unsigned long []        array of unsigned long\\
+3as       struct []               array of struct\\
+3pac      char [] *               pointer to char array\\
+3ppc      char **                 pointer to char pointer\\
+3.          .                     . \\
+4c        char                    a character or byte\\
+4uc       unsigned char           an unsigned character or byte\\
+4i        int                     an integer\\
+4ui       unsigned int            an unsigned integer\\
+4l        long                    a long integer\\
+4ul       unsigned long           an unsigned long integer\\
+4f        float                   a floating point number\\
+4d        double          float with double precision\\
+4s        struct          a user defined structure\\
+4t        type                    a user defined type\\
+4pc       char *          pointer to character or byte\\
+4pi       int *                   pointer to integer\\
+4pl       long *          pointer to long integer\\
+4pul      unsigned long *         \dots\\
+4pF       FILE *          pointer to file\\
+4ps       struct *                pointer to user-def'd struct\\
+4ts       type struct             used-def'd type of struct\\
+4ac       char []                 array of character or byte\\
+4ai       int []          array of integer\\
+4aul      unsigned long []        array of unsigned long\\
+4as       struct []               array of struct\\
+4pac      char [] *               pointer to char array\\
+4ppc      char **                 pointer to char pointer\\
+4.          .                     . \\ \hrule
+end of prefix  type  description \\     \hrule
+\end{mylist}
+
+
+
+
+
+
+
+
+\end{document}
+

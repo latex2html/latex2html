@@ -1,0 +1,20 @@
+Name: ChangeBar
+Problems-To: JLBraams@cistron.nl
+Author: J.L. Braams
+Version: 1.0
+
+Description:
+
+This bunlde contains a package that provides commands for adding
+change bars to a document. It relies on \special commands.
+
+Keywords: latex, packages, changebars
+
+See-Also: 
+
+Address:
+J.L. Braams
+Kooienswater 62
+2715 AJ Zoetermeer
+The Netherlands
+mi

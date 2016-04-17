@@ -1,0 +1,629 @@
+#!/usr/local/bin/perl
+
+################################################################################
+# Copyright 1998-1999 by Jens Lippmann (lippmann@rbg.informatik.th-darmstadt.de)
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose and without fee is hereby granted, provided that the above
+# copyright notice appears in all copies. This software is provided "as is"
+# and without any express or implied warranties.
+#
+#
+# cweb2html, a converter for CWEB LaTeX to LaTeX2HTML parseable LaTeX.
+#
+# This program converts CWEB produced TeX and substitutes several
+# plain TeX macros with LaTeX macros.
+# The output may be translated with LaTeX2HTML.
+# Use with LaTeX2HTML to translate HyTeX specific commands.
+# Corresponding to HTMLMAC.STY, HTMLMAC.TEX, HTMLMAC.PERL.
+#
+# $Source: /home/latex2ht/cvs/latex2html/user/cweb2html/cweb2html,v $
+# $RCSfile: cweb2html,v $
+# $Revision: 1.2 $
+# $Date: 1999/04/09 19:25:32 $
+# $Author: JCL $
+# $State: Exp $
+#
+# Handles:
+# - TeX macros \.{  \?  \\{  \&{  \,  \)  \|  $<$  $>$  \1...\9
+# - TeX macros   \X...\X
+# - TeX macros in code section \T{  \vb{
+# - math symbols in code section
+#
+# BUGS: - does not prevent \vb{} string substitution in \.{} environment
+#       - does not avoid command substitution in \verb/../ strings.
+#
+################################################################################
+# History
+#
+# $Log: cweb2html,v $
+# Revision 1.2  1999/04/09 19:25:32  JCL
+# changed my e-Mail address
+#
+# Revision 1.1  1998/02/24 02:29:49  latex2html
+# for 98.1
+#
+# Revision 1.1  1998/02/24 02:15:28  latex2html
+# ready for 98.1
+#
+# Revision 1.16  1997/06/25 01:45:32  lippmann
+# debugged
+#
+# Revision 1.15  1997/06/05 16:12:19  lippmann
+# styled argument handling, new synopsis (-b changed to -bc !)
+# introduced -bak/+bak switch, -pretty changed to -fold/+fold
+# improved help information (usage)
+# new backup mechanism (stores files in backup directory instead tagging them)
+# new folding mechanism (replaced awk script with improved Perl logic)
+#
+# Revision 1.14  1997/06/02 16:45:08  lippmann
+# renamed PROCESSCWEBTEXOFF to CWEB2HTMLOFF.
+# setting CWEB2HTMLOFF to 1 causes the script to behave like a dummy
+#
+# Revision 1.13  1997/06/02 16:07:18  lippmann
+# renamed from ProcessCwebTex to cweb2html
+#
+# Revision 1.12  1997/06/01 11:57:41  lippmann
+# removed (Cweb,Hyweb) mode selection, produces different include file
+# names instead
+#
+# Revision 1.11  1997/06/01 08:19:08  lippmann
+# adapted to new name space of htmlmac.sty:
+#
+# HTmode, HTpretty, HTnoderef -> HTCweb...
+# HTweb -> HTCweb
+# \ciao -> \HTCwebdocumentend
+# 1 -> HTCweboneright
+# 2 -> HTCweboneleft
+# 3 -> HTCweboptbreak
+# 4 -> HTCwebthisleft
+# 5 -> HTCwebbigoptbreak
+# 6 -> HTCwebbreak
+# 7 -> HTCwebbigbreak
+# 8 -> HTCwebclearleft
+# 9 -> HTCwebempty
+# idit -> HTCwebidit
+# idma -> HTCwebidma
+# idbo -> HTCwebidbo
+# idtt -> HTCwebidtt
+# discr -> HTCwebdiscr
+# mathque -> HTCwebmathque
+# smllspc -> HTCwebsmllspc
+#
+# Revision 1.10  1997/05/31 01:49:53  lippmann
+# o \HTwebNodeRef has a new synopsis that allows to handle a refinement list
+#   (multi-part refinements cited in the list of refinements)
+# o tested with multi-part refinements in Cweb and Hyweb mode, works in
+#   conjunction with new htmlmac.sty, htmlmac.perl
+# o backward compatibility on by default, use +b to switch off (faster then)
+#
+# Revision 1.9  1997/05/25 21:16:04  lippmann
+# o backward compatibility is on by defaults, switch of with '+b'
+# o handles now \Xnum(, num)*:...\X, occurring in cweave generated list of
+#   refinements with multi-part refinements
+# o handling of multi-part refinements still is immature
+#
+# Revision 1.8  1997/02/27 13:49:57  lippmann
+# handling of comments/verbatim much improved
+#
+# Revision 1.7  1997/02/26 03:24:03  lippmann
+# reverted flaw in % line concatenation
+#
+# Revision 1.6  1997/02/09 15:34:49  lippmann
+# fixed bug with \HTwebpar
+#
+# Revision 1.5  1997/02/09 15:26:20  lippmann
+# allow our special hycweave to end code sections also with \cio
+#
+# Revision 1.4  1997/01/26 19:19:07  lippmann
+# introduced -b (backwards compatibility) switch and fixed minor bugs
+#
+# Revision 1.3  1996/12/11 12:35:48  lippmann
+# changed to get to work with Schrod's LaTeX CWEB
+#  o handles now \X <num> : ... \X if <num> is non-zero
+#  o sets an outer mode macro to cweb or hyweb depending on cwebmac.tex
+#    or hywebmac.tex inclusion
+#  o handles preliminary \end{document}
+#  o \B -> \HTwebB
+#  o \par -> \HTwebpar in code section (program state), was: \cio
+#
+# Revision 1.2  1996/09/24 03:26:53  lippmann
+# env variable to switch off processing of the script should be used this way:
+#     setenv PROCESSCWEBTEXOFF 1
+#
+# Revision 1.1.1.1  1996/07/08 15:46:29  liefke
+# initial version for Darmstadt
+#
+# Revision 1.1.1.1  1996/07/08 15:36:06  liefke
+# initial version for Darmstadt
+#
+# Revision 1.6  1996/06/20 02:22:09  lippmann
+# - the parsing of \X..\X has a totally new face.
+#   + is welded into HTweb macros
+#   + newlines between \X and \X are handled much better
+#
+# - Synopsis changed:
+#   + input file list now possible
+#   + .tex is no more appended!
+#
+#
+################################################################################
+
+exit(0) if $ENV{'CWEB2HTMLOFF'};
+
+# set this if awk cannot be found
+$AUTHOR = "lippmann";
+$DEBUG = 0;
+$FOLD = 0;
+$KEEPBAK = 0;
+$BAKDIR = "bak";
+$BACKCOMP = 1;
+$DESTDIR = ".";
+$SRCDIR = ".";
+$DS = '/';
+$FILE = undef;
+
+
+$RCSID = '$Id: cweb2html,v 1.2 1999/04/09 19:25:32 JCL Exp $';
+$RCSID =~ /[^ ]* ([^ ]*),v ([^ ]*) ([^ ]*) ([^ ]*) ([^ ]*) ([^ ]*)/;
+$PRGFILE = $1;
+$RCSFILE = "$1,v";
+$RCSREV = $2;
+$RCSDATE = $3;
+$RCSTIME = $4;
+$RCSAUTHOR = $5;
+$RCSSTATE = $6;
+
+while ($ARGV[0] =~ /^-/ && (! ($ARGV[0] =~ /^--$/)))
+{
+    $_ = shift;
+    if (/^-dest_dir$/) {
+	&mis_usage("<no arg for -dest_dir>") if !$ARGV[0];
+	$DESTDIR = shift;
+    } elsif (/^-fold$/) {
+	$FOLD=1;
+    } elsif (/^\+fold$/) {
+	$FOLD=0;
+    } elsif (/^-debug$/) {
+	$DEBUG++;
+    } elsif (/^\+debug$/) {
+	$DEBUG=0;
+    } elsif (/^-bc$/) {
+	$BACKCOMP=1;
+    } elsif (/^\+bc$/) {
+	$BACKCOMP=0;
+    } elsif (/^-bak$/) {
+	$KEEPBAK=1;
+    } elsif (/^\+bak$/) {
+	$KEEPBAK=0;
+    } elsif (/^-h|help/) {
+	&help_usage;
+    } else {
+	&usage("<unknown option: $_>");
+    }
+}
+&mis_usage("<no file name given>") if !$ARGV[0];
+
+&main;
+
+sub main {
+    foreach $FILE (@ARGV) {
+	# get leading path of file name and store in $SRCDIR
+        if ($FILE =~ s/^(.*)$DS//) {
+	    $SRCDIR = $1;
+	} else {
+	    $SRCDIR = ".";
+	}
+	print "$PRGFILE v$RCSREV -- Doing $FILE\n";
+        &process_file;
+    }
+}
+
+sub process_file {
+    die "$PRGFILE: error: Could not find $SRCDIR/$FILE\n"
+	unless -f "$SRCDIR/$FILE";
+
+    if ($KEEPBAK) {
+	mkdir("$DESTDIR/$BAKDIR",0755) unless -d "$DESTDIR/$BAKDIR";
+
+	die "$PRGFILE: error: Could not create backup directory <$DESTDIR/$BAKDIR>\n"
+	    unless -d "$DESTDIR/$BAKDIR";
+
+	rename("$SRCDIR/$FILE", "$DESTDIR/$BAKDIR/$FILE") ||
+	    die "$PRGFILE: error: Could not create backup file <$DESTDIR/$BAKDIR/$FILE>\n";
+    }
+
+    open(HELP,">&STDOUT");
+    &slurp_file($KEEPBAK ? "$DESTDIR/$BAKDIR/$FILE" : "$SRCDIR/$FILE");
+    # file must have been read before we open output (dest dir may be src dir)
+    open (STDOUT, ">$DESTDIR/$FILE");
+    &pass1;
+
+    if ($FOLD) {
+	# close associated file and restore STDOUT
+	open (STDOUT, ">&HELP");
+	&slurp_file("$DESTDIR/$FILE");
+	open (STDOUT, ">$DESTDIR/$FILE");
+	&pass2;
+    }
+
+    open (STDOUT, ">&HELP");
+    close HELP;
+}
+
+# Reads the entire input file into a single string. 
+sub slurp_file  {
+    local($filename) = @_;
+    local(%string);
+
+    open(INPUT,"<$filename") ||
+	die "$PRGFILE: error: Could not open $filename\n";
+
+    while (<INPUT>) {
+	$string{'STRING'} .= $_;
+    }
+    $_ = delete $string{'STRING'}; # Blow it away and return the result
+}
+
+sub pass1 {
+    local($verbatim) = 0;
+    local($code_section) = 0;
+
+    # Change input files to hook in our HTWEB style.
+    # The closing \n is for LaTeX2HTML bugs (percent after \input...)
+    s/\\input\Whywebmac\W/\\input{htcwebhy}\n/;
+    s/\\input\Wcwebmac\W/\\input{htcweb}\n/;
+
+    local($contents) = $_;
+
+    while ($contents =~ s/.*\n//) {
+	$_ = $&;
+
+	if (/^\s*%/) { # comment
+	    print;
+	}
+	elsif (/\\begin\s*\{(LVerbatim|verbatim)\*?\}/) {
+	    # fails if inside \verb !
+	    $verbatim++;
+	    print;
+	}
+	elsif (/\\end\s*\{(LVerbatim|verbatim)\*?\}/) {
+	    # fails if inside \verb !
+	    $verbatim--;
+	    print;
+	}
+	elsif ($verbatim) {
+	    print;
+	}
+	else {
+	    # Concat lines truncated with % (percent sign).
+	    # The % might be inserted by pass2 to make the lines readable.
+	    # One reason yet to do this is compliance with LaTeX2HTML
+	    # versions which do not recognize \foo in \foo% at end of line.
+	    # Another reason is to get bubble names parsed trucated this way.
+	    # Also, concat lines truncated with \ (occurs within \.{}).
+	    # This will not be reversed, so awkward line lengthes can occur
+	    # with verbatim strings of unusual length.
+	    # This approach produces wrong results on:
+	    # - % at line end and space, tab at next line:
+	    #   leaves space, tab in the text (should be removed, too)
+	    # - % at line end followed by an empty line:
+	    #   results in one newline between the tokens (must be two, ie., \par)
+	    #
+	    while (s/([^\\]|^)((\\\\)*)%+[ \t]*\n/$1$2/ ||
+		   s/([^\\]|^)((\\\\)*)\\\n/$1$2\\ /) {
+		# peek and fetch next line if available
+		$contents =~ s/(.*\n?)//;
+		$_ .= $1;
+	    }
+
+	    if (s/([^\\]|^)\\B\\/$1\\HTCwebB\\/o) {$code_section = 1;}
+
+	    # try first to convert \.{}, \\{}, \&{}, \?, \, and \)
+	    # take care that \\, \& etc. in a \.{} or \vb{} macro are unaffected
+	    # therefore handle contents of \.{} and \vb{} macros first
+	    # Do double substitution to catch \vb{}\vb{} or \.{}\.{} (problem with [^\\|^])
+
+	    # handle verbatim strings in \vb
+		s/([^\\]|^)\\vb\{(([^\\\}]|\\.)*)\}/$1."\\vb {".&subst_verbatim($2)."}"/geo;
+		s/([^\\]|^)\\vb\{(([^\\\}]|\\.)*)\}/$1."\\vb {".&subst_verbatim($2)."}"/geo;
+	    # replace \.{ if not \\.{
+		s/([^\\]|^)\\\.\{(([^\\\}]|\\.)*)\}/$1."\\HTCwebidtt{".&subst_verbatim($2)."}"/geo;
+		s/([^\\]|^)\\\.\{(([^\\\}]|\\.)*)\}/$1."\\HTCwebidtt{".&subst_verbatim($2)."}"/geo;
+
+	    # process the total (maybe new) line with the other macros
+	    s/\\\?/\\HTCwebmathque/go;
+	    s/\\\\\{/\\HTCwebidit\{/go;
+	    s/\\\&\{/\\HTCwebidbo\{/go;
+	    s/\\\,/\\HTCwebsmllspc/go;
+	    s/\\\)/\\HTCwebdiscr/go;
+	    s/\\\|(\\_|[a-zA-Z])/\\HTCwebidma\{$1\}/go;
+	    s/\$<\$/</go; s/\$>\$/>/go;
+
+	    # The \<num> commands must get parsed order-sensitive.
+	    # This is not done by LaTeX2HTML when they occur
+	    # within others.
+	    s/\\hbox\{\\(\d+)\}/\\\1/go;
+
+	    if ($BACKCOMP) {
+		s/\\1/\\HTCweboneright/go;
+		s/\\2/\\HTCweboneleft/go;
+		s/\\3([0-9])/\\HTCweboptbreak{$1}/go;
+		s/\\4/\\HTCwebthisleft/go;
+		s/\\5/\\HTCwebbigoptbreak/go;
+		s/\\6/\\HTCwebbreak/go;
+		s/\\7/\\HTCwebbigbreak/go;
+		s/\\8/\\HTCwebclearleft/go;
+		s/\\9/\\HTCwebempty/go;
+	    }
+
+# a kludge to spoof LaTeX2HTML
+	    s/^\\end\{document\}$/\\HTCwebdocumentend/;
+
+	    if ($code_section) {
+		local($pre,$value);
+		# replace unmasked dollars with alternate math sign
+		# we don't care of \\$ (\\ at EOL) here
+		# Do it twice to catch $$ (display math, maybe in comments)
+		s/([^\\]|^)\$/$1\~/g;
+		s/([^\\]|^)\$/$1\~/g;
+# we need a better 'end of code section' marker than
+# provided by CWEB.
+# This delimits \B both in htmlmac.sty and htmlmac.perl.
+		s/\\(par|cio)$/\\HTCwebpar/;
+	    }
+	    # handle escape command for constants
+	    s/([^\\]|^)\\T\{([^\}]*)\}/$1."\\T\{".&subst_const($2)."\}"/geo;
+
+	    # replace $\X...\X$ resp. \X...\X with \HTCwebNodeRef{..}{..}{..}
+	    # this task must be done *after* dollar signs are handled
+
+
+	    # revert $ conversion for \PB{~\X((not \X)*)\X~} (must occur in 1 line)
+	    s/\\PB\{\~\\X(([^\\]|(\\[^X]))*)\\X\~\}/\\PB\{\$\\X$1\\X\$\}/go;
+
+	    # and rip out \PB. This is necessary to get catcodes working, i.e.
+	    # \X...\X must not be subjected as argument to any macro.
+	    # This is a kludge to get it working with LaTeX CWEB, where \PB is
+	    # defined for 'restricted program mode', but cwebmac.tex defines it
+	    # to \relax nevertheless.
+	    s/\\PB(\{[\~\$]?\\X)/$1/g unless $code_section;
+
+	    # handle \X...\X null refs of HYWEB resp. normal refs of CWEB
+	    # handle case that a newline may appear between \X...\X
+	    while (/(\$)?\\X([\d, ]+):(\\underline\{\\HTCwebidbo\{)?/) {
+		local($before,$after,$math,$labellist,$pretty) = ($`,$',$1,$2,$3);
+		# There must be an '\\X' following
+		$math = '\$' if $math;
+		$pretty = '\}\}' if $pretty;
+		local($cmdtail);
+		# we need this tail only for external references
+		$cmdtail = '~\\HTCwebX'
+		    unless $labellist;
+
+		if (!($after =~ s/$pretty\\X$math/\}$cmdtail/)) {
+		    # go beyond end of line to substitute!
+		    $contents =~ s/$pretty\\X$math/\}$cmdtail/;
+		}
+		if ($labellist) {
+		    # In Cweb, $labellist may be a comma separated list of numbers.
+		    # (multiply occurring refinements are handled this way in the
+		    # list of refinements).
+		    # Make comma separated list with elements {section_<no>}{<no>}.
+		    $labellist =~ s/(\d+)/\{section_$1\}\{$1\}/g;
+
+		    $_ = join('',$before,"\\HTCwebNodeRef\{",$labellist,"\}\{",$after);
+		} else {
+		    $_ = join('',$before,"\\HTCwebX~\\HTCwebNodeRefExt\{",$after);
+		}
+	    }
+
+	    # then, care of \X...\X normal refs for HYWEB
+	    while (/(\$?)\\X((\\noderef\{[^\}]*\}\{[^\}]*\}(, )?)+):\\underline\{\\HTCwebidbo\{/) {
+		local($before,$after,$math,$labellist) = ($`,$',$1,$2);
+		# There must be an '\\X' following
+		$math =~ s/\$/\\\$/;
+		if (!($after =~ s/\}\}\\X$math/\}/)) {
+		    # go beyond end of line to substitute!
+		    $contents =~ s/\}\}\\X$math/\}/;
+		}
+		$labellist =~ s/\\noderef//g;
+		$_ = join('',$before,"\\HTCwebNodeRef\{",$labellist,"\}\{",$after);
+	    }
+
+
+	    if (/\\HTCwebpar$/) {$code_section = 0;}
+	    print;
+	}
+    }
+}
+
+sub subst_const {
+    local($_) = @_;
+
+    s/\\\^/{\\hex}/g;
+    s/\\\~/{\\oct}/g;
+    $_;
+}
+
+sub subst_verbatim {
+    local($_) = @_;
+
+    s/\\\\/\{\\BS\}/g;
+    s/\\\{/\{\\LB\}/g;
+    s/\\\}/\{\\RB\}/g;
+    s/\\~/\{\\TL\}/g;
+    s/\\ /\{\\SP\}/g;
+    s/\\_/\{\\UL\}/g;
+    s/\\&/\{\\AM\}/g;
+    s/\\\^/\{\\CF\}/g;
+    $_;
+}
+
+
+# Parse file in $_ and truncate long lines with percent signs to improve
+# readability of output.
+# Precondition: Percents at end of non-comment lines cannot occur, because such
+# lines are concatenated during pass one.
+#
+sub pass2 {
+    local($verbatim) = 0;
+    local($contents) = $_;
+
+    while ($contents =~ s/.*\n//) {
+	$_ = $&;
+
+	if (/^\s*%/) {	# comment
+	    print;
+	}
+	elsif (/\\begin\s*\{(LVerbatim|verbatim)\*?\}/) {
+	    # fails if inside \verb !
+	    $verbatim++;
+	    print;
+	}
+	elsif (/\\end\s*\{(LVerbatim|verbatim)\*?\}/) {
+	    # fails if inside \verb !
+	    $verbatim--;
+	    print;
+	}
+	elsif ($verbatim) {
+	    print;
+	}
+	elsif (length >= 80) {
+	    if (/((^|[^\\])(\\\\)*)\\verb/) {
+		# long line containing \verb, try to break before or forget it
+		if (length($`) || length($1)) {
+		    print $`, $1, "%\n\\verb", $';
+		} else {
+		    print;
+		}
+	    } else {
+		# long line without \verb, banzai!
+
+		if (s/((^|[^\\])(\\\\)*)(%+)/$1%\n/) {
+		    local($comment) = $4.$';
+		    # we have a semi-line comment.
+		    # take it to a single line and shorten remainder.
+		    # this saves false breakpoint detection in comments.
+		    &cutline;
+		    print $_, $comment;
+		} else {
+		    &cutline;
+		    print;
+		}
+	    }
+	} else {
+	    print;
+	}
+    }
+}
+
+
+# Cut line longer than 79 chars (included the trailing newline) by
+# finding a breakpoint and inserting a %.
+# Strategy: find all breakpoints occurring < 80 chars, choose last one
+# before 70. char if exists, else next one if exists, else do no break.
+# A breakpoint is any unmasked opening/closing brace not followed
+# by white space (is precious here!) or % (comment lines are already
+# handled) and not occurring at line end.
+# Preconditions:
+# a) line must not be or end with a comment (=> false break)
+# b) catcoded {, } (=> false break)
+# Modifies $_.
+#
+sub cutline {
+    while (length >= 80) {
+	local($pre,$pat,$aft,$idx,$lastidx,$done,$lastdone);
+
+	while (/((^|[^\\])(\\\\)*)(\{|\})([^\s%])/) {
+	    ($pre,$pat,$aft) = ($`.$1,$4,$5.$');
+	    $done .= $pre . $pat;
+	    $idx = length($done);
+	    $_ = $aft;
+	    last if $idx >= 70;
+	    $lastdone = $done;
+	    $lastidx = $idx;
+	}
+
+	if (!$idx) {
+	    # found no breakpoint at all, out
+	    return;
+	} elsif ($idx < 70) {
+	    # found no suitable break above 69. char
+	    print $done, "%\n";
+	} elsif ($idx < 80) {
+	    # found perfect breakpoint
+	    print $done, "%\n";
+	} elsif ($lastidx) {
+	    # breakpoint above 79. char and breakpoint below 70., take latter
+	    print $lastdone, "%\n";
+	    $_ = join('', $pre, $pat, $aft);
+	} else {
+	    # single breakpoint above 79. char, take it
+	    print $done, "%\n";
+	}
+    }
+}
+
+
+sub help_usage {
+    print "Booting <help> system, please stand by...\n\n";
+    print "HLP% $PRGFILE internal help system Version 7.6plus \"rightsized\"\n";
+    print "HLP% User requested       : <help>.\n";
+    print "HLP% Available ressources : <help>.\n";
+    print "HLP% Activating           : <help>.\n";
+    print "HLP% Have a nice day!\n";
+    &usage;
+}
+
+sub mis_usage {
+    print "AAAAAAAAAAAAAAAAAAAAAAArgh!!!!\n";
+    print "You didn't invoke me the right way. Watch the error message below!\n\n";
+    &usage;
+}
+
+sub usage {
+    print (<<"_USAGE_");
+
+RCS version:
+  $RCSFILE Rev $RCSREV by $AUTHOR (last change $RCSDATE by $RCSAUTHOR)
+Usage:
+  $PRGFILE [+-bc] [+-bak] [+-debug] [-dest_dir <dest_dir>] [+-fold] [-h[elp]]
+           <file> [more_files]
+  where <dest_dir> specifies output directory and <file> may have a full path
+  name specification. The arguments denoted with [ ] backets are optional.
+  Giving an option with - sets it on, and + turns it definitely off.
+
+  For each given <file>, this perl script processes the Cweb-like TeX contents
+  and stores the result in <dest_dir>/<file>. The resulting file works together
+  with htcweb.sty and can be fed into LaTeX2HTML to produce HTML output.
+Options:
+  -bc
+  +bc
+      Set/Unset backwards compatiblity to LaTeX2HTML releases 95.3 and 96.1x.
+      Set by default.
+  -bak
+  +bak
+      Keep/Discard original input files in backup directory. If they should be
+      kept, they are stored in a backup direcory in <dest_dir>. Else if they
+      should be discarded, original files will be overwritten unless
+      <dest_dir> differs from the residing directory of the original file.
+      Discards them by default.
+  -debug
+  +debug
+      Sets/Zeroes debug level (reserved). Debug level is 0 by default.
+  -dest_dir
+      Specifies directory where to store the output files.
+  -fold
+  +fold
+      If on, lines of the output file longer than 80 chars are broken with %.
+      This may cause insertion of a space in HTML output with older LaTeX2HTML
+      versions. Off by default.
+  -h
+  -help
+      Prints this.
+_USAGE_
+
+    die("\n$PRGFILE: @_\n") if @_;
+    exit(1);
+}

@@ -1,0 +1,138 @@
+% itrans.sty by Ross Moore <ross@mpce.mq.edu.au> $
+%% $Log: 
+%
+% LaTeX2e package interface for ...
+%
+%  ITRANS pre-processor, and indic fonts, by Avinash Chopde  
+%
+% The ITRANS system is *not* included with this package.
+% Obtain if from:  http://www.aczone.com/itrans/
+%
+% ===================================================================
+% In LaTeX this package does little more than to load  .
+% However...
+%
+% ...the package has a corresponding implementation for  LaTeX2HTML 
+% called: itrans.perl .
+%
+% With LaTeX2HTML the options on the \usepackage line specify 
+% pre-processor commands to be included automatically.
+%
+% Usage:
+%
+%  \usepackage{itrans}            %|  for text already pre-processed
+%  \usepackage[itrans]{itrans}    %|  for all supported languages
+%  \usepackage[preprocess]{itrans}%|  same as  [itrans]
+%
+%  options affecting Input-forms
+%
+%  \usepackage[7bit]{itrans}    %|  
+%  \usepackage[8bit]{itrans}    %|  
+%  \usepackage[csx]{itrans}     %|  8-bit Sanskrit extension of ISO 646
+%  \usepackage[csxx]{itrans}    %|  CSX+ transliteration (not ready yet)
+%  \usepackage[latex]{itrans}   %|  standardized LaTeX transcription form
+%  \usepackage[unicode]{itrans} %|  ISO 10646-1 + Sinhalese extension
+%  \usepackage[ind]{itrans}     %|  Indian
+%
+%  options specifyinging languages:
+%
+%  \usepackage[ben]{itrans} %|  Bengali
+%  \usepackage[guj]{itrans} %|  Gujarati
+%  \usepackage[gur]{itrans} %|  Gurmukhi
+%  \usepackage[hin]{itrans} %|  Hindi
+%  \usepackage[kan]{itrans} %|  Kannada
+%  \usepackage[mar]{itrans} %|  Marathi
+%  \usepackage[ori]{itrans} %|  Oriya
+%  \usepackage[pun]{itrans} %|  Punjabi
+%  \usepackage[rom]{itrans} %|  Roman
+%  \usepackage[san]{itrans} %|  Sanskrit
+%  \usepackage[tam]{itrans} %|  Tamil
+%  \usepackage[tel]{itrans} %|  Telugu
+%
+%
+%  \usepackage[bengali]{itrans}   %|  Bengali
+%  \usepackage[gujarati]{itrans}  %|  Gujarati
+%  \usepackage[gurmukhi]{itrans}  %|  Gurmukhi
+%  \usepackage[hindi]{itrans}     %|  Hindi
+%  \usepackage[kannada]{itrans}   %|  Kannada
+%  \usepackage[marathi]{itrans}   %|  Marathi
+%  \usepackage[oriya]{itrans}     %|  Oriya
+%  \usepackage[punjabi]{itrans}   %|  Punjabi
+%  \usepackage[roman]{itrans}     %|  Roman
+%  \usepackage[sanskrit]{itrans}  %|  Sanskrit
+%  \usepackage[tamil]{itrans}     %|  Tamil
+%  \usepackage[telugu]{itrans}    %|  Telugu
+%
+%
+% ===================================================================
+%
+\ProvidesFile{itrans.sty}[1998/6/12]
+%
+\NeedsTeXFormat{LaTeX2e}
+%
+\DeclareOption{preprocess}{\ds@itrans}
+\DeclareOption{indica}{\ds@itrans}
+\DeclareOption{html7}{\ds@itrans}
+\DeclareOption{html8}{\ds@itrans}
+\DeclareOption{csx}{\ds@itrans}
+\DeclareOption{csxx}{\ds@notyetitrans{csxx}}
+\DeclareOption{html}{\ds@itrans}
+\DeclareOption{postscript}{\ds@itrans}
+\DeclareOption{unicode}{\ds@itrans}
+
+\DeclareOption{ben}{\ds@itrans} %|  Bengali
+\DeclareOption{dev}{\ds@itrans} %|  Devanagari
+\DeclareOption{guj}{\ds@itrans} %|  Gujarati
+\DeclareOption{gur}{\ds@itrans} %|  Gurmukhi
+\DeclareOption{hin}{\ds@itrans} %|  Hindi
+\DeclareOption{kan}{\ds@itrans} %|  Kannada
+\DeclareOption{mar}{\ds@itrans} %|  Marathi
+\DeclareOption{ori}{\ds@itrans} %|  Oriya
+\DeclareOption{pun}{\ds@itrans} %|  Punjabi
+\DeclareOption{rom}{\ds@itrans} %|  Roman
+\DeclareOption{san}{\ds@itrans} %|  Sanskrit
+\DeclareOption{tam}{\ds@itrans} %|  Tamil
+\DeclareOption{tel}{\ds@itrans} %|  Telugu
+
+\DeclareOption{bengali}{\ds@itrans}   %|  Bengali
+\DeclareOption{devanagari}{\ds@itrans}%|  Devanagari
+\DeclareOption{gujarati}{\ds@itrans}  %|  Gujarati
+\DeclareOption{gurmukhi}{\ds@itrans}  %|  Gurmukhi
+\DeclareOption{hindi}{\ds@itrans}     %|  Hindi
+\DeclareOption{kannada}{\ds@itrans}   %|  Kannada
+\DeclareOption{marathi}{\ds@itrans}   %|  Marathi
+\DeclareOption{oriya}{\ds@itrans}     %|  Oriya
+\DeclareOption{punjabi}{\ds@itrans}   %|  Punjabi
+\DeclareOption{roman}{\ds@itrans}     %|  Roman
+\DeclareOption{sanskrit}{\ds@itrans}  %|  Sanskrit
+\DeclareOption{tamil}{\ds@itrans}     %|  Tamil
+\DeclareOption{telugu}{\ds@itrans\ds@itrans@telugu}%|  Telugu
+
+
+\DeclareOption*{\@latexerr{%
+ `\CurrentOption' is an invalid option, using `preprocess' instead}%
+ {Available Options:^^J^^J itrans,html7,html8,bengali,devanagari^^J
+  gujarati,gurmukhi,hindi,kannada,marathi,oriya,punjabi,roman,sanskrit,^^J
+  tamil,telugu, ben,dev,guj,gur,hin,kan,mar,ori,pun,rom,san,tam,tel^^J}%
+ \PassOptionsToPackage{preprocess}{itrans}}
+
+
+\def\ds@itrans@telugu{%
+ \InputIfFileExists{itrnstlg.tex}{}{\@latexerr{%
+ Could not find the  itrnstlg.tex  macros file.}}}
+
+\def\ds@itrans@devnag{%
+ \InputIfFileExists{idevn.tex}{}{\@latexerr{%
+ Could not find the  idevn.tex  macros file.}}}
+
+\def\ds@notyetitrans#1{%
+ \typeout{** Sorry, the #1 option isn't implemented yet. **}%
+}
+
+\def\ds@itrans{\ds@itrans@devnag
+  \def\itransloaded{}}
+
+\ProcessOptions*
+\expandafter\ifx\csname itransloaded\endcsname\relax\expandafter\ds@itrans\fi
+\endinput
+

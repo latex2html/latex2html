@@ -1,0 +1,63 @@
+%% 
+%% This is file `l2hglo.ist,
+%% adapted from the `gglo.ist' distributed with LaTex
+%% by Ross Moore <ross@maths.mq.edu.au> on 7 March 1996.
+%% 
+%% `gglo.ist' has copyright...
+%%
+%% Copyright 1993 1994 1995 The LaTeX3 Project and any individual 
+%% authors listed elsewhere in this file. 
+%% 
+%% For further copyright information, and conditions for modification 
+%% and distribution, see the file legal.txt, and any other copyright 
+%% notices in this file. 
+%% 
+
+actual '@'
+quote '"'
+level '!'
+item_0   "\n  \\item[]\\gn{"
+item_01   "\n  \\subitem\\gn{"
+item_x1   "}\\quad{\\glsget}\\efill \n \\subitem\\texttt{"
+item_x2   "\\ "
+delim_0   "}\\quad{\\glsget}\\pfill "
+delim_1   "}\\quad{\\glsget}\\pfill "
+delim_2   "\\pfill "
+indent_length	"0"
+% The next lines will produce some warnings when
+% running Makeindex as they try to cover two different
+% versions of the program:
+lethead_prefix   "{\\bfseries\\hfil "
+lethead_suffix   "\\hfil}\\nopagebreak\n"
+lethead_flag       0
+heading_prefix   "{\\bfseries\\hfil "
+heading_suffix   "\\hfil}\\nopagebreak\n"
+headings_flag       0
+preamble
+"\\section*{Glossary of variables and file-names}
+ \\addcontentsline{toc}{section}%
+  {\\protect\\numberline{}Glossary of variables and file-names}
+ \\newread\\glsfile \\openin\\glsfile=l2hfiles.dat
+ \\def\\glsreopen{\\immediate\\closein\\glsfile\\relax
+	\\immediate\\openin\\glsfile=l2hfiles.dat \\relax}
+ \\begin{theglossary} 
+	\\def\\gn#1{\\def\\glsthis{#1}\\texttt{#1}}
+	\\def\\appl{\\textit}\\def\\gsl{\\textsl}
+	\\def\\glsget{\\ifeof\\glsfile\\glsm\\else\\expandafter\\glsgA\\fi}
+	\\def\\glsgA{\\read\\glsfile to\\glsitem\\relax\\expandafter
+		\\ifx\\expandafter\\par\\glsitem\\relax\\expandafter\\glsget
+		\\else\\expandafter\\glsgB\\fi}
+	\\def\\glsgB{\\expandafter\\glsgC\\glsitem\\relax}
+	\\def\\glsgC\\item[\\gn#1]#2\\relax{\\def\\tmp{#1}\\ifx\\tmp\\glsthis
+		\\def\\next{#2}\\else\\def\\next{\\glsget}\\fi\\next}
+	\\def\\glsm{\\glsmA}
+	\\def\\glsmA{\\def\\glsm{\\glsmB}\\glsreopen\\glsget}
+	\\def\\glsmB{\\typeout{^^J*** no glossary data for <\\glsthis> in l2hfiles.dat^^J}%
+		\\def\\glsm{\glsmA}\\glsreopen}
+\n"
+postamble
+"\n\n \\end{theglossary}\n
+ \\closein\\glsfile\n"
+keyword "\\glossaryentry"
+%% 
+%% End of file `l2hglo.ist'.

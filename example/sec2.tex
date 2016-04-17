@@ -1,0 +1,40 @@
+%
+%  This is the second document segment input by report.tex.
+%  It can be independently processed by latex2html.
+%
+\begin{htmlonly}
+\documentclass{article}
+\usepackage{html,color,makeidx}
+\input{sec2.ptr}		% Input vital counter and section
+				%   information from sec2.ptr.
+\end{htmlonly}
+%
+%  The following command is ignored by LaTeX:
+%
+
+\internal{s1}			% Input \label information from
+				%    the first segment of this
+				%    report, found in
+				%    report/s1internals.pl
+
+\startdocument			% This marks the end of the preamble.
+				% Take the place of \begin{document}
+%
+%  Here is the body of this segment:
+%
+
+Here's is another section \label{second}.
+
+%
+%  This reference is defined in sec1.tex:
+% 
+Plus another\index{Reference, another} reference \ref{first}.
+
+\begin{figure}
+\fbox{The figure}
+\caption{The caption}
+\end{figure}
+
+%
+%  Note that it does not have to end with \end{document}.
+%

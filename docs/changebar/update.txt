@@ -1,0 +1,264 @@
+Date: Tue, 04 Jan 1994 12:37:30 +0000
+From: Robin.Fairbairns@cl.cam.ac.uk
+Subject: Re: The joys of 2e
+
+You write:
+|>         As I am currently the maintainer of changebar I am also
+|>         planning to make a new release for LaTeX2e. Any help with that
+|>         would of course be appreciated.
+
+As promised, here's a change file for what I've done.
+
+277,288d276
+< % \begin{macro}{\atcatcode}
+< %    In this file, a lot of control sequences contain {\tt @}-signs.
+< %    To be able to do this the category of the {\tt @} has to be `letter'.
+< %    Therefore we save the current category code and restore it later.
+< %    For this purpose the control sequence \verb=\atcatcode= is used.
+< %
+< %    \begin{macrocode}
+< \chardef\atcatcode=\catcode`\@
+< \catcode`\@=11\relax
+< %    \end{macrocode}
+< % \end{macro}
+< %
+446,448c434,437
+< % \begin{macro}{\driver}
+< %    The user can select the specials that should be used by calling
+< %    the command {\tt\bsl driver\{}\meta{drivername}{\tt\}}.
+---
+> % \begin{macro}{package options}
+> %    The user can select the specials that should be used by
+> %    specifying the driver name as an option to the {\tt\bsl
+> %    usepackage} call.
+456d444
+< %    This command can only be used in the preamble of the document.
+458,461c446,448
+< %    The argument should be case-insensitive, so it is turned into
+< %    a string containing all uppercase characters. To keep some definitions
+< %    local, everything is done within a group.
+< % \changes{3.1}{2 jul 93}{Removed some spurious spaces}
+---
+> %    The ambition is that the driver names should be case-insensitive,
+> %    but the following code doesn't achieve this: it only permits the
+> %    forms given above and their lower-case equivalents.
+463,469c450,461
+< \def\driver#1{%
+<   \bgroup\edef\next{\def\noexpand\tempa{#1}}%
+<     \uppercase\expandafter{\next}%
+<     \def\LN{DVITOLN03}%
+<     \def\DVItoPS{DVITOPS}%
+<     \def\DVIPS{DVIPS}%
+<     \def\emTeX{EMTEX}%
+---
+> \DeclareOption{DVItoLN03}{\global\chardef\cb@driver@setup=0\relax}
+> \DeclareOption{dvitoln03}{\global\chardef\cb@driver@setup=0\relax}
+> \DeclareOption{DVItoPS}{\global\chardef\cb@driver@setup=1\relax}
+> \DeclareOption{dvitops}{\global\chardef\cb@driver@setup=1\relax}
+> \DeclareOption{DVIps}{\global\chardef\cb@driver@setup=2\relax}
+> \DeclareOption{dvips}{\global\chardef\cb@driver@setup=2\relax}
+> \DeclareOption{emTeX}{\global\chardef\cb@driver@setup=3\relax}
+> \DeclareOption{emtex}{\global\chardef\cb@driver@setup=3\relax}
+> \DeclareOption*{\@latexerr%
+>       {Unrecognised printer option `\CurrentOption'}%
+>       {Allowed options are DVItoLN03, DVItoPS, dvips and emTeX}}
+> \ProcessOptions\relax
+471,482d462
+< %    The choice has to be communicated to the macro \verb=\cb@setup@specials=
+< %    that will be called from within \verb=\document=. For this puprose the
+< %    control sequence \verb=\cb@driver@setup= is used. It receives a numeric
+< %    value using \verb=\chardef=.
+< %    \begin{macrocode}
+<     \global\chardef\cb@driver@setup=0\relax
+<     \ifx\tempa\LN      \global\chardef\cb@driver@setup=0\fi
+<     \ifx\tempa\DVItoPS \global\chardef\cb@driver@setup=1\fi
+<     \ifx\tempa\DVIPS   \global\chardef\cb@driver@setup=2\fi
+<     \ifx\tempa\emTeX   \global\chardef\cb@driver@setup=3\fi
+<   \egroup}
+< %    \end{macrocode}
+485,495d464
+< % \begin{macro}{\@preamblecmds}
+< %    We add \verb+\driver+ to \verb+\@preamblecmds+, which is a
+< %    list of commands to be used only in the preamble of a document.
+< %
+< %    \begin{macrocode}
+< {\def\do{\noexpand\do\noexpand}
+<  \xdef\@preamblecmds{\@preamblecmds \do\driver}
+< }
+< %    \end{macrocode}
+< % \end{macro}
+< %
+1030c999
+< % \begin{macro}{\cb@cardr}
+---
+> % \begin{macro}{\cb@carcdr}
+1063c1032
+< % \begin{macro}{\document}
+---
+> % \begin{macro}{\AtBeginDocument}
+1065,1067c1034
+< %    For these macros we need to modify the \LaTeX-command
+< %    \verb=\begin{document}=. The way to this is first save
+< %    the old definition of the macro.
+---
+> %    For these macros we need to add to the LaTeX begin-document hook.
+1069c1036
+< \let\cb@document=\document
+---
+> \AtBeginDocument{%
+1071d1037
+< %    Then it can be redefined including a call to the saved old definition.
+1080,1084c1046,1049
+< \def\document{\cb@document
+<               \cb@setup@specials
+<               \cb@positions
+<               \immediate\closeout\cb@write
+<               \immediate\openin\cb@read=\jobname.cb}
+---
+>                  \cb@setup@specials
+>                  \cb@positions
+>                  \immediate\closeout\cb@write
+>                  \immediate\openin\cb@read=\jobname.cb}
+1088c1053
+< % \begin{macro}{\enddocument}
+---
+> % \begin{macro}{\AtEndDocument}
+1090c1055,1059
+< %    Does a \verb=\clearpage= to flush rest of document.
+---
+> %    Does a \verb=\clearpage= to flush rest of document.  (Note that I
+> %    believe there is contention in this area: are there in fact
+> %    situations in which the end-document hooks need to be called
+> %    \emph{before} the final \verb'clearpage'? --- the documentation of
+> %    LaTeX itself implies that there are.)
+1096,1100c1065
+< \let\cb@enddocument\enddocument
+< %    \end{macrocode}
+< %
+< %    \begin{macrocode}
+< \def\enddocument{\clearpage\cb@initlist\cb@history
+---
+> \AtEndDocument{\clearpage\cb@initlist\cb@history
+1102c1067
+<    \let\cb@barpoint=\cb@checkHistory\cb@enddocument}
+---
+>    \let\cb@barpoint=\cb@checkHistory}% \cb@enddocument}
+1185c1150
+<     \cb@footnote{#1}
+---
+>     \cb@footnote{#1}% this comment removes redundant spaces
+1206c1171
+<     \cb@mpfootnote{#1}
+---
+>     \cb@mpfootnote{#1}% this comment removes redundant space
+1215,1219d1179
+< %    Finally, the category code of {\tt @} is reset to its original
+< %    value. The macrospace used by \verb=\atcatcode= is freed.
+< %    \begin{macrocode}
+< \catcode`\@=\atcatcode \let\atcatcode\relax
+< %    \end{macrocode}
+
+Notes:
+
+1) I don't like my implementation of the package options: it doesn't
+provide the case flexibility that the present version offers.  Doing it in
+a  \DeclareOption* is a trivial modification of the present version.
+
+2) I've posted a comment on the requirement for \clearpage in the end
+document hook to LATEX-L (I've cc'ed myself, so if it fails I can provide
+a copy direct to you).
+
+3) The comments after executing \cb@[mp]footnote fix a bug that I had
+corrected in my own version long ago, but which I appear not to have
+posted anywhere...
+
+Robin
+--
+Robin (Campaign for Real Radio 3) Fairbairns       rf@cl.cam.ac.uk
+U of Cambridge Computer Lab, Pembroke St, Cambridge  CB2 3QG, UK
+
+Date: Sun, 06 Feb 1994 10:45:59 +0100
+From: Chris Rowley <C.A.Rowley@open.ac.uk>
+Subject: RE: a problem with changebar and the ltoutput
+
+Frank wrote:
+
+> Chris & Johannes,
+> 
+> while recompiling the companion under 2e i ran into a problem with the
+> changebar style. this style graps \@makecol and thereby kills the
+> reference point of box 255. the result is a page with a lot of stuff
+> below the bottom line.
+> 
+> I'm not completely sure when this happens but the extra line below
+> fixes the case in the companion. it didn't happen in 209, so i suppose
+> it is due to moving such settings in the output routine.
+> 
+> not really a bug in the output routine but something to think about.
+> 
+> the situation was that a large box with a huge depth was at the bottom
+> of the page (an example environment). the following redefinition of
+> makecol then placed the thing below the the page (when used without
+> the boxmaxdepth line).
+> 
+> \def\@makecol{%
+>   \boxmaxdepth\maxdepth  %FMi
+>   \setbox\@cclv=\vbox{\cb@resetpoints\cb@beginSaves\unvbox\@cclv}%
+>   \gdef\cb@beginSaves{}
+>   \global\advance\cb@pagecount by 1%
+>   \cb@buildActive\cb@processActive
+>   \cb@makecol}
+> 
+> reason is the kern minus dp output box that is inside the output
+> routine somewhere.
+If Johannes, or anyone else, is working on things which redefine stuff
+in ltoutput, then please:
+
+1. Read the comments in ltoutput.dtx which give some hints about why
+things changed and, more importantly, things which I know still need
+sttention.  One example is setting of boxmaxdepth.
+
+2. Please send me, or alert me what file to look at, when you redefine
+something in another file.  then I can see how you are using things
+and thus what the standard case needs to support.
+
+Thanks
+
+Note:  When I get back to looking at ltoutput in detail again, I shall
+try to write down some principles for discusssion.
+
+> however, for some reason i was unable to produce this behavior with a
+> simple example (nevertheless i'm think that the analysis is basically
+> correct) perhaps it was just too late last night
+> 
+> 
+> comments? 
+It's always like that with output stuff, simple examples rarely prove
+much!
+
+> 
+> ps: if chris thinks this is okay can you update the package file? (one
+> day)
+Assuming that it is only the box being constructed by the \setbox whose
+depth should remain small, then I would put the \boxmaxdepth setting inside it
+to keep it local; otherwise it may still be in force at times when it
+is not wanted, thus:
+
+\def\@makecol{%
+%  \boxmaxdepth\maxdepth  %FMi
+  \setbox\@cclv \vbox{%
+           \cb@resetpoints
+	   \cb@beginSaves
+	   \unvbox\@cclv
+           \boxmaxdepth\maxdepth  %CAR
+	              }%
+  \gdef\cb@beginSaves{}
+  \global\advance\cb@pagecount by 1%
+  \cb@buildActive\cb@processActive
+  \cb@makecol}
+
+Yes, this does affect the depth of the box inside which it
+appears!...really, it does.
+
+
+chris

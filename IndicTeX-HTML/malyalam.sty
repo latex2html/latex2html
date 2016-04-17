@@ -1,0 +1,116 @@
+% malyalam.sty by Ross Moore <ross@mpce.mq.edu.au> $
+%% $Log: 
+%
+% LaTeX2e package for typesetting Malayalam script
+%
+% using  EITHER
+%
+%    1.  patc  and  mm  pre-processors
+%        Malayalam fonts: 
+%        and the  mmmacs.tex  and  mmtrmacs.tex   macros
+%        by Jeroen Hellingman
+%
+% OR
+%
+%    2.  Indica pre-processor, and sinhala fonts:  sinha, sinhb, sinhc
+%        by Yannis Haralambous <Yannis.Haralambous@univ-lille1.fr>
+%
+%        and the  sinhala.sty  package for LaTeX-2e,
+%        by Dominik Wujastyk <D.Wujastyk@ucl.ac.uk>
+%
+%        extended for Prasad Dharmasena's <pkd@isr.umd.edu>
+%        `samanala'  transliteration scheme
+%        by Vasantha Saparamadu <vsaparam@ocs.mq.edu.au>
+%
+%
+% These resources are *not* included with this package.
+% Obtain them from CTAN:  http//ctan.tug.org/ctan
+%
+% ===================================================================
+% This package has a corresponding implementation for  LaTeX2HTML 
+% called: malyalam.perl .
+% With LaTeX2HTML the options on the \usepackage line specify which
+% preprocessor and transcription mode to use.
+%
+% Usage:
+%
+%  \usepackage{malyalam}        %|  for text already pre-processed
+%  \usepackage[mm]{malyalam}    %|  for Malayalam (reformed) script
+%  \usepackage[ml]{malyalam}    %|  for traditional script
+%  \usepackage[mlr]{malyalam}   %|  for reformed script
+%  \usepackage[mtr]{malyalam}   %|  transcription only
+%  \usepackage[patc]{malyalam}  %|  transcription only
+%  \usepackage[ack]{malyalam}   %|  convert ACK transcription
+%  \usepackage[preprocess]{malyalam} %| same as  [mm]
+%
+% for the Indica pre-processor:
+%
+%  \usepackage[indica]{malyalam}  %|  uses #ALIAS MALAYALAM M 
+%  \usepackage[mal]{malyalam}     %|  uses #ALIAS MALAYALAM MAL
+%  \usepackage[7bit]{malyalam}    %|  Velthuis' Hindi/Sanskri transcription
+%  \usepackage[csx]{malyalam}     %|  8-bit Sanskrit extension of ISO 646
+%  \usepackage[latex]{malyalam}   %|  standardized LaTeX transcription form
+%  \usepackage[unicode]{malyalam} %|  ISO 10646-1 + Sinhalese extension
+%  \usepackage[samanala]{malyalam}%|  Prasad Dharmasena's transliteration
+%
+% ===================================================================
+%
+\ProvidesFile{malyalam.sty}[1998/1/12]
+%
+\NeedsTeXFormat{LaTeX2e}
+%
+\def\LoadIndica{\RequirePackage{indica}}
+
+\DeclareOption{preprocess}{\ds@malyalam}
+\DeclareOption{mm}{\ds@malyalam}
+\DeclareOption{ml}{\ds@malyalam}
+\DeclareOption{mlr}{\ds@malyalam}
+\DeclareOption{mtr}{\ds@malyalam}
+\DeclareOption{patc}{\ds@malyalam}
+\DeclareOption{ack}{\ds@malyalam}
+
+\DeclareOption{indica}{\ds@indica}
+\DeclareOption{7bit}{\ds@sevenbit}
+\DeclareOption{csx}{\ds@csx}
+\DeclareOption{latex}{\ds@latex}
+\DeclareOption{samanala}{\ds@samanala}
+\DeclareOption{unicode}{\ds@unicode}
+\DeclareOption{mal}{\ds@mal}
+
+\DeclareOption*{\relax\@latexerr{%
+ `\CurrentOption' is an invalid option, using `preprocess' instead}%
+  {Available Options:^^J^^J* Malayalam-TeX^^J
+   preprocess,mm,ml,mlr,mtr,patc,ack^^J^^J* Indica^^J
+   indica,7bit,csx,latex,unicode,samanala,mal^^J}\ds@malyalam}
+
+\def\ds@indica{\@loadindica{malayalam}}
+\def\ds@sevenbit{\@loadindica{malayalam,7bit}}
+\def\ds@csx{\@loadindica{malayalam,csx}}
+\def\ds@latex{\@loadindica{malayalam,latex}}
+\def\ds@samanala{\@loadindica{malayalam,samanala}}
+\def\ds@unicode{\@loadindica{malayalam,unicode}}
+\def\ds@mal{\@loadindica{malayalam,mal}}
+\def\@loadindica#1{\def\NeedsIndica{}\PassOptionsToPackage{#1}{indica}}
+
+\def\ds@malyalam{\expandafter\ifx\csname malyalamloaded\endcsname\relax
+  \def\malyalamloaded{}\IfFileExists{mmmacs}%
+  {\AtBeginDocument{\input{mmmacs}}\@loadmalyalam}%
+  {\@latexerr{Malayalam-TeX requires  mmmacs.tex  and  mmtrmacs.tex .}{}}%
+ \fi}
+%%
+%%
+\def\@loadmalyalam{%
+ \InputIfFileExists{mmtrmacs}{}{\@latexerr{%
+ The file  mmtrmacs.tex  could not be found; transcriptions may fail.}{}}%
+ \font\sevenrm=cmr7
+ \font\twelvesl=cmsl12
+ \font\twelvebf=cmbx12
+ \font\seventeenbf=cmbx12 at 17pt 
+}
+
+\ProcessOptions*
+\expandafter\ifx\csname NeedsIndica\endcsname\relax
+ \else\expandafter\LoadIndica\expandafter\endinput\fi
+\expandafter\ifx\csname malyalamloaded\endcsname\relax\expandafter\ds@malyalam\fi
+\endinput
+

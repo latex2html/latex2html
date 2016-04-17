@@ -1,0 +1,195 @@
+# $Id: Makefile.in,v 1.9 1999/10/25 21:18:21 MRO Exp $
+# Makefile for LaTeX2HTML.
+# Copyright (C) 1997 Marek Rouchal <marek@saftsack.fs.uni-bayreuth.de>
+
+# @configure_input@
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
+
+#### Start of system configuration section. ####
+
+DISTVER = @distver@
+srcdir = @srcdir@
+
+PERL = @PERL@
+PLAT = @plat@
+AUTOCONF = autoconf
+
+# All programs
+SCRIPTS = latex2html texexpand pstoimg
+
+# Modules
+MODULES = l2hconf.pm
+
+# for dependencies
+wrappers = wrapper/dos.pin wrapper/macos.pin wrapper/os2.pin \
+        wrapper/unix.pin wrapper/win32.pin
+
+# Switch for Perl Warnings; should always be on
+# temporary solution until latexhtml is cleaned up
+PERLW =# -w
+
+#### End of system configuration section. ####
+
+# Placeholder for additional arguments
+ARGS=#
+
+SHELL = /bin/sh
+
+# Files that can be generated, but should be up to date for a distribution.
+DISTDEP = configure Makefile MANIFEST
+
+buildcmd = config/build.pl
+BUILDOPT=# nothing special, but -devel is a good idea!
+TESTCASE=l2htest# can be overridden on the command line
+installcmd = config/install.pl
+cfgfile = cfgcache.pm
+
+all: ${SCRIPTS} ${MODULES}
+
+devel:
+	${MAKE} all BUILDOPT=-devel
+
+# .SUFFIXES:
+
+pstoimg:  ${cfgfile} ${srcdir}/${buildcmd} pstoimg.pin ${wrappers}
+	${PERL} ${srcdir}/${buildcmd} -x ${BUILDOPT} $@
+	touch pstoimg
+
+latex2html:  ${cfgfile} ${srcdir}/${buildcmd} latex2html.pin ${wrappers}
+	${PERL} ${srcdir}/${buildcmd} -x ${BUILDOPT} $@
+	touch latex2html
+
+texexpand:  ${cfgfile} ${srcdir}/${buildcmd} texexpand.pin ${wrappers}
+	${PERL} ${srcdir}/${buildcmd} -x ${BUILDOPT} $@
+	touch texexpand
+
+${cfgfile}: config.status
+
+l2hconf.pm: ${cfgfile} ${srcdir}/${buildcmd} l2hconf.pin
+	${PERL} ${srcdir}/${buildcmd} ${BUILDOPT} $@
+	touch l2hconf.pm
+
+test: all
+	LATEX2HTMLDIR=${srcdir}; export LATEX2HTMLDIR ; \
+	latex2html='' ; \
+	for file in latex2html bin/latex2html* bin/${PLAT}/latex2html*; do \
+	  test -s $$file && latex2html=$$file break ; \
+	done ; \
+	if test -n "$$latex2html"; then \
+	  echo "*** Running test on $$latex2html"; \
+	  cd tests ; ${PERL} ../$$latex2html -test_mode ${ARGS} ${TESTCASE} ; \
+	fi
+
+test_clean:
+	cd tests ; \
+	for i in *.tex ; do \
+	  dir=`basename $$i .tex` ; \
+	  rm -rf $$dir ; \
+	done ; \
+	rm -f *.aux *.dvi *.log
+
+test_pstoimg: pstoimg
+	@LATEX2HTMLDIR=${srcdir}; export LATEX2HTMLDIR ; \
+	pstoimg='' ; \
+	for file in pstoimg bin/pstoimg* bin/${PLAT}/pstoimg*; do \
+	  test -s $$file && pstoimg=$$file break ; \
+	done ; \
+	if test -n "$$pstoimg"; then \
+	  echo "*** Running test: $$pstoimg ${ARGS}"; \
+	  ${PERL} $$pstoimg ${ARGS} ; \
+	fi
+
+texlive: texlive.pm
+	cp texlive.pm ${cfgfile}
+	${MAKE} all
+
+check: all
+	LATEX2HTMLDIR=${srcdir}; export LATEX2HTMLDIR ; \
+	for file in versions/*.pl styles/*.perl; do \
+	  ${PERL} ${PERLW} -c $$file || exit 1; \
+	done ; \
+	for file in ${SCRIPTS} ${MODULES}; do \
+	  test -s $$file && ( ${PERL} ${PERLW} -c $$file || exit 1 ); \
+	  test -s $$file.pl && ( ${PERL} ${PERLW} -c $$file.pl || exit 1 ); \
+	done ; \
+	exit 0
+
+install: all
+	${PERL} ${installcmd}
+
+# Don't cd, to avoid breaking install-sh references.
+
+${srcdir}/configure:
+	cd ${srcdir} && \
+	${AUTOCONF}
+
+Makefile: Makefile.in config.status
+	./config.status
+
+config.status: ${srcdir}/configure config/config.pl
+	./config.status --recheck
+
+clean mostlyclean distclean:: test_clean
+	rm -f ${SCRIPTS} ${MODULES} *.tmp *.bak *.pl
+	rm -fr bin
+
+distclean::
+	rm -f Makefile config.status config.cache config.log ${cfgfile}
+	rm -f test.bat install.bat
+
+MANIFEST:
+	${PERL} make_manifest \
+	  -x configure.in \
+	  -x make_manifest \
+	> MANIFEST
+
+# Create a distribution based on the MANIFEST file
+dist: ${DISTDEP}
+	distname=latex2html-${DISTVER} ; \
+	rm -fr $$distname; \
+	mkdir $$distname; \
+	for item in `cat MANIFEST`; do \
+	  test -d $$item && mkdir $$distname/$$item; \
+	  test -f $$item && ( \
+	    ln $$item $$distname/$$item || \
+	    { echo copying $$item instead; cp -p $$item $$distname/$$item;}; \
+	  ) ; \
+	done; \
+	chmod -R u+rw,go-w+rX $$distname; \
+	tar -chz -f $$distname.tar.gz $$distname; \
+	rm -fr $$distname
+
+# Create a zipped dist
+zipdist: ${DISTDEP}
+	distname=latex2html-${DISTVER} ; \
+	rm -fr $$distname; \
+	mkdir $$distname; \
+	for item in `cat MANIFEST`; do \
+	  test -d $$item && mkdir $$distname/$$item; \
+	  test -f $$item && ( \
+	    ln $$item $$distname/$$item || \
+	    { echo copying $$item instead; cp -p $$item $$distname/$$item;}; \
+	  ) ; \
+	done; \
+	chmod -R u+rw,go-w+rX $$distname; \
+	zip -r -y $$distname.zip $$distname; \
+	rm -fr $$distname
+
+# no comment...
+love:
+	@echo "...not war!"
+

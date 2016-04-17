@@ -1,0 +1,16 @@
+MRO: Process commands like \psfig and \includegraphics directly, i.e. parse 
+them, run pstoimg on the postscript file and add the image to an images list.
+This requires:
+- (maybe) a new array with image filenames and secifications, or can we
+  use the same one as for the images coming out of dvips?
+- recognition of certain directives, mainly the image size (i.e. width
+  or height) and calculation of a corresponding pixel size
+- in the long run support of rotation angles; these could be implemented
+  in pstoimg with appropriate postscript code (like dvips does)
+
+MRO: Adapt the configuration procedure to the MacOS platform.
+
+MRO: Include the kpsewhich command in texexpand
+
+MRO: Configure for use of Type1 fonts, if available
+

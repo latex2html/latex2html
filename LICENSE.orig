@@ -1,0 +1,80 @@
+In September 2008, this software was re-licensed to use the
+   GNU General Public License v2  (GPLv2).
+This was done at the instigation of the following people:
+
+   Tom "spot" Callaway <tcallawa@redhat.com>  Fedora Legal
+   Roland Stigge   <stigge@antcom.de>  Debian
+                   <debian-legal@lists.debian.org>
+
+and with the permission of the original author and
+copyright holder, and the most recent authors:
+
+   Roger Hartley <J.R.Hartley@education.leeds.ac.uk>
+   Nikos Drakos  <Nikos.Drakos@gartner.com>
+   Ross Moore    <ross@maths.mq.edu.au>
+   Marek Rouchal <mrouchal@arcor.de>
+   Jens Lippmann <jens.lippmann@arcor.de>
+
+A copy of the original license is included below.
+Note that many software modules and scripts that are
+included with the LaTeX2HTML software were, and always
+have been, licensed under the GPLv2.
+
+  Ross Moore, 2008-09-24
+
+
+
+Original LaTeX2HTML License
+===========================
+
+Original Copyright notice:
+LaTeX2HTML by Nikos Drakos <nikos@cbl.leeds.ac.uk>
+
+Some portions of this package are published under the
+GNU public license. These are clearly marked in the header.
+
+****************************************************************
+General License Agreement and Lack of Warranty *****************
+****************************************************************
+
+This software is distributed in the hope that it will be useful
+but WITHOUT ANY WARRANTY. The author(s) do not accept responsibility
+to anyone for the consequences of using it or for whether it serves
+any particular purpose or works at all. No warranty is made about
+the software or its performance.
+
+Use and copying of this software and the preparation of derivative
+works based on this software are permitted, so long as the following
+conditions are met:
+
+o  The copyright notice and this entire notice are included intact
+   and prominently carried on all copies and supporting documentation.
+o  No fees or compensation are charged for use, copies, or
+   access to this software. You may charge a nominal
+   distribution fee for the physical act of transferring a
+   copy, but you may not charge for the program itself.
+o  If you modify this software, you must cause the modified
+   file(s) to carry prominent notices (a Change Log)
+   describing the changes, who made the changes, and the date
+   of those changes.
+o  Any work distributed or published that in whole or in part
+   contains or is a derivative of this software or any part
+   thereof is subject to the terms of this agreement. The
+   aggregation of another unrelated program with this software
+   or its derivative on a volume of storage or distribution
+   medium does not bring the other program under the scope
+   of these terms.
+
+This software is made available AS IS, and is distributed without
+warranty of any kind, either expressed or implied.
+
+In no event will the author(s) or their institutions be liable to you
+for damages, including lost profits, lost monies, or other special,
+incidental or consequential damages arising out of or in connection
+with the use or inability to use (including but not limited to loss of
+data or data being rendered inaccurate or losses sustained by third
+parties or a failure of the program to operate as documented) the
+program, even if you have been advised of the possibility of such
+damages, or for any claim by any other party, whether in an action of
+contract, negligence, or other tortious action.
+

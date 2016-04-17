@@ -1,0 +1,562 @@
+\section*{Credits, 1993--1994\label{credits}}%
+\index{Computer~Based~Learning~Unit!University of Leeds}\html{\\}%
+Several people have contributed suggestions, ideas, solutions, support
+and encouragement. Some of these are \RodWilliams, \AnaPaiva, 
+\JamilSawar\ and \AndrewCole\ at the \CBLU.
+
+\begin{htmllist}
+\htmlitemmark{YellowBall}
+\index{CERN!World-Wide Web Project}%
+\item [\CERN]
+The idea of splitting \LaTeX{}  files
+into more than one component, connected via hyperlinks, 
+was first implemented in \Perl{} by Toni Lantunen at CERN.
+Thanks to \RobertCailliau{} of the World-Wide Web Project, also at CERN, 
+for providing access to the source code and documentation 
+(although no part of the original design or the actual code has been used).
+
+
+\item [\RobertThau]
+has contributed the new version of \fn{texexpand}. 
+Also, in order to translate the ``document from hell'' (!!!) 
+he has extended the translator to handle \Lc{def} commands, 
+nested math-mode commands, and has fixed several bugs.
+
+\item [Phillip Conrad and L. Peter Deutsch.]
+The \fn{pstogif} \Perl{} script uses the \fn{pstoppm.ps} \PS\ program, 
+originally written by Phillip Conrad (Perfect Byte, Inc.) and 
+modified by L. Peter Deutsch (Aladdin Enterprises).
+
+\item [\RodWilliams]
+The idea of using existing symbolic labels to provide cross-references
+between documents was first conceived during discussions with Roderick.
+
+
+\item [\EricCarroll] 
+who first suggested providing a command like \Lc{hyperref}\,. 
+
+\index{accents!foreign}%
+
+\item [\FranzVojik]
+provided the basic mechanism for handling foreign accents.
+
+
+\item [\ToddLittle]
+The \Cs{auto\_navigation} option was based on an idea by Todd.
+
+
+\item [\AxelBelinfante]
+provided the \Perl{} code in the \fn{makeidx.perl} file, 
+as well as numerous suggestions and bug-reports. 
+
+\item [\VerenaUmar] (from the \CSEP) 
+has been a very patient tester of some early versions of \latextohtml{}
+and many of the current features are a result of her suggestions. 
+
+\index{mailing list!Argonne National Labs}%
+
+\item [Ian Foster and Bob Olson.]
+Thanks to \IanFoster{} and \BobOlson{} at the Argonne National Labs, 
+for setting up the \maillist.
+\end{htmllist}
+
+
+\clearpage
+\section*{Later Developments, 1995--1996\label{recent96}}%
+%
+Since 1995 the power and usefulness of \latextohtml{} has been enhanced significantly.
+The revisions later than \textsc{v95.1} have been largely due 
+to the combined efforts of many people, other than the original author.
+Interested users have supplied patches to fix a fault, 
+or implement a feature that previously was not supported. 
+Often a question or complaint to the discussion-group 
+(see \hyperref{Getting Support ...}{Section~}{}{support})
+has spurred someone else to provide the necessary ``patch''.%
+
+\bigskip\noindent
+Arising from this work, special credit is due to: 
+\begin{htmllist}
+\htmlitemmark{GreenBall}
+\item [\Hennecke] for his many extensive revisions; 
+
+\item [\Noworolski] for coordinating \textsc{v95.3};
+ 
+\item [\Isani] for his improvement in GIF quality; 
+
+\index{CERN!World-Wide Web Project}\index{CERN!Michel Goossens}%
+\item [\Goossens]
+was the driving force behind the upgrade to \LaTeXe{} compatibility,
+and other features developed at CERN;
+
+\item [Herb Swan]
+for coordinating \textsc{v96.1} of \latextohtml, 
+including much of the \Perl{} code 
+for the new features that were introduced,
+and for providing a series of bug-fix revisions 
+prior to  \textsc{v96.1} \texttt{rev-f};
+
+\item [\RossMoore]
+who has revised and extended this manual, helped design and test the 
+segmentation strategy, and later revisions of \textsc{v96.1}\,.
+Ross organised the release of \textsc{v96.1} \texttt{rev-g} 
+and provided many of the improvements
+incorporated into \textsc{v96.1} \texttt{rev-h}. 
+
+\item [\Wilck]
+for the initial work on implementation of \env{frames}. 
+Also Martin did most of the work implementing the extensive citation and
+bibliographic features of the \env{natbib} package, written by \PatrickDaly.
+He also provided the \fn{makeseg} \Perl{} script to create Makefiles
+for segmented documents.
+
+\item [\Lippmann]
+for organising the releases \textsc{v96.1} \texttt{rev-h} to \textsc{v98.1}. 
+Jens made significant contributions to
+the internal workings of \latextohtml, 
+as well as cleaning up much of its source code. 
+\end{htmllist}
+
+\htmlrule
+
+
+\bigskip\noindent
+Many others, too many to mention, contributed bug-reports, 
+fixes and other suggestions.
+
+\latex{\bigskip}\htmlrule
+
+\index{URL!url package@\env{url} package}%
+\noindent
+Thanks also to \Arseneau{} for allowing his \fn{url.sty} 
+to be distributed with this manual. 
+Similarly, thanks to \JohannesBraams{} for \fn{changebar.sty}.
+%
+\index{change-bars}\html{\\}
+Both of these are useful utilities which enhance the appearance of the printed manual. 
+\begin{latexonly}
+In particular, changes introduced with  \textsc{v98.1} and its revisions are denoted 
+by thin change-bars, while thicker bars denote changes introduced with  \textsc{v98.2}
+and later releases.%
+\end{latexonly}
+
+
+
+\clearpage
+\section*{Developments: late 1996 to mid 1997\label{recent97}}%
+%
+During the latter part of 1996 there was much work on improving the
+capabilities of \latextohtml.
+Some of this was due to the \WiiiC's proposals for \HTMLiii, 
+becoming a formal recommendation in November 1996,
+and their subsequent acceptance in January 1997. 
+Existing \LaTeX{} markup for effects such as centering, left- 
+or right-justification of paragraphs,
+flow of text around images, table-layout with formal captions, etc.
+could now be given a safe translation into \HTMLiii, compliant with a standard
+that would guarantee that browsers would be available to view such effects.  
+
+At the same time developers were exploring ways to enhance the overall
+performance of \latextohtml.
+As a result the current \textsc{v97.1} release has significant improvements in
+the following areas:
+%
+\begin{htmllist}\htmlitemmark{OrangeBall}
+% 
+\item[image-generation]
+is much faster, requires less memory
+and inline images are aligned more accurately; 
+%
+\item[image quality]
+is greatly improved by the use of anti-aliasing effects for on-screen clarity,
+in particular with mathematics, text and line-drawings; 
+%
+\item[memory-requirements]
+are much reduced, particularly with image-generation;
+%
+\item[mathematics]
+can now be handled using a separate parsing procedure;
+images of sub-parts of expressions can be created, rather
+than using a single image for the whole formula;
+%
+\item[macro definitions]
+having a more complicated structure than previously allowed,
+can now be successfully expanded;
+%
+\item[counters]
+and numbering are no longer entirely dependent on the \texttt{.aux}
+file generated by \LaTeX;
+%
+\item[decisions]
+about which environments to include or exclude can now be made;
+%
+\item[HTML effects]
+for which there is no direct \LaTeX{} counterpart
+can be requested in a variety of new ways;
+%
+\item[HTML code]
+produced by the translator is much neater and more easily readable,
+containing more comments and fewer redundant breaks and \HTMLtag{P} tags.
+%
+\item[error-detection]
+of simple \LaTeX{} errors, such as missing or unmatched braces, 
+is now performed --- a warning message shows a line or two
+of the source code where the error has apparently occurred;
+%
+\end{htmllist} 
+
+
+\medskip\htmlrule[50\% center]
+\noindent
+For these developments, thanks goes especially to: 
+%
+\begin{htmllist}
+%
+\item [\Lippmann]
+for creating and maintaining the CVS repository at \CVSrepos\,. 
+This has made it much easier for the contributions from different developers
+to be collected and maintained as a ``development version'' which
+is kept up-to-date and available at all times. Together with \Rouchal\
+he produced an extensive rewrite of the \fn{texexpand} utility.
+
+
+\item [\RossMoore]
+for extensive work on almost all aspects of the \latextohtml{} source
+and documentation,
+combining code for \LaTeX{}, \Perl{}, \texttt{HTML} and other utilities.
+Most of the coding for the new features based on \texttt{HTML} 3.2, 
+many of the new packages, faster image-generation 
+and the improved support for mathematics 
+and other environments, is his work.
+
+
+\item [\Rouchal]
+for extending the former \fn{pstogif} utility,
+transforming it into \fn{pstoimg} which now allows for 
+alternative image formats, such as \fn{PNG}.
+Also he produced the neat \fn{configure-pstoimg} script, which eases
+\latextohtml{} installation, and a rewrite of \fn{texexpand}.
+
+
+
+\index{portability!Unix systems}\index{latex2html-NG}%
+\item [\Hennecke]
+who has always been there, up-to-date with developments in \texttt{HTML} and
+related matters concerning Web publishing, 
+and tackling the issues involved with portability 
+of \latextohtml{} to Unix systems on various platforms.
+
+Furthermore Marcus has produced \latextohtmlNG, a version of
+\latextohtml{} which handles expansion of macros in a more ``\TeX-like''
+fashion. This should lead to further improvements in speed and efficiency,
+while allowing complicated macro definitions to work as would be expected
+from their expansions under \LaTeX.
+(This requires \Perl{ 5}\,, 
+using some programming features not available with \Perl{ 4}\,.)%
+
+
+\item [\Popineau] has produced
+an adaptation for the Windows NT platform, of \latextohtml{} \textsc{v97.1}\,.
+
+\item [\Wortmann]
+showed how to configure \appl{Ghostscript} to produce
+anti-aliasing effects within images.
+
+\item [\AxelRamge]
+for various suggestions and examples of enhancements,
+and the code to avoid a problem with \appl{Ghostscript}.
+
+\end{htmllist}
+
+\medskip\vfil\htmlrule\bigskip\noindent
+Thanks also to all those who have made bug-reports, supplied fixes 
+or offered suggestions as to features that might allow \latextohtml{} 
+to be used more efficiently in particular circumstances. 
+Most of these have been incorporated into this new version \textsc{v97.1}\,,
+though perhaps not in the form originally envisaged.
+Such feedback has contributed enormously to helping make \latextohtml{} the
+easy to use, versatile program that it has now become.
+
+\bigskip
+\begin{center}
+Keep the ideas coming!
+\end{center}
+\bigskip
+\vfil
+
+
+
+
+\subsection*[center]{1st \LaTeX2HTML{} Workshop\\Darmstadt, 
+15 February 1997\label{darmstadt}}
+Thanks again to \Lippmann\ and members of the \LiPS\ for organising this meeting; 
+also to the \FIDarmstadt\ at \Darmstadt\ for use of their facilities.
+
+\noindent
+This was an opportunity for many of the current \latextohtml{} developers to
+actually meet for the first time; rather than communication by exchange
+of electronic mail messages.
+%
+\begin{itemize}
+\item
+\NikosDrakos\ talked about the early development of \latextohtml, while\dots
+\item \dots
+\RossMoore, \Lippmann\ and \Rouchal\ described recent improvements. 
+\item
+\Goossens\ presented a list of difficulties encountered with earlier
+versions of \latextohtml{}, and aspects requiring improvement.
+Almost all of these now have been addressed in the \textsc{v97.1} release,
+so far as is possible within the bounds inherent in the \HTMLiii\ standard.
+\item
+\KrisRose\ showed how it is possible to create \texttt{GIF89} animations 
+from pictures generated by \TeX{} or \LaTeX{}, using the \XypicDK\ graphics 
+package and extensions, developed by himself and \XypicAUS.
+\end{itemize}
+
+\noindent
+Also present were representatives from the \DANTE\ \Praesidium\ and 
+members of the \LaTeXiii\ development team.\html{\\} 
+In all it was a very pleasant and constructive meeting.
+
+\vfil
+
+\subsection*[center]{TUG'97 --- Workshop on \LaTeX2HTML\\
+University of San Francisco, 28 July 1997\label{tug97}}
+
+\noindent
+On the Sunday afternoon (2.00pm--5.00pm)
+immediately prior to the TUG meeting, there will be a workshop
+on \latextohtml, conducted by \RossMoore\footnote{%
+Mathematics Department, Macquarie University, Sydney, Australia}.
+
+\begin{itemize}
+\item[]
+Admission: \$50, includes a printed copy of the latest \latextohtml\ manual.
+\end{itemize}
+
+\bigskip
+
+\subsection*[center]{\TeX{}Northeast TUG Conference, \TeX/\LaTeX{} Now\\
+March 22--24, 1998, New York City}
+
+\noindent
+Includes a workshop/presentation by \RossMoore\footnote{%
+Mathematics Department, Macquarie University, Sydney, Australia}.
+
+
+\subsection*[center]{Euro-\TeX{}'98, 10th European \TeX{} Conference\\
+St. Malo, France --- 29--31 March, 1998}
+
+\noindent
+Several of the \latextohtml{} developers will be present.
+All European (and other) \latextohtml{} users are encouraged to attend.
+
+
+\vfil
+
+
+\clearpage
+\section*{Developments: late 1997 to early 1998\label{recent98}}%
+Much of the work contributed to \latextohtml{} during this time was
+related to bug fixing and maintaining the 97.1 release, in order to
+reach a more stable and reliable version which produces \fn{HTML} code
+conforming to the W3C standards/drafts.
+To keep in context with this view, support for \texttt{HTML 4} has been
+incorporated into the translator.
+
+\smallskip\noindent
+There have been improvements to the way math code is handled, as well
+as font-changing and numbering commands. These now are expected to
+work much closer to the way that \LaTeX{} handles them.
+
+\smallskip\noindent
+Furthermore, missing \LaTeX{} style translations for basic \LaTeX{} 
+and \AmSTeX{} document classes were added to the distribution: 
+\texttt{book.perl}, \texttt{report.perl}, \texttt{article.perl},
+\texttt{letter.perl}, \texttt{amsbook.perl} and \texttt{amsart.perl}.
+New styles implementing \LaTeX{} packages include \texttt{seminar.perl},
+\texttt{inputenc.perl} and \texttt{chemsym.perl} naming but a few.
+
+The aim is ultimately to support all \LaTeX{}, \AmSTeX{} etc. packages in the 
+standard \LaTeX{} distribution, or for which there is published documentation. 
+At the time of writing this aim has not quite been reached.
+To support internationalisation, \Perl{} extensions were provided for
+\texttt{HTML} output conforming to ISO-Latin 1, 2, 3, 4, 5, 6,
+and \Unicode{} encodings.
+
+\smallskip\noindent
+All of the above work was done by \RossMoore.
+\bigskip
+
+Additional document formats are now supported, these are Indic\TeX{},
+\FoilTeX{}, and \texttt{CWEB} documents.
+You may use any of these packages to translate such documents together
+with \latextohtml{}, refer to the instructions in the various
+\texttt{README} files.
+
+\smallskip\noindent
+Thanks go to \RossMoore{} for \IndicHTML{}, to \Veytsman{} for 
+\FoilTeX{}/\texttt{HTML} and to \Lippmann{} for the \texttt{CWEB} to
+\texttt{HTML} translator.
+
+\bigskip
+Numerous discussions and efforts have been undertaken to get
+\latextohtml{} working independent from the underlying operating
+system.
+Yet all obstacles are not quite taken, but it is forseeable that we are
+OS independent very soon.
+This release has been reported to run on OS/2, DOS, and MacOS, besides
+Unix-like operating systems.
+A former version has also been ported to Amiga OS, but that results
+still need to be re-integrated into the source.
+Ports for Windows'95 and Windows NT exist, but are not yet
+integrated with the main distribution.
+
+\smallskip\noindent
+Thanks go to \Hennecke, \AxelRamge, \Rouchal{} and \Wortmann{} for
+fruitful and refreshening discussions about that \fn{Override.pm}
+loading scheme (which finally made its way after enough chickens and
+eggs chased one another to death \mbox{$\mathsmiley$}\,),
+and to \Taupin{} for his successful efforts to get \latextohtml{}
+running on DOS.
+
+\smallskip\noindent
+Thanks go also to \Popineau{} for his port to Windows NT
+\footnote{\ctanURL{systems/win32/web2c/l2h-win32.tar.gz}},
+and \NikosDrakos{} for a Windows 95 port based on \textsc{v96.1}h
+\footnote{\url{ftp://ftp.mpn.com/pub/nikos/latex2html96.1-h-win32.tar.gz}}
+(which is mentioned here at last, but not least).
+
+\medskip\noindent
+We want to take the opportunity to thank \Nelson{} and the people at
+Lawrence Livermore National Laboratory who help to keep up the
+\latextohtml{} main archive and the mailing list, and to \Bohnet{} at
+the Max Planck Institut fuer extraterrestrische Physik, Garching for
+maintaining the list's online archive.
+Finally thanks and greetings to all people that contributed to this
+release and have not been mentioned here...
+
+\medskip\noindent
+You all showed spirit and favour. Thank you for your efforts!
+
+\medskip
+\begin{flushright}
+\dots\ and don't forget Jens and the LiPS team at Darmstadt!
+\end{flushright}
+
+\clearpage
+\section*{1998 to 1999}\label{recent99}%
+During this period large parts of \latextohtml{} have been overhauled and
+compatibility with Perl 4 broken once and for all. The 99.2 release is the
+first known to work out of the box on several UNIX systems as well as on 
+Windows 95, 98, NT and OS/2. The number of supported \LaTeX\ packages is
+bigger than ever.
+
+\medskip\noindent
+Thanks to \Perbandt{} for testing every second alpha/beta release of
+99.2 on OS/2 and ensuring that things work ok there.
+
+
+\clearpage
+\subsection*{Proposals for Future Development:\label{future}}%
+
+
+
+\subsection*{\latextohtmlNG}
+Developed by \Hennecke\label{latex2htmlNG} this is a version of 
+\latextohtml{} that addresses various issues,
+not currently handled in the best way by version \textsc{v97.1}\,.
+These include:
+\begin{itemize}
+\item validating the \texttt{HTML} output,
+so that only correctly nested tags, and their contents,
+can be produced by the translator;
+%
+\item more \TeX-like order of macro-expansion,
+so that macros and their expansions will produce exactly
+the results expected from the \TeX{} implementation of \LaTeX;
+%
+\item faster processing,
+by streamlining some of the current \Perl{} code, and allowing
+shorter strings to be handled at any given time;
+%
+\item customisation issues,
+allowing easier portability to Unix-like environments on
+other platforms.
+%
+\end{itemize}
+Many of these features have been the inspiration for new code
+written for \latextohtml~\textsc{v98.1}.
+
+\medskip\noindent
+The current version of \latextohtmlNG{} can be obtained from
+the developer's
+\hyperref[page]{repository}{repository, see page~}{}{cvsrepos},
+in the directory
+\url{http://saftsack.fs.uni-bayreuth.de/~latex2ht/ng-user}.\html{\\}
+Beware that the files there are \emph{not} compatible with those of the
+same name that come with the current version of \latextohtml.
+
+
+
+\subsection*{Extended Capabilities in Web browsers}
+The following areas are the subject of active development
+within the Web community. 
+Limited support is available within \latextohtml{} for some of these features,
+using the \texttt{-html\_version 4.0} command-line switch.
+\begin{description}
+%
+\index{style sheets!CSS}%
+\index{style sheets!DSSSL}%
+\item [style-sheets: ] \htmladdnormallink{proposals}%
+{http://www.w3.org/pub/WWW/TR/WD-style-970324.html}
+for a flexible mechanism to allow cascading (CSS) and DSSSL, 
+within \htmladdnormallinkfoot{\HTMLiv}{http://www.w3.org/pub/Markup/}.
+%
+\index{extended markup!XML}%
+\index{XML!extended markup}%
+\item [XML: ] \htmladdnormallinkfoot{eXtensible Markup Language}%
+{http://www.w3.org/pub/WWW/TR/WD-xml.html}.
+
+\index{mathematics!markup, MathML}%
+\index{MathML!mathematics markup}%
+\item [MathML: ] \htmladdnormallinkfoot{Mathematical Markup Language}%
+{http://www.w3.org/pub/WWW/TR/WD-math-970515}.
+
+\index{chemical!markup, CML}%
+\index{CML!chemical markup}%
+\item [CML: ] \htmladdnormallinkfoot{Chemical Markup Language}%
+{http://www.venus.co.uk/omf/cml}.
+
+\index{fonts!non-standard encodings}%
+\item [Fonts: ] further support for non-standard font encodings.
+
+\index{icons}%
+\item [Icons: ] Alternative sets of icons for navigation buttons 
+and other purposes.
+\end{description}
+For some background on these technologies read
+\Goossens' survey article ``Hyper-activity in the Web-world''
+in \textsl{CERN Computer Newsletter} 
+\htmladdnormallinkfoot{No. 227}{http://wwwinfo.cern.ch/cnls/227/art\_xml.html},
+and browse \AxelRamge's 
+\htmladdnormallinkfoot{site}{http://www.ramge.de/ax/latex2html/latex2html.html}
+for ideas on how they could be used with \latextohtml.
+
+
+
+\endinput
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1232 @@
+
+                   LATEX2HTML Frequently Asked Questions
+                                      
+				Release 98.1
+
+Contents
+
+     * Contents
+     * 1. Overview
+     * 2. Installation and Further Support
+          + 2.1 Getting LATEX2HTML
+          + 2.2 Getting Support and More Information
+     * 3. Known Problems
+          + 3.1 Troubleshooting
+     * Bibliography
+       
+                                       
+                                  1. Overview
+                                       
+   This manual describes the LATEX2HTML translator which is used to
+   create Web pages from document source written for the LATEX
+   typesetting system, or simply containing LATEX commands.
+   
+   -----
+   
+   To use LATEX2HTML to translate a file  <file>.tex containing LATEX
+   commands, simply type:
+   
+     latex2html <file>.tex
+     
+   This will create a new directory called <file> which will contain the
+   generated HTML files, some log files and possibly some images.
+   
+   -----
+   
+   Basically the translator reads the source document and creates a
+   linked set of HTML pages, displaying the information it contains. The
+   LATEX commands and environments that are found are interpreted either
+   as ``markup'' instructions, or as macros expanding into more text or
+   markup commands. Where such markup corresponds to the intended use for
+   markup tags in the HTML language, a direct translation is made. If
+   there is no natural way to present the information using simple text
+   embellished with HTML markup tags, then an image is generated, using
+   LATEX itself to interpret the portion of code.
+   
+   Of course this is a drastically over-simplified description of what
+   LATEX2HTML actually does. Many questions spring readily to mind. The
+   answers to these and the options available to handle particular
+   situations are discussed elsewhere in this manual.
+   
+   -----
+     * What does ``natural way to present the information'' really mean?
+       
+   Text and paragraphing clearly should appear as such, whether printed
+   or on-screen. Different font sizes and styles such as ``bold-face'' or
+   ``italic'' are generally rendered accordingly. However, whereas LATEX
+   has access to appropriate fonts for specialised purposes such as
+   mathematical symbols, these cannot be guaranteed to be available with
+   all Web-browsers. So for information requiring such things, LATEX2HTML
+   will generally resort to making an image, using LATEX itself to
+   typeset the material required for that image.
+   
+   The next page contains a brief overview of how LATEX's standard
+   environments are handled within LATEX2HTML. It also mentions some of
+   the extra features that are available.
+   In general LATEX2HTML attempts to use textual constructions to
+   represent the required information. Generation of an image is done
+   only when there is no adequate textual construction with the required
+   version of HTML, or when specifically requested to do so. Various
+   extensions, to cope with the different HTML versions and extra
+   features, are discussed elsewhere. That describes what to expect on
+   the HTML pages, with little or no changes required to the LATEX
+   source.
+   
+   Just as LATEX has various packages which can be used to present
+   specific types of information in appropriate ways, so is LATEX2HTML
+   capable of handling the commands from many of these packages. See this
+   table for a listing of those packages which currently have special
+   support.
+   
+   -----
+     * Some features of HTML have no direct counterpart in a LATEX
+       typeset document.
+       Can such features be used with LATEX2HTML?
+       
+   Any effect currently available with any version of the HTML standard
+   can be specified for a document processed by LATEX2HTML. New LATEX
+   commands are defined in the html.sty  package; the features that these
+   commands allow are the subject of a whole section of this manual. Some
+   of the new commands provide improved strategies for effects already
+   existing in LATEX; e.g. cross-references and citations. To use these
+   effectively requires only small changes to the LATEX source.
+   
+   Other commands define new environments which are completely ignored
+   when processed by LATEX. Indeed the full scope of HTML 3.2 is
+   available, using LATEX-like macros to help structure the source,
+   reduce the tedium of repetitious use of tags, and ensure that all
+   appropriate tags are correctly closed.
+   
+   -----
+     * What determines the amount of information that goes onto a single
+       HTML page?
+       How are different pages linked?
+       
+   The HTML pages can contain whole chapters, sections, (sub)subsections
+   or (sub)paragraphs. This is fully customisable using the command-line
+   options discussed in detail in a separate section of this manual.
+   
+   -----
+     * Does the original document have to be a valid LATEX document,
+       typesetting without errors? If not, does it help if it is?
+       
+   In fact any document can be fed to the LATEX2HTML processor, but it is
+   designed specifically to recognise and sensibly translate the
+   intentions expressed by LATEX markup commands. Although sensible
+   results can be obtained even when the LATEX source is not valid, the
+   most reliable translations are obtained when it is. Relevant issues
+   are discussed in a later section.
+   
+   -----
+     * When developing a document which contains special HTML features,
+       is it best to regularly test it in LATEX or with LATEX2HTML?
+       
+   The answer to such a question changes as the developer gains more
+   experience with the available tools. Some aspects to be considered are
+   discussed in a later section of this manual.
+     _________________________________________________________________
+   
+   -----
+   
+   Information relevant to obtaining the latest version of LATEX2HTML,
+   installation within the local environment, and where to look for help
+   when things do not go as expected, can be found in the support
+   section.
+   
+                      2. Installation and Further Support
+                                       
+     2.1 Getting LATEX2HTML
+     _________________________________________________________________
+   
+   
+change_begin 98.1
+   One way LATEX2HTMLmay be obtained is through one of the three
+   Comprehensive TEX Archive Network (CTAN) sites. They are located at
+   
+   * US
+          United States: http://ctan.tug.org/ctan/,
+          
+   * UK
+          United Kingdom: http://www.tex.ac.uk/
+          
+   * DE
+          Germany: ftp://ftp.dante.de.
+          
+   In the directory http://ctan.tug.org/ctan/ should be the latest
+   version, uncompressed.
+   
+   There are also many mirrors. To find the nearest to you, get a listing
+   via the command:
+   
+     finger ctan@www.tug.org
+     
+change_begin 97.1
+   The site at
+   http://cdc-server.cdc.informatik.tu-darmstadt.de/~latex2html/ is a
+   convenient alternative for European users. This is connected to the
+   developer's repository, so should always have the most recent release.
+change_end 97.1
+   
+   
+   
+   Alternatively, a compressed tar  file of the source and related files
+   may be obtained from
+   http://saftsack.fs.uni-bayreuth.de/~latex2ht/
+
+   
+   Two other ftp -sites are
+   http://ctan.tug.org/ctan/tex-archive/support/latex2html and
+   ftp://ftp.rzg.mpg.de/pub/software/latex2html/sources/latex2html-98.1.t
+   ar.gz.
+   
+   
+   
+   Other ftp -sites nearer to you can be found using Archie  at
+   http://hoohoo.ncsa.uiuc.edu/archie.html or
+   http://www.pvv.unit.no/archie/ (faster) or more recent Web-searching
+   tools such as FTP search  in Norway.
+   
+     Warning: Some ftp -sites may not carry the latest version.
+     
+   
+   
+   Updates and patches are posted on the LATEX2HTML server at
+   http://saftsack.fs.uni-bayreuth.de/~latex2ht/
+
+change_end 98.1
+   
+   
+change_begin 97.1
+   For users of Windows NT, there is a port of LATEX2HTML obtainable from
+   ftp://ftp.ese-metz.fr/pub/TeX/win32. Obtain the release from this site
+   and follow the instructions in the accompanying file README.win32.
+   Thanks to   Fabrice Popineau for this work.
+   In future it is planned to merge this code with the main distribution.
+change_end 97.1
+   
+   
+change_begin 97.1
+   Finally there is the LATEX2HTML developers' CVS repository, at
+   http://cdc-server.cdc.informatik.tu-darmstadt.de/~latex2html/user/.
+   The files to be found here are the most up-to-date with current
+   developments, but they cannot be guaranteed to be fully reliable. New
+   features may be still under development and not yet sufficiently
+   tested for release. A daily updated compressed archive of the
+   developers' work may be downloaded from
+   http://cdc-server.cdc.informatik.tu-darmstadt.de/~latex2html/l2h-lates
+   t.tar.gz.
+   
+     Warning: Use the files from this site at your own risk.
+     
+change_end 97.1
+     _________________________________________________________________
+   
+   
+   
+   Having obtained a compressed tar  version, save it into a file
+   latex2html-98.1.tar.gz  say, then extract its contents with
+
+% gzip -d latex2html-98.1.tar.gz
+% tar xvf latex2html-98.1.tar
+
+   
+   
+   You should then have the following:
+     * README  file;
+change_begin 98.1
+     * Changes  index with latest changes;
+     * Changes.detailed  (no longer supplied);
+change_end 98.1
+     * latex2html  Perl script;
+     * texexpand  Perl script1;
+     * latex2html.config  configuration file;
+     * install-test  Perl script, for installation and testing;
+     * dot.latex2html-init  sample initialisation file;
+change_begin 97.1
+     * texinputs/  subdirectory, containing various LATEX style-files;
+     * versions/  subdirectory, containing code for specific HTML
+       versions;
+     * makemap  Perl script;
+     * example/  subdirectory, containing the segmentation example,
+       described in detail in a later section;
+     * .dvipsrc  file;
+     * pstogif  Perl script (no longer supplied);
+change_end 97.1
+change_begin 97.1
+     * pstoimg  Perl script for image conversion (replaces pstogif );
+     * configure-pstoimg  Perl script for installation;
+     * local.pm  Perl input file;
+     * icons.gif/  subdirectory, containing icons in GIF format;
+     * icons.png/  subdirectory, containing icons in PNG format;
+     * makeseg  Perl script and examples to handle segmented documents
+       via a generated Makefile, see makeseg.tex;
+change_end 97.1
+change_begin 98.1
+     * foilhtml/  package to support FoilTeX to HTML  translation, by
+       Boris Veystman;
+     * IndicTeX-HTML/  package that contains Perl and LATEX code for
+       translating IndicTEX documents (see README file);
+change_end 98.1
+     * docs/  subdirectory, containing the files needed to create a
+       version of this manual;
+     * styles/  subdirectory, containing Perl code for handling some
+       style-files;
+     * tests/  contains some test documents for LATEX2HTML.
+     _________________________________________________________________
+   
+  2.1.1 Requirements
+  
+   
+   The translator makes use of several utilities all of which are freely
+   available on most platforms. You may use Archie , or other
+   Web-searching tools such as FTP search , to find the source code of
+   any utilities you might need.
+   
+   For the best use of LATEX2HTML you want to get the latest versions of
+   all the utilities that it uses. (It will still work with earlier
+   versions, but some special effects may not be possible. The specific
+   requirements are discussed below.)
+change_begin 98.1
+     * Perl version 5.002, or later (check with perl -v);
+       Perl should be compiled to use the csh  or tcsh  shell, though
+       LATEX2HTML can also work with the bash  shell if Perl is
+       recompiled to use it as ``full csh''. Don't care about this, you
+       will be reported about missing things by install-test  if there
+       are any.
+change_end 98.1
+     * LATEX, meaning LATEX2e dated <1995/06/01>, or later;
+     * dvips  or dvipsk , at version 5.58 or later;
+     * Ghostscript  at version 4.02 or later;
+     * the netpbm  library of graphics utilities version 1-MAR-94 (check
+       with pnmcrop -version).
+     _________________________________________________________________
+   
+   More specific requirements for using LATEX2HTML depend on the kind of
+   translation you would like to perform, as follows:
+   1.
+            LATEX commands but without equations, figures, tables, etc.
+          + Perl
+change_begin 98.1
+            Note: LATEX2HTML requires Perl 5 to operate.
+change_end 98.1
+            Warning 1: You really do need Perl 5.
+            Versions of LATEX2HTML up to V96.1H work both with Perl 4 at
+            patch level 36 and Perl 5, though some of the packages may
+            only work with Perl 5.
+            Warning 2:   Various aspects of Perl, which are used by
+            LATEX2HTML, assume certain system commands to be provided by
+            the operating system shell. If csh  or tcsh  is used to
+            invoke LATEX2HTML then everything should work properly. Perl
+            5 eliminates this requirement on the shell.
+            
+          + DBM  or NDBM , the Unix DataBase Management system, or GDBM ,
+            the GNU database manager.
+            Note: Some systems lack any DBM support. Perl 5 comes with
+            its own database system SDBM, but it is sometimes not part of
+            some Perl distributions.
+change_begin 98.1
+            The installation script install-test  will check that for
+            you. If no database system is found, you will have to install
+            Perl properly.
+change_end 98.1
+          
+   2.
+          LATEX commands with equations, figures, tables, etc.
+          As above plus ...
+          + latex  (version 2e recommended but 2.09 acceptable);
+          + dvips (version 5.516 or later) or dvipsk
+change_begin 98.1
+            Version 5.62 or higher enhances the performance of image
+            creation with a significant speed-up. See latex2html.config
+            for this after you are done with the installation. Do not use
+            the 'dvips -E' feature unless you have 5.62, else you will
+            get broken images.
+change_end 98.1
+            
+          +
+change_begin 98.1
+            gs  Ghostscript  (version 4.03 or later); with the ppmraw
+            device driver, or even better pnmraw. Upgrade to 5.10 or
+            later if you want to go sure about seldom problems with 4.03
+            to avoid (yet unclarified).
+change_end 98.1
+            
+          +
+change_begin 98.1
+            The netpbm library. Netpbm 1 March 1994 is recommended. Check
+            with pnmcrop -version.
+change_end 98.1
+            Several of the filters in those libraries are used during the
+            PostScript  to GIF conversion.
+          +
+change_begin 98.1
+            If you want PNG images, you need pnmtopng  (current version
+            is 2.31). It is not part of netpbm  and requires
+            libpng-0.89c.tar.gz  and libz  (1.0.4) (or later versions).
+            pnmtopng  supports transparency and interlace mode.
+            Hooray!!!
+            Netscape Navigator  v4.04 has been reported to grok PNG
+            images! That means your PNG option is not longer ahead of its
+            time!
+change_end 98.1
+          
+   3.
+          Segmentation of large documents
+          If you wish to use this feature, you will have to upgrade your
+          LATEX to LATEX2e. Some other hyperlinking features also require
+          LATEX2e.
+          
+   4.
+          Transparent inlined images
+          If you dislike the white background color of the generated
+          inlined images then you should get either the netpbm  library
+          (instead of the older pbmplus ) or install the giftrans filter
+          by Andreas Ley <ley@rz.uni-karlsruhe.de>. LATEX2HTML now
+          supports the shareware program giftool  (by Home Pages, Inc.,
+          version 1.0), too. It can also create interlaced GIFs.
+          
+   
+   
+   If Ghostscript  or the netpbm  library are not available, it is still
+   possible to use the translator with the -no_images option.
+   
+   
+   If you intend to use any of the special features of the translator
+   then you have to include the html.sty  file in any LATEX documents
+   that use them.
+   
+   
+   Since by default the translator makes use of inlined images in the
+   final HTML output, it would be better to have a viewer which supports
+   the <IMG> tag, such as NCSA Mosaic or Netscape Navigator.
+change_begin 97.1
+   Any browser which claims to be compatible with HTML 3.2 should meet
+   this requirement.
+change_end 97.1
+   
+   
+   If only a character-based browser, such as lynx , is available, or if
+   you want the generated documents to be more portable, then the
+   translator can be used with the -ascii_mode option.
+   
+   
+   
+  2.1.2 Installing LATEX2HTML
+  
+   
+change_begin 98.1
+   To install LATEX2HTML you MUST do the following:
+   1.
+          Specify where Perl is on your system.
+          In each of the files latex2html , texexpand , pstoimg ,
+          install-test  and makemap , modify the first line saying where
+          Perl is on your system.
+          
+          Some system administrators do not allow Perl programs to run as
+          shell scripts. This means that you may not be able to run any
+          of the above programs. In this case change the first line in
+          each of these programs from 
+          #!/usr/local/bin/perl
+          to:
+
+# *-*-perl-*-*
+    eval 'exec perl -S  $0 "$@"'
+    if $running_under_some_shell;
+          
+   2.
+          Copy the files to the destination directory.
+          Copy the contents of the texinputs/  directory to a place where
+          they will be found by LATEX, or set up your TEXINPUTS  variable
+          to point to that directory.
+          
+   3.
+          Run install-test .
+          This Perl script will make some changes in the latex2html  file
+          and then check whether the path-names to any external utilities
+          required by latex2html  are correct. It will not actually
+          install the external utilities. install-test  asks you whether
+          to configure for GIF or PNG  image generation. Finally it
+          creates the file local.pm  which houses pathnames for the
+          external utilities determined earlier.
+          You might need to make install-test  executable before using
+          it. Use chmod +x install-test to do this. You may also need to
+          make the files pstogif , texexpand , configure-pstoimg  and
+          latex2html  executable if install-test  fails to do it for you.
+          
+   4.
+          If you like so, copy or move the latex2html  executable script
+          to some location outside the $LATEX2HTMLDIR  directory.
+          
+   5.
+          You might want to edit latex2html.config  to reflect your
+          needs. Read the instructions about $ICONSERVER  carefully to
+          make sure your HTML  documents will be displayed right via the
+          Web server.
+          While you're at it you may want to change some of the default
+          options in the same file.
+          If you do a system installation for many users, only care for
+          general aspects and let the user override them with
+          $HOME/.latex2html-init.
+          
+   Note that you must run install-test  now (formerly you needn't). If
+   you want to reconfigure LATEX2HTML for GIF/PNG image generation, or
+   because some of the external tools changed the location, simply rerun
+   configure-pstoimg .
+change_end 98.1
+                    ___________________________________
+   
+   This is usually enough for the main installation, but you may also
+   want to do some of the following, to ensure that advanced features of
+   LATEX2HTML work correctly on your system:
+   
+     * To use the new LATEX commands which are defined in html.sty :
+       Make sure that LATEX knows where the html.sty  file is, either by
+       putting it in the same place as the other style-files on your
+       system, or by changing your TEXINPUTS  shell environment variable,
+       or by copying html.sty  into the same directory as your LATEX
+       source file.
+       The environment variable TEXINPUTS  is not to be confused with the
+       LATEX2HTML installation variable $TEXINPUTS  described next.
+       
+     * There is an installation variable in latex2html.config  called
+       $TEXINPUTS , which tells LATEX2HTML where to look for LATEX
+       style-files to process. It can also affect the input-path of LATEX
+       when called by LATEX2HTML, unless the command latex  is really a
+       script which overwrites the $TEXINPUTS  variable prior to calling
+       the real latex . This variable is overridden by the environment
+       variable of the same name if it is set.
+       
+     * The installation variable $PK_GENERATION  specifies which fonts
+       are used in the generation of mathematical equations. A value of
+       ``0'' causes the same fonts to be used as those for the default
+       printer. Because they were designed for a printer of much greater
+       resolution than the screen, equations will generally appear to be
+       of a lower quality than is otherwise possible. To cause LATEX2HTML
+       to dynamically generate fonts that are designed specifically for
+       the screen, you should specify a value of ``1'' for this variable.
+       If you do, then check to see whether your version of dvips
+       supports the command-line option -mode . If it does, then also set
+       the installation variable $DVIPS_MODE  to a low resolution entry
+       from modes.mf , such as toshiba .
+       It may also be necessary to edit the MakeTeXPK  script, to
+       recognise this mode at the appropriate resolution.
+change_begin 97.1
+       If you have PostScript  fonts available for use with LATEX and
+       dvips  then you can probably ignore the above complications and
+       simply set $PK_GENERATION  to ``0'' and $DVIPS_MODE  to "" (the
+       empty string). You must also make sure that gs  has the locations
+       of the fonts recorded in its gs_fonts.ps  file. This should
+       already be the case where GS-Preview  is installed as the viewer
+       for .dvi-files, using the PostScript  fonts.
+change_end 97.1
+       If dvips  does not support the -mode switch, then leave
+       $DVIPS_MODE  undefined, and verify that the .dvipsrc  file points
+       to the correct screen device and its resolution.
+       
+     * The installation variable $AUTO_PREFIX  allows the filename-prefix
+       to be automatically set to the base filename-prefix of the
+       document being translated. This can be especially useful for
+       multiple-segment documents.
+       
+     * The makemap  script also has a configuration variable $SERVER ,
+       which must be set to either CERN or NCSA, depending on the type of
+       Web-server you are using.
+       
+     * To set up different initialization files:
+       For a ``per user'' initialization file, copy the file
+       dot.latex2html-init  in the home directory of any user that wants
+       it, modify it according to her preferences and rename it as
+       .latex2html-init . At runtime, both the latex2html.config  file
+       and $HOME/.latex2html-init  file will be loaded, but the latter
+       will take precedence.
+       
+       You can also set up a ``per directory'' initialization file by
+       copying a version of .latex2html-init  in each directory you would
+       like it to be effective. An initialization file
+       /X/Y/Z/.latex2html-init will take precedence over all other
+       initialization files if /X/Y/Z is the ``current directory'' when
+       LATEX2HTML is invoked.
+       
+       
+     Warning: This initialization file is incompatible with any version
+     of LATEX2HTML prior to V96.1. Users must either update this file in
+     their home directory, or delete it altogether.
+       
+     *  To make your own local copies of the LATEX2HTML icons:
+       Please copy the icons/  subdirectory to a place under your WWW
+       tree where they can be served by your server. Then modify the
+       value of the $ICONSERVER  variable in latex2html.config
+       accordingly.
+change_begin 97.1
+       Alternatively, a local copy of the icons can be included within
+       the subdirectory containing your completed HTML documents. This is
+       most easily done using the -local_icons command-line switch, or by
+       setting $LOCAL_ICONS  to ``1'' in latex2html.config  or within an
+       initialization file, as described above.
+change_end 97.1
+       
+       
+     Warnings: If you cannot do that, bear in mind that these icons will
+     have to travel from Livermore, California!!! Also note that several
+     more icons were added in V96.1 that were not present in earlier
+     versions of LATEX2HTML.
+       
+     * To make your own local copy of the LATEX2HTML documentation:
+       This will also be a good test of your installation.   Firstly, to
+       obtain the .dvi version for printing, from within the docs/
+       directory it is sufficient to type:
+       make manual.dvi
+       This initiates the following sequence of commands:
+
+latex manual.tex
+makeindex -s l2hidx.ist manual.idx
+makeindex -s l2hglo.ist -o manual.gls manual.glo
+latex manual.tex
+latex manual.tex
+       ...in which the two configuration files l2hidx.ist  and
+       l2hglo.ist  for the makeindex  program, are used to create the
+       index and glossary respectively. The 2nd run of latex  is needed
+       to assimilate references, etc. and include the index and glossary.
+       
+       (In case makeindex  is not available, a copy of its outputs
+       manual.ind  and manual.gls  are included in the docs/
+       subdirectory, along with manual.aux .)
+       The 3rd run of latex  is needed to adjust page-numbering for the
+       Index and Glossary within the Table-of-Contents.
+       Next, the HTML version is obtained by typing:
+       make manual.html
+       This initiates a series of calls to LATEX2HTML on the separate
+       segments of the manual; the full manual is thus created as a
+       ``segmented document'' (see a later section). The whole process
+       may take quite some time, as each segment needs to be processed at
+       least twice, to collect the cross-references from other segments.
+       
+       The files necessary for correct typesetting of the manual to be
+       found within the docs/  subdirectory. They are as follows:
+        
+          + style-files: l2hman.sty , html.sty , htmllist.sty ,
+            justify.sty ,
+            changebar.sty  and url.sty
+          + inputs: changes.tex , credits.tex , features.tex ,
+            hypextra.tex ,
+            licence.tex , manhtml.tex , manual.tex , overview.tex ,
+            problems.tex , support.tex  and userman.tex
+          + sub-directory: psfiles/  containing PostScript  graphics used
+            in the printed version of this manual
+          + images of small curved arrows: up.gif , dn.gif
+          + filename data: l2hfiles.dat
+          + auxiliaries: manual.aux , manual.ind , manual.gls
+       The last three can be derived from the others, but are included
+       for convenience.
+       
+     *
+change_begin 98.1
+       To get a printed version of the `Changes' section: 
+       Due to the burgeoning size of the Changes  file with successive
+       revisions of LATEX2HTML, the `Changes' section is no longer
+       supported for the manual. Please refer to text file Changes
+       instead which is part of the distribution.
+change_end 98.1
+       
+     * To join the community of LATEX2HTML users:
+       More information on a mailing list, discussion archives, bug
+       reporting forms and more is available at
+       http://saftsack.fs.uni-bayreuth.de/~latex2ht/
+       or
+       http://cbl.leeds.ac.uk/nikos/tex2html/doc/latex2html/latex2html.html
+       
+   2.2 Getting Support and More Information
+
+   
+   
+   A LATEX2HTML mailing list has been set up at the TeX Users Group.
+   The LATEX2HTML mailing list archive is available.
+   (Thanks to Ian Foster <itf@mcs.anl.gov> and Bob Olson
+   <olson@mcs.anl.gov>.)
+   
+   To join send a message to: <latex2html-request@tug.org >
+   with the contents:   subscribe
+   
+   To be removed from the list send a message to:
+   <latex2html-request@tug.org>
+   with the contents:   unsubscribe
+   
+   The mailing list also has a searchable online archive at
+   http://www.xray.mpe.mpg.de/mailing-lists/latex2html/. It is
+   recommendable to start with that URL first, to get in touch with the
+   topics actually discussed and to search for articles related with your
+   interests.
+   
+   Enjoy!
+   
+                                       
+                               3. Known Problems
+     _________________________________________________________________
+   
+   
+   Here are some of the problems that were known to exist with previous
+   versions of LATEX2HTML. Most of those that were real errors are either
+   fixed completely in the current version (V98.1), or are much less
+   likely to occur within correct LATEX source. (Some are not really
+   errors but indications of poor style in the user's choices among
+   various ways to organise their source code.)
+   Several are indeed limitations inherent in the way LATEX2HTML
+   currently performs its processing.
+   
+   * Correctness and Efficiency:  
+          The translator cannot be guaranteed to perform as expected.
+          Several aspects of the implementation need optimisation and
+          improvement. Apart from possible bugs the translator may place
+          heavy demands on your resources.
+change_begin 97.1
+          The current version works much more efficiently than previous
+          versions; many subtle bugs have been identified and eliminated.
+change_end 97.1
+change_begin 98.1
+          The process of command substitution has been improved
+          significantly, resulting in memory savings and faster document
+          text translation.
+change_end 98.1
+          
+   * Unrecognised Commands and Environments:  
+          Unrecognised commands are ignored and any arguments are left in
+          the text. Unrecognised environments are passed to LATEX and the
+          result is included in the document as one or more inlined
+          images.
+change_begin 97.1
+          There are very few standard LATEX commands that are not
+          recognised. Many common TEX commands are recognised also, even
+          though not explicitly mentioned in the LATEX #!lamp:latex!#.
+          Any aberrant commands should be reported to the LATEX2HTML
+          mailing list.
+change_end 97.1
+          
+   * Cross-references:  
+          References in environments that are passed to LATEX for
+          processing (e.g. a \cite, or a \ref command), are not processed
+          correctly. \label commands are handled correctly.
+change_begin 97.1
+          All citation, reference and label commands should work
+          correctly now. Report any problems to the LATEX2HTML mailing
+          list.
+change_end 97.1
+          
+   * Order-Sensitive Commands: 
+          Commands which affect global parameters during the translation,
+          and are sensitive to the order in which they are processed may
+          not be handled correctly. In particular, counter manipulation
+          (e.g. \newcounter, \setcounter, \stepcounter, etc.) commands
+          may cause problems.
+change_begin 97.1
+          Counter commands now work correctly; dependencies are also
+          implemented.
+change_end 97.1
+          
+          
+   * Index: 
+          The translator generates its own index by saving the arguments
+          of the \index command. The contents of the theindex environment
+          are ignored.
+change_begin 97.1
+          This remains true. When using the makeidx package, very
+          sophisticated Indexes can be built automatically. The Index for
+          this manual is a good example.
+change_end 97.1
+          
+   * New Definitions:  
+          New definitions (\newcommand, \newenvironment, \newtheorem and
+          \def), will not work as expected if they are defined more than
+          once. Only the last definition will be used throughout the
+          document.
+change_begin 97.1
+          This remains true. Stylistically it is bad to declare new
+          environments or theorems outside of the document preamble, so
+          these should cause no problems anyway.
+          Changes to commands using \def or \renewcommand should usually
+          be made only locally, within special environments, to set a
+          needed parameter; e.g. a basic length in a picture environment.
+          But when such environments force an image to be generated, then
+          LATEX will make the correct redefinition.
+change_end 97.1
+          
+   * Scope of declarations and environments: 
+          If the scope of a declaration or environment crosses section
+          boundaries, then the output may not be as expected, because
+          each section is processed independently.
+change_begin 97.1
+          This is inherent to the way LATEX2HTML does its processing. It
+          will not be fixed until later versions change this strategy;
+          e.g. when LATEX2HTML-NG becomes fully integrated.
+change_end 97.1
+          
+   * Math-mode font-size changes: 
+          Math-mode font changes made outside the math-mode are not
+          honoured. Thus the two equations in $a_b$ and {\LARGE $a_b$}
+          would come out looking the same. The trick is to write $a_b and
+          $\mbox{\LARGE $a_b$}$.
+change_begin 97.1
+          This remains. The work-around is effective.
+change_end 97.1
+          
+3.1 Troubleshooting
+
+       Here are some curable symptoms:
+   
+   * Cannot run any of the Perl programs: 
+          If your Perl installation is such that Perl programs are not
+          allowed to run as shell scripts you may be unable to run
+          latex2html , texexpand , pstoimg  and install-test . In this
+          case change the first line in each of these programs from
+          
+
+#!/usr/local/bin/perl
+
+   to
+          
+: # *-*-perl-*-*
+    eval 'exec perl -S  $0 "$@"'
+    if $running_under_some_shell;
+
+   * The install-test  script gives uninformative error messages: 
+          If, for any reason, you have trouble running install-test , do
+          not despair. Most of what it does is to do with checking your
+          installation rather than actually installing anything. To do a
+          manual installation just change the variable $LATEX2HTMLDIR  in
+          the beginning of the file latex2html  to point to the directory
+          where the LATEX2HTML files can be found.
+          
+          Also, make sure that the files pstoimg , texexpand  and
+          latex2html  are executable; if necessary use the Unix chmod
+          command to make them executable.
+          
+   * It just stops. 
+          Check the style files that you are using. It is possible that
+          you are using a style file which contains raw TEX commands. In
+          such a case start LATEX2HTML with the option -dont_include
+          <style-file name> . Alternatively, add the name of the style to
+          the variable $DONT_INCLUDE  in your $HOME/.latex2html-init
+          file. If you don't have such a file then create one and add the
+          lines:
+          
+     $DONT_INCLUDE = "$DONT_INCLUDE" . ": <style file name>";
+     1; # This must be the last line
+     
+          Another reason why LATEX2HTML might stop is that the LATEX
+          source file itself contains raw TEX commands. In this case you
+          may put such commands inside a latexonly environment.
+          
+change_begin 97.1
+          The $VERBOSITY  variable can be used to create tracing
+          messages, which may help to locate which command or environment
+          was being processed when everything stopped.
+change_end 97.1
+          
+change_begin 97.1
+          
+   * It appears to be doing nothing. 
+          Perhaps the processor has fallen into an unending loop. Usually
+          there will be a bad definition, or other faulty source code,
+          which has caused this. The $VERBOSITY  variable can be set to
+          generate tracing messages, which may help to locate which
+          command or environment is being processed repeatedly. Try
+          setting a value of `3'; e.g. using the commandline switch
+          -verbosity 3 . This will print command and environment names,
+          as thaey are processed. It should soon become apparent where
+          any such looping occurs.
+          
+   * It just fills the endlessly with dots.
+          No `perhaps' here; the processor has definitely fallen into an
+          unending loop. See the previous item for how to detect which
+          command or environment is causing the problem.
+change_end 97.1
+change_begin 98.1
+          
+   * Perl cannot parse the latex2html  script: 
+          If Perl refuses to start LATEX2HTML and issues errors, your
+          Perl version is not up to date. Update your Perl to 5.003 or
+          later. You can check which version of Perl you are using by
+          invoking Perl with the -v option.
+          
+          If Perl issues errors during runtime, this is most probably
+          related to bugs within LATEX2HTML or one of its modules. In
+          this case you will need help from the developers or experienced
+          users; this can be obtained via the discussion list.
+          
+   * It crashes (dumps core) as soon as it starts : 
+          Update your Perl to 5.003 or later.
+change_end 98.1
+change_begin 98.1
+          
+   * It does not show any of your images: 
+          You can't run LATEX2HTML in a subdirectory that contains a dot
+          within the directory name, such as latex2html-98.1, or in name
+          of any higher directory. This is because dvips 's -o option
+          will change 98.1 into 98.001 and use that as the resulting
+          output file, instead of image001 . The PostScript  files will
+          be placed higher up in the directory tree.
+          
+          For instance, if pwd returns something like:
+          
+/usr/people/nelson/files/latex2html-98.1/work/tests
+
+   and you run LATEX2HTML, then dvips  will generate image output files
+          here:
+          
+
+/usr/people/nelson/files
+
+   called latex2html-98.001, latex2html-98.002, ... instead of image001,
+          image002, image003, ... in the subdirectory where your .html
+          files were created. As a result the images will not show in
+          your documents.
+          
+          If you are getting File Not Found errors, then turn on the
+          $DEBUG  flag in latex2html.config  to see what options are
+          passed to dvips . If there are some dots in names, then look
+          above that directory to see if files are being generated there.
+          
+          One obvious fix is to rename the offending directory to remove
+          the `.' from its name.
+          
+          If that is not possible, then define an alternative location
+          for image generation to take place; set $TMP to contain the
+          name for this location. Typically $TMP = '/usr/tmp'; . (This
+          use of $TMP is a good thing to do anyway, especially if your
+          Unix account is subject to quota limitations.)
+          
+   * It stops after having run LATEX, displaying a message about dvips : 
+          See the previous item.
+change_end 98.1
+          
+   * dvips  complains about incorrect arguments:  
+          Please use a version which supports the command-line options -M
+          , -S , -o and -i . ``Recent'' versions, at least after 5.516,
+          do support them.
+          
+   * It gives an ``Out of memory'' message and dies: 
+          Try splitting your source file into more than one file, using
+          the LATEX commands \input or \include. Also, try using the
+          -no_images option.
+          
+change_begin 97.1
+          Perhaps the processor has fallen into an infinite loop. Usually
+          there will be a bad definition, or other faulty source code,
+          which has caused this. See an earlier problem for how to set
+          the $VERBOSITY  variable to help locate the bad code leading to
+          this memory exhaustion.
+change_end 97.1
+          As a last resort you may consider increasing the virtual memory
+          (swap space) of your machine. As an indication of what you
+          might be able to do on your machine, a very long book (about
+          1000 printed pages) required about 24MB of RAM and over 150MB
+          of swap space to convert on a local Sun Sparc ELC running SunOS
+          4.1.3.
+change_begin 97.1
+          Much of this memory would have been consumed during
+          image-generation. This part of the processing is much more
+          efficient in V97.1.
+change_end 97.1
+change_begin 98.1
+          
+   * install-test  issues ``dbm'' related error messages: 
+          LATEX2HTML requires a DataBase Management system (NDBM , GDBM ,
+          or SDBM ) in order to run. This is usually part of each
+          Unix-like operating system and SDBM  is part of Perl 5, but
+          sometimes this is either missing on your operating system or
+          left out in a binary Perl distribution. Use   to find one or
+          (better) update to a complete Perl 5 distribution.
+          
+   * latex2html  issues ``dbm'' related error messages: 
+          If you get warnings like
+          
+
+ndbm store returned -1, errno 28, key "xyz" at latex2html line 123
+
+   this is related to an overflow of LATEX2HTML internals. You will need
+          help from the list, here.
+          
+          If you get real error messages which cause LATEX2HTML to abort,
+          run install-test  to check if your DataBase management works.
+          You will probably need to re-install Perl 5 (see above topic).
+change_end 98.1
+change_begin 97.1
+          This can happen when an image is being created from a large
+          piece of LATEX source code. The image-reuse mechanism uses the
+          code itself to construct a database key. If too long, the key
+          is invalid and may crash DBM  or NDBM . (In fact this error
+          should no longer occur in V97.1, so please advise the
+          LATEX2HTML developers if you get error messages of this kind.)
+          The message should contain the name of environment which caused
+          the problem, along with an identifying number; e.g.
+          eqnarray268. To find which exact piece of code this represents,
+          run LATEX2HTML again, using the -debug switch. Then look at the
+          files in the TMP subdirectory of the working directory named
+          TMP/part001, TMP/part002, etc. Use the unix grep  command: grep
+          268 <dir>/TMP/part* to find that number in these files. This
+          should enable you to locate exactly where the problem occurs.
+          
+          One solution may be to wrap the whole environment within
+          \begin{makeimage} and \end{makeimage}. This will still cause
+          the image to be created, but uses just the environment name and
+          number as the database key.
+change_end 97.1
+          
+   * The \verb"ABC" command doesn't work: 
+          This is a nasty bug. Please use any character other than
+          quotes; e.g. \verb+ABC+.
+          
+   * Cannot get the ``tilde'' (~) to show: 
+          The trick here is to use the command \~{}.
+          Alternatively try using something like: mylink">mylink
+          
+   .
+   
+   Warning: Some browsers may not be able to interpret the %7E as a
+   ``tilde'' character.
+   
+change_begin 98.1
+   Alternatively use the \char126 command. Anyway, tildes within
+   \htmladdnormallink and familiar commands are now handled correctly.
+change_end 98.1
+   
+   * Macro definitions don't work correctly: 
+   As mentioned in other places, not all plain TEX \def-initions can be
+   converted. But you may also have problems even when using LATEX
+   definitions (with \newcommand and \newenvironment) if such definitions
+   make use of sectioning or \verbatim commands. These are handled in a
+   special way by LATEX2HTML and cannot be used in macro definitions.
+   
+   In general the macro handling mechanism is inefficient and very
+   fragile. Avoid using macros if possible.
+change_begin 97.1
+   A greater range of macros definitions can now be handled, especially
+   if appropriate declarations are added to an initialization file.
+change_end 97.1
+   
+   * \input commands: 
+   There is a bug in the expansion of \input commands which causes a
+   problem when more than one \input command appears on the same line.
+   There is no quick fix other than suggesting that you put each \input
+   command on a line by itself, in the LATEX source files.
+   
+   * \input commands in verbatim environments: 
+change_begin 98.1
+   Should no longer cause problems (actually since 97.1). \input commands
+   are also handled right within comment environments as declared with
+   \excludecomment. Alternatively you might want to use either the
+   verbatim or the verbatimfiles package.
+change_end 98.1
+   
+   * Optional arguments in description environments: 
+   If you have optional arguments for the \item command in a description
+   environment containing nested ``]'' characters then these may not show
+   up correctly. To avoid the problem enclose them in {}s;
+   e.g. \item[{[nested [angle [brackets] are ok]]}]
+   
+   * LATEX2HTML behaves differently even when you run it on the same
+   file: 
+   
+   If you notice any strange side-effects from previous runs of
+   LATEX2HTML, try using the option -no_reuse and choose (d) when
+   prompted. This will clear any intermediate files generated during
+   previous runs. Note that this option will disable the image-reuse
+   mechanism.
+   
+   * Cannot convert PostScript  images which are included in the LATEX
+   file: 
+   
+   It is likely that the macros you are using for including PostScript
+   files (e.g. \epsffile) are not understood by LATEX2HTML. To avoid this
+   problem enclose them in an environment which will be passed to LATEX
+   anyway; e.g.
+   
+     \begin{figure}
+     \epsffile{ <PostScript file name>}
+     \end{figure}
+     
+   Another reason why this might happen is that your shell environment
+   variable TEXINPUTS  may be undefined. This is not always fatal but if
+   you have problems you can use full path-names for included PostScript
+   files (even when the PostScript  files are in the same directory as
+   the LATEX source file). Alternatively try setting TEXINPUTS  to `.::'.
+   With some TEX and LATEX installations setting TEXINPUTS  to `.::' may
+   cause problems in the normal operation of LATEX. If you get errors
+   such as LATEX complaining that it can no longer find any style files
+   then you must set TEXINPUTS  to "<path to your LaTeX installation>:."
+   if you want to use both LATEX and LATEX2HTML.
+   
+   * Some of the inlined images are in the wrong places: 
+   There are several known ways that this may occur.
+     * Perhaps one of the inlined images is more than a page (paper page)
+       long. This is sometimes the case with very large tables or large
+       PostScript  images. In this case you can try specifying a larger
+       paper size (e.g. `a4', `a3' or even `a0') instead of the default
+       (`a5') using the LATEX2HTML variable $PAPERSIZE  in the file
+       latex2html.config .
+       This reason for the error should no longer occur with V97.1.
+       Please report it on the mailing-list, if it does.
+     * More likely is that some inappropriate LATEX code has caused an
+       error, resulting in an extra page (or pages) being generated.
+       Examine the images.log  file, to see if it reports any LATEX
+       errors.
+     * A much rarer reason is that by default the dvips  program reverses
+       the PostScript  pages it generates. If your dvips  program behaves
+       in this way try changing the line:
+       $DVIPS = "dvips";
+       to:
+       $DVIPS = "dvips -r0";
+       within the file latex2html.config .
+     * Yet another reason for images appearing out of place, especially
+       while developing a document, is that the browser's image cache is
+       providing out-of-date versions rather than getting the latest
+       version afresh. When this occurs there will often be images
+       stretched or shrunk to fit the wrong sized imaging area; this
+       symptom is browser-dependent. Flushing the cache, then reloading
+       the HTML document, should clear up the problem.
+       
+   * Unacceptable quality of converted images: 
+   Try changing the size of the image (see image conversion).
+   
+   * The bibliographic references are missing: 
+   Run latex  and then bibtex  on the original source file in order to
+   generate a .bbl file. LATEX2HTML may need the .bbl file in order to
+   generate the references.
+   
+   * The labels of figures, tables or equations are wrong: 
+   This can happen if you have used any figures, tables, equations or any
+   counters inside conditional text; i.e. in a latexonly or a htmlonly
+   environment.
+   
+   * Problems after changing the configuration files: 
+   Please make sure that the last line in the configuration files (i.e.
+   .latex2html-init  and latex2html.config ) is:
+
+1;      # This is the last line
+
+   This is a Perl quirk.
+   
+   * Problems when producing the .dvi version:  
+   If you are using any of the new LATEX commands which are defined in
+   the html.sty  file make sure that html.sty  is included; e.g. as one
+   of the optional arguments to the \documentclass command.
+   
+   Of course you also have to make sure that LATEX knows where the
+   html.sty  file is, either by putting it in the same place as the other
+   style-files on your system, or by changing your TEXINPUTS  shell
+   environment variable 2.
+   
+   * Some of the fonts are translated incorrectly: 
+   There is a fault in way the LATEX scoping rules have been interpreted
+   in LATEX2HTML. Consider this:
+
+\ttfamily fixed-width font.
+\begin{something}
+nothing here
+\end{something}
+default font.
+
+   When processed by LATEX, the effect of the \tt command is delimited by
+   the beginning of the environment ``something'', so that ``default
+   font'' will appear in the default font. But LATEX2HTML will not
+   recognise ``something'' as a delimiter and ``default font'' will
+   appear in the wrong font.
+   
+   To avoid this problem (until it is fixed) you may delimit the scope of
+   some commands explicitly using {}'s; i.e.
+
+\texttt{fixed-width font}.
+\begin{something}
+nothing here
+\end{something}
+default font.
+
+change_begin 98.1
+   Nesting of font changing commands is now handled right. Such problems
+   should not occur furthermore.
+change_end 98.1
+   
+   * Cannot get it to generate inlined images: 
+   Run LATEX2HTML with the -debug switch, and have a look in the
+   directory of the generated HTML files for two files images.tex  and
+   images.log . Do you notice anything unusual in them? Copy images.tex
+   into the directory of your original LATEX file and run latex  on
+   images.tex . Can you see any errors in images.log ? If yes, can you
+   fix images.tex  to get rid of the errors?
+   
+   After fixing images.tex  you can put it back in the directory of HTML
+   files created by LATEX2HTML and run LATEX2HTML on the original
+   document using the option -images_only .
+   
+   However if you make changes or additions to the original source then
+   the same problems may occur again, so it is better to understand why
+   the changes were required and alter the source code appropriately.
+   
+   If you get into a mess delete all the image files and run LATEX2HTML
+   again. Often it is sufficient to just delete the file images.pl .
+   
+   If you still get into a mess, try running LATEX2HTML with the options
+   -no_reuse and -no_images ; e.g.
+
+cblipca% latex2html -no_reuse -no_images test.tex
+This is LaTeX2HTML Version 95 (Tue Nov 29 1994) by Nikos Drakos,
+Computer Based Learning Unit, University of Leeds.
+
+OPENING /tmp_mnt/home/cblelca/nikos/tmp/test.tex
+Cannot create directory /usr/cblelca/nikos/tmp/test: File exists
+(r) Reuse the images in the old directory OR
+(d) *** DELETE *** /usr/cblelca/nikos/tmp/test AND ITS CONTENTS OR
+(q) Quit ?
+:d
+
+Reading ...
+Processing macros ....+.
+Reading test.aux ......................
+Translating ...0/1........1/1.....
+Writing image file ...
+
+Doing section links .....
+
+*********** WARNINGS ***********
+
+If you are having problems displaying the correct images with Mosaic,
+try selecting "Flush Image Cache" from "Options" in the menu-bar
+and then reload the HTML file.
+
+Done.
+
+   Then try to have a look in the file images.tex  (as described earlier)
+   and perhaps fix it. Once you are happy that images.tex  is OK, run
+   LATEX2HTML again with the option -images_only .
+   
+   Some problems in displaying the correct inlined images, may be due to
+   the image caching mechanisms of your browser. With some browsers a
+   simple ``Reload Current Document'' will be enough to refresh the
+   images but with others (e.g. Mosaic ) you may need to request for the
+   cache to be refreshed. With Mosaic  try selecting ``Flush Image
+   Cache'' from ``Options'' in the menu-bar and then reload the HTML
+   file.
+   
+   * It cannot do slides, memos, etc. 
+   If you use SliTEX you can go a long way just by replacing the {slides}
+   argument of the \documentclass command with something like {article}
+   just before using LATEX2HTML. One problem may be that all your slides
+   will end up in the same HTML file. If you use lslide.sty  you may get
+   much better results (use   to find this or any other style files).
+   
+   2
+     _________________________________________________________________
+   
+    Footnotes
+    
+   ... script1
+          Initially written by   Robert S. Thau, completely rewritten by
+            Marek Rouchal and   Jens Lippmann.
+          
+   ... variable2
+          If you don't know how to do either of these things, copy (or
+          link) html.sty  to the directory of your LATEX document.
+     _________________________________________________________________
+   
+   
+    Jens Lippmann 
+    1998-02-22

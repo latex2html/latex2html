@@ -1,0 +1,79 @@
+        SECTIONING COMMANDS IN FOILTEX AND CONVERSION TO HTML FORMAT:
+                             FOILHTML PACKAGE
+
+                        Version 1.2, February 17, 1998
+
+                              Boris Veytsman  
+                      E-mail: boris@plmsc.psu.edu
+               Home page: http://www.plmsc.psu.edu/~boris
+
+
+   The standard FoilTeX system is based on a visual rather than
+   logical formatting. Thus automatic conversion of FoilTeX 
+   documents to HTML format is difficult. In particular, the
+   well-known LaTeX2HTML converter gives unsatisfactory results
+   when used on FoilTeX documents.
+ 
+   This package provides integration between FoilTeX and
+   LaTeX2HTML. It adds sectioning commands and elements of logical
+   formatting to FoilTeX and provides support for FoilTeX commands
+   in LaTeX2HTML. It also supports automatic creation of
+   LaTeX2HTML images with proper font sizes and shapes when
+   converting FoilTeX documents.
+
+
+ 
+Installation
+
+Since FoilHTML is an add-on to FoilTeX and LaTeX2HTML, you need both
+these programs installed and working prior to installation of
+FoilHTML. This package is intended for LaTeX2e only; I don't have
+enough time to port and test it under LaTeX2.09. It is tested under
+FoilTeX v2.1 and LaTeX2HTML v96, 97, 98.
+
+The FoilHTML distribution consists of the following files:
+
+ - readme.v12---Read Me file
+ - foilhtml.dtx---the fully documented code
+ - foilhtml.ins---the LaTeX program extracting the code from the .dtx file. 
+
+To install the package:
+
+ - Run LaTeX on foilhtml.ins. This will create the following files:
+     o foilhtml.perl---Perl script for LaTeX2HTML96-1,
+     o foils.perl---Perl script for LaTeX2HTML97-1,
+     o foilhtml.sty and foilhtml.cfg---LaTeX style file and the
+         configuration file for user-customization,
+     o foilhtml.drv---documentation driver.
+     o foilhtml-96.perl and foils-97.perl---obsolete versions of
+         Perl scripts required only if you have an obsolete installation
+         LaTeX2HTML.
+
+ - Put foils.perl to the directory where your LaTeX2HTML 
+     scripts reside (usually it is styles subdirectory of the main 
+     LaTeX2HTML directory, e. g. /usr/local/lib/latex2html/styles). 
+ - Tune the configuration file foilhtml.cfg according to your
+     taste and put it together with the file foilhtml.sty to the
+     directory read by LaTeX. 
+ - Run LaTeX on  foilhtml.drv to produce the documentation (the 
+     documentation driver foilhtml.drv reads the contents of the file 
+     foilhtml.dtx, so do not delete the latter until you produced the 
+     documentation).
+ - (Optional) to produce the documentation and the code run
+     LaTeX through the file foilhtml.dtx
+
+If you have older versions of LaTeX2HTML, your best options is to upgrade. 
+However, if you cannot do this by some reason, you can use the previous
+versions of the perl scripts. Just rename the files foilhtml-96.perl 
+or foils-97.perl to foilhtml.perl or foils.perl correspondingly
+and install them in the |styles| subdirectory.
+
+
+
+What's New in Version 1.2:
+ - Added support for LaTeX2HTML98-1.
+
+
+What's New in Version 1.1:
+ - Added support for LaTeX2HTML97-1.
+

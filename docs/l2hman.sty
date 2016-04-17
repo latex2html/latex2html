@@ -1,0 +1,56 @@
+\makeatletter
+%
+% indent verbatim environments
+%
+%\def\verbatim{\@verbatim \advance\@totalleftmargin 30\p@
+% \frenchspacing\@vobeyspaces \@xverbatim}
+
+\def\indentverb#1{\def\@verbindent{#1}}
+\def\@verbindent{18\p@}
+\def\@verbatim{\trivlist \advance\@totalleftmargin\@verbindent 
+  \item\relax
+  \if@minipage\else\vskip\parskip\fi
+  \leftskip\@totalleftmargin\rightskip\z@skip
+  \parindent\z@\parfillskip\@flushglue\parskip\z@skip
+  \@@par
+  \@tempswafalse
+  \def\par{%
+    \if@tempswa
+      \leavevmode \null \@@par\penalty\interlinepenalty
+    \else
+      \@tempswatrue
+      \ifhmode\@@par\penalty\interlinepenalty\fi
+    \fi}%
+  \obeylines \verbatim@font \@noligs
+  \let\do\@makeother \dospecials
+  \everypar \expandafter{\the\everypar \unpenalty}%
+}
+
+%
+% these are used in the index and/or glossary
+%
+\def\efill{\hfill\nopagebreak}%
+\def\dotfill{\leaders\hbox to.6em{\hss.\hss}\hskip0pt plus 1fill}%
+\def\dotfil{\leaders\hbox to.6em{\hss.\hss}\hfil}%
+\def\pfill{\unskip~\dotfill\penalty500\strut\nobreak
+  \dotfil~\ignorespaces}%
+\def\atstring{\texttt{@string}}
+%
+% version-control for change-bars
+%
+\def\cb@i{96.1}
+\def\cb@ii{96.1f}
+\def\cb@iii{96.1g}
+\def\cb@iv{96.1h}
+\def\cb@v{97.1}
+\def\cb@vi{98.1}
+\def\cbversion#1{\def\tmp{#1}\ifx\tmp\cb@v\def\tmp{1pt}%
+  \else\ifx\tmp\cb@vi\def\tmp{2pt}\else\def\tmp{0pt}\fi\fi
+  \expandafter\setlength\expandafter\changebarwidth\expandafter{\tmp}}
+\ifx\undefined\changebarwidth\def\cbversion#1{}%
+ \typeout{*** No version control,  changebar.sty  was not loaded.}
+\fi
+
+\def\smiley{\hbox{\rlap{$\bigcirc$}\kern1.3pt$\scriptstyle\ddot\smile$}}
+
+\endinput

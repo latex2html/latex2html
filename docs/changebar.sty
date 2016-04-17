@@ -1,0 +1,453 @@
+%% 
+%% This is file `changebar.sty', generated 
+%% on <1996/1/14> with the docstrip utility (2.2i).
+%% 
+%% The original source files were:
+%% 
+%% changebar.dtx  (with options: `package')
+%% 
+%% 
+%% This is a generated file. 
+%% 
+%% Copyright 1994-1995 Johannes Braams. All rights reserved. 
+%% 
+%% For further copyright information see any other copyright notices in 
+%% this file. 
+%% 
+%% This file is distributed in the hope that it will be useful, 
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of 
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+%% 
+%% For error reports concerning UNCHANGED versions of this file no more 
+%% than one year old, send a bug report, using latex-bugs.tex to me at 
+%% the address jlbraams@cistron.nl. 
+%% 
+%% Please do not request updates from me directly. Primary 
+%% distribution is through the CTAN archives. 
+%% 
+%% 
+%% IMPORTANT COPYRIGHT NOTICE: 
+%% 
+%% You are NOT ALLOWED to distribute this file alone. 
+%% 
+%% You are allowed to distribute this file under the condition that it is 
+%% distributed together with all the files listed in manifest.txt. 
+%% 
+%% If you receive only some of these files from someone, complain! 
+%% 
+%% Permission is granted to copy this file to another file with a clearly 
+%% different name and to customize the declarations in that copy to serve 
+%% the needs of your installation. 
+%% 
+%% However, NO PERMISSION is granted to generate or to distribute a 
+%% modified version of this file under its original name. 
+%% 
+%% You are NOT ALLOWED to change this file. 
+%% 
+%% 
+%% MODIFICATION ADVICE: 
+%% 
+%% If you want to customize this file, it is best to make a copy of the 
+%% source file(s) from which it was produced. Use a different name for 
+%% your copy(ies) and modify the copy(ies); this will ensure that your 
+%% modifications do not get overwritten when you install a new release of 
+%% the standard system. You should also ensure that your modified source 
+%% file does not generate any modified file with the same name as a 
+%% standard file. You can then easily distribute your modifications by 
+%% distributing the modified and renamed copy of the source file; this 
+%% will ensure that other users can safely use your modifications. 
+%% 
+%% You will also need to produce your own, suitably named, .ins file to 
+%% control the generation of files from your source file; this file 
+%% should contain your own preambles for the files it generates, not 
+%% those in the standard .ins file. 
+%% 
+%% The names of the source files used are shown above. 
+%% 
+%% 
+%% 
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{changebar}
+           [1995/06/27 v3.2b Indicate changes with marginal bars]
+\def\cb@maxpoint{80}
+\def\cb@minpoint{1}
+\def\cb@nil{0}
+\newcount\cb@nextpoint
+\cb@nextpoint=\cb@minpoint
+\newcount\cb@currentpoint
+\newcount\cb@page
+\newcount\cb@pagecount
+\cb@pagecount=0
+\newif\ifouterbars
+\newif\if@cb@trace
+\newdimen\cb@odd
+\newdimen\cb@even
+\def\cb@positions{%
+  \global\cb@odd =\hoffset
+  \global\advance\cb@odd by \oddsidemargin
+  \ifouterbars
+    \global\advance\cb@odd by \textwidth
+    \global\advance\cb@odd by \changebarsep
+    \global\advance\cb@odd by 0.5\changebarwidth
+  \else
+    \global\advance\cb@odd by -\changebarsep
+    \global\advance\cb@odd by -0.5\changebarwidth
+  \fi
+  \global\cb@even =\hoffset
+  \global\advance\cb@even by \evensidemargin
+  \if@twoside
+    \ifouterbars
+      \global\advance\cb@even by -\changebarsep
+      \global\advance\cb@even by -0.5\changebarwidth
+    \else
+      \global\advance\cb@even by \textwidth
+      \global\advance\cb@even by \changebarsep
+      \global\advance\cb@even by 0.5\changebarwidth
+    \fi
+  \else
+    \ifouterbars
+      \global\advance\cb@even by \textwidth
+      \global\advance\cb@even by \changebarsep
+      \global\advance\cb@even by 0.5\changebarwidth
+    \else
+      \global\advance\cb@even by -\changebarsep
+      \global\advance\cb@even by -0.5\changebarwidth
+    \fi
+  \fi}
+{\catcode`\p=12\catcode`\t=12 \gdef\cb@removedim#1pt{#1}}
+\DeclareOption{DVItoLN03}{\global\chardef\cb@driver@setup=0\relax}
+\DeclareOption{dvitoln03}{\global\chardef\cb@driver@setup=0\relax}
+\DeclareOption{DVItoPS}{\global\chardef\cb@driver@setup=1\relax}
+\DeclareOption{dvitops}{\global\chardef\cb@driver@setup=1\relax}
+\DeclareOption{DVIps}{\global\chardef\cb@driver@setup=2\relax}
+\DeclareOption{dvips}{\global\chardef\cb@driver@setup=2\relax}
+\DeclareOption{emTeX}{\global\chardef\cb@driver@setup=3\relax}
+\DeclareOption{emtex}{\global\chardef\cb@driver@setup=3\relax}
+\DeclareOption{outerbars}{\outerbarstrue}
+\DeclareOption{innerbars}{\outerbarsfalse}
+\DeclareOption{leftbars}{%
+  \def\cb@positions{%
+    \global\cb@odd\hoffset
+    \global\advance\cb@odd by \oddsidemargin
+    \global\advance\cb@odd by -\changebarsep
+    \global\advance\cb@odd by -0.5\changebarwidth
+    \global\cb@even\hoffset
+    \global\advance\cb@even by \evensidemargin
+    \global\advance\cb@even by -\changebarsep
+    \global\advance\cb@even by -0.5\changebarwidth
+    }}
+\DeclareOption{rightbars}{%
+  \def\cb@positions{%
+    \global\cb@odd =\hoffset
+    \global\advance\cb@odd by \oddsidemargin
+    \global\advance\cb@odd by \textwidth
+    \global\advance\cb@odd by \changebarsep
+    \global\advance\cb@odd by 0.5\changebarwidth
+    \global\cb@even\hoffset
+    \global\advance\cb@even by \evensidemargin
+    \global\advance\cb@even by \textwidth
+    \global\advance\cb@even by \changebarsep
+    \global\advance\cb@even by 0.5\changebarwidth
+    }}
+\DeclareOption{traceon}{\@cb@tracetrue}
+\DeclareOption{traceoff}{\@cb@tracefalse}
+\DeclareOption*{\OptionNotUsed\PackageError
+      {Unrecognised option `\CurrentOption'}%
+      {known options are dvitoln03, dvitops, dvips
+        and emtex,\MessageBreak
+        outerbars, innerbars, leftbars and rightbars.}}
+\ExecuteOptions{innerbars,traceoff}
+\ProcessOptions\relax
+\def\cb@trace@defpoint#1#2{%
+  \wlog{Changebar trace: defining point \the#1 at position \the#2}
+  \wlog{Changebar trace: cb@pagecount: \the\cb@pagecount;
+    page \thepage}}
+\def\cb@trace@connect#1#2#3{%
+  \wlog{Changebar trace: connecting points \the#1 and \the#2;
+      barwidth: \the#3}
+  \wlog{Changebar trace: cb@pagecount: \the\cb@pagecount;
+    page \thepage}}
+\def\cb@setup@specials{%
+\ifcase\cb@driver@setup
+  \def\cb@defpoint##1##2{%
+    \special{ln03:defpoint \the##1(\the##2,)}%
+    \if@cb@trace\cb@trace@defpoint##1##2\fi}
+  \def\cb@connect##1##2##3{%
+    \special{ln03:connect \the##1\space\space \the##2\space \the##3}%
+    \if@cb@trace\cb@trace@connect##1##2##3\fi}
+  \def\cb@resetpoints{%
+    \special{ln03:resetpoints \cb@minpoint \space\cb@maxpoint}}
+\or
+  \def\cb@defpoint##1##2{%
+    \special{dvitops: inline
+                \expandafter\cb@removedim\the##2\space 6.5536 mul\space
+                /CBarX\the##1\space exch def currentpoint exch pop
+                /CBarY\the##1\space exch def}%
+    \if@cb@trace\cb@trace@defpoint##1##2\fi}
+  \def\cb@connect##1##2##3{%
+    \special{dvitops: inline
+                gsave \thechangebargrey\space 100 div setgray
+                \expandafter\cb@removedim\the##3\space 6.5536 mul\space
+                CBarX\the##1\space\space CBarY\the##1\space\space moveto
+                CBarX\the##2\space\space CBarY\the##2\space\space lineto
+                stroke grestore}%
+    \if@cb@trace\cb@trace@connect##1##2##3\fi}
+  \let\cb@resetpoints\relax
+\or
+  \def\cb@defpoint##1##2{%
+     \special{ps:
+                \expandafter\cb@removedim\the##2\space
+                Resolution\space mul\space 72.27\space div\space
+                /CBarX\the##1\space exch def currentpoint exch pop
+                /CBarY\the##1\space exch def}%
+    \if@cb@trace\cb@trace@defpoint##1##2\fi}
+    \def\cb@connect##1##2##3{%
+      \special{ps:
+                gsave \thechangebargrey\space 100 div setgray
+                \expandafter\cb@removedim\the##3\space
+                Resolution\space mul\space 72.27\space div\space
+                setlinewidth
+                CBarX\the##1\space\space CBarY\the##1\space\space moveto
+                CBarX\the##2\space\space CBarY\the##2\space\space lineto
+                stroke grestore}%
+    \if@cb@trace\cb@trace@connect##1##2##3\fi}
+    \let\cb@resetpoints\relax
+\or
+  \PackageWarning{Changebar}%
+    {changebars only supported for v1.5+ of dvidrv}%
+  \def\cb@defpoint##1##2{%
+    \special{em:point \the##1,\the##2}%
+    \if@cb@trace\cb@trace@defpoint##1##2\fi}
+  \def\cb@connect##1##2##3{%
+    \special{em:line \the##1,\the##2,\the##3}%
+    \if@cb@trace\cb@trace@connect##1##2##3\fi}
+  \let\cb@resetpoints\relax
+\else
+  \PackageWarning{Changebar}{changebars not supported in unknown setup}
+  \def\cb@defpoint##1##2{%
+    \if@cb@trace\cb@trace@defpoint##1##2\fi
+    }
+  \def\cb@connect##1##2##3{%
+    \if@cb@trace\cb@trace@connect##1##2##3\fi
+    }
+  \let\cb@resetpoints\relax
+\fi
+\global\let\cb@setup@specials\relax}
+\newcommand\cbstart{\@ifnextchar [{\cb@start}%
+                                  {\cb@start[\changebarwidth]}}
+\newcommand\cbend{\cb@end}
+\newcommand\cbdelete{\@ifnextchar [{\cb@delete}
+                                   {\cb@delete[\deletebarwidth]}}
+\def\cb@delete[#1]{\vbox to \z@{\vss\cb@start[#1]\vskip #1\cb@end}}
+\newenvironment{changebar}%
+               {\@ifnextchar [{\cb@start}%
+                              {\cb@start[\changebarwidth]}}%
+               {\cb@end}
+\newcommand\nochangebars{%
+  \def\cb@start[##1]{}%
+  \def\cb@delete[##1]{}%
+  \let\cb@end\relax}
+\newlength{\changebarwidth}
+\setlength{\changebarwidth}{2pt}
+\newlength{\deletebarwidth}
+\setlength{\deletebarwidth}{4pt}
+\newlength{\changebarsep}
+\setlength{\changebarsep}{30pt}
+\newcounter{changebargrey}
+\setcounter{changebargrey}{65}
+\def\cb@start[#1]{%
+  \cb@currentpoint=\cb@nextpoint
+  \@tempdima#1\relax
+  \cb@push\cb@currentlist
+  \ifvmode
+    \cb@setBeginPoint\cb@currentpoint
+  \else
+   \vbox to \z@{%
+     \vskip -\ht\strutbox
+     \cb@setBeginPoint\cb@currentpoint
+     \vskip \ht\strutbox}\fi
+  \cb@writeAux\cb@advancePoint}
+\def\cb@advancePoint{%
+  \global\advance\cb@nextpoint by 2\relax
+  \ifnum\cb@nextpoint>\cb@maxpoint
+    \global\cb@nextpoint=\cb@minpoint\relax
+  \fi}
+\def\cb@end{%
+  \cb@pop\cb@currentlist
+  \ifnum\cb@currentpoint=\cb@nil
+    \PackageWarning{Changebar}%
+      {Badly nested changebars; Expect erroneous results}%
+  \else
+    \cb@setEndPoint\cb@currentpoint
+    \global\advance\cb@currentpoint by1\cb@writeAux
+  \fi}
+\def\cb@setBeginPoint#1{%
+  \ifodd\cb@pagecount
+    \cb@defpoint{#1}{\cb@even}%
+  \else
+    \cb@defpoint{#1}{\cb@odd}%
+  \fi}
+\def\cb@setEndPoint#1{%
+  \@tempcnta=#1\advance\@tempcnta by1\relax
+  \ifodd\cb@pagecount
+    \cb@defpoint{\@tempcnta}{\cb@even}%
+  \else
+    \cb@defpoint{\@tempcnta}{\cb@odd}%
+  \fi
+  \cb@connect{#1}{\@tempcnta}{\@tempdima}}%
+\def\cb@writeAux{%
+  \if@filesw
+    \begingroup
+      \edef\point{\the\cb@currentpoint}%
+      \edef\level{\the\@tempdima}%
+      \let\the=0%
+      \edef\cb@temp{\write\@auxout
+        {\string\cb@barpoint{\point}{\the\cb@pagecount}{\level}}}%
+      \cb@temp
+    \endgroup
+  \fi}
+\let\cb@makecol\@makecol
+\def\@makecol{%
+  \setbox\@cclv \vbox{%
+    \cb@resetpoints
+    \cb@beginSaves
+    \unvbox\@cclv
+    \boxmaxdepth\maxdepth}%
+  \gdef\cb@beginSaves{}
+  \global\advance\cb@pagecount by 1\relax
+  \cb@buildActive\cb@processActive
+  \cb@makecol}
+\let\cb@vtryfc\@vtryfc
+\def\@vtryfc{%
+  \setbox\@outputbox \vbox{%
+    \cb@resetpoints
+    \cb@beginSaves
+    \unvbox\@cclv
+    \boxmaxdepth\maxdepth}%
+  \gdef\cb@beginSaves{}
+  \global\advance\cb@pagecount by 1\relax
+  \cb@buildActive\cb@processActive
+  \cb@vtryfc}
+\def\cb@processActive{%
+  \cb@pop\cb@spanlist
+  \ifnum\cb@currentpoint=\cb@nil
+  \else
+    \setbox\@cclv\vbox{%
+      \unvbox\@cclv
+      \boxmaxdepth\maxdepth
+      \advance\cb@pagecount by -1\relax
+      \cb@setEndPoint\cb@currentpoint}%
+    \cb@saveBeginPoint\cb@currentpoint
+    \cb@push\cb@history
+    \cb@processActive
+  \fi}
+\def\cb@saveBeginPoint#1{%
+  \ifodd\cb@pagecount
+    \xdef\cb@beginSaves{\cb@defpoint{#1}{\cb@even}\cb@beginSaves}%
+  \else
+    \xdef\cb@beginSaves{\cb@defpoint{#1}{\cb@odd}\cb@beginSaves}%
+  \fi}
+\def\cb@beginSaves{}                % initially empty
+\def\cb@buildActive{\cb@initlist\cb@spanlist\cb@pushNextActive}
+\def\cb@pushNextActive{%
+  \cb@pop\cb@history
+  \ifnum\cb@currentpoint=\cb@nil
+  \else
+    \ifnum\cb@page>\cb@pagecount
+      \cb@push\cb@history
+    \else
+      \ifodd\cb@currentpoint
+        \cb@push\cb@spanlist
+      \else
+        \cb@pop\cb@spanlist
+      \fi
+      \cb@pushNextActive
+    \fi
+  \fi}
+\def\cb@initlist#1{\xdef#1{}}
+\cb@initlist\cb@history
+\newwrite\cb@write
+\newread\cb@read
+\immediate\openout\cb@write=\jobname.cb\relax
+\cb@initlist\cb@spanlist
+\cb@initlist\cb@currentlist
+\def\cb@pop#1{%
+  \ifx #1\cb@history
+    \ifeof\cb@read
+    \else
+      {\endlinechar=-1\read\cb@read to\@temp
+       \xdef\cb@history{\cb@history\@temp}%
+      }%
+    \fi
+  \fi
+  \ifx#1\@empty
+    \cb@currentpoint=\cb@nil\cb@page=0\relax
+  \else
+    \expandafter\cb@carcdr#1e#1%
+  \fi}
+\def\cb@carcdr#1n#2p#3l#4e#5{%
+  \cb@currentpoint=#1\cb@page=#2\relax\@tempdima=#3\xdef#5{#4}}
+\def\cb@push#1{%
+  \xdef#1{\the\cb@currentpoint n\the\cb@page p\the\@tempdima l#1}}
+\def\cb@barpoint#1#2#3{\immediate\write\cb@write{#1n#2p#3l}}
+\AtBeginDocument{%
+  \cb@setup@specials
+  \cb@positions
+  \immediate\closeout\cb@write
+  \immediate\openin\cb@read=\jobname.cb}
+\AtEndDocument{%
+  \clearpage
+  \cb@initlist\cb@history
+  \immediate\closein\cb@read
+  \immediate\openin\cb@read=\jobname.cb%
+  \let\cb@barpoint=\cb@checkHistory}
+\def\cb@checkHistory#1#2#3{%
+  \cb@pop\cb@history
+  \ifnum #1=\cb@currentpoint\relax
+    \ifnum #2=\cb@page\relax
+    \else
+      \cb@error
+    \fi
+  \else
+    \cb@error
+  \fi}
+\def\cb@error{%
+  \PackageWarning{Changebar}%
+    {Changebar info has changed. Rerun to get the bars right.}
+  \gdef\cb@checkHistory##1##2##3{}%
+  \let\cb@barpoint=\cb@checkHistory}
+\let\cb@endfloat=\end@float
+\def\end@float{%
+  \cb@pop\cb@currentlist
+  \ifnum\cb@currentpoint=\cb@nil
+  \else
+    \cb@push\cb@currentlist
+    \global\@tempdima=\@tempdima
+    \egroup
+    \global\setbox\@currbox=%
+        \vbox\bgroup\cb@start[\@tempdima]\unvbox\@currbox\cb@end
+  \fi
+  \cb@endfloat}
+\let\cb@footnote=\@footnotetext
+\long\def\@footnotetext#1{%
+  \cb@pop\cb@currentlist
+  \ifnum\cb@currentpoint=\cb@nil
+    \cb@footnote{#1}%
+  \else
+    \cb@push\cb@currentlist
+    \edef\cb@temp{\the\@tempdima}%
+    \cb@footnote{\cb@start[\cb@temp]#1\cb@end}%
+  \fi}
+\let\cb@mpfootnote=\@mpfootnotetext
+\long\def\@mpfootnotetext#1{%
+  \cb@pop\cb@currentlist
+  \ifnum\cb@currentpoint=\cb@nil
+    \cb@mpfootnote{#1}%
+  \else
+    \cb@push\cb@currentlist
+    \edef\cb@temp{\the\@tempdima}%
+    \cb@mpfootnote{\cb@start[\cb@temp]#1\cb@end}%
+  \fi}
+\endinput
+%% 
+%% End of file `changebar.sty'.

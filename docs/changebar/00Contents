@@ -1,0 +1,10 @@
+total 158
+-rw-r--r--   1 ctan_us  mirror       607 Jul 12 00:33 00Contents
+-rw-rw-r--   1 ctan_us  mirror       506 Jul 10  1995 00readme.txt
+-rw-rw-r--   1 ctan_us  mirror       347 Jul 10  1995 catalog.txt
+-rw-rw-r--   1 ctan_us  mirror      5110 Jul 10  1995 changebar.bug
+-rw-rw-r--   1 ctan_us  mirror     53325 Jul 10  1995 changebar.dtx
+-rw-rw-r--   1 ctan_us  mirror      3663 Jul 10  1995 changebar.ins
+-rw-rw-r--   1 ctan_us  mirror      2880 Jul 10  1995 chbar.sh
+-rw-rw-r--   1 ctan_us  mirror       546 Jul 10  1995 manifest.txt
+-rw-rw-r--   1 ctan_us  mirror      9459 Jul 10  1995 update.txt

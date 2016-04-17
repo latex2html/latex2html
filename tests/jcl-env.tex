@@ -1,0 +1,51 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Item:
+%% Test suite for l2h bug.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bug description (add references to further descriptive files if possible):
+%% In LaTeX, \begin{environment} opens a group which is ended by
+%% \end{environment}, making definitions or font changes local within
+%% this group. This was not seen by l2h.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bug caused this behaviour (may be several descriptions):
+%% Changes to the font (style, size) made within the environment are not
+%% reverted after the environment closed.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bug severity (low|bothers|problematic|urgent -- fixed|open -- message):
+%% bothers -- fixed --
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bug fix identification
+%% (id -- l2h release (or releases for multiple fixes) -- location in file(s)):
+%% jcl(env) -- 96.1h -- latex2html
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Author: Jens Lippmann <http://www-jb.cs.uni-sb.de/~www/people/lippmann>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Change log (Mon/DD/YY -- author -- message):
+%% jcl = Jens Lippmann
+%%
+%% Aug/13/96 -- jcl -- created
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Test suite decription:
+%% Uses an itemize environment and makes font changes within this environment.
+%% Has control text after the environment to check l2h's behaviour.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Expected output of this suit:
+%% The output is self-explaining.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\documentstyle[12pt]{article}
+\documentclass[12pt]{article}
+\usepackage{html}
+
+\begin{document}
+
+\itshape
+italic text not bold
+
+\begin{itemize}
+\bfseries
+\item bold text
+\end{itemize}
+
+italic text not bold
+\end{document}

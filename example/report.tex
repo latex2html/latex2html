@@ -1,0 +1,86 @@
+%
+%  This simple example illustrates how documents can be
+%  split into smaller segments, each segment processed
+%  by latex2html separately.  This document can be
+%  processed through latex and latex2html with the
+%  corresponding makefile.
+%
+
+\documentclass{article}         % Must use LaTeX 2e
+\usepackage{html,makeidx,color}
+
+%
+%  The following commands are necessary to generate
+%  the list of figures, and table of contents in this
+%  document segment.  Information for the list of tables
+%  and the index could be similarly loaded, if needed.
+%  These commands are ignored by LaTeX.
+%
+\internal[figure]{s1}           % Include list-of-figure
+                                %    information from
+                                %    report/s1figure.pl
+
+\internal[figure]{s2}           % Include list-of-figure
+                                %    information from
+                                %    report/s2figure.pl
+
+\internal[sections]{s1}         % Include section information
+                                %    from report/s1sections.pl
+
+\internal[sections]{s2}         % Include section information
+                                %    from report/s2sections.pl
+
+\internal[contents]{s1}         % Include table-of-content
+                                %    information from
+                                %    report/s1contents.pl
+
+\internal[contents]{s2}         % Include table-of-content
+                                %    information from
+                                %    report/s2contents.pl
+
+\internal[index]{s1}
+\internal[index]{s2}
+
+% \internal[table]{s1}          % Uncomment these if you need
+% \internal[table]{s2}          %    a list of tables
+
+\begin{document}                % The start of the document
+\title{A Segmentation Example}
+\author{by Ross Moore}
+\date{translated \today}
+\maketitle
+%
+%  Generate the table of contents and list of figures in
+%  both the LaTeX and HTML documents.
+%
+
+\tableofcontents
+\listoffigures
+
+%
+%  The following two commands are ignored by latex2html:
+%  Note that they do not contain the string "\section", 
+%  which would confuse latex2html.
+%
+
+%
+%  Generate a \section{Section 1 title} command.
+%  Update latex2html counters and dump them to sec1.ptr.
+%  Also write an \htmlhead command to sec1.ptr.
+%  Then proceed to input sec1.tex.
+%
+
+\segment{sec1}{section}{Section 1 title}
+
+%
+%  Generate a \section{Section 2 title} command.
+%  Update latex2html counters and dump them to sec2.ptr.
+%  Also write an \htmlhead command to sec2.ptr.
+%  Then proceed to input sec2.tex.
+%
+\segment{sec2}{section}{Section 2 title}
+%
+%  Print the index:
+%
+\printindex
+\end{document}

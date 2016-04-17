@@ -1,0 +1,159 @@
+\documentclass[11pt,a4paper]{article}
+% $Id: hthtml.tex,v 1.1 1996/12/21 19:56:26 JCL Exp $
+\usepackage{html}
+\usepackage{hthtml}
+\title{\htmladdnormallinkfoot{hthtml}
+  {http://www.cs.tu-bs.de/\~{}krinke/hthtml/index.html} 
+  - an extended interface to LaTeX2HTML}
+\author{\htmladdnormallinkfoot{Jens Krinke}%
+  {http://www.cs.tu-bs.de/\~{}krinke/}\\
+  \htmailto{j.krinke@tu-bs.de}\\
+  \htmladdnormallinkfoot{TU Braunschweig}{http://www.tu-bs.de/}}
+\htmetainfo{keywords}{latex2html, hthtml}
+\htsetvar{NO_NAVIGATION}{1}
+\htsetvar{ADDRESS}
+{'<A HREF="http://www.cs.tu-bs.de/~krinke/hthtml/index.html">Original 
+site</A><P><HR>' . \$ADDRESS}
+\begin{document}
+\maketitle
+\tableofcontents
+\section{Introduction}
+The use of \texttt{html.sty} makes the use of some special
+\LaTeX-commands possible, which supports the use of HTML-features in
+LaTeX and give different results in the generated DVI-file and the
+translated HTML-file.  However, more support can be added, which makes
+it easier to write documents that are looking similar in DVI and HTML
+format. 
+
+\section{Features of \texttt{hthtml}}
+
+\subsection{A frequently requested feature}
+
+Every now and the somebody asks how to use `\verb|_|' and
+`\verb|~|' in the \texttt{htmladdnormallink}-commands.  This is
+not supported, one has to use \verb|\_| and \verb|\~{}|.  
+
+The following commands are able to process `\verb|_|' and `\verb|~|'
+directly:
+\begin{enumerate}
+\item \verb|\htlink{|\emph{text}\verb|}{|\emph{url}\verb|}|: Sets
+  \emph{text} with a link to \emph{url} in HTML and \emph{text} with a
+  footnote of \emph{url} in typewriter-style in DVI. This is an
+  \htlink{example}{http://foo.bar/~gnus_and_gnats}.
+
+This is made from:
+\begin{verbatim}
+\htlink{example}{http://foo.bar/~gnus_and_gnats}
+\end{verbatim}
+
+\item \verb|\hturl{|\emph{url}\verb|}|: Sets \emph{url} as text with a
+  link to \emph{url} in HTML and \emph{url} in typewriter-style in
+  DVI. Example: \hturl{http://foo.bar/~gnus_and_gnats}.
+
+This is made from:
+\begin{verbatim}
+\hturl{http://foo.bar/~gnus_and_gnats}
+\end{verbatim}
+
+\item \verb|\htmailto{|\emph{mail-address}\verb|}|: Sets a mail address
+  with a mailto-url pointing to it in HTML and just the address in
+  DVI.  Example: \htmailto{foo@bar}.
+
+This is made from:
+\begin{verbatim}
+\htmailto{foo@bar}
+\end{verbatim}
+
+\end{enumerate}
+
+\verb|htlink| and \verb|hturl| aren't useable inside commands like
+\verb|\author| or \verb|\title|, where one has to use the old
+\verb|\htmladdnormallinkfoot| command.  This command is redefined in
+\emph{hthtml} to set the footnote in typewriter-style. 
+
+\subsection{A patched description environment}
+
+The use of \verb|\htmladdnormallinkfoot| and \verb|htlink| is
+impossible in the item-elements of a description environment because
+it is impossible to use footnotes there.  The \verb|htdescription|
+environment is a different implementation of the \verb|description|
+environment which allows footnote and the other mentioned commands.
+
+\begin{htdescription}
+\item[foo] is not described here.
+\item[Another \htlink{example}{http://foo.bar/~gnus_and_gnats} here.]
+  Look at the footnote!
+\item[bar] is described somewhere else.
+\end{htdescription}
+
+This is made from:
+\begin{verbatim}
+\begin{htdescription}
+\item[foo] is not described here.
+\item[Another \htlink{example}{http://foo.bar/~gnus_and_gnats} here.]
+  Look at the footnote!
+\item[bar] is described somewhere else.
+\end{htdescription}
+\end{verbatim}
+
+\subsection{Some nice features}
+
+\begin{itemize}
+\item \verb|\htaddress{|\emph{text}\verb|}|:  Sets \emph{text} with
+  \verb|<ADDRESS>| in HTML.  In DVI, \emph{text} is set in italics on
+  a line by its own.  This looks like most browsers are rendering
+  \verb|<ADDRESS>|. Example: \htaddress{gnus \& gnats\\
+    \hturl{http://foo.bar/~gnus_and_gnats}\\
+    \htmailto{foo@bar}} (with embedded urls).
+
+This is made from:
+\begin{verbatim}
+\htaddress{gnus \& gnats\\
+\hturl{http://foo.bar/~gnus_and_gnats}\\
+\htmailto{foo@bar}}
+\end{verbatim}
+
+\item \verb|\htsetvar{|\emph{variable}\verb|}{|\emph{value}\verb|}|:
+  Sets a variable of latex2html to a different value.  Has no other
+  effect and can be used to set configuration variables in the
+  \TeX-source. 
+
+Look at this Example, which is part of this document:
+\begin{verbatim}
+\htsetvar{NO_NAVIGATION}{1}
+\htsetvar{ADDRESS}
+{'<A HREF="http://www.cs.tu-bs.de/~krinke/hthtml/index.html">Original 
+site</A><P><HR>' . \$ADDRESS}
+\end{verbatim}
+
+This influences the look of the HTML-Version of this document:  There
+is no navigation panel and the url of the original hthtml site is
+included in the address.\par
+
+\item \verb|\htmetainfo{|\emph{field}\verb|}{|\emph{value}\verb|}|:
+  An entry of the form \verb|| is appended to the information in the
+  head of the HTML-document.
+
+
+Look at this Example:
+\begin{verbatim}
+\htmetainfo{keywords}{latex2html, hthtml}
+\end{verbatim}
+
+    sets the following in the head-section of the HTML-document.
+\begin{verbatim}
+<META NAME="keywords" CONTENT="latex2html, hthtml">
+\end{verbatim}
+
+    This command has to be placed in the document's head.
+\end{itemize}
+
+\section{Availability}
+
+The complete \emph{hthtml}-package is available at the author's
+\htlink{homepage}{http://www.cs.tu-bs.de/~krinke/} where the
+\htlink{original hthtml-page}
+{http://www.cs.tu-bs.de/~krinke/hthtml/index.html} is located.  It is
+available as \htlink{gzip'ed tar-file}{http://www.cs.tu-bs.de/~krinke/hthtml/hthtml.tar.gz}.
+
+\end{document}

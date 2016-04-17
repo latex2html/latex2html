@@ -1,0 +1,1608 @@
+% \iffalse
+%<*driver>
+\ProvidesFile{foilhtml.drv}
+%</driver>
+%<*driver|package>
+%<+package>\ProvidesPackage{foilhtml}
+[1998/02/17 v1.2 Sectioning Commands for FoilTeX]
+%% Copyright Boris Veytsman 1997
+%
+% \fi
+% \CheckSum{2423}
+%%
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~} 
+% \iffalse
+%</driver|package>
+%
+%
+% \section{Documentation driver}
+%
+% Nothing interesting here\dots
+%    \begin{macrocode}
+%<*driver> 
+\documentclass{ltxdoc}
+\DoNotIndex{\@Alph,\@alph,\@arabic,\@badmath}
+\DoNotIndex{\@centercr}
+\DoNotIndex{\@empty,\@ignoretrue}
+\DoNotIndex{\@ixpt}
+\DoNotIndex{\@M,\@minus,\@ne,\@plus}
+\DoNotIndex{\\,\addtolength}
+\DoNotIndex{\advance}
+\DoNotIndex{\ast,\begin,\begingroup,\bfseries,\bgroup,\box}
+\DoNotIndex{\bullet}
+\DoNotIndex{\cdot,\cr,\day,\DeclareOption}
+\DoNotIndex{\def,\DocInput,\documentclass}
+\DoNotIndex{\DoNotIndex,\egroup,\ifx,\else,\fi,\endtrivlist}
+\DoNotIndex{\EnableCrossrefs,\end,\end@dblfloat,\end@float,\endgroup}
+\DoNotIndex{\endlist,\everycr,\ExecuteOptions}
+\DoNotIndex{\filedate,\filename,\fileversion}
+\DoNotIndex{\global,\halign,\hangindent,\hbox,\hfil,\hfill,\hrule}
+\DoNotIndex{\hsize,\hskip,\hspace,\hss,\ifcase,\or,\fi}
+\DoNotIndex{\ifvmode,\fi,\ifnum,\fi,\input}
+\DoNotIndex{\kern,\leavevmode,\let,\leftmark}
+\DoNotIndex{\list,\llap,\long,\m@ne,\m@th,\mark}
+\DoNotIndex{\month,\newcommand,\newcounter,\newenvironment}
+\DoNotIndex{\NeedsTeXFormat,\newdimen}
+\DoNotIndex{\newpage,\nobreak,\noindent,\number}
+\DoNotIndex{\p@}
+\DoNotIndex{\pagestyle,\par}
+\DoNotIndex{\penalty,\PrintChanges,\PrintIndex,\ProcessOptions}
+\DoNotIndex{\protect,\ProvidesClass,\raggedbottom,\raggedright}
+\DoNotIndex{\refstepcounter,\relax,\renewcommand,\reset@font}
+\DoNotIndex{\rightmargin,\rlap,\rmfamily}
+\DoNotIndex{\setbox,\setcounter,\setlength}
+\DoNotIndex{\skip,\slshape,\space}
+\DoNotIndex{\trivlist,\typeout,\tw@}
+\DoNotIndex{\vskip,\vspace,\year,\z@}
+%
+\DoNotIndex{\@ptsize,\@sptoken,\addtocounter,\afterassignment}
+\DoNotIndex{\AtEndOfPackage,\baselineskip,\boxmaxdepth,\clearpage}
+\DoNotIndex{\clubpenalty,\csname,\CurrentOption,\DeclareRobustCommand}
+\DoNotIndex{\eject,\endcsname,\evensidemargin,\expandafter}
+\DoNotIndex{\footnotesize,\footskip,\fromaddress,\futurelet}
+\DoNotIndex{\headheight,\headsep,\hfuzz,\ignorespaces}
+\DoNotIndex{\InputIfFileExists,\large,\lineskip,\loop}
+\DoNotIndex{\MakeUppercase,\MessageBreak,\mbox,\multiply}
+\DoNotIndex{\newcount,\newif,\newlength,\newtoks,\nolinebreak}
+\DoNotIndex{\nopagebreak,\normalfont,\normalsize,\null,\newline}
+\DoNotIndex{\oddsidemargin,\PackageError,\PackageInfo}
+\DoNotIndex{\paperheight,\paperwidth,\parbox,\parindent}
+\DoNotIndex{\PassOptionsToPackage,\ProvidesPackage,\RequirePackage}
+\DoNotIndex{\rule,\selectfont,\sffamily,\sloppy,\small,\spaceskip}
+\DoNotIndex{\stepcounter,\textheight,\textwidth,\the,\topmargin}
+\DoNotIndex{\unhbox,\voidb@x,\vsize,\vfuzz,\widowpenalty,\xspaceskip}
+\DoNotIndex{\AtBeginDocument,\AtEndDocument}
+\DoNotIndex{\n}
+\usepackage{enumerate}
+\CodelineIndex
+\RecordChanges
+\EnableCrossrefs
+\renewcommand{\partname}{Part}
+% 
+% We want |foilhtml.dtx| to produce the code and interface, but
+% |foilhtml.drv| to produce only interface
+%
+%<+driver>\OnlyDescription
+%<+driver>\renewcommand{\part}[2][dummy]{}
+%
+% We generate foilhtml.ins---just in case\ldots
+%
+\begin{filecontents}{foilhtml.ins}
+\def\batchfile{foilhtml.ins}
+\input docstrip
+\keepsilent
+
+\declarepreamble\cfg
+
+The first part of this file contains default options for your site.
+The second part (inside AtEndOfPackage declaration) should contain
+customization commands specific to your site.
+
+Good luck
+\endpreamble
+
+\Msg{Generating files...}
+\generate{%
+  \file{foilhtml.drv}{\from{foilhtml.dtx}{driver}}%
+  \file{foilhtml.sty}{\from{foilhtml.dtx}{package}}% 
+  \usepreamble\cfg\file{foilhtml.cfg}{\from{foilhtml.dtx}{cfg}}%
+  \usepreamble\empty\usepostamble\empty\file{foils.perl}%
+    {\from{foilhtml.dtx}{foils}}}
+\Msg{Generating Perl scripts for obsolete versions of LaTeX2HTML...}
+\generate{%
+  \usepreamble\empty\usepostamble\empty\file{foilhtml-96.perl}%
+    {\from{foilhtml.dtx}{foilhtml}}
+  \usepreamble\empty\usepostamble\empty\file{foils-97.perl}%
+    {\from{foilhtml.dtx}{foils-97}}}
+\obeyspaces
+\Msg{}
+\Msg{**********************************************************}
+\Msg{* To finish the installation, put the files foilhtml.sty *}
+\Msg{* and foilhtml.cfg to a directory read by LaTeX, and the *}
+\Msg{* script foils.perl to the subdirectory styles of the    *}
+\Msg{* main LaTeX2HTML directory.                             *}
+\Msg{* Happy LaTeXing & good luck!                            *}
+\Msg{**********************************************************}
+\Msg{}
+\end{filecontents}
+
+\begin{document}
+  \DocInput{foilhtml.dtx}
+\end{document}
+%</driver>
+%    \end{macrocode}
+% \fi
+% \newcommand{\FH}{\textsf{FoilHTML}}
+% \newcommand{\Perl}{\textsf{Perl}}
+% \newcommand{\latextohtml}{\LaTeX 2\texttt{HTML}}
+% \DeclareRobustCommand\FoilTeX{{\normalfont{\sffamily Foil}\kern-.03em{\rmfamily\TeX}}}
+%
+% \GetFileInfo{foilhtml.drv}
+%
+% \title{Sectioning commands in \FoilTeX\ and conversion to HTML
+% format:  \FH\ Package
+%  \thanks{This file
+%        has version number \fileversion, last
+%        revised \filedate.}
+%  \thanks{\copyright Boris Veytsman, 1998}}
+% \author{Boris Veytsman\thanks{E-mail: \texttt{boris@plmsc.psu.edu},
+% Home page: \texttt{http://www.plmsc.psu.edu/}\~{}\texttt{boris}}} 
+% \date{\filedate}
+% \maketitle
+% 
+% \begin{abstract}
+%   The standard \FoilTeX\ system is based on a visual rather than
+%   logical formatting. Thus automatic conversion of \FoilTeX\ 
+%   documents to HTML format is difficult. In particular, the
+%   well-known \latextohtml\ converter gives unsatisfactory results
+%   when used on \FoilTeX\ documents.
+% 
+%   This package provides integration between \FoilTeX\ and
+%   \latextohtml. It adds sectioning commands and elements of logical
+%   formatting to \FoilTeX\ and provides support for \FoilTeX\ commands
+%   in \latextohtml. It also supports automatic creation of
+%   \latextohtml\ images with proper font sizes and shapes when
+%   converting \FoilTeX\ documents.
+% \end{abstract}
+%
+% \tableofcontents
+%
+% \part{User Interface} 
+%
+% \section{Introduction}
+%
+% Many people like to put the contents of their talks and lectures on
+% the World Wide Web using tools like Nikos Drakos'
+% \latextohtml~\cite{LaTeX2HTML}. Unfortunately, when one tries to
+% convert the documents prepared in \FoilTeX~\cite{FoilTeX}, several
+% problems emerge:
+% \begin{enumerate}
+% \item \FoilTeX\ does not have proper sectioning commands. Instead it
+% has command like |\foilhead| and |\rotatefoilhead|, that are not
+% recognized by \latextohtml. 
+% \item \FoilTeX\ has commands like |\MyLogo| and |\Restriction| that
+% have no correspondence in the HTML format.
+% \item The equations and pictures processed by \latextohtml\ are too
+% large and (for pictures) use Sans Serif fonts. This produces ugly
+% |gif| inserts in HTML files.
+% \end{enumerate}
+%
+% This package solves these problems by two methods:
+% \begin{enumerate}
+% \item It provides a \Perl\ script to teach \latextohtml\ the basic
+% constructions of \FoilTeX\ and put the correct headers in the \latextohtml\
+% |images.tex| file.
+% \item It provides a \LaTeX\ package that implements sectioning
+% commands in \FoilTeX.
+% \end{enumerate}
+%
+% 
+% \section{Installation}
+% Since \FH\ is an \emph{add-on} to \FoilTeX\ and \latextohtml, you need both
+% these programs installed and working prior to installation of
+% \FH. This package is intended for \LaTeXe\ \emph{only}; I don't have
+% enough time to port and test it under \LaTeX2.09. It is tested under
+% \FoilTeX2.1 and \latextohtml96--\latextohtml98.
+%
+% The \FH\ distribution consists of the following files:
+% \begin{itemize}
+% \item |readme.v12|---Read Me file
+% \item |foilhtml.dtx|---the fully documented code
+% \item |foilhtml.ins|---the \LaTeX\ program extracting
+% the code from the |.dtx| file. 
+% \end{itemize}
+% To install the package:
+% \begin{enumerate} 
+% \item Run \LaTeX\ on |foilhtml.ins|. This will
+% create the following files:
+% \begin{itemize}
+% \item |foils.perl|---\Perl{} script for \latextohtml98
+% \item  |foilhtml.sty| and |foilhtml.cfg|---\LaTeX\ style file and the
+%   configuration file for user-customization,
+% \item |foilhtml.drv|---documentation driver.
+% \item |foilhtml-96.perl| and |foils-97.perl|---obsolete versions of
+% \Perl{} scripts required \emph{only} if you have an obsolete installation
+% of \latextohtml.
+% \end{itemize}
+% \item Install the script |foils.perl| in the directory where your
+% \latextohtml{}  scripts reside (usually it is
+% |styles| subdirectory of the main \latextohtml{} directory,
+% e.~g. |/usr/local/lib/latex2html/styles|). 
+% \item Tune the configuration file |foilhtml.cfg| according to your
+%   taste and put it together with the file |foilhtml.sty| to the
+%   directory read by \LaTeX\footnote{If you use |kpathsea| (e.~g. if
+%     you have te\TeX\ distribution), you will need to run |texhash| to
+%     update your search database}. 
+% \item Run \LaTeX\ on  |foilhtml.drv| to produce the
+%   documentation\footnote{The documentation driver |foilhtml.drv|
+%   reads the contents of the file |foilhtml.dtx|, so do not delete
+%   the latter until you produced the documentation.}.
+% \item (Optional) to produce the documentation \emph{and} the code run
+%   \LaTeX\ through the file |foilhtml.dtx|
+% \end{enumerate}
+%
+% \subsection{Obsolete versions}
+% 
+% If you have older versions of \latextohtml, your best options is to upgrade. 
+% However, if you cannot do this by some reason, you can use the previous
+% versions of the perl scripts. Just rename the files |foilhtml-96.perl| 
+% \emph{or} |foils-97.perl| to |foilhtml.perl| or |foils.perl| correspondingly
+% and install them in the |styles| subdirectory.
+%
+% \section{Basic Usage}
+%
+% The usage of \FH\ could be very simple. Just add to the preamble of your
+% document |\usepackage{foilhtml}|, for example 
+% \begin{verbatim}
+% \documentclass[20pt,dvips]{foils}
+% \usepackage{foilhtml,html}
+% \end{verbatim}
+% and your \FoilTeX\ documents will be correctly parsed by
+% \latextohtml\footnote{Actually, if you use \latextohtml97-1 or later, you
+% don't need even to load the package |foilhtml|: unlike the old
+% versions of \latextohtml, this one parses both \cs{usepackage} and
+% \cs{documentclass} commands. However, you will want to load this
+% package if you need the new \FoilTeX{} commands described below.}.
+% The \FoilTeX-specific commands
+% \DescribeMacro{\foilhead}\DescribeMacro{\rotatefoilhead} |\foilhead| and
+% |\rotatefoilhead| will be translated by \latextohtml\ as
+% starred |\subsection*| commands (this behavior could be changed in your
+% |.latex2html-init| file---see Section~\ref{sec:config}).
+%
+% However, this is not the full story. In addition, you will be able
+% to use ``normal'' sectioning 
+% commands like |\section| and |\chapter| and even
+% |\tableofcontents|.  By default, commands |\part| and |\chapter|
+% produce new foils containing only titles of the corresponding, and
+% the command |\section| starts a new foil. The starred forms of these
+% commands produce unnumbered sections that are not included in the table of
+% contents. 
+%
+% In the ``vanilla'' \FoilTeX\ the commands |\foilhead| and
+% |rotatefoilhead| have both logical (they are close to sectioning
+% commands) and visual meanings. If you want to convert your documents
+% to HTML, you need to adhere to logical formatting. Therefore, their
+% usage is discouraged. Most important, you should \emph{not} use the
+% commands |\foilhead{}| and |\rotatefoilhead{}| without arguments to
+% produce blank pages: they will be treated by \latextohtml\ as
+% |\subsection*{}| commands with blank subsection name. Instead, use
+% |\clearpage| and the commands |\portraitfoils| and |\landscapefoils|,
+% described below.
+%
+% While the sectioning commands take care of the logical formatting,
+% it is impossible to get rid of visual formatting of foils
+% altogether. \FH\ package provides some new commands for visual
+% formatting. 
+%
+% \DescribeMacro{\portraitfoils}\DescribeMacro{\landscapefoils} 
+% \DescribeMacro{\portraitfoils*}\DescribeMacro{\landscapefoils*} 
+% The commands |\portraitfoils| and |\landscapefoils| start a new foil
+% with the selected orientation. Their starred forms do not eject the
+% page, and the selected orientation begins only from the next
+% sectioning command at the level of |section| or greater. Note that the
+% explicit commands |\foilhead| and |\rotatefoilhead| might change the
+% orientation of the produced pages. However, the default orientation
+% will be restored by the next sectioning command on the level of
+% |section| or greater.
+%
+% \section{Customization}
+% \label{sec:config}
+% \FH\ should work ``right out of the box''. However, there some ways
+% to customize its behavior for picky users.
+%
+% \subsection{Configuring the \latextohtml{} behavior}
+% There are three \Perl\ variables that control translation that could
+% be set in your 
+% |.latex2html-init| file
+%
+% \DescribeMacro{$FOILHEADLEVEL}
+% The value of |$FOILHEADLEVEL| describes the level of sectioning for
+% explicit |foilhead| and |rotatefoilhead| commands. By default it is
+% 4 (subsection). Other values are 1 (part), 2 (chapter), etc.\ up to 7
+% (subparagraph).
+%
+% \DescribeMacro{$FOILCLASS}\DescribeMacro{$FOILOPTIONS}
+% The header of the |images.tex| is
+% \begin{verbatim}
+% \documentclass[$FOILOPTIONS]{$FOILCLASS}
+% \end{verbatim} 
+% The defaults are |10pt| and |article|. The variables can be set to any
+% valid \LaTeX\ values.
+%
+% For example, the following lines in your |.latex2html-init| file:
+% \begin{verbatim}
+% $FOILHEADLEVEL = 2;
+% $FOILOPTIONS = '12pt';
+% $FOILCLASS = 'book';
+% \end{verbatim}
+% produce HTML file with |foilhead| commands translated as
+% Chapters, and the images created as for a 12pt book.
+% 
+% \subsection{\LaTeX\ variables and options}
+% There are several ways to change the look of the \LaTeX\
+% document. 
+%
+% \DescribeMacro{\contentsname}
+% By default, the Table of Contents is titled ``Outline'' in the
+% printed document. This could be changed by changing the macro
+% |\contentsname| like this:
+% \begin{verbatim}
+% \renewcommand{\contentsname}{The Outline of Today's Talk}
+% \end{verbatim}
+% Note that the in the HTML version Table of Contents is still called
+% ``Contents''. This could be changed separately in your
+% |.latex2html-init| file. 
+%
+% \DescribeMacro{[pagesintoc]}\DescribeMacro{[nopagesintoc]}
+% By default, the Table of Contents does not include the page numbers
+% of the corresponding sections (they have little sense for a
+% lecture). However, if you wish to include them in the Table of
+% Contents, use package option |pagesintoc|. The package option
+% |nopagesintoc| (default) suppresses the page numbers.
+%
+% By default, |foilhtml| does \emph{not} number even the non-starred
+% sections, subsections, etc. This behavior is determined by the variable
+% |secnumdepth| (by default 0). This variable has the same meaning
+% here, as in the standard \LaTeX\ classes. All
+% sectioning units of the level larger than |secnumdepth| are
+% numbered, and the others are not. 
+%
+% \subsection{\LaTeX\ configuration file}
+% If the file |foilhtml.cfg| exists, it is loaded by the style
+% |foilhtml.sty|. If you use some customization code often, you can
+% put it there. A sample configuration file is provided in the
+% distribution; feel free to hack it.
+%
+% \section{New versions and bug reports}
+%
+% Feel free to send bug reports to |boris@plmsc.psu.edu|. You can find
+% new versions of the package on my home page
+% (|http://www.plmsc.psu.edu/|\~{}|boris| or on CTAN.
+%
+% \section{Legalese}
+%
+% The package \FH\ is provided ``as is'' and comes with absolutely no
+% warranty of any kind, either expressed or implied, including, but not
+% limited to, the implied warranties of merchantability and fitness for
+% a particular purpose.  The entire risk as to the quality and
+% performance of the program is with you.  Should the program prove
+% defective, you assume the cost of all necessary servicing, repair or
+% correction.
+%
+% In no event unless required by applicable law will the author of the
+% program be liable to you for damages, including any general, special,
+% incidental or consequential damages arising out of any use of the
+% program or out of inability to use the program (including but not
+% limited to loss of data or data being rendered inaccurate or losses
+% sustained by you or by third parties as a result of a failure of the
+% program to operate with any other programs), even if such holder or
+% other party has been advised of the possibility of such damages.
+%
+% \FH\ package is covered by the same license as the current \LaTeXe\ 
+% package (see the files |legal.txt| and |modguide.tex| in the \LaTeXe\
+% distribution).
+%
+% The program \FoilTeX\ is copyrighted by IBM Corporation and covered
+% by a separate license.
+% 
+% The program \latextohtml\ is copyrighted by Nikos Drakos and covered by a
+% separate license.
+% 
+%
+% \StopEventually{%
+% \clearpage
+% \begin{thebibliography}{1}
+%
+% \bibitem{LaTeX2HTML}
+% Nikos Drakos, Jens Lippmann, and Ross Moore
+% \newblock The {\latextohtml{}} translator.
+% \newblock CTAN, 1996, 1997.
+%
+% \bibitem{FoilTeX}
+% Jim Hafner.
+% \newblock The {\FoilTeX{}} class package.
+% \newblock CTAN, 1997.
+%
+% \bibitem{classes}
+% Leslie Lamport, Frank Mittelbach, and Johannes Braams.
+% \newblock Standard document classes for {\LaTeX{}} version 2e.
+% \newblock CTAN, 1997.
+%
+% \bibitem{ltdefns}
+% Johannes Braams, David Carlisle, Alan Jeffrey, Leslie Lamport, Frank
+%   Mittelbach, Chris Rowley, and Rainer Sch{\"o}pf.
+% \newblock ltdefns.dtx.
+% \newblock CTAN, 1997.
+%
+% \end{thebibliography}
+% }
+%
+% \clearpage
+% \part{Implementation}
+% \section{\Perl\ code}
+% \changes{v1.1}{1997/08/11}{Added support for \latextohtml97-1}
+% \changes{v1.2}{1998/02/17}{Added support for \latextohtml98-1}
+% \changes{v1.2}{1998/02/17}{Old perl scripts now have distinct names}
+%    \begin{macrocode}
+%<*foilhtml|foils-97|foils>
+%    \end{macrocode}
+% First, the header:
+%    \begin{macrocode}
+######################################################
+#
+%<+foilhtml># This is file `foilhtml.perl',
+%<+foils># This is file `foils.perl',
+# generated with the docstrip utility.
+#
+# Copyright Boris Veytsman 1998
+#
+#  You are *not* allowed to modify this file.
+#
+#  You are *not* allowed to distribute this file.
+# For distribution of the original source see
+# the terms for copying and modification in the file 
+# foilhtml.dtx
+#
+%    \end{macrocode}
+% 
+% \DescribeMacro{$FOILHEADLEVEL}
+% Now we define |\foilhead| and |\rotatefoihead| as sectioning
+% commands. By default their level is ``section'', but this can be used
+% by setting |$FOILHEADLEVEL| to 1 (part), 2 (chapter), 3 (section),
+% etc. up to 7 (subparagraph). Note that this will affect only \latextohtml\
+% sectioning commands. The typesetting will the same: |<H1>|-level
+% headings. Note, that article class does not have chapters,
+% so if you want to make |$FOILHEADLEVEL| to be 2, you need to
+% redefine |$FOILCLASS| below. Otherwise \TeX ing |images.tex| will
+% give an error.
+%
+% \begin{macrocode}
+ $FOILHEADLEVEL = 4 unless defined($FOILHEADLEVEL);
+ %section_commands=('foilhead',$FOILHEADLEVEL,
+   'rotatefoilhead',$FOILHEADLEVEL,%section_commands);
+        
+ %new_section_headings = ('foilhead', 'H1','rotatefoilhead','H1');
+ &generate_new_sectioning_subs;
+
+ sub generate_new_sectioning_subs{
+    local($key, $val);
+    while ( ($key, $val) = each %new_section_headings) {
+        eval "sub do_cmd_$key {" 
+            . 'local($after) = @_;'
+                . '&do_cmd_section_helper(' . $val . ');}';
+        %section_commands=($key,$val,%section_commands);
+    }
+ };
+%    \end{macrocode}
+%
+% Now the redefinition of the |images.tex| headers. We just lift the
+% definition from the original \latextohtml\ and make some modifications. 
+%
+% \DescribeMacro{$FOILCLASS}\DescribeMacro{$FOILOPTIONS}
+% We substitute the header |\documentclass|\oarg{options}|{foils}| by
+% the header |\documentclass[$FOILOPTIONS]{$FOILCLASS}| (note that
+% \FoilTeX\ options have no meaning in the HTML world, so we can
+% safely drop them). The defaults are |10pt| and |article|, but this
+% could be easily changed in the init file.
+%    \begin{macrocode}
+ $FOILCLASS = 'article' unless defined $FOILCLASS;
+ $FOILOPTIONS = '10pt' unless defined $FOILOPTIONS;
+%    \end{macrocode}
+%
+% The processing is different for different versions of
+% \latextohtml{}. First, the 96 version:
+%
+%
+%    \begin{macrocode}
+%</foilhtml|foils-97|foils>
+%<*foilhtml>
+ sub make_latex{
+ # This is the environment in which to process constructs that cannot be
+ # translated to HTML.
+ # The environment tex2html_wrap will be wrapped around any shorthand 
+ # environments (e.g. $, \(, \[).
+ # The tex2html_wrap environment will be treated as an unrecognised 
+ # evironment by the translator and its contents (i.e. the 'shorthand'
+ # environment) will be passed to latex for processing as usual.
+    local($contents) = @_;
+    local($preamble) = $preamble;
+    # Make the @ character a normal letter ...
+    $preamble =~ 
+      s/\\documentclass.*/
+      \\documentclass\[$FOILOPTIONS\]{$FOILCLASS}\\makeatletter/;
+    # ... and make it special again after the preamble
+    ($DEBUG ? "\\nonstopmode" : "\\batchmode") .
+    "\n$preamble\n\\makeatother\n" .
+    "\\newenvironment{tex2html_wrap}{}{}\n" .
+    "\\newwrite\\lthtmlwrite\n" .
+    "\\def\\lthtmltypeout#1%\n" .
+    "{{\\let\\protect\\string\\immediate\\write\\lthtmlwrite{#1}}}%\n" .
+    "\\newbox\\sizebox\n" .
+    # "\\textheight 250cm\n" .
+    "\\begin{document}\n" .
+    "\\pagestyle{empty}\n" .
+    "$contents\n".
+    "\\end{document}";
+ }
+%    \end{macrocode}
+%
+% The 97 version is much longer:
+%
+%    \begin{macrocode}
+%</foilhtml>
+%<*foils-97>
+ sub make_latex{
+ # This is the environment in which to process constructs that cannot be
+ # translated to HTML.
+ # The environment tex2html_wrap will be wrapped around any shorthand
+ # environments (e.g. $, \(, \[).
+ # The tex2html_wrap environment will be treated as an unrecognised
+ # evironment by the translator and its contents (i.e. the 'shorthand'
+ # environment) will be passed to latex for processing as usual.
+     local($contents) = @_;
+     local($preamble) = $preamble;
+     local($preamble_aux) = $preamble_aux;
+     # Make the @ character a normal letter ...
+     $preamble =~
+       s/\\documentclass.*/
+       \\documentclass\[$FOILOPTIONS\]{$FOILCLASS}\\makeatletter/;
+     # ... and make it special again after the preamble
+     # remove the  \begin/\end  for  tex2html_nowrap and tex2html_deferred environments
+     $preamble =~s/\\(begin|end)\s*\{(tex2html_(nowrap|deferred|nomath)[_a-z]*|imagesonly)\}//g;
+     $preamble = "\\documentclass\{article\}%\\usepackage{html}%\n\\makeatletter"
+         unless ($preamble);
+     $preamble_aux = '' unless (($preamble_aux)&&($contents =~ /\\(hyper)?(ref|cite)/));
+
+     local($paperwidth) = '';
+     if ($PAPERSIZE) { $paperwidth = &adjust_textwidth($PAPERSIZE); }
+     else { $paperwidth = &adjust_textwidth("a5"); }
+     local($kern) = ($EXTRA_IMAGE_SCALE ? $EXTRA_IMAGE_SCALE/2 : ".5" );
+     $kern = $kern * $MATH_SCALE_FACTOR;
+     ($DEBUG ? "\\nonstopmode" : "\\batchmode") .
+     "\n$preamble\n$preamble_aux\\makeatother\n" .
+     "\\ifx\\AtBeginDocument\\undefined \\newcommand{\\AtBeginDocument}[1]{}\\fi\n" .
+     "\\newenvironment{tex2html_wrap}{}{}\n" .
+     "\\newbox\\sizebox\n" . "$paperwidth" .
+     "\\newwrite\\lthtmlwrite\n" . "\\makeatletter\n" .
+     "\\let\\realnormalsize=\\normalsize\n\\topskip=0pt\n\\def\\preveqno{}" .
+     "\\let\\real\@float=\\\@float \\let\\realend\@float=\\end\@float\n" .
+     "\\def\\\@float{\\let\\\@savefreelist\\\@freelist\\real\@float}\n" .
+ #    "\\def\\\@float{\\\@dbflt}\n" .
+     "\\def\\end\@float{\\realend\@float\\global\\let\\\@freelist\\\@savefreelist}\n" . 
+     "\\let\\real\@dbflt=\\\@dbflt \\let\\end\@dblfloat=\\end\@float\n" .
+     "\\let\\\@largefloatcheck=\\relax\n" .
+     "\\def\\\@dbflt{\\let\\\@savefreelist\\\@freelist\\real\@dbflt}\n" .
+     "\\def\\adjustnormalsize{\\def\\normalsize{\\mathsurround=0pt \\realnormalsize" .
+     "\\parindent=0pt\\abovedisplayskip=0pt\\belowdisplayskip=0pt}\\normalsize}\n" .
+     "\\def\\lthtmltypeout#1{{\\let\\protect\\string\\immediate\\write\\lthtmlwrite{#1}}}%\n" .
+     "\\newcommand\\lthtmlhboxmathA{\\adjustnormalsize\\setbox\\sizebox=\\hbox\\bgroup}%\n" .
+     "\\newcommand\\lthtmlvboxmathA{\\adjustnormalsize\\setbox\\sizebox=\\vbox\\bgroup%\n".
+     " \\let\\ifinner=\\iffalse }%\n" .
+     "\\newcommand\\lthtmlboxmathZ{\\\@next\\next\\\@currlist{}{\\def\\next{\\voidb\@x}}%\n" .
+ #    " \\expandafter\\box\\next\\edef\\next{\\egroup\\def\\noexpand\\thiseqn{\\theequation}}\\next}%\n" .
+     " \\expandafter\\box\\next\\egroup}%\n" .
+     "\\newcommand\\lthtmlmathtype[1]{\\def\\lthtmlmathenv{#1}}%\n" .
+ #    "\\newcommand\\lthtmllogmath{\\lthtmltypeout{latex2htmlSize%\n" .
+     "\\newcommand\\lthtmllogmath{\\lthtmltypeout{l2hSize %\n" .
+     ":\\lthtmlmathenv:\\the\\ht\\sizebox::\\the\\dp\\sizebox::\\the\\wd\\sizebox.\\preveqno}}%\n" .
+     "\\newcommand\\lthtmlfigureA[1]{\\let\\\@savefreelist\\\@freelist
+        \\lthtmlmathtype{#1}\\lthtmlvboxmathA}%\n" .
+     "\\newcommand\\lthtmlfigureZ{\\lthtmlboxmathZ\\lthtmllogmath\\copy\\sizebox
+        \\global\\let\\\@freelist\\\@savefreelist}%\n" .
+     "\\newcommand\\lthtmldisplayA[1]{\\lthtmlmathtype{#1}\\lthtmlvboxmathA}%\n" .
+     "\\newcommand\\lthtmldisplayB[1]{\\edef\\preveqno{(\\theequation)}%\n" .
+     "  \\lthtmldisplayA{#1}\\let\\\@eqnnum\\relax}%\n" .
+     "\\newcommand\\lthtmldisplayZ{\\lthtmlboxmathZ\\lthtmllogmath\\lthtmlsetmath}%\n" .
+     "\\newcommand\\lthtmlinlinemathA[1]{\\lthtmlmathtype{#1}\\lthtmlhboxmathA" .
+     "  \\vrule height1.5ex width0pt }%\n" .
+     "\\newcommand\\lthtmlinlinemathZ{\\egroup\\expandafter\\ifdim\\dp\\sizebox>0pt %\n" .
+     "  \\expandafter\\centerinlinemath\\fi\\lthtmllogmath\\lthtmlsetmath}\n" .
+     "\\def\\lthtmlsetmath{\\hbox{\\vrule width.5pt\\vtop{\\vbox{%\n" .
+     "  \\kern.5pt\\kern$kern pt\\hbox{\\hglue.5pt\\copy\\sizebox\\hglue$kern pt}\\kern.5pt%\n" .
+     "  \\ifdim\\dp\\sizebox>0pt\\kern$kern pt\\fi}%\n" .
+     "  \\ifdim\\hsize>\\wd\\sizebox \\hrule depth1pt\\fi}}}\n" .
+     "\\def\\centerinlinemath{\\dimen1=\\ht\\sizebox\n" . 
+     "  \\ifdim\\dimen1<\\dp\\sizebox \\ht\\sizebox=\\dp\\sizebox\n" .
+     "  \\else \\dp\\sizebox=\\ht\\sizebox \\fi}\n\n" .
+     "\\def\\lthtmlcheckvsize{\\ifdim\\ht\\sizebox<\\vsize\\expandafter\\vfill\n" .
+     "  \\else\\expandafter\\vss\\fi}%\n" .
+ #    "\\def\\\@enddocumenthook{\\ifnum\\count0>1 \\ifvoid\\\@cclv\\penalty-\\\@MM\\fi\\fi}\n" .
+     "\\makeatletter\n" .
+     $LaTeXmacros . "\n" .  # macros defined in extension files
+ #    "\\usepackage{lthimages}\n" .
+     "\n\\begin{document}\n" .
+     "\\pagestyle{empty}\\thispagestyle{empty}%\n" .
+     "\\lthtmltypeout{latex2htmlLength hsize=\\the\\hsize}%\n" .
+     "\\lthtmltypeout{latex2htmlLength vsize=\\the\\vsize}%\n" .
+     "\\lthtmltypeout{latex2htmlLength hoffset=\\the\\hoffset}%\n" .
+     "\\lthtmltypeout{latex2htmlLength voffset=\\the\\voffset}%\n" .
+     "\\lthtmltypeout{latex2htmlLength topmargin=\\the\\topmargin}%\n" .
+     "\\lthtmltypeout{latex2htmlLength topskip=\\the\\topskip}%\n" .
+     "\\lthtmltypeout{latex2htmlLength headheight=\\the\\headheight}%\n" .
+     "\\lthtmltypeout{latex2htmlLength headsep=\\the\\headsep}%\n" .
+     "\\lthtmltypeout{latex2htmlLength parskip=\\the\\parskip}%\n" .
+     "\\lthtmltypeout{latex2htmlLength oddsidemargin=\\the\\oddsidemargin}%\n" .
+     "\\makeatletter\n" .
+     "\\if\@twoside\\lthtmltypeout{latex2htmlLength evensidemargin=\\the\\evensidemargin}%\n" .
+     "\\else\\lthtmltypeout{latex2htmlLength evensidemargin=\\the\\oddsidemargin}\\fi%\n" .
+     "\\makeatother\n" .
+     "$contents\n".
+ #    "\\clearpage\n" .
+     "\\end{document}";
+ }
+%</foils-97>
+%    \end{macrocode}
+%
+% And 98 version is even longer...
+%    \begin{macrocode}
+%<*foils>
+sub make_latex{
+# This is the environment in which to process constructs that cannot be
+# translated to HTML.
+# The environment tex2html_wrap will be wrapped around any shorthand
+# environments (e.g. $, \(, \[).
+# The tex2html_wrap environment will be treated as an unrecognised
+# evironment by the translator and its contents (i.e. the 'shorthand'
+# environment) will be passed to latex for processing as usual.
+    local($contents) = @_;
+    local($preamble) = $preamble;
+    local($aux_preamble) = $aux_preamble;
+    while ($preamble =~ s/^(\@.*\n)/$prelatex .= $1;''/e) {}
+    print "\nPRE-LATEX: $prelatex" if (($prelatex)&&($VERBOSITY > 1));
+
+    # Make the @ character a normal letter ...
+    $preamble =~ s/\\par([^A-Za-z])/\n$1/g;
+     $preamble =~
+       s/\\documentclass.*/
+       \\documentclass\[$FOILOPTIONS\]{$FOILCLASS}\\makeatletter/;
+    # ... and make it special again after the preamble
+    # remove the  \begin/\end  for  tex2html_nowrap and tex2html_deferred environments
+    $preamble =~s/\\(begin|end)\s*\{(tex2html_(nowrap|deferred|nomath|preform)[_a-z]*|imagesonly)\}//g;
+    $preamble = "\\documentclass\{article\}%\n\\usepackage{html,color}%\n\\makeatletter"
+	unless ($preamble);
+    if (($LATEX_DUMP)&&(!($preamble =~ /\\usepackage\{ldump\}/))) {
+	$*=1;
+	$preamble =~ s/(\\document(class|style)[^\n]*\n)/$1\\usepackage\{ldump\}\n/;
+	$*=0;
+    }
+    $LOAD_LATEX_COLOR = "\\usepackage[dvips]{color}" unless $LOAD_LATEX_COLOR;
+    $LATEX_COLOR = "\\pagecolor[gray]{.85}" unless $LATEX_COLOR;
+    if ($preamble =~ /(^|\s*[^%])\s*\\documentstyle/) {
+	# \usepackage is invalid in LaTeX 2.09 and LaTeX-2e compatibility mode
+	$LATEX_COLOR = ''; $LOAD_LATEX_COLOR = '';
+    }
+
+    $preamble .= $LOAD_LATEX_COLOR."\n" unless ($preamble =~ /[,\{]color[,\}]/);
+    $preamble .= $LATEX_COLOR."\n" unless ($preamble =~ /\\pagecolor/);
+
+    $aux_preamble = '' unless (($aux_preamble)&&($contents =~ /\\(hyper)?(ref|cite)/));
+
+    local($paperwidth) = '';
+    if ($PAPERSIZE) { $paperwidth = &adjust_textwidth($PAPERSIZE); }
+    else { $paperwidth = &adjust_textwidth("a5"); }
+    local($kern) = ($EXTRA_IMAGE_SCALE ? $EXTRA_IMAGE_SCALE/2 : ".5" );
+    $kern = $kern * $MATH_SCALE_FACTOR;
+    $prelatex . ($DEBUG ? "\\nonstopmode" : "\\batchmode") .
+    "\n$preamble\n$aux_preamble\n" .
+    "\\count\@=\\the\\catcode`\\_ \\catcode`\\_=8 \n" .
+    "\\newenvironment{tex2html_wrap}{}{} \\catcode`\\_=\\count\@\n" .
+    "\\makeatother\n" .
+    "\\ifx\\AtBeginDocument\\undefined \\newcommand{\\AtBeginDocument}[1]{}\\fi\n" .
+    "\\newbox\\sizebox\n" . "$paperwidth" .
+    "\\newwrite\\lthtmlwrite\n" . "\\makeatletter\n" .
+    "\\let\\realnormalsize=\\normalsize\n\\global\\topskip=2sp\n\\def\\preveqno{}" .
+    "\\let\\real\@float=\\\@float \\let\\realend\@float=\\end\@float\n" .
+    "\\def\\\@float{\\let\\\@savefreelist\\\@freelist\\real\@float}\n" .
+#    "\\def\\\@float{\\\@dbflt}\n" .
+    "\\def\\end\@float{\\realend\@float\\global\\let\\\@freelist\\\@savefreelist}\n" . 
+    "\\let\\real\@dbflt=\\\@dbflt \\let\\end\@dblfloat=\\end\@float\n" .
+    "\\let\\\@largefloatcheck=\\relax\n" .
+    "\\def\\\@dbflt{\\let\\\@savefreelist\\\@freelist\\real\@dbflt}\n" .
+    "\\def\\adjustnormalsize{\\def\\normalsize{\\mathsurround=0pt \\realnormalsize\n" .
+    " \\parindent=0pt\\abovedisplayskip=0pt\\belowdisplayskip=0pt}\\normalsize}%\n" .
+    "\\def\\lthtmltypeout#1{{\\let\\protect\\string\\immediate\\write\\lthtmlwrite{#1}}}%\n" .
+    "\\newcommand\\lthtmlhboxmathA{\\adjustnormalsize\\setbox\\sizebox=\\hbox\\bgroup}%\n" .
+    "\\newcommand\\lthtmlvboxmathA{\\adjustnormalsize\\setbox\\sizebox=\\vbox\\bgroup%\n".
+    " \\let\\ifinner=\\iffalse }%\n" .
+    "\\newcommand\\lthtmlboxmathZ{\\\@next\\next\\\@currlist{}{\\def\\next{\\voidb\@x}}%\n" .
+#    " \\expandafter\\box\\next\\edef\\next{\\egroup\\def\\noexpand\\thiseqn{\\theequation}}\\next}%\n" .
+    " \\expandafter\\box\\next\\egroup}%\n" .
+    "\\newcommand\\lthtmlmathtype[1]{\\def\\lthtmlmathenv{#1}}%\n" .
+    "\\newcommand\\lthtmllogmath{\\lthtmltypeout{l2hSize %\n" .
+    ":\\lthtmlmathenv:\\the\\ht\\sizebox::\\the\\dp\\sizebox::\\the\\wd\\sizebox.\\preveqno}}%\n" .
+    "\\newcommand\\lthtmlfigureA[1]{\\let\\\@savefreelist\\\@freelist
+       \\lthtmlmathtype{#1}\\lthtmlvboxmathA}%\n" .
+    "\\newcommand\\lthtmlfigureZ{\\lthtmlboxmathZ\\lthtmllogmath\\copy\\sizebox
+       \\global\\let\\\@freelist\\\@savefreelist}%\n" .
+    "\\newcommand\\lthtmldisplayA[1]{\\lthtmlmathtype{#1}\\lthtmlvboxmathA}%\n" .
+    "\\newcommand\\lthtmldisplayB[1]{\\edef\\preveqno{(\\theequation)}%\n" .
+    "  \\lthtmldisplayA{#1}\\let\\\@eqnnum\\relax}%\n" .
+    "\\newcommand\\lthtmldisplayZ{\\lthtmlboxmathZ\\lthtmllogmath\\lthtmlsetmath}%\n" .
+    "\\newcommand\\lthtmlinlinemathA[1]{\\lthtmlmathtype{#1}\\lthtmlhboxmathA" .
+    "  \\vrule height1.5ex width0pt }%\n" .
+    "\\newcommand\\lthtmlinlineA[1]{\\lthtmlmathtype{#1}\\lthtmlhboxmathA}%\n" .
+    "\\newcommand\\lthtmlinlineZ{\\egroup\\expandafter\\ifdim\\dp\\sizebox>0pt %\n" .
+    "  \\expandafter\\centerinlinemath\\fi\\lthtmllogmath\\lthtmlsetinline}\n" .
+    "\\newcommand\\lthtmlinlinemathZ{\\egroup\\expandafter\\ifdim\\dp\\sizebox>0pt %\n" .
+    "  \\expandafter\\centerinlinemath\\fi\\lthtmllogmath\\lthtmlsetmath}\n" .
+    "\\def\\lthtmlsetinline{\\hbox{\\vrule width.1em\\vtop{\\vbox{%\n" .
+    "  \\kern.1em\\copy\\sizebox}\\ifdim\\dp\\sizebox>0pt\\kern.1em\\else\\kern.3pt\\fi\n" .
+    "  \\ifdim\\hsize>\\wd\\sizebox \\hrule depth1pt\\fi}}}\n" .
+    "\\def\\lthtmlsetmath{\\hbox{\\vrule width.1em\\setbox1=\\vtop{\\vbox{%\n" .
+    "  \\kern.1em\\kern$kern pt\\hbox{\\hglue.17em\\copy\\sizebox\\hglue$kern pt}}\\kern.3pt%\n" .
+#   "  \\ifdim\\dp\\sizebox>0pt\\kern.1em \\kern$kern pt\\fi}%\n" .
+    "  \\ifdim\\dp\\sizebox>0pt\\kern.1em\\fi \\kern$kern pt%\n" .
+    "  \\ifdim\\hsize>\\wd\\sizebox \\hrule depth1pt\\fi}\\message{ht\\the\\ht1: dp\\the\\dp1}\\box1}}\n" .
+    "\\def\\centerinlinemath{%\\dimen1=\\ht\\sizebox\n" . 
+#   "  \\ifdim\\dimen1<\\dp\\sizebox \\ht\\sizebox=\\dp\\sizebox\n" .
+    "  \\dimen1=\\ifdim\\ht\\sizebox<\\dp\\sizebox \\dp\\sizebox\\else\\ht\\sizebox\\fi\n" .
+#    "   \\vrule width0pt depth\\dp\\sizebox \n" .
+#   "  \\else \\dp\\sizebox=\\ht\\sizebox \\fi}\n\n" .
+    "  \\advance\\dimen1by.5pt \\vrule width0pt height\\dimen1 depth\\dimen1 \n".
+    " \\dp\\sizebox=\\dimen1\\ht\\sizebox=\\dimen1\\relax}\n\n" .
+    "\\def\\lthtmlcheckvsize{\\ifdim\\ht\\sizebox<\\vsize\\expandafter\\vfill\n" .
+    "  \\else\\expandafter\\vss\\fi}%\n" .
+#    "\\def\\\@enddocumenthook{\\ifnum\\count0>1 \\ifvoid\\\@cclv\\penalty-\\\@MM\\fi\\fi}\n" .
+    "\\makeatletter \\tracingstats = 1 \n" .
+    $LaTeXmacros . "\n"  # macros defined in extension files
+#    "\\usepackage{lthimages}\n" .
+    . (($LATEX_DUMP)? "\\latexdump\n" : '')
+    . "\n\\begin{document}\n" .
+    "\\pagestyle{empty}\\thispagestyle{empty}%\n" .
+    "\\lthtmltypeout{latex2htmlLength hsize=\\the\\hsize}%\n" .
+    "\\lthtmltypeout{latex2htmlLength vsize=\\the\\vsize}%\n" .
+    "\\lthtmltypeout{latex2htmlLength hoffset=\\the\\hoffset}%\n" .
+    "\\lthtmltypeout{latex2htmlLength voffset=\\the\\voffset}%\n" .
+    "\\lthtmltypeout{latex2htmlLength topmargin=\\the\\topmargin}%\n" .
+    "\\lthtmltypeout{latex2htmlLength topskip=\\the\\topskip}%\n" .
+    "\\lthtmltypeout{latex2htmlLength headheight=\\the\\headheight}%\n" .
+    "\\lthtmltypeout{latex2htmlLength headsep=\\the\\headsep}%\n" .
+    "\\lthtmltypeout{latex2htmlLength parskip=\\the\\parskip}%\n" .
+    "\\lthtmltypeout{latex2htmlLength oddsidemargin=\\the\\oddsidemargin}%\n" .
+    "\\makeatletter\n" .
+    "\\if\@twoside\\lthtmltypeout{latex2htmlLength evensidemargin=\\the\\evensidemargin}%\n" .
+    "\\else\\lthtmltypeout{latex2htmlLength evensidemargin=\\the\\oddsidemargin}\\fi%\n" .
+    "\\makeatother\n"
+    . "$contents\n"
+#    "\\clearpage\n" .
+    . "\\end{document}";
+}
+%</foils>
+%    \end{macrocode}
+% Since they are different, we must prevent loading |foilhtml.perl| if
+% we use |foils.perl|. Of course, we asked in the user guide \emph{not}
+% to install |foilhtml.perl| for 97-1, but one cannot be sure anybody
+% will RTFM\ldots
+%
+%    \begin{macrocode}
+%<*foils-97|foils>
+ $DONT_INCLUDE = "foilhtml:".$DONT_INCLUDE;
+%    \end{macrocode}
+%
+%
+% And now the ignored \FoilTeX\ commands. They are common for both
+% versions of \latextohtml.
+%    \begin{macrocode}
+%</foils-97|foils>
+%<*foilhtml|foils-97|foils>
+&ignore_commands( <<_IGNORED_CMDS_);
+portraitfoils
+lanscapefoils
+MyLogo # {}
+Restriction # {}
+LogoOff
+LogoOn
+rightfooter # {}
+rightheader # {}
+leftheader # {}
+newnonfloat #{} #{}
+foilheadskip # &ignore_numeric_argument
+abovefloatskip # &ignore_numeric_argument
+captionwidth # &ignore_numeric_argument
+titleauthorskip # &ignore_numeric_argument
+authorauthorskip # &ignore_numeric_argument
+authordateskip # &ignore_numeric_argument
+dateabstractskip # &ignore_numeric_argument
+zerolistvertdimens
+_IGNORED_CMDS_
+%    \end{macrocode} 
+%
+% The famous last line:
+%    \begin{macrocode}
+ 1; # This should be the last line
+%</foilhtml|foils-97|foils>
+%    \end{macrocode}
+%
+% \section{\LaTeX\ style}
+% \subsection{Initialization and processing options}
+% First, let us ask (not so) nicely for \LaTeX\
+%    \begin{macrocode}
+%<*package>
+\NeedsTeXFormat{LaTeX2e}
+%    \end{macrocode}
+%
+% \begin{macro}{\@pagesintoc}
+% Now let us check whether we need pages in toc:
+%    \begin{macrocode}
+\newif\if@pagesintoc
+\DeclareOption{pagesintoc}{\@pagesintoctrue}
+\DeclareOption{nopagesintoc}{\@pagesintocfalse}
+\ExecuteOptions{nopagesintoc}
+%    \end{macrocode}
+% \end{macro}
+% 
+% \begin{macro}{\c@secnumdepth}
+% We need to set |secnumdepth| before loading the configuration file:
+%    \begin{macrocode}
+\setcounter{secnumdepth}{0}
+%    \end{macrocode}
+% \end{macro}
+% Now let us check the configuration file:
+%    \begin{macrocode}
+\InputIfFileExists{foilhtml.cfg}{%
+  \typeout{Loading configuration file foilhtml.cfg}}{%
+  \typeout{Configuration file foilhtml.cfg is not found. Using default
+  options.}}
+%    \end{macrocode}
+%
+% And now we construct a sample configuration file
+%    \begin{macrocode}
+%</package>
+%<*cfg>
+%%
+%% The default options go here
+%%
+\ExecuteOptions{nopagesintoc}
+%%
+\AtEndOfPackage{\setcounter{secnumdepth}{0} % Customization goes here
+}
+%</cfg>
+%<*package>
+%    \end{macrocode}
+%
+% \DescribeMacro{\if@portraitfoils} 
+% The flag |\if@portraitfoils| controls what kind of foils we produce
+% for sectioning commands: portrait or rotated. We put it here because
+% we want the global option |landscape| to work intelligently\ldots
+%    \begin{macrocode}
+\newif\if@portraitfoils
+\@portraitfoilstrue
+\DeclareOption{landscape}{\@portraitfoilsfalse}
+%    \end{macrocode}
+%
+% Processing options:
+%    \begin{macrocode}
+\ProcessOptions
+%    \end{macrocode}
+% 
+% \subsection{Checking the caller}
+% Let us check where we are. The package could be loaded either from
+% |foils| document class or from |article| (or other) documentclass
+% (e.~g. from |images.tex|). We don't want to do anything in the
+% latter case. So let us check whether some \FoilTeX\ command is
+% defined: 
+%    \begin{macrocode}
+\@ifundefined{foilhead}{%
+%    \end{macrocode}
+% If we are \emph{not} called by \FoilTeX, we should disable
+% \FoilTeX-specific commands. The \latextohtml{} script does not allow
+% them in the document body, but, unfortunately, leaves them in the
+% preamble. So we take care of them:
+%    \begin{macrocode}
+ \def\portraitfoils{\relax}%
+ \def\lanscapefoils{\relax}%
+ \def\MyLogo{\@gobble}%
+ \def\Restriction{\@gobble}%
+ \def\LogoOff{\relax}%
+ \def\LogoOn{\relax}%
+ \def\rightfooter{\@gobble}%
+ \def\rightheader{\@gobble}%
+ \def\leftheader{\@gobble}%
+ \def\newnonfloat{\@gobbletwo}%
+ \newdimen\foilheadskip
+ \newdimen\abovefloatskip
+ \newdimen\captionwidth
+ \newdimen\titleauthorskip
+ \newdimen\authorauthorskip
+ \newdimen\authordateskip
+ \newdimen\dateabstractskip
+ \def\zerolistvertdimens{\relax}%
+ }{%
+%    \end{macrocode}
+%
+% \subsection{Rotating commands}
+% \begin{macro}{\portraitfoils}
+% \begin{macro}{\portraitfoils*}
+% \begin{macro}{\landscapefoils}
+% \begin{macro}{\landscapefoils*}
+% The rotating commands set |\if@portraitfoils| and (for unstarred
+% variants) eject the foil using |\foilhead|
+%    \begin{macrocode}
+ \newcommand{\portraitfoils}{%
+   \@ifstar{\@portraitfoilstrue}{%
+   \@portraitfoilstrue\foilhead[-\foilheadskip]{}}}
+ \newcommand{\landscapefoils}{%
+   \@ifstar{\@portraitfoilsfalse}{%
+   \@portraitfoilsfalse\rotatefoilhead[-\foilheadskip]{}}}
+%    \end{macrocode}
+% \end{macro}\end{macro}\end{macro}\end{macro}
+%
+% \subsection{Sectioning commands}
+%
+% The stuff here is mostly stolen from
+% |classes.dtx|~\cite{classes}---however, we implement the high level
+% sectioning commands through |\foilhead|. 
+%
+% \begin{macro}{\chaptermark}
+% First, mark commands (anybody uses marks for foils out here?) The
+% file |latex.ltx| defines all of them but |\chaptermark|, so we
+% will oblige\ldots
+%    \begin{macrocode}
+\newcommand*\chaptermark[1]{}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\c@part}
+% \begin{macro}{\c@chapter}
+% \begin{macro}{\c@section}
+% \begin{macro}{\c@subsection}
+% \begin{macro}{\c@subsubsection}
+% \begin{macro}{\c@paragraph}
+% \begin{macro}{\c@subparagraph}
+% Now the counters: (almost verbatim from |classes.dtx|):
+%    \begin{macrocode}
+ \newcounter {part}
+ \newcounter {chapter}
+ \newcounter {section}
+ \newcounter {subsection}[section]
+ \newcounter {subsubsection}[subsection]
+ \newcounter {paragraph}[subsubsection]
+ \newcounter {subparagraph}[paragraph]
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\thepart}
+% \begin{macro}{\thechapter}
+% \begin{macro}{\thesection}
+% \begin{macro}{\thesubsection}
+% \begin{macro}{\thesubsubsection}
+% \begin{macro}{\theparagraph}
+% \begin{macro}{\thesubparagraph}
+%    \begin{macrocode}
+ \renewcommand \thepart {\@Roman\c@part}
+ \renewcommand \thechapter {\@arabic\c@chapter}
+ \renewcommand \thesection {\@arabic\c@section}
+ \renewcommand\thesubsection   {\thesection.\@arabic\c@subsection}
+ \renewcommand\thesubsubsection{\thesubsection .\@arabic\c@subsubsection}
+ \renewcommand\theparagraph    {\thesubsubsection.\@arabic\c@paragraph}
+ \renewcommand\thesubparagraph {\theparagraph.\@arabic\c@subparagraph}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% 
+% \begin{macro}{\part}
+% \begin{macro}{\part*}   
+% The commands |\part| and |\part*| are implemented through |\secdef|
+% macro: 
+%    \begin{macrocode}
+\newcommand\part{%
+   \@afterindentfalse\clearpage
+   \secdef\@part\@spart}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\@part}
+% \begin{macro}{\@spart}
+% The actual typesetting is done by |\@part| and |\@spart|
+% commands. They produce foils with just the title on them in
+% |\Huge\bfseries| font. By the way, we still print \emph{Logo} and
+% \emph{Restriction}  on them. Maybe we should set them to null? 
+%    \begin{macrocode}
+ \def\@part[#1]#2{%
+     \ifnum \c@secnumdepth >-2\relax
+       \refstepcounter{part}%
+       \addcontentsline{toc}{part}{\thepart\hspace{1em}#1}%
+       \if@portraitfoils
+          \foilhead{\huge\bfseries\partname~\thepart\\[1ex]%
+          \Huge\bfseries #2}%
+       \else
+          \rotatefoilhead{\huge\bfseries\partname~\thepart\\[1ex]%
+          \Huge\bfseries #2}%
+       \fi
+     \else
+       \addcontentsline{toc}{part}{#1}%
+       \if@portraitfoils
+          \foilhead{\Huge\bfseries #2}%
+       \else
+          \rotatefoilhead{\Huge\bfseries #2}%
+       \fi
+     \fi
+    \markboth{}{}%
+    \clearpage}
+ \def\@spart#1{%
+    \if@portraitfoils
+       \foilhead{\Huge\bfseries #1}%
+    \else
+       \rotatefoilhead{\Huge\bfseries #1}%
+    \fi
+    \markboth{}{}%
+    \clearpage}
+%    \end{macrocode}
+% \end{macro}\end{macro}
+%
+% \begin{macro}{\chapter}
+% \begin{macro}{\chapter*}   
+% The commands |\chapter| and |\chapter*| are implemented through |\secdef|
+% macro: 
+%    \begin{macrocode}
+\newcommand\chapter{%
+   \@afterindentfalse\clearpage
+   \secdef\@chapter\@schapter}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\@chapter}
+% \begin{macro}{\@schapter}
+% The |\@chapter| and |\@schapter| commands produce foils with just
+% the title on them in 
+% |\huge\bfseries| font. Once again, we still print \emph{Logo} and
+% \emph{Restriction}  on them. Maybe we should set them to null? 
+%    \begin{macrocode}
+ \def\@chapter[#1]#2{%
+     \ifnum \c@secnumdepth >-1\relax
+       \refstepcounter{chapter}%
+       \addcontentsline{toc}{chapter}{\thechapter\hspace{1em}#1}%
+       \if@portraitfoils
+          \foilhead{\LARGE\bfseries\chaptername~\thechapter\\[1ex]%
+          \huge\bfseries #2}%
+       \else
+          \rotatefoilhead{\LARGE\bfseries\chaptername~\thechapter\\[1ex]%
+          \huge\bfseries #2}%
+       \fi
+     \else
+       \addcontentsline{toc}{chapter}{#1}%
+       \if@portraitfoils
+          \foilhead{\huge\bfseries #2}%
+       \else
+          \rotatefoilhead{\huge\bfseries #2}%
+       \fi
+     \fi
+    \markboth{}{}%
+    \clearpage}
+ \def\@schapter#1{%
+    \if@portraitfoils
+       \foilhead{\huge\bfseries #1}%
+    \else
+       \rotatefoilhead{\huge\bfseries #1}%
+    \fi
+    \markboth{}{}%
+    \clearpage}
+%    \end{macrocode}
+% \end{macro}\end{macro}
+%
+% \begin{macro}{\section}
+% \begin{macro}{\section*}   
+% Once again, |\secdef|:
+%    \begin{macrocode}
+\newcommand\section{%
+   \@afterindentfalse\clearpage
+   \secdef\@section\@ssection}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\if@subnewfoil}
+% All previous commands had titles on separate foils. Now the situation
+% is different: we want the text follow the heading. The only problem
+% we have is with subsection: should it start a new foil or not? The
+% decision is the following: subsection does not start a new foil only
+% if it follows a section title. To implement this we use the mechanism
+% similar to |\@nobreak| in standard classes: a flag |\if@subnewfoil|
+% is initially set to true. Each section command sets it to false, but
+% any new paragraph will set it to true.
+%    \begin{macrocode}
+ \newif\if@subnewfoil
+ \@subnewfoiltrue
+%    \end{macrocode}
+% \end{macro} 
+%
+% \begin{macro}{\@section}
+% \begin{macro}{\@ssection}
+% The commands |\section| and |\section*| produce new foils with the
+% section titles on them. Also, they set |\if@subnewfoil| to false, so
+% new subsection will start on the same foil if no new text is
+% present. 
+%    \begin{macrocode}
+ \def\@section[#1]#2{%
+     \ifnum \c@secnumdepth >0\relax
+       \refstepcounter{section}%
+       \addcontentsline{toc}{section}{\thesection\hspace{1em}#1}%
+       \markboth{\MakeUppercase{\thesection~#2}}{%
+          \MakeUppercase{\thesection~#2}}% 
+       \if@portraitfoils
+          \foilhead{\Large\bfseries\thesection~#2}%
+       \else
+          \rotatefoilhead{\Large\bfseries\thesection~#2}%
+       \fi
+     \else
+       \addcontentsline{toc}{section}{#1}%
+       \markboth{\MakeUppercase{#2}}{\MakeUppercase{#2}}%
+       \if@portraitfoils
+          \foilhead{\Large\bfseries #2}%
+       \else
+          \rotatefoilhead{\Large\bfseries #2}%
+       \fi
+     \fi
+    \global\@subnewfoilfalse\everypar{\global\@subnewfoiltrue\everypar{}}}
+ \def\@ssection#1{%
+    \if@portraitfoils
+       \foilhead{\Large\bfseries #1}%
+    \else
+       \rotatefoilhead{\Large\bfseries #1}%
+    \fi
+    \markboth{\MakeUppercase{#1}}{\MakeUppercase{#1}}%
+    \global\@subnewfoilfalse\everypar{\global\@subnewfoiltrue\everypar{}}}
+%    \end{macrocode}
+% \end{macro}\end{macro}
+%
+% \begin{macro}{\subsection}
+% \begin{macro}{\subsection*}   
+% We start a new page unless immediately after a section title:
+%    \begin{macrocode}
+\newcommand\subsection{%
+   \@afterindentfalse\if@subnewfoil\clearpage\fi\global\@subnewfoiltrue
+   \secdef\@subsection\@ssubsection}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% 
+% \begin{macro}{\@subsection}
+% \begin{macro}{\@ssubsection}
+%    \begin{macrocode}
+ \def\@subsection[#1]#2{%
+     \ifnum \c@secnumdepth >1\relax
+       \refstepcounter{subsection}%
+       \addcontentsline{toc}{subsection}{\thesubsection\hspace{1em}#1}%
+       \begin{center}\large\bfseries\thesubsection~#2\end{center}%
+     \else
+       \addcontentsline{toc}{subsection}{#1}%
+       \begin{center}\large\bfseries #2\end{center}%
+     \fi}
+ \def\@ssubsection#1{%
+     \begin{center}\large\bfseries #1\end{center}}%
+%    \end{macrocode}
+% \end{macro}\end{macro}
+%
+% All lower lever headings are shamelessly copied from
+% |classes.dtx|~\cite{classes} with one addition: they all set
+% |\@subnewfoiltrue|. The quotes are from |classes.dtx|. 
+%
+% \begin{macro}{\subsubsection}
+% \begin{quote}
+%    This gives a normal heading with white space above and below the
+%    heading, the title set in |\normalsize\bfseries|, and no
+%    indentation on the first paragraph.
+% \end{quote}
+%    \begin{macrocode}
+ \newcommand\subsubsection{\global\@subnewfoiltrue%
+                                 \@startsection{subsubsection}{3}{\z@}%
+                                 {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                 {1.5ex \@plus .2ex}%
+                                 {\normalfont\normalsize\bfseries}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\paragraph}
+% \begin{quote}
+%    This gives a run-in heading with white space above and to the
+%    right of the heading, the title set in |\normalsize\bfseries|.
+% \end{quote}
+%    \begin{macrocode}
+ \newcommand\paragraph{\global\@subnewfoiltrue%
+                                \@startsection{paragraph}{4}{\z@}%
+                                {3.25ex \@plus1ex \@minus.2ex}%
+                                {-1em}%
+                                {\normalfont\normalsize\bfseries}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\subparagraph}
+% \begin{quote}
+%    This gives an indented run-in heading with white space above and
+%    to the right of the heading, the title set in
+%    |\normalsize\bfseries|.
+% \end{quote}
+%    \begin{macrocode}
+ \newcommand\subparagraph{\global\@subnewfoiltrue%
+                              \@startsection{subparagraph}{5}{\parindent}%
+                              {3.25ex \@plus1ex \@minus .2ex}%
+                              {-1em}%
+                              {\normalfont\normalsize\bfseries}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Table of Contents}
+%
+%
+%
+%
+% First, the typesetting parameters. Once again, from |classes.dtx|:
+%
+% \begin{macro}{\@pnumwidth}
+% \begin{macro}{\@tocrmarg}
+% \begin{macro}{\@dotsep}
+% \begin{quote}
+%    This command uses the following three parameters, which are set
+%    with a |\newcommand| (so em's can be used to make them depend upon
+%    the font).
+%    \begin{description}
+%    \item[\texttt{\bslash @pnumwidth}] The width of a box in which the
+%        page number is put.
+%    \item[\texttt{\bslash @tocrmarg}] The right margin for multiple
+%        line entries.  One wants |\@tocrmarg| $\ge$ |\@pnumwidth|
+%    \item[\texttt{\bslash @dotsep}] Separation between dots, in mu
+%        units. Should be defined as a number like 2 or 1.7
+%    \end{description}
+% \end{quote}
+%    \begin{macrocode}
+ \newcommand\@pnumwidth{1.55em}
+ \newcommand\@tocrmarg{2.55em}
+ \newcommand\@dotsep{4.5}
+ \setcounter{tocdepth}{3}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\@nopagetocline}
+% The standard \LaTeX\ kernel~\cite{ltdefns} defines |\@dottedtocline| for
+% formatting the Table of Contents entries. We define an analogous
+% command for contents line \emph{without} page number. Its parameters
+% are the same as for |\@dottedtocline| but the last one (page).
+%    \begin{macrocode}
+ \def\@nopagetocline#1#2#3#4{%
+   \ifnum #1>\c@tocdepth \else
+     \vskip \z@ \@plus.2\p@
+     {\leftskip #2\relax 
+      \parindent #2\relax\@afterindenttrue
+      \interlinepenalty\@M
+      \leavevmode
+      \@tempdima #3\relax
+      \advance\leftskip \@tempdima \null\nobreak\hskip -\leftskip
+      {#4}\hfil%
+      \par}%
+   \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tableofcontents}
+% We implement table of contents as a new |\section*|:
+%    \begin{macrocode}
+ \newcommand\tableofcontents{%
+ \section*{\contentsname}%
+ \@starttoc{toc}%
+ \clearpage\global\@subnewfoiltrue}%
+%    \end{macrocode}
+% \end{macro}
+%
+% The actual typesetting is done by commands |\l@|\meta{name}. Here we
+% define them. Once again, verbatim from |classes.dtx| plus check for
+% |\if@pagesintoc|. 
+%
+% \begin{macro}{\l@part}
+% \begin{quote}
+%    First we make sure that if a pagebreak should occur, it occurs
+%    \emph{before} this entry. Also a little whitespace is added and a
+%    group begun to keep changes local.
+% \end{quote}
+%    \begin{macrocode}
+ \newcommand*\l@part[2]{%
+   \ifnum \c@tocdepth >-2\relax
+     \addpenalty\@highpenalty
+     \addvspace{2.25em \@plus\p@}%
+     \begingroup
+%    \end{macrocode}
+% \begin{quote}
+%    The macro |\numberline| requires that the width of the box that
+%    holds the part number is stored in \LaTeX's scratch register
+%    |\@tempdima|. Therefore we put it there.
+% \end{quote}
+%    \begin{macrocode}
+       \setlength\@tempdima{3em}%
+%    \end{macrocode}
+% \begin{quote}
+%    The we set |\parindent| to 0pt and use |\rightskip| to leave
+%    enough room for the pagenumbers. To prevent overfull box messages
+%    the |\parfillskip| is set to a negative value.
+% \end{quote}
+%    \begin{macrocode}
+       \parindent \z@ 
+       \if@pagesintoc
+         \rightskip \@pnumwidth
+         \parfillskip -\@pnumwidth
+       \fi
+%    \end{macrocode}
+% Unlike standard classes, the entry is set in |\Large| bold font
+% (they use |\large|)
+% \begin{quote}
+%    We make sure to
+%    leave vertical mode, set the part title and add the pagenumber,
+%    set flush right.
+% \end{quote}
+%    \begin{macrocode}
+       {\leavevmode
+         \Large \bfseries #1\hfil 
+         \if@pagesintoc\hb@xt@\@pnumwidth{\hss #2}\fi
+       }\par
+%    \end{macrocode}
+% \begin{quote}
+%    Prevent a pagebreak immediately after this entry, but use
+%    |\everypar| to reset the |\if@nobreak| switch. Finally we close
+%    the group.
+% \end{quote}
+%    \begin{macrocode}
+        \nobreak
+          \global\@nobreaktrue
+          \everypar{\global\@nobreakfalse\everypar{}}%
+     \endgroup
+   \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@chapter}
+% \begin{quotation}
+%    This macro formats the entries in the table of contents for
+%    chapters. It is very similar to |\l@part|
+%
+%    First we make sure that if a pagebreak should occur, it occurs
+%    \emph{before} this entry. Also a little whitespace is added and a
+%    group begun to keep changes local.
+% \end{quotation}
+%    \begin{macrocode}
+ \newcommand*\l@chapter[2]{%
+   \ifnum \c@tocdepth >\m@ne
+     \addpenalty{-\@highpenalty}%
+     \vskip 1.0em \@plus\p@
+%    \end{macrocode}
+% \begin{quote}
+%    The macro |\numberline| requires that the width of the box that
+%    holds the part number is stored in \LaTeX's scratch register
+%    |\@tempdima|. Therefore we put it there. We begin a group, and
+%    change some of the paragraph parameters.
+% \end{quote}
+%    \begin{macrocode}
+     \setlength\@tempdima{1.5em}%
+     \begingroup
+       \parindent \z@ 
+       \if@pagesintoc
+         \rightskip \@pnumwidth
+         \parfillskip -\@pnumwidth
+       \fi
+%    \end{macrocode}
+%    Then we leave vertical mode and switch to a large bold font.
+%    \begin{macrocode}
+       \leavevmode \large\bfseries
+%    \end{macrocode}
+% \begin{quote}
+%    Because we do not use |\numberline| here, we have do some fine
+%    tuning `by hand', before we can set the entry. We discourage but
+%    not disallow a pagebreak immediately after a chapter entry.
+% \end{quote}
+%    \begin{macrocode}
+       \advance\leftskip\@tempdima
+       \hskip -\leftskip
+       #1\nobreak\hfil
+       \if@pagesintoc\nobreak\hb@xt@\@pnumwidth{\hss #2}\fi\par
+       \penalty\@highpenalty
+     \endgroup
+   \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@section}
+% Our class is a sort of a cross between article and book/report.
+% Therefore we want the special formatting used in the article
+% class\ldots 
+% \begin{quotation}
+%    In the article document class the entry in the table of contents
+%    for sections looks much like the chapter entries for the report
+%    and book document classes.
+%
+%    First we make sure that if a pagebreak should occur, it occurs
+%    \emph{before} this entry. Also a little whitespace is added and a
+%    group begun to keep changes local.
+% \end{quotation}
+%    \begin{macrocode}
+ \newcommand*\l@section[2]{%
+   \ifnum \c@tocdepth >\z@
+     \addpenalty\@secpenalty
+     \addvspace{1.0em \@plus\p@}%
+%    \end{macrocode}
+% \begin{quote}
+%    The macro |\numberline| requires that the width of the box that
+%    holds the part number is stored in \LaTeX's scratch register
+%    |\@tempdima|. Therefore we put it there. We begin a group, and
+%    change some of the paragraph parameters.
+% \end{quote}
+%    \begin{macrocode}
+     \setlength\@tempdima{1.5em}%
+     \begingroup
+       \parindent \z@ 
+       \if@pagesintoc
+          \rightskip \@pnumwidth
+          \parfillskip -\@pnumwidth
+       \fi
+%    \end{macrocode}
+% \begin{quote}
+%    Then we leave vertical mode and switch to a bold font.
+% \end{quote}
+%    \begin{macrocode}
+      \leavevmode \bfseries
+%    \end{macrocode}
+% \begin{quote}
+%    Because we do not use |\numberline| here, we have do some fine
+%    tuning `by hand', before we can set the entry. We discourage but
+%    not disallow a pagebreak immediately after a chapter entry.
+% \end{quote}
+%    \begin{macrocode}
+       \advance\leftskip\@tempdima
+       \hskip -\leftskip
+       #1\nobreak\hfil 
+       \if@pagesintoc\nobreak\hb@xt@\@pnumwidth{\hss #2}\fi\par
+     \endgroup
+   \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@subsection}
+% \begin{macro}{\l@subsubsection}
+% \begin{macro}{\l@paragraph}
+% \begin{macro}{\l@subparagraph}
+% Lower level headings are made through |\@dottedtocline| and
+% |\@nopagetocline|: 
+%    \begin{macrocode}
+\newcommand*\l@subsection[2]{%
+  \if@pagesintoc
+    \@dottedtocline{2}{1.5em}{2.3em}{#1}{#2}%
+  \else
+    \@nopagetocline{2}{1.5em}{2.3em}{#1}%
+  \fi}
+\newcommand*\l@subsubsection[2]{%
+  \if@pagesintoc
+    \@dottedtocline{3}{3.8em}{3.2em}{#1}{#2}%
+  \else
+    \@nopagetocline{3}{3.8em}{3.2em}{#1}%
+  \fi}
+\newcommand*\l@paragraph[2]{%
+  \if@pagesintoc
+    \@dottedtocline{4}{7.0em}{4.1em}{#1}{#2}%
+  \else
+    \@nopagetocline{4}{7.0em}{4.1em}{#1}%
+  \fi}
+\newcommand*\l@subparagraph[2]{%
+  \if@pagesintoc
+    \@dottedtocline{5}{10em}{5em}{#1}{#2}%
+  \else
+    \@nopagetocline{5}{10em}{5em}{#1}%
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \subsection{Bibliography}
+% \begin{macro}{\thebibliography}
+% Jim Hafner~\cite{FoilTeX} reimplemented |\thebibliography|. He deleted
+% the |\section*| command. Now we put it back!
+%    \begin{macrocode}
+ \renewenvironment{thebibliography}[1]{
+  \section*{\refname}
+  \list{\@biblabel{\arabic{enumiv}}}%
+  {\settowidth\labelwidth{\@biblabel{#1}}%
+  \leftmargin\labelwidth
+  \advance\leftmargin\labelsep
+  \if@openbib
+    \advance\leftmargin\bibindent
+    \itemindent -\bibindent
+    \listparindent \itemindent
+    \parsep \z@
+  \fi
+  \usecounter{enumiv}%
+  \let\p@enumiv\@empty
+  \renewcommand\theenumiv{\arabic{enumiv}}}
+  \if@openbib
+    \renewcommand\newblock{\par}
+  \else 
+    \renewcommand\newblock{\hskip .11em \@plus .33em \@minus -.07em}
+  \fi
+  \sloppy\clubpenalty4000\widowpenalty4000%
+  \sfcode`\.=\@m\relax}%
+  {\def\@noitemerr{\@latex@warning{Empty `thebibliography' environment}}%
+  \endlist}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Names}
+% 
+% \begin{macro}{\contentsname}
+% \begin{macro}{\partname}
+% \begin{macro}{\chaptername}
+% We add names for Table of Contents, chapters and parts.
+%    \begin{macrocode}
+ \newcommand\contentsname{Outline}%
+ \newcommand\partname{Part}%
+ \newcommand\chaptername{Chapter}%
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \subsection{Wrapping up}
+%
+% And now let us finish this |\if@undefined| stuff
+%    \begin{macrocode}
+}
+%    \end{macrocode}
+%
+% \Finale
+% \clearpage
+% \PrintChanges
+% \clearpage
+% \PrintIndex
+%
+\endinput
+
+
+
+
+
+
+
