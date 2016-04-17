@@ -112,6 +112,13 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#--------- v2016
+#
+#               - config: fix parsing of version number for pnmcrop
+#               - config: fix uninitialized argument in error messages
+#		- longtable: fix duplicate caption
+#		  https://bugs.debian.org/310702
+#
 #--------- v2015 apply patches from Debian
 #
 #		- add-abnt.patch

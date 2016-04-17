@@ -8,6 +8,7 @@
 # Change Log:
 # ===========
 # MRO: added changes proposed by Keith Refson
+# 2016: fix duplicate caption https://bugs.debian.org/310702
 
 package main;
 #
@@ -21,7 +22,7 @@ sub do_env_longtable {
 	(s/$next_pair_pr_rx/$cols=$&;''/eo)
 	||(s/$next_pair_rx/$cols=$&;''/eo));
 
-    local($cap_env,$captions) = ('table', $captions);
+    local($cap_env,$captions) = ('table', '');
     if (/\\caption\s*(\*?)/) {
 	my $star = $1;
 	do { local($contents) = $_;
