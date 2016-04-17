@@ -1274,14 +1274,18 @@ if($opt{'have_pstoimg'}) {
     my ($stat,$msg,$err) = ('','','');
     ($stat,$msg,$err) = &get_out_err("$pnmcrop -version");
     my $vers = '';
+    my $major_vers = '';
     $msg = $msg || $err;
-    if ($msg =~ /(^|\s*)Version.*\s([\d\.]+)\s*([\n\r]|$)/is) { $vers = $2; }
-    if ($vers =~ /^199/) {
+    if ($msg =~ /(^|\s*)Version.*\s([\d\.]+)\s*([\n\r]|$)/is) {
+        $vers = $2;
+        ($major_vers) = $vers =~ /^(\d+)/;
+    }
+    if ($major_vers =~ /^199/) {
 	# try left crop
 	&checking('if pnmcrop can crop from one direction');
         my $timg = "config${dd}timg.pnm";
 	($stat,$msg,$err) = &get_out_err("$pnmcrop -l $timg");
-    } elsif ($vers > 8) {
+    } elsif ($major_vers > 8) {
 	my $sub_vers = '';
 	if ($vers =~ /9\.(\d+)/) {
 	    $sub_vers = $1;
@@ -1295,7 +1299,7 @@ if($opt{'have_pstoimg'}) {
 		$newcfg{'PNMCROPOPT'} = ' -sides ';
 	    }
 	} else { $newcfg{'PNMCROPOPT'} = ' -sides '; }
-	$pnmcrop .= ' -verbose ' if ($vers >= 10 || $sub_vers > 10);
+	$pnmcrop .= ' -verbose ' if ($major_vers >= 10 || $sub_vers > 10);
 	print "\n$pnmcrop";
 	$msg = 'there is nothing to crop'; $stat = '';
     } else {
@@ -2392,12 +2396,12 @@ sub warn_no_images {
 }
 
 sub warn_no_graphics {
-  logit("Warning: You may need to rely on LaTeX to generate images with $_[1] effects.\n");
+  logit("Warning: You may need to rely on LaTeX to generate images with $_[0] effects.\n");
   1;
 }
 
 sub warn_no_image_type {
-  logit("Warning: You cannot directly translate/modify graphics of $_[1] format.\n");
+  logit("Warning: You cannot directly translate/modify graphics of $_[0] format.\n");
   1;
 }
 
