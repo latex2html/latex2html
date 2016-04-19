@@ -118,6 +118,8 @@
 #               - config: fix uninitialized argument in error messages
 #		- longtable: fix duplicate caption
 #		  https://bugs.debian.org/310702
+#               - pstoimg: fix pstoimg -depth 24 -flip cw
+#		  https://bugs.debian.org/612126
 #
 #--------- v2015 apply patches from Debian
 #

@@ -22,6 +22,11 @@
 ##############################################################################
 #
 # $Log: pstoimg.pin,v $
+# Revision 2016/04/19
+#  --  fix pstoimg -depth 24 -flip cw
+#      avoiding dropping unexecuted command when ppmquant is not run
+#      https://bugs.debian.org/612126
+#
 # Revision 1.19  2004/01/02 08:20:33  RRM
 #  --  support  -interlace (as identical to  -interlaced) so as not to
 #      run afoul when  $POSIXLY_CORRECT  is set.
@@ -1537,7 +1542,7 @@ sub crop_scale_etc {
 #else
     &do_cmd($in,$tmp,"$reduce_color < $in") || return 0;
 #fi
-  } else { $cmd = '' }
+  }
 #fi # PPMQUANT
 
 #if @pipes@
