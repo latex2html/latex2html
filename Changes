@@ -112,6 +112,9 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#               - latex2html.pin: keep newline before comment
+#		  https://www.tug.org/pipermail/latex2html/2016-May/003953.html
+#
 #--------- v2016
 #
 #               - config: fix parsing of version number for pnmcrop

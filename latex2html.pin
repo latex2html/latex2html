@@ -5114,7 +5114,7 @@ sub substitute_meta_cmds {
     $_ = join('',@processed, $after); undef @processed;
     if ($PREAMBLE) {
 	# MRO: replaced $* with /m
-        s/((\n$comment_mark\d*)+\n)//gm;
+        s/((\n$comment_mark\d*)+\n)/\n/gm;
         s/(\\par\b\s*\n?)+/\\par\n/gm;
         s/(\\par\b\n?)+/\\par\n/gm;
     }
