@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- docs/Makefile: use html.sty included in this package
 #               - latex2html.pin: keep newline before comment
 #		  https://www.tug.org/pipermail/latex2html/2016-May/003953.html
 #

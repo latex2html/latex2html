@@ -17,7 +17,9 @@
 # These are the usual calls to application programs
 #
 DVIPS = dvips
-LATEX = latex
+DVIPDF = dvipdf
+# set TEXINPUTS to use the html.sty included in this package
+LATEX = TEXINPUTS=../texinputs:: latex
 MAKEINDEX = makeindex
 BIBTEX = bibtex
 
@@ -133,13 +135,17 @@ LSEC7	  = $(COMMON) -prefix C -dir $(TOP)  -info 0  \
 #  dvi- and  PostScript versions
 #
 
-manual.ps:      manual.cb
+manual.pdf:      manual.dvi
+	$(DVIPDF) manual.dvi $@
+
+manual.ps:      manual.dvi
 	$(DVIPS) manual.dvi -o $@
 
 manual.aux manual.cb: \
 	    manual.tex credits.tex licence.tex overview.tex \
 	    support.tex userman.tex hypextra.tex features.tex \
 	    problems.tex l2hfiles.dat  manhtml.tex l2hman.sty
+	$(LATEX) manual.tex
 	$(LATEX) manual.tex
 
 manual.glo manual.idx: \
@@ -148,7 +154,7 @@ manual.glo manual.idx: \
 	    problems.tex l2hfiles.dat  manhtml.tex l2hman.sty
 	$(LATEX) manual.tex
 
-manual.dvi:     manual.aux manual.ind manual.gls
+manual.dvi:     manual.aux manual.ind manual.gls manual.cb
 	$(LATEX) manual.tex
 
 manual.ind:     manual.idx
