@@ -2,61 +2,61 @@ LaTeX2HTML README
 =================
 
 Contents
-********
+--------
+
+* Overview
+* Pointers to the User Manual
+* Requirements
+* Installation
+* Troubleshooting
+* Support and More Information
 
 Overview
-Pointers to the User Manual
-Requirements
-Installation
-Troubleshooting
-Support and More Information
-
-Overview
-********
+--------
 
 The LaTeX2HTML translator: 
 
- o breaks up a document into one or more components as specified by
+ * breaks up a document into one or more components as specified by
    the user, 
- o provides optional iconic navigation panels on every page which
+ * provides optional iconic navigation panels on every page which
    contain links to other parts of the document,  
- o handles inlined equations, right-justified
+ * handles inlined equations, right-justified
    numbered equations, tables, or figures and any arbitrary environment, 
- o can produce output suitable for browsers that support inlined images
+ * can produce output suitable for browsers that support inlined images
    or character based browsers (as specified by the user), 
- o handles definitions of new commands, environments, and theorems
+ * handles definitions of new commands, environments, and theorems
    even when these are defined in external style files, 
- o handles footnotes, tables of contents, lists of figures and tables,
+ * handles footnotes, tables of contents, lists of figures and tables,
    bibliographies, and can generate an Index, 
- o translates cross-references into hyperlinks and extends the
+ * translates cross-references into hyperlinks and extends the
    LaTeX cross-referencing mechanism to work not just
    within a document but between documents which may reside in
    remote locations, 
- o translates accent and special character
+ * translates accent and special character
    commands to the equivalent ISO-LATIN-1
    character set where possible, 
- o recognizes hypertext links (to multimedia resources or arbitrary
+ * recognizes hypertext links (to multimedia resources or arbitrary
    internet services such as sound/video/ftp/http/news) and links which
    invoke arbitrary program scripts, all expressed as LaTeX commands, 
- o recognizes conditional text which is intended only for the hypertext
+ * recognizes conditional text which is intended only for the hypertext
    version, or only for the paper (DVI) version, 
- o can include raw HTML in a LaTeX document (e.g. in order to specify
+ * can include raw HTML in a LaTeX document (e.g. in order to specify
    interactive forms), 
- o can deal sensibly with all the commands and environments commonly used 
+ * can deal sensibly with all the commands and environments commonly used 
    with LaTeX as summarized at the back of the LaTeX blue book [1],
    and many of the packages described in the LaTeX Companion, and others. 
- o will try to translate any document with embedded LaTeX commands
+ * will try to translate any document with embedded LaTeX commands
    irrespective of whether it is complete or syntactically legal. 
 
 Pointers to the User Manual
-***************************
+---------------------------
 
 The LaTeX2HTML program includes its own manual page. 
 The manual page can be viewed by saying "perldoc latex2html"
 or "latex2html -help".
 
-See the online documentation at 
-   http://www-texdev.ics.mq.edu.au/l2h/docs/manual/
+See the documentation at 
+   http://mirrors.ctan.org/support/latex2html/manual.pdf
 for more information and examples.
 
 Other useful links can be found at:  www.latex2html.org
@@ -69,55 +69,41 @@ for instructions on how to install the program
 and make your own local copy of the manual in HTML.
 
 Requirements
-************
+------------
 
-Please consult the section "Requirements" of the online manual at
-
-   http://www-texdev.ics.mq.edu.au/l2h/docs/manual/Snode2.html
-
-for more information as well as *active* links to any utilities
-that you may require. 
-
+Please consult the section "Requirements" of the manual at
+for more information.
 
 The requirements for using LaTeX2HTML depend on the kind of
 translation it is asked to perform as follows: 
 
  1. LaTeX commands but without equations, figures, tables, etc. 
-    o Perl 5.003 (Perl5 Patch level 3) or higher.
-------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    * Perl 5.003 (Perl5 Patch level 3) or higher.
 
-    o DBM or NDBM, the Unix DataBase Management system.
+    * DBM or NDBM, the Unix DataBase Management system.
       Alternatively, Perl5's SDBM DataBase system.
-------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
       Do not care unless you get misconfiguration errors from LaTeX2HTML.
 
  2. LaTeX commands with equations, figures, tables, etc. 
    As above plus 
-    o latex (version 2e recommended but 2.09 acceptable), 
-    o dvips (version 5.516 or later) or dvipsk.
+    * latex (version 2e recommended but 2.09 acceptable), 
+    * dvips (version 5.516 or later) or dvipsk.
       Version 5.62 or higher enhances the performance of image creation
       with a *significant* speed-up. See l2conf.pm for this
       after you are done with the installation.
       Do not use the 'dvips -E' feature unless you have 5.62, else you
       will get broken images.
-------^^^^
-    o gs (Ghostscript version 4.03 or later),
-------------------------------^^^^
+    * gs (Ghostscript version 4.03 or later),
       with the ppmraw device driver, or even better pnmraw.
       Upgrade to 5.10 or later if you want to go sure about seldom problems
       with 4.03 to avoid (yet unclarified).
-    o The netpbm library (ftp://ftp.x.org/R5contrib/).
+    * The netpbm library (ftp://ftp.x.org/R5contrib/).
       Netpbm 1 March 1994 is recommended. Check with 'pnmcrop -version'.
       Some of the filters in those libraries are used during the postscript
       to image conversion.
-    o If you want PNG images, you need pnmtopng (current version is 2.31).
+    * If you want PNG images, you need pnmtopng (current version is 2.31).
       It is not part of netpbm and requires libpng (version 0.89c) and 
       libz (1.0.4). pnmtopng supports transparency and interlace mode.
-      Hurray!!! Netscape 4.04 has been reported to grok PNG images!
-------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      That means your PNG option is not longer ahead of its time!
-      Unfortunately Netscape still does not make use of the alpha
-      channel... still not transparency.
 
  3. Transparent inlined GIFs
    If you dislike the gray background color of the generated inlined images
@@ -130,9 +116,9 @@ translation it is asked to perform as follows:
    version 1.0), too. It can also create interlaced GIFs.
 
 Because by default the translator makes use of inlined images in the final
-HTML output, it would be better to have a viewer which supports the <IMG>
-tag, such as NCSA Mosaic. If only a character based browser is available or
-if you want the generated documents to be more portable then the translator
+HTML output, it would be better to have a graphical browser.
+If only a character based browser is available or
+if you want the generated documents to be more portable, then the translator
 can be used with the -ascii_mode option. 
 
 If ghostscript or netpbm library are not available
@@ -144,45 +130,24 @@ use them.
 
 
 Installation
-************
+------------
 
-Please consult the section "Installing LaTeX2HTML" of the online manual at
+LaTeX2HTML is available through the debian, fedora, and macports
+package managers.
 
-    http://www-texdev.ics.mq.edu.au/l2h/docs/manual/Snode3.html
-
-Also consult the page at
-
-   http://tug.org/mailman/listinfo/latex2html
-
-for links to special instructions on some platforms.
-
-
-To install LaTeX2HTML please read the file INSTALL.
+To install LaTeX2HTML from source please read the file INSTALL.
 
 Troubleshooting
-***************
+---------------
 
 Please refer to the FAQ file that came with your distribution.
 
 
 Support and More Information
-****************************
+----------------------------
 
-Announcements, discussion archives, bug reporting forms and
-more are kept at the LaTeX2HTML home at 
-http://saftsack.fs.uni-bayreuth.de/~latex2ht/
-or
-http://cbl.leeds.ac.uk/nikos/tex2html/doc/latex2html/latex2html.html.
-
-*** this site has not been updated since November 1996.
-Many of the links are still valid, leading to useful information. 
-
-
-A LaTeX2HTML mailing list had been set up at the Argonne National Labs
-(thanks to Ian Foster <itf@mcs.anl.gov> and Bob Olson <olson@mcs.anl.gov>). 
-
-*** This list is no longer functional; it has now been taken over by the
- TeX User Group (TUG). Thank you Argonne, for the 5+ years of support. 
+A LaTeX2HTML mailing list has been set up by the
+ TeX User Group (TUG).
 
 To join the list, visit the web-page at:
 
@@ -211,30 +176,26 @@ can be browsed at:
 
    http://tug.org/pipermail/latex2html/
 
-This mailing list also has a searchable online archive,
-from 1994 up until 2003-08, at
-
-   http://www.xray.mpe.mpg.de/mailing-lists/latex2html/
 
 
 Enjoy!
 
 
 Original Author:
-  Nikos Drakos <nikos@cbl.leeds.ac.uk>
+  Nikos Drakos 
   Computer Based Learning Unit
   University of Leeds.
 
 Most Recent Author:
-  Ross Moore <ross@maths.mq.edu.au>
+  Ross Moore 
   Mathematics Department
   Macquarie University, Sydney.
 
 Former Authors:
-  Marek Rouchal <marek@saftsack.fs.uni-bayreuth.de>
+  Marek Rouchal 
   Infineon Technologies AG
   Munich, Germany
 
-  Jens Lippmann <lippmann@rbg.informatik.tu-darmstadt.de>
+  Jens Lippmann 
   Technische Universit"at Darmstadt.
 
