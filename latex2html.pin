@@ -10586,7 +10586,7 @@ sub do_leftquote {
 
 sub do_leftquotes {
     # MRO: use $_[0] : local(*_) = @_;
-    local($quote,$lquo) = ('',($HTML_VERSION<5)? '&#8220;' : ';SPMldquo;');
+    local($quote,$lquo) = ('',($HTML_VERSION<4)? '&#8220;' : ';SPMldquo;');
     # select whole quotation, if \lq\lq matches \rq\rq or ''
     if ($_[0] =~ /^(.*)(\\rq\\rq|'')/) {
 	$quote = $1; $_[0] = $';
@@ -10612,8 +10612,8 @@ sub do_cmd_rq {
     $rquote . $_;
 }
 
-sub do_rightquote { (($HTML_VERSION < 5)? '&#8217;' : ';SPMrsquo;') }
-sub do_rightquotes { (($HTML_VERSION < 5)? '&#8221;' : ';SPMrdquo;') }
+sub do_rightquote { (($HTML_VERSION < 4)? '&#8217;' : ';SPMrsquo;') }
+sub do_rightquotes { (($HTML_VERSION < 4)? '&#8221;' : ';SPMrdquo;') }
 
 sub do_cmd_parbox {
     local($_) = @_;
@@ -15812,7 +15812,7 @@ sub initialise {
 
     %html_specials = ( %html_specials
 		, '``', ';SPMldquo;', "''", ';SPMrdquo;'
-		) if ($HTML_VERSION >= 5 );
+		) if ($HTML_VERSION >= 4 );
 
     # This mapping is needed in sub revert_to_raw_tex
     # before passing stuff to latex for processing.
