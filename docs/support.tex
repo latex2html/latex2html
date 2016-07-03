@@ -221,8 +221,7 @@ then the translator can be used with the \Cs{ascii\_mode}
 For Windows $95$, $98$, and NT you will either need a newer
 \latex2html{} Release $99.1$ or higher, or if you like to try an
 older release get the Windows $97.1$ port by \Popineau\ from
-\url{ftp://ftp.ese-metz.fr/pub/TeX/win32} or the $98.2$ DOS version
-\fn{l2h98\_2dos.tar.gz} by \Taupin{} from \CVSsite.
+\url{ftp://ftp.ese-metz.fr/pub/TeX/win32}.
 Meanwhile, all the operating system dependent issues are integrated
 into the main release, thanks to the cool work of \Rouchal.
 
@@ -273,21 +272,20 @@ for providing this list!
 %\section[center]{Getting \protect\latextohtml}
 \tableofchildlinks*
 \htmlrule
+\latextohtml\ is available through the Fedora, Debian, and Ubuntu
+package managers for Linux, and the macports package manager for MacOS.
+
 \index{source code}%
 \index{source code!from CTAN}%
 \index{CTAN}%
-One way \latextohtml may be obtained is through one of the three
+Releases of \latextohtml\ may also be obtained through one of the 
 \htmladdnormallink{Comprehensive \TeX{} Archive Network (CTAN)}%
 {\CTANtug{}} sites.
 They are located at
 \begin{htmllist}\htmlitemmark{GreenBall}
 \item [US ]
 United States:
-\htmladdnormallinkfoot{\CTANtug{}}{\CTANtug{\CTANA}}\,,
-\item [UK ]
-United Kingdom:
-\htmladdnormallinkfoot{\path{http://www.tex.ac.uk/}}%
-{http://www.tex.ac.uk/\CTANA}
+\htmladdnormallinkfoot{\path{https://www.ctan.org/}}{https://www.ctan.org/\CTANA}\,,
 \item [DE ]
 Germany:
 \htmladdnormallinkfoot{\path{ftp://ftp.dante.de/}}%
@@ -298,49 +296,15 @@ should be the latest version, as a compressed archive.
 
 \smallskip\noindent
 There are also many mirrors.
-To find the nearest to you, get a listing via the command:
-\begin{quote}
-\texttt{finger ctan@www.tug.org}
-\end{quote}
+To find the mirror nearest to you, use:
+\htmladdnormallinkfoot{\path{http://mirror.ctan.org/}}%
+{http://mirror.ctan.org}.
 
-\noindent
-The site at \CVSsite\ is a convenient alternative for European users.
-This is connected to the \htmlref{developer's repository}{cvsrepos},
-so should always have the most recent release.
-
-\index{source code!home site}%
-\smallskip\noindent
-Alternatively, a compressed \fn{tar} file of the source and related files 
-may be obtained via \appl{anonymous ftp} to \sourceA\,.
-
-\smallskip\noindent
-Two other \appl{ftp}-sites are:
-\begin{itemize}
-\item \sourceB{}
-\item \sourceC{}
-\end{itemize}
-
-\index{source code!using Archie@using \textsl{Archie}}%
-\index{source code!using FTP search@using \textsl{FTP search}}%
-\smallskip\noindent
-Other \appl{ftp}-sites nearer to you can be found using \appl{Archie} at 
-\url{http://hoohoo.ncsa.uiuc.edu/archie.html} or 
-\url{http://www.pvv.unit.no/archie/} (faster) 
-or more recent Web-searching tools such as \appl{FTP search}
-in \htmladdnormallink{Norway}{http://ftpsearch.ntnu.no/ftpsearch}.
-\begin{quote}
-\textbf{Warning: }%
-Some \appl{ftp}-sites may not carry the latest version.
-\end{quote}
-
-\index{source code!patches}%
-\smallskip\noindent
-Updates and patches are posted on the \latextohtml{} server at \patches\,.
 
 \bigskip
 \index{source code!developer's repository}\label{cvsrepos}%
 \noindent
-Finally there is the \latextohtml{} developers' CVS repository, at \CVSrepos\,.\\
+Finally there is the \latextohtml{} developers' source repository, at \CVSrepos\,.\\
 The files to be found here are the most up-to-date with current developments,
 but they cannot be guaranteed to be fully reliable. New features may be
 still under development and not yet sufficiently tested for release.
