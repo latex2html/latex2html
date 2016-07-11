@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- handle \newcommand with no braces around command name
 #		- use curly quotes in html 4
 #		- add hyperref.perl: process \href command
 #		- docs/Makefile: use html.sty included in this package

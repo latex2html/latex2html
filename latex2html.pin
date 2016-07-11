@@ -1222,7 +1222,7 @@ sub process_ext_file {
 		if ($skip_to) { next unless ($eline =~ s/$O$skip_to$C//) }
 		$skip_to = '';
 		# skip lines added for pdfTeX/hyperref compatibility
-		next if ($eline =~ /^\\(ifx|else|fi|global \\let|gdef|AtEndDocument|let )/);
+		next if ($eline =~ /^\\(ifx|else|fi|global ?\\let|gdef|AtEndDocument|let )/);
 		# remove \index and \label commands, else invalid links may result
 		$eline =~ s/\\(index|label)\s*($O\d+$C).*\2//g;
 		if ($eline =~ /\\(old)?contentsline/) {
@@ -5678,18 +5678,19 @@ sub process_body_newcommand {
     local($no_change) = $_;
     local($argn,$newcmd,$cmd_br,$body,$body_br,$tmp,$tmp1,$opt,$pat);
     local($new_cmd) = 'command';
-    if ($renewed =~ /provide/||$renewed == 2) {
-	# $newcmd = &missing_braces unless (
-	($newcmd,$pat) = &get_next(1) unless (
-	        (s/$next_pair_pr_rx/$pat=$&;$newcmd=$2;''/e)
-	        ||(s/$next_pair_rx/$pat=$&;$newcmd=$2;''/e));
-	if (!$pat) {
-	    local($br_id) = ++$global{'max_id'};
-	    $pat = "$O$br_id$C".$newcmd."$O$br_id$C";
-	}
+
+    # read command name
+    if ((s/$next_pair_pr_rx/$pat=$&;$newcmd=$2;''/e)
+	||(s/$next_pair_rx/$pat=$&;$newcmd=$2;''/e)) {
+	# command name was in curly braces
     } else {
-	($newcmd,$pat) = &get_next(1); # Get command name
+	# didn't find curly braces, now read command name
+	($newcmd,$pat) = &get_next(2);
+	local($br_id) = ++$global{'max_id'};
+	# add synthetic curly braces
+	$pat = "$O$br_id$C".$newcmd."$O$br_id$C";
     }
+
     $pat =~ s/\\//; $new_cmd .= $pat;
     $newcmd =~ s/^\s*\\//;
     ($argn,$pat) = &get_next(0);	# Get optional no. of args
