@@ -354,7 +354,7 @@ sub check_frame_colorset {
     elsif ($reverse == 1) {$colorset="${which}_colorset_star"}
     elsif ($reverse == 2) {$colorset="${which}_colorset_star_star"}
     else {$colorset="${which}_colorset"}
-    if (!(defined  @$colorset))
+    if (!(@$colorset))
 	{ print STDERR "\nframes for $which are not supported\n"; return($rest);}	
     local($frame_tmp)=$frame_data;
     local($key, @values);
@@ -774,7 +774,7 @@ sub reduce_frame_header {
     $_[0] =~ s/<(META NAME|LINK)[^>]*>\s*//g;
     $_[0] =~ s/$more_links_mark/$NO_ROBOTS\n$LATEX2HTML_META/g;
     local($savedRS)=$/; $/ = '';
-    $_[0] =~ s/\n{2;}/\n/sg;
+    $_[0] =~ s/\n{2,}/\n/sg;
     $_[0] =~ s/\s$//s;
     $_[0] =~ s!\s*(\n</HEAD>\n)\s*!$1!s;
     $/ = $savedRS;

@@ -1014,11 +1014,14 @@ sub pstoimg {
     my @list = grep(/^\d+_${pnmbase}\.pnm/,readdir(DIR));
     closedir(DIR);
     if(@list) {
+      sub log10 { log($_[0]) / log(10) }
+      my $len = int(log10(@list))+1;
       my $i;
       foreach $i (@list) {
         my ($n) = $i =~ /^(\d+)_/;
+        my $n_pad = sprintf("%0${len}d", $n);
         my $j = $outfile;
-        $j =~ s|(\.[^/.]*)$|$n$1|;
+        $j =~ s|(\.[^/.]*)$|_$n_pad$1|;
 	if(crop_scale_etc("$pnmdir$i", $j)) {
           L2hos->Unlink("$pnmdir$i") unless($opt{debug});
           }

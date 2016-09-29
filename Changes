@@ -112,6 +112,11 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- perl5.22-defined-array.patch
+#		- perl5.22-unescaped-left-braces.patch
+#		- using-multipage-options-should-use-zeropadding.patch
+#		- less verbose credits in output
+#		  https://bugs.debian.org/144034
 #		- handle \newcommand with no braces around command name
 #		- use curly quotes in html 4
 #		- add hyperref.perl: process \href command
