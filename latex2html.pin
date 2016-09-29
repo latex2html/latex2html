@@ -16879,7 +16879,7 @@ S<[ B<-font_size> I<size> ]>
 S<[ B<->(B<no>)B<tex_defs> ]>
 S<[ B<->(B<no>)B<navigation> ]>
 S<[ B<->(B<no>)B<top_navigation> ]>
-S<[ B<->(B<no>)B<buttom_navigation> ]>
+S<[ B<->(B<no>)B<bottom_navigation> ]>
 S<[ B<->(B<no>)B<auto_navigation> ]>
 S<[ B<->(B<no>)B<index_in_navigation> ]>
 S<[ B<->(B<no>)B<contents_in_navigation> ]>
@@ -17052,9 +17052,9 @@ Put a navigation panel at the top of each page (default).
 
 Enables navigation links at the top of each page (default).
 
-=item B<->(B<no>)B<buttom_navigation>
+=item B<->(B<no>)B<bottom_navigation>
 
-Enables navigation links at the buttom of each page.
+Enables navigation links at the bottom of each page.
 
 =item B<->(B<no>)B<auto_navigation>
 
