@@ -11007,17 +11007,6 @@ sub do_require_package {
     #RRM: make common ps/eps-packages use  epsfig.perl
     $file = 'epsfig' if ($file =~ /^(psfig|epsf)$/);
 
-    if ($file =~ /^graphicx$/) {
-	# work-around the CVS repository bug: use graphixx , not graphicx
-	foreach $dir (split(/$envkey/,$LATEX2HTMLSTYLES)) {
-	    if (-f "$dir${dd}graphixx.perl") {
-		$file = 'graphixx';
-		last;
-	    }
-	}
-    }
-
-    
     if (! $styles_loaded{$file}) {
 	# look for a file named ${file}.perl
 	# MRO: use $texfilepath instead of `..'

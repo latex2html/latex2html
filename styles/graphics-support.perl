@@ -193,6 +193,17 @@ sub do_cmd_graphicspath {
     $latex_body .= "\n\\graphicspath{$paths}\n\n" unless ($PREAMBLE);
     $_; }
 
+# adds ../ if file name begins with ./ or ../
+# used to adjust filename in \includegraphics for
+# use in images.tex, which will be latex'ed in a subdir
+sub find_from_subdir {
+    my($file) = @_;
+    if ( $file =~ /^\.\.?\Q$dd\E/ ) {
+	$file = "..$dd$file";
+    }
+    $file;
+}
+
 sub do_cmd_DeclareGraphicsRule {
     local($_) = @_;
     local($arg1,$arg2,$arg3,$arg4);

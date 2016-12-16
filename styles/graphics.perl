@@ -22,18 +22,20 @@ sub do_cmd_includegraphics {
   my $opt=x_next_optarg();   $opt =~ s/,/ /;
   my $op2=x_next_optarg();   $op2 =~ s/,/ /;
   my $file = x_next_arg();
+  my $file_from_subdir = find_from_subdir($file);
   do_includegraphics($file,
      ($op2 ? "bb=$opt $op2" : ($opt ? "bb=0 0 $opt" : '')),
-     "\\includegraphics".($opt && "[$opt]").($op2 && "[$op2]")."\{$file\}"); }
+     "\\includegraphics".($opt && "[$opt]").($op2 && "[$op2]")."\{$file_from_subdir\}"); }
 
 sub do_cmd_includegraphicsstar {
   local($_)=@_;
   my $opt=x_next_optarg();  $opt =~ s/,/ /;
   my $op2=x_next_optarg();  $op2 =~ s/,/ /;
   my $file = x_next_arg();
+  my $file_from_subdir = find_from_subdir($file);
   do_includegraphics($file,
      ($op2 ? "bb=$opt $op2, clip" : ($opt ? "bb=0 0 $opt, clip" : "clip")),
-     "\\includegraphics*".($opt && "[$opt]").($op2 && "[$op2]")."\{$file\}"); }
+     "\\includegraphics*".($opt && "[$opt]").($op2 && "[$op2]")."\{$file_from_subdir\}"); }
 
 # ====================================================================== 
 1;
