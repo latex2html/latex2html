@@ -178,7 +178,7 @@ $PARTITION_PREFIX = 'part_' unless $PARTITION_PREFIX;
 
 # Author address
 @address_data = &address_data('ISO');
-$ADDRESS = "$address_data[0]\n$address_data[1]";
+$ADDRESS = "$address_data[1]";
 
 # ensure non-zero defaults
 $MAX_SPLIT_DEPTH = 4 unless ($MAX_SPLIT_DEPTH);
@@ -1041,7 +1041,7 @@ sub restore_critical_variables {
     # undef any renewed-commands...
     # so the new defs are read from %new_command
     local($cmd,$key,$code);
-    foreach $key (keys %renew_command) {
+    foreach $key (sort keys %renew_command) {
 	$cmd = "do_cmd_$key";
 	$code = "undef \&$cmd"; eval($code) if (defined &$cmd);
 	if ($@) { print "\nundef \&do_cmd_$cmd failed"}
@@ -1665,7 +1665,7 @@ sub make_comment {
 
 sub wrap_other_environments {
     local($key, $env, $start, $end, $opt_env, $opt_start);
-    foreach $key (keys %other_environments) {
+    foreach $key (sort keys %other_environments) {
 	# skip bogus entries
 	next unless ($env = $other_environments{$key});
 	$key =~ s/:/($start,$end)=($`,$');':'/e;
@@ -3841,7 +3841,8 @@ sub make_off_line_images {
         print "\n\n*** LaTeXERROR\n"; return();
     }
 
-    while ( ($name, $page_num) = each %new_id_map) {
+    for $name (sort keys %new_id_map) {
+        $page_num = $new_id_map{$name};
 	# Extract the page, convert and save it
 	&extract_image($page_num,$orig_name_map{$page_num});
     }
@@ -3944,7 +3945,8 @@ sub make_images {
 	    if (s/$PREFIX$img_rx\.new/$PREFIX$1.$IMAGE_TYPE/go);
     }
     print "\n *** removing unnecessary images ***\n" if ($VERBOSITY > 1);
-    while ( ($name, $page_num) = each %id_map) {
+    for $name (sort keys %id_map) {
+        $page_num = $id_map{$name};
 	$contents = $latex_body{$name};
 	if ($page_num =~ /^\d+\#\d+$/) { # If it is a page number
 	    do {		# Extract the page, convert and save it
@@ -5122,8 +5124,8 @@ sub substitute_meta_cmds {
     #
     # Now substitute the new commands and environments:
     # (must do them all together because of cross definitions)
-    $new_cmd_rx = &make_new_cmd_rx(keys %new_command);
-    $new_cmd_no_delim_rx = &make_new_cmd_no_delim_rx(keys %new_command);
+    $new_cmd_rx = &make_new_cmd_rx(sort keys %new_command);
+    $new_cmd_no_delim_rx = &make_new_cmd_no_delim_rx(sort keys %new_command);
     $new_env_rx = &make_new_env_rx;
     $new_end_env_rx = &make_new_end_env_rx;
 #    $new_cnt_rx = &make_new_cnt_rx(keys %new_counter);
@@ -5132,7 +5134,8 @@ sub substitute_meta_cmds {
     $new_cmd_or_env_rx =~ s/^ \||\|$//;
 
     print STDOUT "\nnew commands:\n" if ($VERBOSITY > 2);
-    while (($cmd, $body) = each %new_command) {
+    for $cmd (sort keys %new_command) {
+        $body = $new_command{$cmd};
 	unless ($expanded{"CMD$cmd"}++) {
 	    print STDOUT ".$cmd " if ($VERBOSITY > 2);
 	    $new_command{$cmd} = &expand_body;
@@ -5142,7 +5145,8 @@ sub substitute_meta_cmds {
     }
 
     print STDOUT "\nnew environments:\n" if ($VERBOSITY > 2);
-    while (($cmd, $body) = each %new_environment) {
+    for $cmd (sort keys %new_environment) {
+        $body = $new_environment{$cmd};
 	unless ($expanded{"ENV$cmd"}++) {
 	    print STDOUT ".$cmd" if ($VERBOSITY > 2);
 	    $new_environment{$cmd} = &expand_body;
@@ -5152,39 +5156,42 @@ sub substitute_meta_cmds {
 
     print STDOUT "\nnew counters and dependencies:\n" if ($VERBOSITY > 2);
     &clear_mydb("dependent") if ($DEBUG);     #avoids appending to a previous version
-    while (($cmd, $body) = each %dependent) {
+    for $cmd (sort keys %dependent) {
+        $body = $dependent{$cmd};
 	print STDOUT ".($cmd,$body)" if ($VERBOSITY > 2);
         &write_mydb("dependent", $cmd, $dependent{$cmd});
     }
     &clear_mydb("img_style") if ($DEBUG);     #avoids appending to a previous version
-    while (($cmd, $body) = each %img_style) {
+    for $cmd (sort keys %img_style) {
         &write_mydb("img_style", $cmd, $img_style{$cmd});
     }
 
     &clear_mydb("depends_on") if ($DEBUG);     #avoids appending to a previous version
-    while (($cmd, $body) = each %depends_on) {
+    for $cmd (sort keys %depends_on) {
+        $body = $dependent_on{$cmd};
 	print STDOUT ".($cmd,$body)" if ($VERBOSITY > 2);
         &write_mydb("depends_on", $cmd, $depends_on{$cmd});
     }
 
 
     &clear_mydb("styleID") if ($DEBUG);     #avoids appending to a previous version
-    while (($cmd, $body) = each %styleID) {
+    for $cmd (sort keys %styleID) {
         &write_mydb("styleID", $cmd, $styleID{$cmd});
     }
 
     &clear_mydb("env_style") if ($DEBUG);     #avoids appending to a previous version
-    while (($cmd, $body) = each %env_style) {
+    for $cmd (sort keys %env_style) {
         &write_mydb("env_style", $cmd, $env_style{$cmd});
     }
     &clear_mydb("txt_style") if ($DEBUG);     #avoids appending to a previous version
-    while (($cmd, $body) = each %txt_style) {
+    for $cmd (sort keys %txt_style) {
         &write_mydb("txt_style", $cmd, $txt_style{$cmd});
     }
 
     print STDOUT "\ntheorem counters:\n" if ($VERBOSITY > 2);
     &clear_mydb("new_theorem") if ($DEBUG);     #avoids appending to a previous version
-    while (($cmd, $body) = each %new_theorem) {
+    for $cmd (sort keys %new_theorem) {
+        $body = $new_theorem{$cmd};
 	print STDOUT ".($cmd,$body)" if ($VERBOSITY > 2);
         &write_mydb("new_theorem", $cmd, $new_theorem{$cmd});
     }
@@ -6515,7 +6522,7 @@ sub parse_keyvalues {
 #	    s/(^|,)\s*([a-zA-Z]+)\s*\=\s*(\"([^"]*)\"|\'([^\']*)\'|([#%&@;:+-\/\w\d]*))\s*/
 	    s/(^|,)\s*([a-zA-Z]+)\s*\=\s*(\"([^"]*)\"|\'([^\']*)\'|([^<>,=\s]*))\s*/
 		$attributes{$2}=($4?$4:($5?$5:$6));' '/eg;
-	    foreach $key (keys %attributes){ 
+	    foreach $key (sort keys %attributes){ 
 		$KEY = $key;
 		$KEY =~ tr/a-z/A-Z/;
 		if ($taglist =~ /,$KEY,/i) {	        
@@ -6557,7 +6564,7 @@ sub parse_keyvalues {
 	# with no tags provided, just list the key-value pairs
 	$_ = $saved;
 	s/\s*(\w+)\s*=\s*\"?(\w+)\"?\s*,?/$attributes{$1}=$2;''/eg;
-	foreach $key (keys %attributes){ 
+	foreach $key (sort keys %attributes){ 
 	    $KEY = $key;
 	    $KEY =~ tr/a-z/A-Z/;
 	    $atts = $attributes{$key};
@@ -6626,7 +6633,7 @@ sub extract_attributes {
 	if ($$name) { $taglist = $$name }
     }
     s/\s*(\w+)\s*=\s*\"?(\w+)\"?\s*,?/$attributes{$1}=$2;''/eg;
-    foreach $key (keys %attributes){ 
+    foreach $key (sort keys %attributes){ 
 	if ($taglist =~ /\,$key\,/) {
 	    $attribs .= " $key=\"$attributes{$key}\"";
 	    &write_warnings("valid attribute $key for $tag\n");
@@ -7186,7 +7193,8 @@ TD.eqno			{ }	/* equation-number cells */
 EOF
     }
     print "\n *** Adding document-specific styles *** ";
-    while (($env,$style) = each %env_style) {
+    for $env (sort keys %env_style) {
+        $style = $env_style{$env};
         if ($env =~ /\./) {
             $env =~ s/\.$//;
             print STYLESHEET "$env\t\t{ $style }\n";
@@ -7202,10 +7210,12 @@ EOF
             print STYLESHEET "DIV.$env\t\t{ $style }\n";
         }
     }
-    while (($env,$style) = each %txt_style) {
+    for $env (sort keys %txt_style) {
+        $style = $txt_style{$env};
         print STYLESHEET "SPAN.$env\t\t{ $style }\n";
     }
-    while (($env,$style) = each %img_style) {
+    for $env (sort keys %img_style) {
+        $style = $img_style{$env};
         print STYLESHEET "IMG.$env\t\t{ $style }\n";
     }
 
@@ -8515,7 +8525,7 @@ sub keysort {
     # Put alphabetic characters after symbols; already downcased
     $x =~ s/^([a-z])/~~~$1/;
     $y =~ s/^([a-z])/~~~$1/;
-    $x cmp $y;
+    ($x cmp $y) || ($a cmp $b);
 }
 
 sub index_key_eq {
@@ -8821,8 +8831,9 @@ sub replace_cite_marks {
     #
     #RRM: Associate the cite_key with  $citefile , for use by other segments.
     if ($citefile) {
-	local($cite_key, $cite_ref);
-	while (($cite_key, $cite_ref) = each %cite_info) {
+        local($cite_key, $cite_ref);
+        for $cite_key (sort keys %cite_info) {
+            $cite_ref = $cite_info{$cite_key};
 	    if ($ref_files{'cite_'."$cite_key"} ne $citefile) {
 		$ref_files{'cite_'."$cite_key"} = $citefile;
 		$changed = 1; }
@@ -9791,7 +9802,7 @@ sub replace_word {
 # for use in regular expressions;
 sub get_current_sections {
     local($_, $key);
-    foreach $key (keys %section_commands) {
+    foreach $key (sort keys %section_commands) {
 	if ($key =~ /star/) {
 	    $_ = $key . "|" . $_}
 	else {
@@ -10209,8 +10220,9 @@ sub save_array_in_file {
 	} else {
 	    print FILE "# LaTeX2HTML $TEX2HTMLVERSION\n";
 	    print FILE "# Associate $type original text with physical files.\n\n";
-	}
-	while (($uutxt,$file) = each %array) {
+        }
+        for $uutxt (sort keys %array) {
+            $file = $array{$uutxt};
 	    $uutxt =~ s|/|\\/|g;
 	    $uutxt =~ s|\\\\/|\\/|g;
 
@@ -10665,7 +10677,8 @@ sub do_cmd_mbox {
 sub generate_declaration_subs {
     local($key, $val, $pre, $post, $code );
     print "\n *** processing declarations ***\n";
-    while ( ($key, $val) = each %declarations) {
+    for $key (sort keys %declarations) {
+        $val = $declarations{$key};
 	if ($val) {
 	    ($pre,$post) = ('','');
 	    $val =~ m|</.*$|;
@@ -10687,7 +10700,8 @@ sub generate_declaration_subs {
 # *Generates* subroutines to handle each of the sectioning commands.
 sub generate_sectioning_subs {
     local($key, $val, $cmd, $body);
-    while ( ($key, $val) = each %standard_section_headings) {
+    for $key (sort keys %standard_section_headings) {
+        $val = $standard_section_headings{$key};
 	$numbered_section{$key} = 0;
 	eval "sub do_cmd_$key {"
 	    . 'local($after,$ot) = @_;'
@@ -13307,7 +13321,7 @@ sub do_cmd_textohtmlindex {
 # when using  makeidx.perl
 sub make_index_labels {
     local($key, @keys);
-    @keys = keys %index_labels;
+    @keys = sort keys %index_labels;
     foreach $key (@keys) {
 	if (($ref_files{$key}) && !($ref_files{$key} eq "$idxfile")) {
 	    local($tmp) = $ref_files{$key};
@@ -13323,7 +13337,7 @@ sub make_preindex { &make_real_preindex }
 sub make_real_preindex {
     local($key, @keys, $head, $body);
     $head = "<HR>\n<H4>Legend:</H4>\n<DL COMPACT>";
-    @keys = keys %index_segment;
+    @keys = sort keys %index_segment;
     foreach $key (@keys) {
 	local($tmp) = "segment$key";
 	$tmp = $ref_files{$tmp};
@@ -14052,7 +14066,7 @@ sub default_textohtmlinfopage {
 	, "<STRONG>latex2html</STRONG> <TT>$argv</TT>\n"
 	, (($SHOW_INIT_FILE && ($INIT_FILE ne ''))?
 	   "\n<P>with initialization from: <TT>$INIT_FILE</TT>\n$init_file_mark\n" :'')
-	, "<P>The translation was initiated by $address_data[0] on $address_data[1]"
+	, "<P>The translation was initiated on $address_data[1]"
 	, $open_all, $_)
       : join('', $close_all, "$INFO\n", $open_all, $_));
     $_;
@@ -14970,7 +14984,12 @@ sub brackets { ($OP, $CP);}
 
 sub get_date {
     local($format,$order) = @_;
-    local(@lt) = localtime;
+    local(@lt);
+    if($ENV{SOURCE_DATE_EPOCH}) {
+        @lt = gmtime($ENV{SOURCE_DATE_EPOCH})
+    } else {
+        @lt = localtime;
+    }
     local($d,$m,$y) = @lt[3,4,5];
     if ($format =~ /ISO/) {
 	sprintf("%4d-%02d-%02d", 1900+$y, $m+1, $d);
@@ -16755,7 +16774,7 @@ sub addto_languages {
 sub make_raw_arg_cmd_rx {
     # $1 or $2 : commands to be processed in latex (with arguments untouched)
     # $4 : delimiter
-    $raw_arg_cmd_rx = &make_new_cmd_rx(keys %raw_arg_cmds);
+    $raw_arg_cmd_rx = &make_new_cmd_rx(sort keys %raw_arg_cmds);
     $raw_arg_cmd_rx;
 }
 

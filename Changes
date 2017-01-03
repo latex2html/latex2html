@@ -112,6 +112,8 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- Reproducible output.
+#		 -- Alexis Bienvenüe <pado@passoire.fr>  Fri, 10 Jun 2016
 #		- handle relative path in \includegraphics
 #		- perl5.22-defined-array.patch
 #		- perl5.22-unescaped-left-braces.patch
