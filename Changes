@@ -112,6 +112,9 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#--------- v2017
+#
+#		- config: Handle . not in @INC
 #		- Reproducible output.
 #		 -- Alexis Bienvenüe <pado@passoire.fr>  Fri, 10 Jun 2016
 #		- handle relative path in \includegraphics

@@ -143,6 +143,8 @@ my ($VERSION) = q$Revision: 1.6 $ =~ /:\s*(\S*)/;
 # --------------------------------------------------------------------------
 
 # Read in the system's configuration
+use FindBin;
+use lib "$FindBin::Bin/..";
 use cfgcache;
 
 my $dd = $cfg{'dd'};

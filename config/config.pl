@@ -432,7 +432,9 @@ use strict;
 require 5.00305;
 use Cwd;
 use IO::File;
-use lib 'lib';
+
+use FindBin;
+use lib "$FindBin::Bin/..";
 use L2hos;
 
 #use diagnostics;

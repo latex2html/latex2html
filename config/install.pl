@@ -181,6 +181,8 @@ my ($VERSION) = q$Revision: 1.12 $ =~ /:\s*(\S*)/;
 # Initialize
 # --------------------------------------------------------------------------
 
+use FindBin;
+use lib "$FindBin::Bin/.."
 use cfgcache;
 use L2hos;
 
