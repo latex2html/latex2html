@@ -182,7 +182,7 @@ my ($VERSION) = q$Revision: 1.12 $ =~ /:\s*(\S*)/;
 # --------------------------------------------------------------------------
 
 use FindBin;
-use lib "$FindBin::Bin/.."
+use lib "$FindBin::Bin/..";
 use cfgcache;
 use L2hos;
 
