@@ -441,7 +441,7 @@ use L2hos;
 use vars qw(%prefs %cfg %newcfg);
 
 # This is the central place to modify the release name!!!
-my $RELEASE = '2016';
+my $RELEASE = '2017';
 # This one is automatically updated by CVS
 my ($VERSION) = q$Revision: 1.49 $ =~ /:\s*(\S*)/;
 
