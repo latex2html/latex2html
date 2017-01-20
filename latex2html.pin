@@ -176,9 +176,9 @@ $IMAGE_PREFIX = '_image';
 # Partition prefix 
 $PARTITION_PREFIX = 'part_' unless $PARTITION_PREFIX;
 
-# Author address
+# Author address - contains user name and date - not used by default
 @address_data = &address_data('ISO');
-$ADDRESS = "$address_data[1]";
+$ADDRESS = "";
 
 # ensure non-zero defaults
 $MAX_SPLIT_DEPTH = 4 unless ($MAX_SPLIT_DEPTH);
@@ -17127,8 +17127,8 @@ Allow directory specified with B<-dir> to be created if necessary.
 
 =item B<-address> I<author_address> | B<-noaddress>
 
-Supply your own string if you don't like the default 
-"E<lt>NameE<gt> E<lt>DateE<gt>". B<-noaddress> suppresses the
+Supply a string to appear in the footer inside an
+E<lt>addressE<gt> tag. B<-noaddress> suppresses the
 generation of an address footer.
 
 =item B<->(B<no>)B<subdir>

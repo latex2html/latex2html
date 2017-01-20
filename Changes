@@ -113,6 +113,8 @@
 # the top.
 #
 #--------- v2017
+#
+#		- default to no <address> element in footer
 #		- Handle init file when . not in @INC
 #		  https://bugs.debian.org/834420
 #		- config: Handle . not in @INC
