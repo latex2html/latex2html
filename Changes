@@ -113,7 +113,8 @@
 # the top.
 #
 #--------- v2017
-#
+#		- Handle init file when . not in @INC
+#		  https://bugs.debian.org/834420
 #		- config: Handle . not in @INC
 #		- Reproducible output.
 #		 -- Alexis Bienvenüe <pado@passoire.fr>  Fri, 10 Jun 2016

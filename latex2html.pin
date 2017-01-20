@@ -202,9 +202,9 @@ if (-f "$HOME$dd$INIT_FILE_NAME" && -r _) {
 
 # Read the $INIT_FILE_NAME file if one is found in current directory
 if ( L2hos->Cwd() ne $HOME && -f ".$dd$INIT_FILE_NAME" && -r _) {
-    print "Note: Loading .$dd$INIT_FILE_NAME\n";
-    require(".$dd$INIT_FILE_NAME");
-    $INIT_FILE = "$INIT_FILE_NAME";
+    $INIT_FILE = ".$dd$INIT_FILE_NAME";
+    print "Note: Loading $INIT_FILE\n";
+    require($INIT_FILE);
 }
 die "Error: '.' is an incorrect setting for DESTDIR.\n" .
     "Please check your $INIT_FILE_NAME file.\n"
@@ -423,6 +423,9 @@ if (defined $opt{math_parsing}) {
 }
 &set_if_false($NO_ISOLATIN, $opt{latin});
 if ($INIT_FILE) {
+    if ($INIT_FILE !~ /^[.$dd]/) {	# should start with / or .
+	$INIT_FILE = ".$dd$INIT_FILE";	# so that value of @INC has no effect
+    }
     if (-f $INIT_FILE && -r _) {
         print "Note: Initialising with file: $INIT_FILE\n"
             if ($DEBUG || $VERBOSITY);
