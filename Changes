@@ -114,6 +114,7 @@
 #
 #--------- v2017
 #
+#		- remove old versions of floatflt.ins, latin9.def, url.sty
 #		- default to no <address> element in footer
 #		- Handle init file when . not in @INC
 #		  https://bugs.debian.org/834420

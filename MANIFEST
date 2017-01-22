@@ -343,10 +343,8 @@ texinputs/hthtml.sty
 texinputs/html.sty
 texinputs/htmllist.sty
 texinputs/justify.sty
-texinputs/latin9.def
 texinputs/ldump.sty
 texinputs/techexplHTML.tex
-texinputs/url.sty
 texinputs/verbatimfiles.sty
 versions
 versions/cp1252.pl
