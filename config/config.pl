@@ -440,10 +440,9 @@ use L2hos;
 #use diagnostics;
 use vars qw(%prefs %cfg %newcfg);
 
-# This is the central place to modify the release name!!!
-my $RELEASE = '2017';
-# This one is automatically updated by CVS
-my ($VERSION) = q$Revision: 1.49 $ =~ /:\s*(\S*)/;
+# This is the central place to modify the release name and date!!!
+my $RELEASE = '2017.2';
+my $VERSION = 'Released Jan 23, 2017';
 
 # --------------------------------------------------------------------------
 # Open log
@@ -473,11 +472,12 @@ foreach (@ARGV) {
 
 # The name of the configuration file to create
 my $CFGFILE = 'cfgcache.pm';
-logit("\nconfig.pl, Release $RELEASE (Revision $VERSION)\n");
+logit("\nconfig.pl, Release $RELEASE ($VERSION)\n");
 logit("Accompanies LaTeX2HTML, (C) 1999 GNU Public License.\n\n");
 
 # This hash contains the final configuration
-%newcfg = ('distver' => $RELEASE);
+%newcfg = ('distver' => $RELEASE,
+	   'release_date' => $VERSION);
 
 # Try to read old config file; will be loaded to %cfg
 my $oldconfig = $opt{'OLDCONFIG'} || $CFGFILE;

@@ -100,7 +100,7 @@ use L2hos; # Operating system dependent routines
 # $^W = 1; # turn on warnings
 
 my $RELEASE = '@distver@';
-my ($REVISION) = q$Revision: 1.71 $ =~ /:\s*(\S+)/;
+my $REVISION = '@release_date@';
 
 # The key, which delimts expressions defined in the environment
 # depends on the operating system. 
