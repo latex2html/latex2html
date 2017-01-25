@@ -459,6 +459,9 @@ if ($opt{test_mode}) {
     $RGBCOLORFILE = "@srcdir@${dd}styles${dd}rgb.txt";
     $CRAYOLAFILE = "@srcdir@${dd}styles${dd}crayola.txt";
 }
+if (!$ICONSERVER) {	# if we don't have a url to find icons on the web,
+    $LOCAL_ICONS = 1;	# copy them into the directory for this document
+}
 if($DEBUG) {
     # make the OS-dependent functions more chatty, too
     $L2hos::Verbose = 1;

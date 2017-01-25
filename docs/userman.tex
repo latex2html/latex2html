@@ -586,6 +586,7 @@ A copy of each of the icons actually used within the document is placed in the
 directory along with the \texttt{HTML} files and generated images.
 This allows the whole document to be fully self-contained, within this directory;
 otherwise the icons must be retrieved from a (perhaps remote) server.
+It is also the default behavior if \fn{\$ICONSERVER} is not set.
 
 \index{icons!alternative set}\index{icons!customised images}%
 The icons are normally copied from a subdirectory of the \fn{\$LATEX2HTMLDIR},
@@ -1254,8 +1255,7 @@ of \fn{\$ICONSERVER}.\\
 When the \htmlref{\Cs{local\_icons}}{cs_localicons} switch is used,
 so that a copy of the icons is placed with the \texttt{HTML} files and other
 generated images, the value of \fn{\$ICONSERVER} is not needed within
-the \texttt{HTML} files themselves. However it \emph{is} needed to find
-the original icons to be copied to the local directory.
+the \texttt{HTML} files themselves.
 
 \item [\fn{\$NAV\_BORDER}\texttt{ = }\Meta{num}\texttt{;}]
 The value given here results in a border, measured in points, around each icon.\html{\\}

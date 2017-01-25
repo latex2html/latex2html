@@ -411,6 +411,7 @@ files and generated images. This
 allows the whole document to be fully self-contained, within this
 directory; otherwise the icons must be retrieved from a (perhaps
 remote) server.
+It is also the default behavior if $ICONSERVER is not set.
 The icons are normally copied from a subdirectory of the
 
 .B $LATEX2HTMLDIR,
@@ -1058,9 +1059,7 @@ placed with the
 files and other generated images, the value of
 $ICONSERVER is not needed within the 
 .B HTML 
-files themselves. However it
-is needed to find the original icons to be copied to the local
-directory.
+files themselves.
 .TP
 .B $NAV_BORDER = <num>;
 The value given here results in a border, measured in points, around

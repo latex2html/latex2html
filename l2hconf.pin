@@ -78,29 +78,24 @@ $HTML_VALIDATOR = '@HTML_VALIDATOR@';
 $HTML_VALIDATE = 0;
 
 
-##########  ICONSERVER  --- !! IMPORTANT !! ############################
+##########  ICONSERVER   ############################
 #
 # LaTeX2HTML uses many small graphics as icons within the navigation
 # panels, and for other purposes.
-# You *must* specify where these graphics are to be found, for use within
-# your documents.
+# You can specify a single location where these graphics are to be found,
+# to avoid creating a separate copy as part of each document.
 #
 # IMPORTANT: This location must not only be accessible to you, but also
 #            to the people who are to read your HTML documents.
 #
-# One option is to always use the  -local_icons switch (see below)
-# to have a copy of the icons together with your HTML document.
+# If $ICONSERVER is not set, latex2html will create
+# a copy of the icons together with your HTML document.
 # (This is safe, but wasteful if you have a large number of documents.)
 #
 # A better option is to set  $ICONSERVER  to point to a location that
 # is known to always (at least in principle) be available publicly.
 #
-# The default value for  $ICONSERVER  given below is within the local 
-# $LATEX2HTMLDIR. If this is *not* to be publicly available then you 
-#  **should change the value of $ICONSERVER to a site that is**.
-#
-# You probably have to talk to your Webmaster to provide access to the
-# icon directory. Some hints:
+# Some hints:
 # a) It's ok to set $ICONSERVER just to "/path/to/icons.$IMAGE_TYPE" (without
 #    the internet address) if /path/to is valid for your file system, *and*
 #    if www_root/path/to points to the same directory. Normally the www area
@@ -115,12 +110,7 @@ $HTML_VALIDATE = 0;
 #    In this case, customize &img_tag to use a central directory, say,
 #    "../icons".
 #
-#if @texlive@
-use L2hos;
-$ICONSERVER = L2hos->path2URL("$LATEX2HTMLDIR/icons");
-#else
-$ICONSERVER = '@ICONSERVER@'||'@ICONPATH@';
-#fi
+$ICONSERVER = '@ICONSERVER@';
 $ALTERNATIVE_ICONS = 0;
 
 
