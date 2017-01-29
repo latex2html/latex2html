@@ -9527,7 +9527,7 @@ sub revert_to_raw_tex {
 #    s/$percent_mark/\\%/go;
 ##    s/$comment_mark(\d+)\n/%$comments{$1}\n/go;
     local($tmp,$tmp2);
-#    s/$comment_mark(\d+)\n/$tmp=$verbatim{$1};chomp($tmp);$tmp."\n"/ego;
+    # only applies if the comment mark is at the end of the line
     s/$comment_mark(\d+)(\n|$|(\$))/$tmp=$verbatim{$1};$tmp2 = $3;
         ($tmp=~m!^\%!s ? '':'%').$tmp.(($tmp=~ m!\n\s*$!s)?'':"\n").$tmp2/sego;
     s/${verbatim_mark}tex2html_code(\d+)\#/$verbatim{$1}/go;

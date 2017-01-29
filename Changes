@@ -112,6 +112,15 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#
+#
+#
+#		- Fix stray comment mark: Issue #19
+#
+#--------- v2017.2
+#
+#		- print release date, remove RCS version numbers from banner
+#
 #--------- v2017
 #
 #		- remove old versions of floatflt.ins, latin9.def, url.sty

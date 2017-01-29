@@ -376,7 +376,7 @@ BEGIN {
 use L2hos;
 
 my $RELEASE = '@distver@';
-my ($VERSION) = q$Revision: 1.12 $ =~ /:\s*(\S+)/;
+my $VERSION = '@release_date@';
 
 my $envkey = L2hos->pathd();
 
@@ -485,7 +485,7 @@ if($TEXINPUTS) {
 exit(0);
 
 sub banner {
-    print STDERR "texexpand V$RELEASE (Revision $VERSION)\n";
+    print STDERR "texexpand V$RELEASE ($VERSION)\n";
 }
 
 sub initialise {

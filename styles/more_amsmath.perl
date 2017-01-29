@@ -72,7 +72,6 @@ sub get_eqn_number {
     # an explicit \tag overrides \notag , \nonumber or *-variant
     local($labels,$tag);
     ($scan,$labels) = &extract_labels($scan); # extract labels
-    $scan =~ s/\n/ /g;
     if ($scan =~ s/\\tag(\*|star\b)?\s*(($O|$OP)\d+($C|$CP))(.*)\2//) {
 	local($star) = $1; $tag = $5;
 	$tag = &translate_environments($tag) if ($tag =~ /\\begin/);
