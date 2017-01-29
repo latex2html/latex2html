@@ -1419,7 +1419,7 @@ sub pre_process {
     }
 
     # Move all LaTeX comments into a local list
-    s/([ \t]*(^|\G|[^\\]))(%.*(\n[ \t]*|$))/print "%";
+    s/([ \t]*(^|[^\\]))(%.*(\n[ \t]*|$))/print "%";
 	$comments{++$global{'verbatim_counter'}} = "$3";
 	&write_mydb("verbatim", $global{'verbatim_counter'}, $3);
 	"$1$comment_mark".$global{'verbatim_counter'}."\n"/mge;
