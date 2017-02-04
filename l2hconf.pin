@@ -34,7 +34,7 @@ $INILATEX = "@INITEX@ \"&latex\"";	# initex+latex
 # They are ignored when the document preamble contains similar commands.
 # Use these defaults for dark solid (anti-aliased) characters in text and math.
 #
-$LOAD_LATEX_COLOR = "\\usepackage[dvips]{color}";
+$LOAD_LATEX_COLOR = "\\usepackage{xcolor}";
 $LATEX_COLOR = "\\pagecolor[gray]{.7}";
 
 

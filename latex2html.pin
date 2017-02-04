@@ -6863,21 +6863,13 @@ sub make_latex{
     $preamble =~s/\\(begin|end)\s*\{(tex2html_(nowrap|deferred|nomath|preform)[_a-z]*|imagesonly)\}//g;
     $preamble =~s/\n?\s?<tex2html_(end)?file>\#[^#]*\#//mg;
 
-    $preamble = "\\documentclass\{article\}%\n\\usepackage{html}\n\\usepackage[dvips]{color}\n"
+    $preamble = "\\documentclass\{article\}%\n\\usepackage{html}\n"
 	unless ($preamble);
     if (($LATEX_DUMP)&&(!($preamble =~ /\\usepackage\{ldump\}/))) {
 	# MRO: replaced $* with /m
 	$preamble =~ s/(\\document(class|style)[^\n]*\n)/$1\\usepackage\{ldump\}\n/m;
     }
-    if ($preamble =~ /pstricks/) {
-	if ($LOAD_LATEX_COLOR) {
-	    $LOAD_LATEX_COLOR =~ s/\{color\}/\{pstcol\}/ ;
-	} else {
-	    $LOAD_LATEX_COLOR = "\n\\usepackage[dvips]{pstcol}\n";
-	}
-    } else {
-	$LOAD_LATEX_COLOR = "\n\\usepackage[dvips]{color}";
-    }
+    $LOAD_LATEX_COLOR = "\n\\usepackage{xcolor}" unless $LOAD_LATEX_COLOR;
     $LATEX_COLOR = "\\pagecolor[gray]{.85}\\nobreak " unless $LATEX_COLOR;
     if ($preamble =~ /(^|\s*[^%])\s*\\documentstyle/) {
 	# \usepackage is invalid in LaTeX 2.09 and LaTeX-2e compatibility mode
@@ -6887,7 +6879,8 @@ sub make_latex{
 		$&."\n\\let\\providecommand\\newcommand\n"/eo;
     }
 
-    $preamble .= $LOAD_LATEX_COLOR."\n" unless ($preamble =~ /[,\{]color[,\}]/);
+    $preamble .= $LOAD_LATEX_COLOR."\n"
+	unless ($preamble =~ /[,\{](xcolor|color|pstricks)[,\}]/);
     $preamble .= "\n\n".$LATEX_COLOR."\n" unless ($preamble =~ /\\pagecolor/);
     do {
 	if ($ISOLATIN_CHARS) { $INPUTENC = $INPUTENC || 'latin1' };

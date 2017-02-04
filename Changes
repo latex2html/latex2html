@@ -114,7 +114,8 @@
 #
 #
 #
-#
+#		- usepackage xcolor.  uses rgb black rather than cmyk black.
+#		  fixes eqns appearing as dark grey rather than black.
 #		- Fix stray comment mark: Issue #19
 #
 #--------- v2017.2
