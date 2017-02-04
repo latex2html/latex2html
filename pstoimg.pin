@@ -22,6 +22,10 @@
 ##############################################################################
 #
 # $Log: pstoimg.pin,v $
+# Revision 2017/02/04
+#  --  Same transparency color for gif and png.
+#  --  Remove RCS version number from banner.
+#
 # Revision 2016/04/19
 #  --  fix pstoimg -depth 24 -flip cw
 #      avoiding dropping unexecuted command when ppmquant is not run
@@ -277,7 +281,6 @@ BEGIN {
 use L2hos; # load OS-specific stuff
 
 my $RELEASE = '@distver@';
-my ($VERSION) = q$Revision: 1.19 $ =~ /:\s*(\S+)/;
 
 $| = 1; # unbuffer STDOUT
 
@@ -1516,8 +1519,6 @@ sub crop_scale_etc {
       $pnmtoimg .= ' -interlace';
     }
     if($TRANSPARENT) {
-      $trans_color = $TRANSPARENT_COLOR||'#d9d9d9'; # don't lookup rgb.txt
-      #$trans_color = $TRANSPARENT_COLOR||'gray85';
       $pnmtoimg .= ' -trans ' . L2hos->quote($trans_color);
     }
   }
@@ -1587,13 +1588,13 @@ sub crop_scale_etc {
 }
 
 sub banner {
-  print "$prompt V$RELEASE (Revision $VERSION, Perl $])\n";
+  print "$prompt V$RELEASE\n";
 }
 
 sub print_version {
   my $formats = join(',',@IMAGE_TYPES);
   print <<"EOM";
-$prompt (Revision $VERSION, perl $]),
+$prompt
 part of LaTeX2HTML Release V$RELEASE.
 
 Supported output image format(s): $formats

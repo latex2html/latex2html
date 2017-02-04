@@ -6870,7 +6870,6 @@ sub make_latex{
 	$preamble =~ s/(\\document(class|style)[^\n]*\n)/$1\\usepackage\{ldump\}\n/m;
     }
     $LOAD_LATEX_COLOR = "\n\\usepackage{xcolor}" unless $LOAD_LATEX_COLOR;
-    $LATEX_COLOR = "\\pagecolor[gray]{.85}\\nobreak " unless $LATEX_COLOR;
     if ($preamble =~ /(^|\s*[^%])\s*\\documentstyle/) {
 	# \usepackage is invalid in LaTeX 2.09 and LaTeX-2e compatibility mode
 	$LATEX_COLOR = ''; $LOAD_LATEX_COLOR = '';
@@ -6881,7 +6880,11 @@ sub make_latex{
 
     $preamble .= $LOAD_LATEX_COLOR."\n"
 	unless ($preamble =~ /[,\{](xcolor|color|pstricks)[,\}]/);
-    $preamble .= "\n\n".$LATEX_COLOR."\n" unless ($preamble =~ /\\pagecolor/);
+    if ($LATEX_COLOR && $preamble !~ /\\pagecolor/) {
+	$preamble .= "\n\\definecolor{background}{HTML}{".$LATEX_COLOR."}\n".
+	    "\\pagecolor{background}\n";
+	$ENV{'TRANSPARENT_COLOR'} = '#'.$LATEX_COLOR;	# pass to pstoimg
+    }
     do {
 	if ($ISOLATIN_CHARS) { $INPUTENC = $INPUTENC || 'latin1' };
 	$preamble .= "\n\\usepackage[".$INPUTENC."]\{inputenc\}\n";

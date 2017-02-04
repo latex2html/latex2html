@@ -32,10 +32,12 @@ $INILATEX = "@INITEX@ \"&latex\"";	# initex+latex
 
 # These affect whether images are made on a white or gray background.
 # They are ignored when the document preamble contains similar commands.
-# Use these defaults for dark solid (anti-aliased) characters in text and math.
+# Default is white background.  Color should be specified as RGB hex
+# values using uppercase for A-F.  Grey background can be used for thicker
+# anti-aliased characters in text and math, at the cost of some fuzziness.
 #
-$LOAD_LATEX_COLOR = "\\usepackage{xcolor}";
-$LATEX_COLOR = "\\pagecolor[gray]{.7}";
+#$LOAD_LATEX_COLOR = "\\usepackage{xcolor}";
+#$LATEX_COLOR = "C0C0C0";
 
 
 # -white

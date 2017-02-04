@@ -113,7 +113,9 @@
 # the top.
 #
 #
-#
+#		- default to white background for rendering images.
+#		  if $LATEX_COLOR set, pass as transparency color to pstoimg.
+#		  https://bugs.debian.org/188024
 #		- usepackage xcolor.  uses rgb black rather than cmyk black.
 #		  fixes eqns appearing as dark grey rather than black.
 #		- Fix stray comment mark: Issue #19
