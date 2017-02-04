@@ -177,6 +177,11 @@ can be browsed at:
    http://tug.org/pipermail/latex2html/
 
 
+License
+-------
+
+GNU Public License Version 2
+
 
 Enjoy!
 
