@@ -1,0 +1,42 @@
+\documentclass[12pt]{amsart}
+\usepackage{amssymb}
+\usepackage{latexsym}
+\title{The trap for \LaTeX\ convertors}
+\author{Sergej V. Znamenskij}
+\begin {document}
+\maketitle
+
+This file contains absolutely legal and ordinary
+mathematical constructions in \LaTeX\ text to facilitate visual
+detection of image alignment algorithm flaws in \LaTeX\ to HTML conversion.
+
+\section {Line alignment problem}
+The problem comes with the large height and (or) depth formulae. 
+Usually such a formula as $x_s^{\int\limits_a^{N^1}\, dx}$ for example has
+larger height than depth. As a corollary, the convertor may add improper large gap (vskip) before the next
+line. The case of equal height and width $\left(x_s^{\int\limits_a^{N^1}\, dx}\right)$ is more controlable, 
+as far as we do not try to get images scaled together with text changing.
+The most rare and difficult situation is a formula with a large depth, but a very small height: 
+$y=1-\dfrac{\alpha}{1-\dfrac{2}{3-\dfrac{4}{5-x}}}$.
+I will appreciate any idea to keep proper interline distance in such a case without 
+additional vskip over this formula though I suppose it to be impossible: I failed to find a hint in html 
+specifications how to force browser to leave a proper place lower image without extra gap over it. 
+
+\section {Inline alignment problems}All dots in the line are to be exactly aligned for any browser and selected text size.
+
+.$.\sum\limits^n1.$.$.\prod\limits_n2.$.$.\dfrac{\alpha\otimes\mu}{\gamma}.$.$.1.$.$.\dfrac {\rightharpoonup}{A\otimes B}.$.
+
+The simple convertion algorithm can fail due to the following reasons:
+\begin {itemize} 
+\item HTML lacks opportunity to reproduce \LaTeX\ layout directly;
+\item Some kind of HTML markup has different visual representation in different browser versions;  
+\item Usable image conversion libraries and tools do not care reference point position in the image while cropping;
+\item \LaTeX\ box dimensions (width, height and depth) \textbf{usually differs} from its visual width, height, or depth. 
+\end {itemize}
+
+Test of Figure environment:
+\begin{figure}
+\[ a = \int exp{x} \,\mathrm{d}x \]
+\end{figure}
+
+\end {document}

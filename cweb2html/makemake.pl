@@ -35,12 +35,11 @@ sub main {
     $_ = delete $string{'STRING'}; # Blow it away and return the result
     close IN;
 
-    $*=1; #multiline matching on
     &rip("no $FILES macro found in $source")
-	unless /^[ \t]*$FILES[ \t]*=((.*\\\n)*.*)/;
+	unless /^[ \t]*$FILES[ \t]*=((.*\\\n)*.*)/m;
     $files = $1;
-    $files =~ s/\#.*\n?//g;
-    @files = split(/[ \t]*\\\n[ \t]*|[ \t]+/,$files);
+    $files =~ s/\#.*\n?//gm;
+    @files = split(/[ \t]*\\\n[ \t]*|[ \t]+/m,$files);
     shift(@files) unless $files[0];
 
     &rip("no files found in $FILES macro")
@@ -49,22 +48,22 @@ sub main {
 
     # get template (one allowed currently)
     &rip("no template found in $source")
-	unless /^[ \t]*$BEGIN.*\n([\s\S]*)\n[ \t]*$END/;
+	unless /^[ \t]*$BEGIN.*\n([\s\S]*)\n[ \t]*$END/m;
     $template = $1;
     # take out comments
-    $template =~ s/^[ \t]*#.*\n//g;
+    $template =~ s/^[ \t]*#.*\n//gm;
 
     # reduce contents to static part and output it
-    s/^[ \t]*$DONOTEDIT[\s\S]*/$DONOTEDIT\n/o;
+    s/^[ \t]*$DONOTEDIT[\s\S]*/$DONOTEDIT\n/om;
     print OUT;
     foreach $file (@files) {
 	next unless $file;
-	if ($file =~ /[\s\\\#]/) {
+	if ($file =~ /[\s\\\#]/m) {
 	    print "rejecting file <$file>";
 	}
 	else {
 	    $_ = $template;
-	    s/\b$pattern\b/$file/g;
+	    s/\b$pattern\b/$file/gm;
 	    print OUT $_,"\n\n";
 	}
     }

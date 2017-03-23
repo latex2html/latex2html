@@ -91,7 +91,7 @@ sub convert_length_table {
     ($pxs,$len);
 }
 # should no longer be needed, as this is defined in latex2html.pin
-if (undefined &convert_length) { sub convert_length {&convert_length_table(@_)} }
+if (!defined &convert_length) { sub convert_length {&convert_length_table(@_)} }
 
 # Translates LaTeX column specifications to HTML. Again, Netscape
 # needs some extra work with its width attributes in the <td> tags.

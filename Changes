@@ -113,6 +113,8 @@
 # the top.
 #
 #
+#		- Picture generation via dvipng
+#		- KOI8-R, CP1251 and UTF-8 support for Russian 
 #		- default to white background for rendering images.
 #		  if $LATEX_COLOR set, pass as transparency color to pstoimg.
 #		  https://bugs.debian.org/188024

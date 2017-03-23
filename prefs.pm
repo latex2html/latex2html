@@ -246,6 +246,9 @@ $prefs{'GIF'} = 1;
 # to disable PNG support even if possible.
 $prefs{'PNG'} = 1;
 
+# The dvipng executable.
+$prefs{'DVIPNG'} = 'dvipng';
+
 # Ghostscript
 # this is one of the crucial points. Use the most recent version of gs
 # available. Versions known to work well are 3.33 and 4.03

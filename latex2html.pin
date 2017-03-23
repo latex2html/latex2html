@@ -56,6 +56,7 @@ use 5.003; # refuse to work with old and buggy perl version
 use Getopt::Long;
 use Fcntl;
 use AnyDBM_File;
+use Encode qw(decode_utf8 encode_utf8);			# for russian UTF-8 hack
 
 # The following are global variables that also appear in some modules
 use vars qw($LATEX2HTMLDIR $LATEX2HTMLPLATDIR $SCRIPT
@@ -283,6 +284,8 @@ unless(GetOptions(\%opt, # all non-linked options go into %opt
         'rootdir=s',
         'dir=s',                \$FIXEDDIR,
         'mkdir',                \$MKDIR,
+        'use_dvipng!',          \$USE_DVIPNG,
+        'dvipng_dpi=s',         \$DVIPNG_DPI,
         'address=s',            \$ADDRESS,
         'noaddress',
         'subdir!',
@@ -526,6 +529,7 @@ $DVIPS_SAFE = 1;
 
 $CHARSET = $charset || 'iso-8859-1';
 
+$DVIPNG_DPI=200 unless $DVIPNG_DPI;
 ####################################################################
 #
 # If possible, use icons of the same type as generated images
@@ -788,9 +792,9 @@ sub driver {
 	next unless (&new_dir($DESTDIR,''));
         # establish absolute path to $DESTDIR
 	$DESTDIR = L2hos->Make_directory_absolute($DESTDIR);
-        &make_tmp_dir;
-        print "\nNote: Working directory is $DESTDIR\n";
-        print "Note: Images will be generated in $TMPDIR\n\n";
+#        &make_tmp_dir;
+#        print "\nNote: Working directory is $DESTDIR\n";
+#        print "Note: Images will be generated in $TMPDIR\n\n";
 
 # Need to clean up a bit in case there's garbage left
 # from former runs.
@@ -802,6 +806,9 @@ sub driver {
 	    closedir TMP; 
 	}
 	&cleanup(1);
+        &make_tmp_dir;
+        print "\nNote: Working directory is $DESTDIR\n";
+        print "Note: Images will be generated in $TMPDIR\n\n";
 	unless(-d $TMP_) {
 	    mkdir($TMP_, 0755) ||
 	      die "Cannot create directory '$TMP_': $!\n";
@@ -3240,8 +3247,8 @@ sub simple_math_env {
     while ($mathcontents =~ s/_$any_next_pair_rx/<SUB>$2<\/SUB>/g){};
     while ($mathcontents =~ s/_$any_next_pair_pr_rx/<SUB>$2<\/SUB>/g){};
 
-    $mathcontents =~ s/\^(\\[a-zA-Z]+|.)/<SUP>$1<\/SUP>/g;
-    $mathcontents =~ s/_(\\[a-zA-Z]+|.)/<SUB>$1<\/SUB>/g;
+    $mathcontents =~ s/\^(\\[a-zA-Z]+|.)/<SUP><i>$1<\/i><\/SUP>/g;
+    $mathcontents =~ s/_(\\[a-zA-Z]+|.)/<SUB><i>$1<\/i><\/SUB>/g;
     $mathcontents =~ s/(^|\s|[,;:'\?\.\[\]\(\)\+\-\=\!>]|[^\\<]\/|\d)(<(I|TT|B)>)?([a-zA-Z]([a-zA-Z ]*[a-zA-Z])?)(<\/\3>)?/
 	$1.(($2)? $2 :'<I>').$4.(($6)? $6 : '<\/I>')/eig;
 
@@ -3730,7 +3737,7 @@ sub make_box {
 #	inline math --- horizontal mode, captures height/depth + \mathsurround
 sub make_hbox {
     local($id,$contents) = @_;
-    if ($id =~ /indisplay/) {
+    if ($id =~ /indisplay/ or $USE_DVIPNG) {
 	"\\lthtmlinlinemathA{". $id ."}%\n". $contents ."%\n\\lthtmlindisplaymathZ\n";
     } else {
 	"\\lthtmlinlinemathA{". $id ."}%\n". $contents ."%\n\\lthtmlinlinemathZ\n";
@@ -3818,10 +3825,12 @@ sub make_off_line_images {
 
 	&make_latex_images();
 
-	print "\nGenerating postscript images using dvips ...\n";
+	print $USE_DVIPNG? "\nGenerating images using dvipng ...\n":
+    "\nGenerating postscript images using dvips ...\n";
 	&process_log_file(".$dd${PREFIX}images.log"); # Get eqn size info
 	unless ($LaTeXERROR) {
-	    local($dvips_call) = 
+    	    local($dvips_call) = 
+	$USE_DVIPNG? "$DVIPNG -D $DVIPNG_DPI -o$TMPDIR$dd$IMAGE_PREFIX%d.png -T tight .${dd}${PREFIX}images.dvi" :
 		"$DVIPS -S1 -i $DVIPSOPT -o$TMPDIR$dd${IMAGE_PREFIX} .${dd}${PREFIX}images.dvi";
 	    print "$dvips_call\n" if (($DEBUG)||($VERBOSITY > 1));
 
@@ -3910,11 +3919,12 @@ sub make_images {
             if(-e $img_path && !-e $img);
     }
     elsif ((!$NOLATEX) && ($latex_body =~ /newpage/) && !($LaTeXERROR)) {
-   	print "\nGenerating postscript images using dvips ...\n";
-        &make_tmp_dir;  # sets  $TMPDIR  and  $DESTDIR
+	print $USE_DVIPNG? "\nGenerating images using dvipng ...\n":
+    "\nGenerating postscript images using dvips ...\n";
 	$IMAGE_PREFIX =~ s/^_//o if ($TMPDIR);
 
 	local($dvips_call) = 
+	$USE_DVIPNG? "$DVIPNG -D $DVIPNG_DPI -T tight -o$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images.dvi" :
 		"$DVIPS -S1 -i $DVIPSOPT -o$TMPDIR$dd$IMAGE_PREFIX .${dd}${PREFIX}images.dvi\n";
 	print $dvips_call if (($DEBUG)||($VERBOSITY > 1));
 	
@@ -4038,7 +4048,7 @@ sub process_log_file {
 		}
 	        $before = '';
 	    }
-	}
+	} else {s/^\:([^:]*)\:lthtmlCropMarkHeight\:\=([0-9.]*)pt/$cropmarkheight{$1} = $2;''/e;}
     $LaTeXERROR = 1 if (/^No pages of output./);
     }
 
@@ -4106,6 +4116,38 @@ sub extract_image { # clean
 		L2hos->Symlink("image.$IMAGE_TYPE", "${PREFIX}T$img");
 		$thumbnail = "${PREFIX}T$img";
 	    }
+    } elsif ($cropmarkheight{$name}) {
+        my $p="$TMPDIR$dd$IMAGE_PREFIX$new_num";
+        die $! unless -f "$p.png";
+        &close_dbm_database if $DJGPP;
+        my $imgpixeloverem=72.27/(15*$DVIPNG_DPI);
+        $imgpixeloverem *=$EXTRA_IMAGE_SCALE if $EXTRA_IMAGE_SCALE ;
+        print "imgpixeloverem=$imgpixeloverem\n";
+        if ( $name =~ /figure|table/ and $FIGURE_SCALE_FACTOR) 
+            {$imgpixeloverem*= $FIGURE_SCALE_FACTOR;}
+        else {$imgpixeloverem*=  $MATH_SCALE_FACTOR if $MATH_SCALE_FACTOR}
+        if ($name =~ /equation|eqnarray|display/){
+            $imgpixeloverem *= $DISP_SCALE_FACTOR if $DISP_SCALE_FACTOR}
+        my $millimeter=int(.04*$DVIPNG_DPI); 
+        $TRANSPARENT_COLOR='FFFFFF' unless defined $TRANSPARENT_COLOR;
+        if ($TRANSPARENT_COLOR){$transparent= "-transparent='#$TRANSPARENT_COLOR'"}
+        else{$transparent =''}
+        my $PPMTO=$IMAGE_TYPE=~m/gif/i? $PPMTOGIF : $PNMTOPNG;
+        unless (-f "strut.$IMAGE_TYPE"){
+            open STRUT, "|$PPMTO --quiet -transparent='#FFFFFF'  >strut.$IMAGE_TYPE";
+            print STRUT "P5\n1 3\n255\nEEE\n"; close STRUT}
+        #L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -sides|tee $p-.ppm|$PPMTO{$IMAGE_TYPE} --quiet $transparent >img$new_num.$IMAGE_TYPE;");
+        L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -left -right|tee $p-.ppm|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
+        open PPM,"<$p.ppm"; read(PPM,$_,30);close PPM;
+        m/^(\d+) (\d+)$/m;
+        $pxdepth{$name}=$2-($cropmarkheight{$name}*$DVIPNG_DPI/72.27);
+        $edepth{$name}=$pxdepth{$name}*$imgpixeloverem;
+        print "edepth{$name}=$edepth{$name}\n";
+        open PPM,"<$p-.ppm"; read(PPM,$_,30);close PPM;
+        m/^(\d+) (\d+)$/m; 
+        $ewidth{$name}=$1*$imgpixeloverem; $eheigth{$name}=$2*$imgpixeloverem;
+        print "ewidth{$name}=$ewidth{$name}\n";
+        &open_dbm_database if $DJGPP;
 	} else {
 	    # RRM: deal with size data
  	    if ($width{$name} < 0) {
@@ -4342,6 +4384,7 @@ sub flatten_math {
     local ($_) = @_;
     $_ = &revert_to_raw_tex($_);
     s/[ \t]+/ /g;
+    s/^\$\s+/\$/;
     # MRO: replaced $* with /m
     s/$tex2html_wrap_rx//gm;
     s/(\\begin\s*\{[^\}]*\})(\s*(\[[^]]*\]))?[ \t]*/$1$3/gm;
@@ -6940,6 +6983,29 @@ sub make_latex{
     " \\parindent=0pt\\abovedisplayskip=0pt\\belowdisplayskip=0pt}%\n" .
     " \\def\\phantompar{\\csname par\\endcsname}\\normalsize}%\n" .
     "\\def\\lthtmltypeout#1{{\\let\\protect\\string \\immediate\\write\\lthtmlwrite{#1}}}%\n" .
+    ($USE_DVIPNG? <<'</dvipng>' :
+\newbox\lthtmlPageBox
+\newdimen\lthtmlCropMarkHeight
+\newdimen\lthtmlCropMarkDepth
+\long\def\lthtmlTightVBox#1#2{%
+    \setbox\lthtmlPageBox\vbox{\catcode`\_=8 #2}%
+    \lthtmlCropMarkHeight=\ht\lthtmlPageBox \advance \lthtmlCropMarkHeight 6pt
+    \lthtmlCropMarkDepth=-\lthtmlCropMarkHeight \advance \lthtmlCropMarkDepth 1pt
+    \lthtmltypeout{^^J:#1:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
+        \hbox to \z@{\vrule width 1pt height\lthtmlCropMarkHeight 
+	   depth \lthtmlCropMarkDepth\hskip 5pt \box\lthtmlPageBox}}%
+    \long\def\lthtmlinlinemathA#1#2\lthtmlindisplaymathZ{\lthtmlTightVBox{#1}{#2}}
+    \def\lthtmlinlineA#1#2\lthtmlinlineZ{\lthtmlTightVBox{#1}{#2}}
+    \long\def\lthtmldisplayA#1#2\lthtmldisplayZ{\lthtmlTightVBox{#1}{#2}}
+    \long\def\lthtmlinlinemathA#1#2\lthtmlindisplaymathZ{\lthtmlTightVBox{#1}{#2}}
+    \def\lthtmlinlineA#1#2\lthtmlinlineZ{\lthtmlTightVBox{#1}{#2}}
+    \long\def\lthtmldisplayA#1#2\lthtmldisplayZ{\lthtmlTightVBox{#1}{#2}}
+    \long\def\lthtmldisplayB#1#2\lthtmldisplayZ{\\edef\preveqno{(\theequation)}%
+        \lthtmlTightVBox{#1}{\let\@eqnnum\relax#2}}
+    \long\def\lthtmlfigureA#1#2\lthtmlfigureZ{\let\@savefreelist\@freelist
+        \lthtmlTightVBox{#1}{#2}\global\let\@freelist\@savefreelist}
+    \long\def\lthtmlpictureA#1#2\lthtmlpictureZ{\lthtmlfigureA#1#2\lthtmlfigureZ}
+</dvipng>
     "\\newcommand\\lthtmlhboxmathA{\\adjustnormalsize\\setbox\\sizebox=\\hbox\\bgroup\\kern.05em }%\n" .
     "\\newcommand\\lthtmlhboxmathB{\\adjustnormalsize\\setbox\\sizebox=\\hbox to\\hsize\\bgroup\\hfill }%\n" .
     "\\newcommand\\lthtmlvboxmathA{\\adjustnormalsize\\setbox\\sizebox=\\vbox\\bgroup %\n".
@@ -6987,7 +7053,7 @@ sub make_latex{
     "\\def\\centerinlinemath{%\n" . 
     "  \\dimen1=\\ifdim\\ht\\sizebox<\\dp\\sizebox \\dp\\sizebox\\else\\ht\\sizebox\\fi\n" .
     "  \\advance\\dimen1by.5pt \\vrule width0pt height\\dimen1 depth\\dimen1 \n".
-    " \\dp\\sizebox=\\dimen1\\ht\\sizebox=\\dimen1\\relax}\n\n" .
+    " \\dp\\sizebox=\\dimen1\\ht\\sizebox=\\dimen1\\relax}\n\n") .
     "\\def\\lthtmlcheckvsize{\\ifdim\\ht\\sizebox<\\vsize \n" .
     "  \\ifdim\\wd\\sizebox<\\hsize\\expandafter\\hfill\\fi \\expandafter\\vfill\n" .
     "  \\else\\expandafter\\vss\\fi}%\n" .
@@ -7086,7 +7152,7 @@ sub make_head_and_body {
     local(%isolanguages) = (  'english',  'EN'   , 'USenglish', 'EN-US'
 			    , 'original', 'EN'   , 'german'   , 'DE'
 			    , 'austrian', 'DE-AT', 'french'   , 'FR'
-			    , 'spanish',  'ES'
+			    , 'spanish',  'ES', russian=>'RU'
 			    , %isolanguages );
 #    $isolanguage = $isolanguages{$default_language};  # DTD is in EN
     $isolanguage = 'EN' unless $isolanguage;
@@ -7920,8 +7986,6 @@ sub add_real_child_links {
 	    $title = '';
 	    if ($exclude) {
 		# making TOC
-		($next_depth, $file, $sec_title) =
-			split($delim,$section_info{$next});
 		($next_depth, $file, $title, $star) =
 			split($delim,$toc_section_info{$next});
 		# use the %section_info  title, in case there are images
@@ -9174,8 +9238,8 @@ sub new_dir {
 			}
 			return(1) if ($this_dir eq '.');
 			if($mode) {
-			  rmdir($this_dir);
-			  rmdir($print_dir);
+                  rmdir($this_dir);
+                  rmdir($print_dir);
                         }
 			if (!$mode) { &new_dir($this_dir,'r')};
 			return(1);
@@ -10019,6 +10083,19 @@ sub embed_image {
 	    $result .= ">";
 	}
     }
+    if ($USE_DVIPNG){
+        $result=~s/(alt)(\=\"[^"]+\")/$1$2 title$2/is;
+        $result=~s/(height|align)(\=\"[^"]+\")//igs;
+        if ($EXTRA_IMAGE_SCALE){
+        $result=~s/(width)(\=\"[^"]+\")/sprintf "style=\"width: \%.2fem; margin-bottom: \%.2fem; line-height: \%.2fem\"",
+        $ewidth{$name} ,-$edepth{$name},$eheigth{$name}+1/esi;
+        $result.=sprintf "<IMG SRC=\"strut.$IMAGE_TYPE\" ALIGN=\"MIDDLE\" WIDTH=\"1\" HEIGHT=\"\%.0f\">",45*$edepth{$name} if $edepth{$name}>.3}
+        else
+	#{$result=~s/(width)(\=\"[^"]+\")/sprintf "style=\"margin-bottom: \%.2f; line-height: \%.2fem\"",
+        #-$pxdepth{$name},$eheigth{$name}+1/esi;}}
+	{$result=~s/(width)(\=\"[^"]+\")/sprintf "style=\"margin-bottom: \%.0f\"", -$pxdepth{$name}/esi;
+        $result.=sprintf "<IMG SRC=\"strut.$IMAGE_TYPE\" ALIGN=\"MIDDLE\" WIDTH=\"1\" HEIGHT=\"\%.0f\">",2*$pxdepth{$name}+3 if $pxdepth{$name}>3
+        }}
     join('',$anch1, $result, $anch2);
 }
 
@@ -11133,10 +11210,21 @@ sub do_env_itemize {
     if (/\s*$item_description_rx/) {
 	# Contains user defined optional labels
 	$bulletx = &do_cmd_mbox("${O}1$C\$$bulletx\$${O}1$C") if $bulletx;
-	&do_env_description($_, " COMPACT", $bullet.$bulletx)
+	&do_env_itemize_compact($_, $bullet.$bulletx)
     } else { &list_helper($_,'UL'); }
 }
 
+sub do_env_itemize_compact{
+    local($_, $bullet) = @_;
+    #RRM - catch nested lists
+    &protect_useritems($_);
+    $_ = &translate_environments($_) unless ($bullet);
+
+	s/\n?$item_description_rx\s*($labels_rx8)?\s*/"<\/td><\/tr>\n<tr><td align=\"right\" valign=\"top\">". 
+	    (($9)? "<A NAME=\"$9\">$1<\/A>" : $1 ) ."<\/td><td valign=\"top\">&nbsp;"/egm;
+        s/\<\/td\>\<\/tr\>\n//s;
+  "<table width=\"90%\">$_</td></tr></table>\n";
+}
 sub do_env_enumerate {
     local($_) = @_;
 # Reiner Miericke provided the main code; integrated by RRM: 14/1/97
@@ -15263,6 +15351,10 @@ sub process_smallcaps {
     local($text) = @_;
     local($next, $scstr, $scbef, $special, $char);
     # is this enough for \sc and \scshape ?
+    if ($NO_UTF == 1 && $USE_UTF == 0 && $CHARSET eq 'utf-8' &&
+	$default_language eq 'russian') {
+      $text = decode_utf8($text);			# russian UTF-8 hack
+    }
     $text = &translate_environments($text);
 
     # MRO: replaced $* with /m
@@ -15288,6 +15380,10 @@ sub process_smallcaps {
 	    $scstr .= "<SMALL>" . $next ."<\/SMALL>";
 	}
 	$scstr .= $text;
+    }
+    if ($NO_UTF == 1 && $USE_UTF == 0 && $CHARSET eq 'utf-8' &&
+	$default_language eq 'russian') {
+      $scstr = encode_utf8($scstr);			# russian UTF-8 hack
     }
     $scstr;
 }
@@ -15842,7 +15938,8 @@ sub initialise {
 		  , '~', 'tilde', '.', 'dot', '=', 'bar'
 		  , '{', 'lbrace' , '}', 'rbrace', '|', 'Vert'
 		  , '#', 'esc_hash', '$', 'esc_dollar'
-                 );
+          , ',', 'enspace'      
+      );
 
     %text_accent = (  'cedil','c', 'bdot','d', 'b','b' , 'tilde','~'
                     , 'circ' ,'^', 'hat','^', 'check','v' , 'caron','v'
@@ -16123,6 +16220,7 @@ rightmargin # &ignore_numeric_argument
 rule # [] # {} # {}
 samepage
 selectfont
+spaceskip # &ignore_numeric_argument
 startdocument # \$SEGMENT=1;\$SEGMENTED=1; \$_
 strut
 suppressfloats # []
@@ -16144,6 +16242,7 @@ vfil
 vfill
 vfilll
 vline
+write # {} # {}
 _IGNORED_CMDS_
 
     # Commands which need to be passed, ALONG WITH THEIR ARGUMENTS, to TeX.
@@ -16478,7 +16577,7 @@ sub make_isolatin1_rx {
 
     # Matches math comments, from  math.pl
     $math_verbatim_rx = "$verbatim_mark#math(\\d+)#";
-    $mathend_verbatim_rx = "$verbatim_mark#mathend([^#]*)#";
+    $mathend_verbatim_rx = "$verbatim_mark.*?mathend([^#]*)#";
 
     # Matches math array environments
     $array_env_rx = "array|cases|\\w*matrix";
@@ -17250,6 +17349,10 @@ by LaTeX.
 Hiding the section numbers encourages use of particular sections 
 as standalone documents. In this case the cross reference to a section 
 is shown using the default symbol rather than the section number.
+
+=item B<->(B<no>)B<use_dvipng>
+
+MISSING_DESCRIPTION
 
 =item B<->(B<no>)B<show_init>
 

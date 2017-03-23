@@ -152,6 +152,7 @@ sub do_babel_welsh { &load_babel_file("welsh") }
 	, 'american'	, 'en-US'
 	, 'austrian'	, 'de-AT'
 	, 'brazil'	, 'pt'
+	, 'russian'	, 'ru'
 	, 'esperant'	, 'eo'
 	, 'francais'	, 'fr'
 	, 'lsorbian'	, 'sr'	

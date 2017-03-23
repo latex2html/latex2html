@@ -1010,6 +1010,19 @@ EOF
   }
 }
 
+# --------------------------------------------------------------------------
+# dvipng
+# --------------------------------------------------------------------------
+
+$newcfg{'DVIPNG'} = '';
+
+if($opt{'IMAGES'}) {
+  my $dvipng = &find_prog(&get_name('DVIPNG',1));
+  if($dvipng) {
+    $newcfg{'DVIPNG'} = $dvipng;
+  }
+}
+
 # HTML validator
 # checks the validity of the generated HTML
 # The support is very rudimentary here.
@@ -1280,6 +1293,10 @@ if($opt{'have_pstoimg'}) {
     $msg = $msg || $err;
     if ($msg =~ /(^|\s*)Version.*\s([\d\.]+)\s*([\n\r]|$)/is) {
         $vers = $2;
+        ($major_vers) = $vers =~ /^(\d+)/;
+    }
+    if ($vers =~ /(\d+\.\d+)(?:\.\d+)+/) {
+        $vers = $1;
         ($major_vers) = $vers =~ /^(\d+)/;
     }
     if ($major_vers =~ /^199/) {

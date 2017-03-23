@@ -1554,7 +1554,7 @@ sub do_env_eqnarray {
 	($sarray, $elcell, $srcell, $erow, $earray, $sempty) = ( 
 	    "\n<TABLE$env_id$lang CELLPADDING=\"0\" ALIGN=\"CENTER\""
 	    , "</TD>\n<TD ALIGN=\"CENTER\" NOWRAP>"
-	    , "</TD>\n<TD ALIGN=\"LEFT\" WIDTH=\"50%\" NOWRAP>"
+	    , "</TD>\n<TD ALIGN=\"LEFT\" NOWRAP>"
 	    , "</TD></TR>", "\n</TABLE>", "</TD>\n<TD>" );
 	$env_id = '';
 	$sarray .= (($no_eqn_numbers) ? ">" :  " WIDTH=\"100%\">" );
@@ -1564,10 +1564,10 @@ sub do_env_eqnarray {
 	if ($EQN_TAGS =~ /L/) { # number on left
 	    ($srow, $slcell, $ercell) = (
 		"\n<TR$valign>" . $seqno
-		, "</TD>\n<TD NOWRAP WIDTH=\"50%\" ALIGN=", '');
+		, "</TD>\n<TD NOWRAP ALIGN=", '');
 	} else { # equation number on right
 	    ($srow, $slcell, $ercell) = ("\n<TR$valign>"
-		, "<TD NOWRAP WIDTH=\"50%\" ALIGN="
+		, "<TD NOWRAP ALIGN="
 		, '</TD>'. $seqno );
 	}
 

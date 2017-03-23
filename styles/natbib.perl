@@ -1451,7 +1451,7 @@ sub do_cmd_citestyle {
     local($_) = @_;
     s/$next_pair_pr_rx//o;
     local($style)="citestyle_$2";
-    if (defined @$style) {
+    if (@$style) {
 	($CITE_OPEN_DELIM,
 	 $CITE_CLOSE_DELIM,
 	 $CITE_ENUM,

@@ -8,6 +8,11 @@ alternatives for Win32 and OS/2 users.
 Step by step cookbook
 =====================
 
+Perl version 5.8 and below uses old style multiline regex matching.
+Perl version 5.10 and above uses new style multiline regex matching.
+Perl version 5.18 is buggy and prevents LaTeX2HTML from working correctly.
+Perl version 5.22 seems to be OK.
+
 A. UNIX
 -------
 

@@ -695,9 +695,7 @@ sub make_latex{
     $preamble = "\\documentclass\{article\}%\n\\usepackage{html,color}%\n\\makeatletter"
 	unless ($preamble);
     if (($LATEX_DUMP)&&(!($preamble =~ /\\usepackage\{ldump\}/))) {
-	$*=1;
-	$preamble =~ s/(\\document(class|style)[^\n]*\n)/$1\\usepackage\{ldump\}\n/;
-	$*=0;
+	$preamble =~ s/(\\document(class|style)[^\n]*\n)/$1\\usepackage\{ldump\}\n/m;
     }
     $LOAD_LATEX_COLOR = "\\usepackage[dvips]{color}" unless $LOAD_LATEX_COLOR;
     $LATEX_COLOR = "\\pagecolor[gray]{.85}" unless $LATEX_COLOR;

@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl  
+#!/usr/bin/perl  
 
 # Check options and load configuration files
 &init;
@@ -1357,14 +1357,14 @@ sub make_known_cmds {
 sub dependencies {
 
     foreach $key (keys %segment_names) {
-	if (defined @{$key."_labels"}) {
+	if (@{$key."_labels"}) {
 	    map { $labelsegs{$_} = $key } @{$key."_labels"};
 	};
     };
     
     foreach $key (keys %segment_names) {
 	$internal{$key}="\\internal\{\}\n" ;
-	if (defined @{$key."_refs"}) {
+	if (@{$key."_refs"}) {
 	    map { $internal{$key}.="\\internal\{$labelsegs{$_}\}\n" 
 		      unless ($labelsegs{$_} =~/$key|$SEGSTART/) } 
 	    @{$key."_refs"};
@@ -1579,7 +1579,7 @@ sub make_makefile {
 			  && ($_ gt $key) } (keys %segment_names);
 	if ($#next > -1) { $down= $next[0] }
 	elsif (defined $segment_names{++$k}) { $down=$k }
-	elsif (defined @specialsegments) { 
+	elsif (@specialsegments) { 
 	    $down=$specialsegments[0];
 	    $lastsegment=$key;
 	} else { $down=$outname ; $lastsegment=$key};

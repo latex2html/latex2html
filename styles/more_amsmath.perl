@@ -235,7 +235,7 @@ sub process_env_equation {
 #	}
 
 	($sarray, $erow, $earray, $sempty, $calign) = ( 
-	    $smarray.$env_id.$smarrayB.$mdisp_width.$mcalign
+	    $smarray.$env_id.$smarrayB.($numbered?$mdisp_width:'').$mcalign
 	    , $emrow , $emarray, $emcell.$mnocell, $mcalign );
 	$env_id = '';
 
@@ -369,7 +369,7 @@ sub process_env_multline {
 	    $env_style{$env} = "" unless ($env_style{$env});
 	}
 	($sarray, $erow, $earray, $sempty, $calign) = ( 
-	    $smarray.$env_id.$smarrayB.$mdisp_width.$mcalign
+	    $smarray.$env_id.$smarrayB.($numbered?$mdisp_width:'').$mcalign
 	    , $emrow , $emarray, $emcell.$mnocell, $mlalign );
 	$env_id = '';
 
@@ -670,7 +670,7 @@ sub process_env_align{
 	    $env_style{$env} = "" unless ($env_style{$env});
 	}
 	local($sarray, $erow, $earray, $sempty, $calign) = (
-	    $smarray.$env_id.$smarrayB.$mdisp_width.$mcalign, $emrow
+	    $smarray.$env_id.$smarrayB.($numbered?$mdisp_width:'').$mcalign, $emrow
 	    , $emarray, $mnocell.$mspace, $mcalign );
 	$env_id = '';
 

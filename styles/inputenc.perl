@@ -99,6 +99,7 @@ sub do_inputenc_skolt{&load_language_support('latin9');}
 
 sub do_inputenc_cyrillic{&no_language_support('iso-8859-5');}
 sub do_inputenc_koi8_r{&load_language_support('koi8');}
+sub do_inputenc_cp1251{&load_language_support('cp1251');}
 sub do_inputenc_arabic{&no_language_support('iso-8859-6');}
 sub do_inputenc_greek{&no_language_support('iso-8859-7');}
 #sub do_inputenc_hebrew{&no_language_support('iso-8859-8');}

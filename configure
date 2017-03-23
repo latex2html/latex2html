@@ -64,6 +64,8 @@ ac_help="$ac_help
 ac_help="$ac_help
   --with-dvips=PATH       path/name of the dvips executable"
 ac_help="$ac_help
+  --with-dvipng=PATH      path/name of the dvipng executable"
+ac_help="$ac_help
   --with-latex=PATH       path/name of the LaTeX executable"
 ac_help="$ac_help
   --with-pnmcrop=PATH     path/name of the pnmcrop executable"
@@ -832,6 +834,14 @@ else
   with_dvips=${DVIPS:-}
 fi
 
+# Check whether --with-dvipng or --without-dvipng was given.
+if test "${with_dvipng+set}" = set; then
+  withval="$with_dvipng"
+  :
+else
+  with_dvipng=${DVIPNG:-}
+fi
+
 # Check whether --with-latex or --without-latex was given.
 if test "${with_latex+set}" = set; then
   withval="$with_latex"
@@ -1187,6 +1197,7 @@ $PERL $srcdir/config/config.pl \
   TEXLIVE=$enable_texlive \
   GS=$with_gs \
   DVIPS=$with_dvips \
+  DVIPNG=$with_dvipng \
   LATEX=$with_latex \
   PNMCROP=$with_latex \
   TEX=$with_tex \

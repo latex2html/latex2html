@@ -607,7 +607,7 @@ sub process_tabular {
 
     if ($color_env) {
 	local($color_test) = join(',',@$open_tags_R);
-	if ($color_test =~ /(color{[^}]*})/g ) {
+	if ($color_test =~ /(color\{[^}]*})/g ) {
 	    $color_env = $1;
 	}
     }
