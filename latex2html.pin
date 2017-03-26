@@ -4137,7 +4137,11 @@ sub extract_image { # clean
             open STRUT, "|$PPMTO --quiet -transparent='#FFFFFF'  >strut.$IMAGE_TYPE";
             print STRUT "P5\n1 3\n255\nEEE\n"; close STRUT}
         #L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -sides|tee $p-.ppm|$PPMTO{$IMAGE_TYPE} --quiet $transparent >img$new_num.$IMAGE_TYPE;");
-        L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -left -right|tee $p-.ppm|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
+        if ($name =~ /figure|table/) {
+	  L2hos->syswait("$PNGTOPNM $p.png|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
+	} else {
+	  L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -left -right|tee $p-.ppm|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
+	}
         open PPM,"<$p.ppm"; read(PPM,$_,30);close PPM;
         m/^(\d+) (\d+)$/m;
         $pxdepth{$name}=$2-($cropmarkheight{$name}*$DVIPNG_DPI/72.27);
@@ -6994,6 +6998,11 @@ sub make_latex{
     \lthtmltypeout{^^J:#1:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
         \hbox to \z@{\vrule width 1pt height\lthtmlCropMarkHeight 
 	   depth \lthtmlCropMarkDepth\hskip 5pt \box\lthtmlPageBox}}%
+\long\def\lthtmlTightFBox#1#2{%
+    \setbox\lthtmlPageBox\vbox{\catcode`\_=8 #2}%
+    \lthtmlCropMarkHeight=\ht\lthtmlPageBox \advance \lthtmlCropMarkHeight 6pt
+    \lthtmlCropMarkDepth=-\lthtmlCropMarkHeight \advance \lthtmlCropMarkDepth 1pt
+    \lthtmltypeout{^^J:#1:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}}%
     \long\def\lthtmlinlinemathA#1#2\lthtmlindisplaymathZ{\lthtmlTightVBox{#1}{#2}}
     \def\lthtmlinlineA#1#2\lthtmlinlineZ{\lthtmlTightVBox{#1}{#2}}
     \long\def\lthtmldisplayA#1#2\lthtmldisplayZ{\lthtmlTightVBox{#1}{#2}}
@@ -7003,7 +7012,7 @@ sub make_latex{
     \long\def\lthtmldisplayB#1#2\lthtmldisplayZ{\\edef\preveqno{(\theequation)}%
         \lthtmlTightVBox{#1}{\let\@eqnnum\relax#2}}
     \long\def\lthtmlfigureA#1#2\lthtmlfigureZ{\let\@savefreelist\@freelist
-        \lthtmlTightVBox{#1}{#2}\global\let\@freelist\@savefreelist}
+        \lthtmlTightFBox{#1}\lthtmltypeout{#2}\global\let\@freelist\@savefreelist}
     \long\def\lthtmlpictureA#1#2\lthtmlpictureZ{\lthtmlfigureA#1#2\lthtmlfigureZ}
 </dvipng>
     "\\newcommand\\lthtmlhboxmathA{\\adjustnormalsize\\setbox\\sizebox=\\hbox\\bgroup\\kern.05em }%\n" .
@@ -10094,7 +10103,8 @@ sub embed_image {
 	#{$result=~s/(width)(\=\"[^"]+\")/sprintf "style=\"margin-bottom: \%.2f; line-height: \%.2fem\"",
         #-$pxdepth{$name},$eheigth{$name}+1/esi;}}
 	{$result=~s/(width)(\=\"[^"]+\")/sprintf "style=\"margin-bottom: \%.0f\"", -$pxdepth{$name}/esi;
-        $result.=sprintf "<IMG SRC=\"strut.$IMAGE_TYPE\" ALIGN=\"MIDDLE\" WIDTH=\"1\" HEIGHT=\"\%.0f\">",2*$pxdepth{$name}+3 if $pxdepth{$name}>3
+	 my $strutcoeff = ($name =~ /figure|table/) ? 1 : 2;
+        $result.=sprintf "<IMG SRC=\"strut.$IMAGE_TYPE\" ALIGN=\"MIDDLE\" WIDTH=\"1\" HEIGHT=\"\%.0f\">",$strutcoeff*$pxdepth{$name}+3 if $pxdepth{$name}>3
         }}
     join('',$anch1, $result, $anch2);
 }
