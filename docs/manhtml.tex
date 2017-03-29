@@ -32,8 +32,8 @@
  \def\CVSrepos{\htmlurl{https://www.github.com/latex2html/latex2html/}}
 % \def\CVSlatest{\htmlurl{http://saftsack.fs.uni-bayreuth.de/~latex2ht/l2h-latest.tar.gz}}
  \def\CVSlatest{\htmlurl{https://www.github.com/latex2html/latex2html/archive/master.zip}}
- \newcommand{\CTANtug}[1]{\htmlurl{http://ctan.tug.org/#1}}
- \def\CTANA{tex-archive/support/latex2html}
+ \newcommand{\CTANtug}[1]{\htmlurl{http://mirrors.ctan.org/#1}}
+ \def\CTANA{support/latex2html}
  \def\tugURL{\htmlurl{http://www.tug.org/}}
  \def\danteURL{\htmlurl{http://www.dante.de/}}
 % \def\ListURL{\htmlurl{http://www.xray.mpe.mpg.de/mailing-lists/latex2html/}}
@@ -75,9 +75,9 @@
 \newcommand{\ctanTUG}{\htmladdnormallinkfoot
  {TUG's searchable CTAN site}{\ctan}}
 \newcommand{\ctanURL}[1]{\htmladdnormallink
- {CTAN:\texttt{.../#1}}{\ctan/tex-archive/#1}}
+ {CTAN:\texttt{.../#1}}{\ctan/#1}}
 \newcommand{\ctanURLbr}[1]{\htmladdnormallink
- {CTAN:\texttt{.../#1}}{\ctan/tex-archive/#1}}
+ {CTAN:\texttt{.../#1}}{\ctan/#1}}
 \newcommand{\ctanTUGurl}[2]{\ctanURL{#2}}
 \newcommand{\indichtml}{l2h/indic/IndicHTML/}
 
@@ -103,8 +103,7 @@
 \newcommand{\ctanURL}{CTAN: \penalty-200\ctanurl}
 \newcommand{\ctanURLbr}{CTAN: \newline\ctanurl}
 \urldef\texdev\url{http://www-texdev.ics.mq.edu.au/}
-\urldef\ctanurl\url{.../tex-archive/}
-\urldef\ctanTUGurl\url{http://ctan.tug.org/ctan/tex-archive/}
+\urldef\ctanTUGurl\url{http://mirrors.ctan.org/}
 \urldef\indichtml\url{l2h/indic/IndicHTML/}
 
 \urldef\MosaicDocs\url{http://www.ncsa.uiuc.edu/SDG/Software/Mosaic/Docs/help-about.html}

@@ -155,44 +155,10 @@ change_begin 98.1
    In the directory http://ctan.tug.org/ctan/ should be the latest
    version, uncompressed.
    
-   There are also many mirrors. To find the nearest to you, get a listing
-   via the command:
+   There are also many mirrors. To find the nearest to you, try:
    
-     finger ctan@www.tug.org
+     http://mirrors.ctan.org/
      
-change_begin 97.1
-   The site at
-   http://cdc-server.cdc.informatik.tu-darmstadt.de/~latex2html/ is a
-   convenient alternative for European users. This is connected to the
-   developer's repository, so should always have the most recent release.
-change_end 97.1
-   
-   
-   
-   Alternatively, a compressed tar  file of the source and related files
-   may be obtained from
-   http://saftsack.fs.uni-bayreuth.de/~latex2ht/
-
-   
-   Two other ftp -sites are
-   http://ctan.tug.org/ctan/tex-archive/support/latex2html and
-   ftp://ftp.rzg.mpg.de/pub/software/latex2html/sources/latex2html-98.1.t
-   ar.gz.
-   
-   
-   
-   Other ftp -sites nearer to you can be found using Archie  at
-   http://hoohoo.ncsa.uiuc.edu/archie.html or
-   http://www.pvv.unit.no/archie/ (faster) or more recent Web-searching
-   tools such as FTP search  in Norway.
-   
-     Warning: Some ftp -sites may not carry the latest version.
-     
-   
-   
-   Updates and patches are posted on the LATEX2HTML server at
-   http://saftsack.fs.uni-bayreuth.de/~latex2ht/
-
 change_end 98.1
    
    
