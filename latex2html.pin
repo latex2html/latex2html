@@ -5975,7 +5975,11 @@ sub get_body_providecommand {
     (($PREAMBLE && $provide) ? 'provided'.$provide : '');
 }
 
-sub do_cmd_providedcommand{ &do_cmd_renewedcommand(@_) }
+sub do_cmd_providedcommand {	# \providecommand does not redefine, so
+    local($_) = @_;		# not setting $ALLOW_REDEFINE
+    &process_body_newcommand('provided',\$_);
+    $_ ;
+}
 
 sub get_body_DeclareRobustCommand {
     local($provide, $n_after) = &process_body_newcommand('provide',@_);

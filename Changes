@@ -113,6 +113,7 @@
 # the top.
 #
 #
+#		- \providecommand should not redefine existing command
 #		- Picture generation via dvipng
 #		- KOI8-R, CP1251 and UTF-8 support for Russian 
 #		- default to white background for rendering images.
