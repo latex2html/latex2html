@@ -525,6 +525,12 @@ These switches affect whether images are created at all, whether old images
 are reused on subsequent runs or new ones created afresh, and whether
 anti-aliasing effects are used within the images themselves.
 .TP
+.B -use_dvipng
+Use the dvipng program to generate png images, rather than using
+dvips followed by gs.  This method produces better alignment of
+math formulas which extend significantly above or below
+the line of text in which they are contained.
+.TP
 .B -ascii_mode
 Same as setting:
 .I $ASCII_MODE = $EXTERNAL_IMAGES = 1;

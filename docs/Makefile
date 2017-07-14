@@ -212,7 +212,7 @@ htmlclean:
 
 clean:
 	rm -f manual.dvi manual.ps manual.glo manual.log manual.aux \
-	    manual.ilg manual.lof manual.lot manual.cb manual.idx \
+	    manual.ilg manual.lof manual.lot manual.cb manual.idx manual.ind \
 	    manual.toc manual.gls
 	rm -f *.ptr
 

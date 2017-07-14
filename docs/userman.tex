@@ -701,6 +701,17 @@ and whether anti-aliasing effects are used within the images themselves.
 
 \begin{htmllist}\htmlitemmark{PinkBall}%
 %
+\index{use-dvipng}%
+\item [ -use\_dvipng \label{cs_use_dvipng}]
+Use the dvipng program to generate png images, rather than
+dvips followed by gs.  This method produces better alignment of
+math formulas which extend significantly above or below
+the line of text in which they are contained.  An example
+of this behavior can be seen in the file \texttt{tests/eq\_line\_spacing.tex}.
+The dvipng method also eliminates the ugly crop
+marks that appear with 12pt documents.
+It does not respect the \fn{\$MATH\_SCALE\_FACTOR} option.
+
 \index{ascii-mode}% 
 \index{browser!character-based}%
 \item [ -ascii\_mode \label{cs_asciimode}]
