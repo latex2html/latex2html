@@ -1,0 +1,15 @@
+\documentclass{article}
+
+% test of graphicspath command with relative path in preamble
+% with non-web (ie, ps rather than png) image files.
+% https://github.com/latex2html/latex2html/issues/40
+
+\usepackage{graphicx}
+
+\graphicspath{{./graphics/}}
+
+\begin{document}
+
+\includegraphics{eqn1}
+
+\end{document}

@@ -177,20 +177,27 @@ sub do_cmd_graphicspath {
     if ($DESTDIR eq $FILE) {
 	# given paths are relative to parent directory
 	map(s|^{([^/~\.\$\\][^}]*)|{..$dd$1|, @paths);
-	map(s/^{\.\Q$dd\E/{\.\.\Q$dd\E/, @paths);
+	map(s/^{\.\Q$dd\E/{\.\.$dd/, @paths);
     } elsif ($DESTDIR eq '.') {
 	# paths are already relative to working directory
     } else { 
 	# specify full paths, by prepending source directory
 	map(s|^{([^/~\.\$\\][^}]*)|{$orig_cwd$dd$1|, @paths);
-	map(s/^{\.\Q$dd\E/{$orig_cwd\Q$dd\E/, @paths);
+	map(s/^{\.\Q$dd\E/{$orig_cwd$dd/, @paths);
     }
     $paths = join('}', @paths).'}';
     map(s/^{//,@paths);		# Strip leading { and trailing $dd
     map(s/\Q$dd\E$//,@paths);
     $GRAPHICS_PATH = [@$GRAPHICS_PATH,@paths];
 
-    $latex_body .= "\n\\graphicspath{$paths}\n\n" unless ($PREAMBLE);
+    if ($PREAMBLE) {
+	# this puts a graphicspath command at the end of the preamble
+	# in images.tex.  unfortunately we still get the original
+	# graphicspath command earlier in the preamble.
+	$preamble .= "\n\\graphicspath{$paths}\n\n";
+    } else {
+	$latex_body .= "\n\\graphicspath{$paths}\n\n";
+    }
     $_; }
 
 # adds ../ if file name begins with ./ or ../

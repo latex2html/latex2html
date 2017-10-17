@@ -112,7 +112,8 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
-#
+#		- fix \graphicspath with relative path in preamble
+#		  https://github.com/latex2html/latex2html/issues/40
 #		- \providecommand should not redefine existing command
 #		- Picture generation via dvipng
 #		- KOI8-R, CP1251 and UTF-8 support for Russian 
