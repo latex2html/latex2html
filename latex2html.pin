@@ -5221,7 +5221,7 @@ sub substitute_meta_cmds {
 
     &clear_mydb("depends_on") if ($DEBUG);     #avoids appending to a previous version
     for $cmd (sort keys %depends_on) {
-        $body = $dependent_on{$cmd};
+        $body = $depends_on{$cmd};
 	print STDOUT ".($cmd,$body)" if ($VERBOSITY > 2);
         &write_mydb("depends_on", $cmd, $depends_on{$cmd});
     }

@@ -233,7 +233,7 @@ my %Install_items = (
   'makemap'           => 'lib',
   'makeseg'           => 'lib,recurse',
   #'prefs.pm'          => 'lib',
-  'readme.hthtml'     => 'lib',
+  #'readme.hthtml'     => 'lib',
   'styles'            => 'lib,recurse',
   # MRO: Tests are for pre-installation testing
   #'tests'             => 'lib,recurse',
