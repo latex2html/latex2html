@@ -2295,7 +2295,13 @@ sub translate {
     &process_aux_file 
 	if $SHOW_SECTION_NUMBERS || /\\(caption|(html|hyper)?((eq)?ref|cite))/;
 
-    require ("${PREFIX}internals.pl") if (-f "${PREFIX}internals.pl");
+    if (-f "${PREFIX}internals.pl") {
+	my $file = "${PREFIX}internals.pl";
+	if ($file !~ /^\Q$dd\E/) {
+	    $file = ".$dd$file";
+	}
+	require ($file);
+    }
 #JCL(jcl-del)
     &make_single_cmd_rx;
 #
@@ -9273,6 +9279,9 @@ sub reuse {
     $print_dir = $this_dir.$dd unless ($print_dir);
     if (-f "$this_dir$dd${PREFIX}images.pl") {
 	print STDOUT "Reusing directory $print_dir:\n";
+	if ($this_dir !~ /^\Q$dd\E/) {
+	    $this_dir = ".$dd$this_dir";
+	}
 	local($key);
 	require("$this_dir$dd${PREFIX}images.pl");
     }
