@@ -93,6 +93,7 @@ sub get_eqn_number {
 		, $EQNO_END);
 	}
     } else { $tag = ';SPMnbsp;;SPMnbsp;;SPMnbsp;' }
+    $scan =~ s/($comment_mark\d+) /$1\n/g;
     if ($labels) {
 	$labels =~ s/$anchor_mark/$tag/o;
 	($labels , $scan);

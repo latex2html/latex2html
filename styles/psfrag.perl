@@ -24,8 +24,10 @@ epsfbox # {}
 _RAW_ARG_CMDS_
 
 &process_commands_nowrap_in_tex (<<_RAW_ARG_CMDS_);
-psfragstar # {} # {}
-psfrag # {} # {}
+psfragstar # {} # [] # [] # [] # [] # {}
+psfrag # {} # [] # [] # [] # [] # {}
+psfragscanon
+psfragscanoff
 _RAW_ARG_CMDS_
 
 

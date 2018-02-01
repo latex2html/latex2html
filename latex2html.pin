@@ -3507,7 +3507,7 @@ sub process_undefined_environment {
     }
     $fullcontents =  $contents; # save for later \label search.
     # MRO: replaced $* with /m
-    $contents =~ s/\n?$labels_rx(\%([^\n]+$|$EOL))?/\n/gm;
+    $contents =~ s/\n?\s*$labels_rx(\%([^\n]+$|$EOL))?/\n/gm;
 
     local($tmp) = $contents;
     $tmp =~ s/^((\\par|\%)?\s*\n)+$//g;
@@ -3889,34 +3889,34 @@ sub make_images {
 	if ($LATEX_DUMP) {
 	    # dump a pre-compiled format
 	    if (!(-f "${PREFIX}images.fmt")) {
-	        print "$INILATEX ./${PREFIX}images.tex\n" 
+	        print "$INILATEX .$dd${PREFIX}images.tex\n" 
 		    if (($DEBUG)||($VERBOSITY > 1));
 	        print "dumping ${PREFIX}images.fmt\n"
-		    unless ( L2hos->syswait("$INILATEX ./${PREFIX}images.tex"));
+		    unless ( L2hos->syswait("$INILATEX .$dd${PREFIX}images.tex"));
 	    }
 	    local ($img_fmt) = (-f "${PREFIX}images.fmt");
 	    if ($img_fmt) {
                 # use the pre-compiled format
-	        print "$TEX \"&./${PREFIX}images\" ./${PREFIX}images.tex\n"
+	        print "$TEX \"&.$dd${PREFIX}images\" .$dd${PREFIX}images.tex\n"
 		    if (($DEBUG)||($VERBOSITY > 1));
-	        L2hos->syswait("$TEX \"&./${PREFIX}images\" ./${PREFIX}images.tex");
+	        L2hos->syswait("$TEX \"&.$dd${PREFIX}images\" .$dd${PREFIX}images.tex");
 	    } elsif (-f "${PREFIX}images.dvi") {
 	        print "${PREFIX}images.fmt failed, proceeding anyway\n";
 	    } else {
 	        print "${PREFIX}images.fmt failed, trying without it\n";
-		print "$LATEX ./${PREFIX}images.tex\n"
+		print "$LATEX .$dd${PREFIX}images.tex\n"
 		    if (($DEBUG)||($VERBOSITY > 1));
-		L2hos->syswait("$LATEX ./${PREFIX}images.tex");
+		L2hos->syswait("$LATEX .$dd${PREFIX}images.tex");
 	    }
 	} else { &make_latex_images() }
 #	    local($latex_call) = "$LATEX .$dd${PREFIX}images.tex";
 #	    print "$latex_call\n" if (($DEBUG)||($VERBOSITY > 1));
 #	    L2hos->syswait("$latex_call");
-##	    print "$LATEX ./${PREFIX}images.tex\n" if (($DEBUG)||($VERBOSITY > 1));
-##	    L2hos->syswait("$LATEX ./${PREFIX}images.tex");
+##	    print "$LATEX .$dd${PREFIX}images.tex\n" if (($DEBUG)||($VERBOSITY > 1));
+##	    L2hos->syswait("$LATEX .$dd${PREFIX}images.tex");
 ##        }
 	$LaTeXERROR = 0;
-	&process_log_file("./${PREFIX}images.log"); # Get image size info
+	&process_log_file(".$dd${PREFIX}images.log"); # Get image size info
     }
     if ($NO_IMAGES) {
         my $img = "image.$IMAGE_TYPE";
@@ -10043,7 +10043,9 @@ sub embed_image {
             unless ($exstr =~ /BORDER/i);
     } else { 
         # MRO: dubious (&extern_image_mark takes only one arg)
-        $extern_image_mark = &extern_image_mark($IMAGE_TYPE,$altst);
+        # shige 07/20 2017 for $PS_IMAGES
+        my ($typename) = ($PS_IMAGES) ? "ps" : $IMAGE_TYPE;
+        $extern_image_mark = &extern_image_mark($typename, $altst);
     }
 
     my ($anch1,$anch2) = ('','');
@@ -14163,7 +14165,7 @@ sub do_cmd_textohtmlinfopage {
 sub default_textohtmlinfopage {
     local($_) = @_;
     local($argv) = $argv;
-    if (-f "../$argv") { $argv = &make_href ("../$argv", $argv, ); }
+    if (-f "..$dd$argv") { $argv = &make_href ("..$dd$argv", $argv, ); }
     $_ = ($INFO && $INFO =~ /^\d+$/
       ? join('', $close_all
 	, "<STRONG>$t_title</STRONG><P>\nThis document was generated using the\n"
