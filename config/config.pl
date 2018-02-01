@@ -638,7 +638,7 @@ $abs_path_names = &get_name('ABSPATHS');
 &checking('if perl supports some dbm');
 
 my %array;
-unless(eval {dbmopen(%array,'DBMtest',0755)}) {
+unless(dbmopen(%array,'DBMtest',0755)) {
   my $err = $@ || 'dbmopen failed';
   &result('no');
   logit("Error: Perl reported DBM error: $err\nLaTeX2HTML needs some DBM.\n");

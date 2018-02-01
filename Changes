@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- config: avoid warning "untie attempted"
 #		- Handle . not in @INC for images.pl and internals.pl
 #		- fix \graphicspath with relative path in preamble
 #		  https://github.com/latex2html/latex2html/issues/40
