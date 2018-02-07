@@ -391,6 +391,9 @@ sub do_cmd_textquoteright {join('', '’', $_[0]);}
 sub do_cmd_textregistered { join('', &iso_map("reg", ""), $_[0]);}
 sub do_cmd_texttrademark {join('', '™', $_[0]);}
 #sub do_cmd_texttrademark { join('', &iso_map("trade", ""), $_[0]);}    # !!!
+#sub do_cmd_textdiv { join('', '÷', $_[0]);}
+#sub do_cmd_textdiv { join('', &iso_map("divide", ""), $_[0]);}
+sub do_cmd_textdiv { join('', '&#247;', $_[0]);}
 sub do_cmd_times { join('', &iso_map("times", ""), $_[0]);}
 
 sub russian_titles {
