@@ -457,42 +457,6 @@ Thanks to \Perbandt{} for testing every second alpha/beta release of
 
 
 
-\subsubsection*{\latextohtmlNG}
-Developed by \Hennecke\label{latex2htmlNG} this is a version of 
-\latextohtml{} that addresses various issues,
-not currently handled in the best way by version \textsc{v97.1}\,.
-These include:
-\begin{itemize}
-\item validating the \texttt{HTML} output,
-so that only correctly nested tags, and their contents,
-can be produced by the translator;
-%
-\item more \TeX-like order of macro-expansion,
-so that macros and their expansions will produce exactly
-the results expected from the \TeX{} implementation of \LaTeX;
-%
-\item faster processing,
-by streamlining some of the current \Perl{} code, and allowing
-shorter strings to be handled at any given time;
-%
-\item customisation issues,
-allowing easier portability to Unix-like environments on
-other platforms.
-%
-\end{itemize}
-Many of these features have been the inspiration for new code
-written for \latextohtml~\textsc{v98.1}.
-
-\medskip\noindent
-The current version of \latextohtmlNG{} can be obtained from
-the developer's
-\hyperref[page]{repository}{repository, see page~}{}{cvsrepos},
-in the directory
-\url{http://saftsack.fs.uni-bayreuth.de/~latex2ht/ng-user}.\html{\\}
-Beware that the files there are \emph{not} compatible with those of the
-same name that come with the current version of \latextohtml.
-
-
 
 \subsubsection*{Extended Capabilities in Web browsers}
 The following areas are the subject of active development
@@ -518,11 +482,6 @@ within \htmladdnormallinkfoot{\HTMLiv}{http://www.w3.org/pub/Markup/}.
 \item [MathML: ] \htmladdnormallinkfoot{Mathematical Markup Language}%
 {http://www.w3.org/pub/WWW/TR/WD-math-970515}.
 
-\index{chemical!markup, CML}%
-\index{CML!chemical markup}%
-\item [CML: ] \htmladdnormallinkfoot{Chemical Markup Language}%
-{http://www.venus.co.uk/omf/cml}.
-
 \index{fonts!non-standard encodings}%
 \item [Fonts: ] further support for non-standard font encodings.
 
@@ -530,13 +489,6 @@ within \htmladdnormallinkfoot{\HTMLiv}{http://www.w3.org/pub/Markup/}.
 \item [Icons: ] Alternative sets of icons for navigation buttons 
 and other purposes.
 \end{description}
-For some background on these technologies read
-\Goossens' survey article ``Hyper-activity in the Web-world''
-in \textsl{CERN Computer Newsletter} 
-\htmladdnormallinkfoot{No. 227}{http://wwwinfo.cern.ch/cnls/227/art\_xml.html},
-and browse \AxelRamge's 
-\htmladdnormallinkfoot{site}{http://www.ramge.de/ax/latex2html/latex2html.html}
-for ideas on how they could be used with \latextohtml.
 
 
 

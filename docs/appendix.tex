@@ -155,68 +155,6 @@ invoking the Makefile, etc., or to get a complete Perl distribution
 with includes the Perl library.
 
 
-\item [Trouble with the images in my \latextohtml\ Manual]
-
-If you have installed the PBM tools beforehand, there could sth.
-went wrong and the tools won't work.
-This problem is known yet to HP users only.
-Since the PBM tools are a bit awkward to install on HP-UX, try
-to download compiled binaries somewhere.
-A possible location is http://hpux.csc.liv.ac.uk/, in
-
-\htmladdnormallink
-{http://hpux.csc.liv.ac.uk/hppd/hpux/X11/Graphics/netpbm-1mar94/}
-{http://hpux.csc.liv.ac.uk/hppd/hpux/X11/Graphics/netpbm-1mar94/}
-.
-
-
-\item [Don't know how to compile the PBM tools on HP-UX]
-
-Since the PBM tools are a bit awkward to install on HP-UX, try
-to download compiled binaries somewhere.
-A possible location is http://hpux.csc.liv.ac.uk/, in
-
-\htmladdnormallink
-{http://hpux.csc.liv.ac.uk/hppd/hpux/X11/Graphics/netpbm-1mar94/}
-{http://hpux.csc.liv.ac.uk/hppd/hpux/X11/Graphics/netpbm-1mar94/}
-.
-
-
-\item [Only two HTML files produced with no contents]
-
-\latextohtml\ did only produce a main page with links to
-\fn{node1.html}, which contains nothing of your document.
-
-This is mainly related to Linux users.
-Perl needs to invoke the \fn{csh} to perform globbing
-(eg. to locate \verb/TMP_*/ files).
-On Linux, there's usually the \fn{tcsh} linked to \fn{csh},
-but this is often missing.
-To fix this, you need to follow several steps:
-
-\begin{enumerate}
-\item Check for the \fn{tcsh}, and install it if you don't have it.
-Take it from (randomly chosen site follows):
-
-\htmladdnormallink
-{file://ftp.cs.uni-sb.de/pub/systems/shells/tcsh/tcsh-6.06.tgz}
-{file://ftp.cs.uni-sb.de/pub/systems/shells/tcsh/tcsh-6.06.tgz}
-
-
-but it is surely part of some Linux distribution for your PC,
-so you won't really need to compile it.
-
-\item Link the \fn{tcsh} to \fn{csh}.
-Eg. say \verb|ln -s /usr/local/bin/tcsh /bin/csh|, or whereever
-you have your \fn{tcsh}.
-
-\item If \latextohtml\ still fails, say \verb/perl -e 'print $INC[1]'/.
-This should prompt the directory where the Perl library resides.
-Step into this directory, and say \verb/grep full_csh Config.pm/.
-The right hand value tells you where Perl wants the \fn{csh}.
-Link the \fn{tcsh} to this place.
-\end{enumerate}
-
 
 \item [It just stops] Check the style
 files that you are using. It is likely that you are using
@@ -279,8 +217,7 @@ running SunOS 4.1.3.
 \latextohtml{} 0.7 and later requires the
 Unix DataBase Management system (DBM or NDBM) in order to run.
 This is usually part of each Unix operating system but if you 
-don't have it then you may need to get it. \htmladdnormallinkfoot{Use Archie}
-{http://www.pvv.unit.no/archie/} to find one.
+don't have it then you may need to get it.
 
 \item [The \texttt{verb"ABC"} command doesn't work]
 This is a nasty bug. Please use any characters other than quotes eg
@@ -622,10 +559,7 @@ the \texttt{slides} argument of the \texttt{documentstyle} command with
 something like \texttt{article} just before using \latextohtml.
 One problem may be that all your slides will end up in the  same HTML 
 file.
-If you use \fn{lslide.sty} you may get much better results 
-(\htmladdnormallinkfoot{use Archie}
-{http://www.pvv.unit.no/archie/} to find this or any other
-style files).
+If you use \fn{lslide.sty} you may get much better results.
 \end{htmllist}
 
 %%% END FAQ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -732,8 +666,8 @@ code in the \fn{makeidx.perl} file as well as numerous suggestions
 and bug reports. 
 
 Verena Umar \Email{verena@edu.vanderbilt.cas.compsci} 
-(\htmladdnormallink{Computer Science
-Education Project}{http://csep1.phy.ornl.gov/csep.html}) has been a very
+(Computer Science
+Education Project) has been a very
 patient tester of some early versions of \latextohtml{}
 and many of the current features are a result of her 
 suggestions. 
@@ -741,7 +675,7 @@ suggestions.
 Thanks to (thanks to Ian Foster 
 \Email{itf@mcs.anl.gov} and Bob Olson \Email{olson@mcs.anl.gov}) at the
 Argonne National Labs for setting up the
-\htmladdnormallinkfoot{\latextohtml{} mailing list}{http://cbl.leeds.ac.uk/nikos/tex2html/doc/mail/mail.html}.
+\latextohtml{} mailing list.
 
 \begin{changebar}
 Special credit is due Marcus Hennecke \Email{marcush@crc.ricoh.com}
@@ -757,10 +691,9 @@ have contributed bug reports, fixes, and other suggestions. Keep them coming!
 
 
 \section{Changes from Previous Versions}
-The \htmladdnormallink{previous versions of the
-translator and some patches}{http://cbl.leeds.ac.uk/nikos/tex2html/previous-versions}
-are available. A \htmladdnormallink{detailed list of changes}
-{http://cbl.leeds.ac.uk/nikos/tex2html/doc/Changes.txt}
+The previous versions of the
+translator and some patches
+are available. A detailed list of changes
 which includes full credits to all who have contributed 
 bug fixes or other code is also available with the
 \latextohtml{} distribution in the file \fn{Changes}.
@@ -1165,11 +1098,8 @@ which avoids converting images unnecessarily..
 \item[\textbf{Other Changes}] \hfill
 \begin{itemize}
 \item LaTeX2HTML now generates \HTML{meta} HTML tags which can be used
-by \htmladdnormallinkfoot{indexing scripts}
-{http://www.ai.mit.edu/tools/site-index.html}
- which generate information for the \htmladdnormallinkfoot{ALIWEB}
-{http://web.nexor.co.uk/aliweb/bin/aliwebsimple.pl} 
-search and retrieval tool. The information in the \HTML{meta} tags
+by indexing scripts.
+The information in the \HTML{meta} tags
 contains
 the title of each separate HTML file. 
 \item A new configuration variable \texttt{DEBUG} can be used to preserve
@@ -1200,8 +1130,7 @@ are named \fn{nodeN.html} where \fn{N} is an integer. Also, the file
 containing
 the footnotes is now called \fn{footnode.html}.
 \item A special extension to \latextohtml{} for those who use the 
-Harvard style for references can be obtained from
-\htmladdnormallink{http://www.arch.su.edu.au/\~{}peterw/latex/harvard/}{http://www.arch.su.edu.au/\~{}peterw/latex/harvard/}.
+Harvard style for references is included.
 \end{itemize}
 \end{htmllist}
 
@@ -1440,8 +1369,8 @@ ascii equivalents. Also generated images are stored externally as with the
 makes documents more portable as it allows them to be
 viewed on browsers that do not support inlined images.
 \end{htmllist}
-\item [\textbf{Special Command Style File}] A style file \htmladdnormallink{\fn{html.sty}} 
-{http://cbl.leeds.ac.uk/nikos/tex2html/doc/html.sty.txt} is now included in the
+\item [\textbf{Special Command Style File}] A style file \fn{html.sty}
+is now included in the
 distribution. This contains the definitions (syntax) of some 
 special LaTeX commands mainly for providing external hypertext
 links.

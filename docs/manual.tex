@@ -44,11 +44,6 @@
  \urldef\ListURL\url{http://www.tug.org/mailman/listinfo/latex2html/}
 
 %
-%  a little hack, needed since a footnote occurs in a figure-caption
-%
-\def\adjustfootnote{\setcounter{footnote}{6}\footnotetext{\url{http://csep1.phy.ornl.gov/csep.html}}}
-
-%
 % These are needed for the Glossary and Index. 
 %
 \newenvironment{theglossary}{\begin{list}{}{\setlength{\labelwidth}{20pt}%
@@ -262,9 +257,6 @@ describes how to obtain and install it, and how to use it effectively.
 \clearpage
 \listoffigures
 \listoftables
-%begin{latexonly}
- \adjustfootnote
-%end{latexonly}
 \clearpage
 
 
