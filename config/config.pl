@@ -741,7 +741,7 @@ elsif($newcfg{'plat'} =~ /dos|win32/i) {
 set arg=
 set prog=%0
 :one
-set arg = %*
+set arg=%*
 :two
 if exist %prog%.bat goto indot
 $newcfg{'PERL'} -x -S %prog% %arg%
