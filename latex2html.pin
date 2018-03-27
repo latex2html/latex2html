@@ -426,7 +426,7 @@ if (defined $opt{math_parsing}) {
 }
 &set_if_false($NO_ISOLATIN, $opt{latin});
 if ($INIT_FILE) {
-    if ($INIT_FILE !~ /^[.$dd]/) {	# should start with / or .
+    if ($INIT_FILE !~ /^[.$dd$dd]/) {	# should start with / or .
 	$INIT_FILE = ".$dd$INIT_FILE";	# so that value of @INC has no effect
     }
     if (-f $INIT_FILE && -r _) {
