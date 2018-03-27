@@ -112,6 +112,8 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- polski.perl: no translation until \prefixing command 
+#
 #--------- v2018
 #
 #		- config: avoid warning "untie attempted"

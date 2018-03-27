@@ -6,12 +6,7 @@
 
 package polski;
 
-sub main'polski_translation {
-    local($_) = @_;
-    s/(^|\G|[^\\<]|[^\\](\\\\)+)\/\s*('|`|;SPMlt;|;SPMgt;|\\|-|\/|=|\||[aelxcnoszAELXCNOSZ])/
-	$1.&get_polski_specials($3)/geom;
-    $_;
-}
+sub main'polski_translation { @_[0] }
 
 sub get_polski_specials {
     local($char) = @_;
@@ -40,7 +35,7 @@ package main;
 
 if (defined &addto_languages) { &addto_languages('polski') };
 
-&do_require_extension('latin2');
+&do_require_extension('unicode');
 
 sub polski_titles {
 #    $toc_title = "Spis rzeczy";
@@ -107,12 +102,20 @@ sub do_cmd_PLSlash {
     $_;
 }
 
+# translation to run on text appearing between \prefixing and \nonprefixing
+sub polski_prefix_translation {
+    local($_) = @_;
+    s/(^|\G|[^\\<]|[^\\](\\\\)+)\/\s*('|`|;SPMlt;|;SPMgt;|\\|-|\/|=|\||[aelxcnoszAELXCNOSZ])/
+	$1.&polski'get_polski_specials($3)/geom;
+    $_;
+}
+
 sub do_cmd_prefixing {
     local($_) = @_;
     my $end_polski;
     $latex_body .= "\n\\prefixing\n";
     s/^(.*?)(\\nonprefixing|$)/$end_polski=$2;
-	&polski_translation($1).$end_polski/es;
+	&polski_prefix_translation($1).$end_polski/es;
     $_;
 }
 
