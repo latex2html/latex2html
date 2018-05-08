@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- perl 5.26: unescaped brace
 #		- polski.perl: no translation until \prefixing command 
 #
 #--------- v2018

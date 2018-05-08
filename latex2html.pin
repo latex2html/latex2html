@@ -1927,7 +1927,7 @@ sub mark_string {
         }
         $_[0] = join('',$before,"\{",$after) if($change);
         # MRO: mark one opening brace
-	if($_[0] =~ s/^([^{]*){/push(@processedB,$1);join('',$O,++$id,$C)/eos) {
+	if($_[0] =~ s/^([^{]*)\{/push(@processedB,$1);join('',$O,++$id,$C)/eos) {
 	    $before=''; $after=$';
         }
         if ($after =~ /\}/) { 
