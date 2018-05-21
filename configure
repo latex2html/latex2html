@@ -66,7 +66,15 @@ ac_help="$ac_help
 ac_help="$ac_help
   --with-dvipng=PATH      path/name of the dvipng executable"
 ac_help="$ac_help
+  --with-pdfcrop=PATH     path/name of the pdfcrop executable"
+ac_help="$ac_help
   --with-latex=PATH       path/name of the LaTeX executable"
+ac_help="$ac_help
+  --with-pdflatex=PATH    path/name of the pdfLaTeX executable"
+ac_help="$ac_help
+  --with-lualatex=PATH    path/name of the LuaLaTeX executable"
+ac_help="$ac_help
+  --with-dvilualatex=PATH path/name of the dviLuaLaTeX executable"
 ac_help="$ac_help
   --with-pnmcrop=PATH     path/name of the pnmcrop executable"
 ac_help="$ac_help
@@ -842,6 +850,14 @@ else
   with_dvipng=${DVIPNG:-}
 fi
 
+# Check whether --with-pdfcrop or --without-pdfcrop was given.
+if test "${with_pdfcrop+set}" = set; then
+  withval="$with_pdfcrop"
+  :
+else
+  with_pdfcrop=${PDFCROP:-}
+fi
+
 # Check whether --with-latex or --without-latex was given.
 if test "${with_latex+set}" = set; then
   withval="$with_latex"
@@ -850,12 +866,36 @@ else
   with_latex=${LATEX:-}
 fi
 
+# Check whether --with-pdflatex or --without-pdflatex was given.
+if test "${with_pdflatex+set}" = set; then
+  withval="$with_pdflatex"
+  :
+else
+  with_pdflatex=${PDFLATEX:-}
+fi
+
+# Check whether --with-lualatex or --without-lualatex was given.
+if test "${with_lualatex+set}" = set; then
+  withval="$with_lualatex"
+  :
+else
+  with_lualatex=${LUALATEX:-}
+fi
+
+# Check whether --with-dvilualatex or --without-dvilualatex was given.
+if test "${with_dvilualatex+set}" = set; then
+  withval="$with_dvilualatex"
+  :
+else
+  with_dvilualatex=${DVILUALATEX:-}
+fi
+
 # Check whether --with-pnmcrop or --without-pnmcrop was given.
 if test "${with_pnmcrop+set}" = set; then
   withval="$with_pnmcrop"
   :
 else
-  with_latex=${PNMCROP:-}
+  with_pnmcrop=${PNMCROP:-}
 fi
 
 # Check whether --with-tex or --without-tex was given.
@@ -1198,8 +1238,12 @@ $PERL $srcdir/config/config.pl \
   GS=$with_gs \
   DVIPS=$with_dvips \
   DVIPNG=$with_dvipng \
+  PDFCROP=$with_pdfcrop \
   LATEX=$with_latex \
-  PNMCROP=$with_latex \
+  PDFLATEX=$with_pdflatex \
+  LUALATEX=$with_lualatex \
+  DVILUALATEX=$with_dvilualatex \
+  PNMCROP=$with_pnmcrop \
   TEX=$with_tex \
   INITEX=$with_initex \
   KPSEWHICH=$with_kpsewhich \

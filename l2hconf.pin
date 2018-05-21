@@ -21,8 +21,13 @@ $PERL = '@PERL@';
 #  Give the paths to latex and dvips on your system:
 #
 $LATEX = '@LATEX@';	# LaTeX
+$PDFLATEX = '@PDFLATEX@';	# pdfLaTeX
+$LUALATEX = '@LUALATEX@';	# LuaLaTeX
+$DVILUALATEX = '@DVILUALATEX@';	# dviLuaLaTeX
 $DVIPS = '@DVIPS@';	# dvips
 $DVIPNG = '@DVIPNG@';	# dvipng
+$PDFCROP = '@PDFCROP@';	# pdfcrop
+$GS = '@GS@';	# GhostScript
 
 
 #  give these too, to use the  -ldump  feature
@@ -657,7 +662,7 @@ $DONT_INCLUDE = "2up:psfig:epsf:texinfo:pictex:" .
     "alltt:amstex:anysize:array:article:bm:book:bookman:" .
     "boxedminipage:cite:comment:courier:dcolumn:doc:eepic:" .
     "enumerate:epic:fleqn:float:floatflt:fullpage:index:" .
-    "inputenc:isolatin1:leqno:letter:llncs:makeidx:" .
+    "inputenc:luainputenc:isolatin1:leqno:letter:llncs:makeidx:" .
     "multicol:psfig:report:shadow:shapepar:showidx:" .
     "slides:syntonly:sz:tabls:times:twoside:umlaut:umlaute";
 

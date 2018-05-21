@@ -15,6 +15,20 @@ package main;
 
 if (defined &addto_languages) { &addto_languages('english') };
 
+sub do_cmd_englishTeX {
+    # Just in case we pass things to LaTeX
+    $default_language = 'english';
+    $latex_body .= "\\englishTeX\n";
+    @_[0];
+}
+
+sub do_cmd_originalTeX {
+    # Just in case we pass things to LaTeX
+    $default_language = 'original';
+    $latex_body .= "\\originalTeX\n";
+    @_[0];
+}
+
 sub english_titles {
     $toc_title = "Contents";
     $lof_title = "List of Figures";
@@ -43,7 +57,8 @@ sub english_titles {
     $child_name = "Subsections";
     $info_title = "About this document ...";
     $also_name = "see also";
-    $see_name = "see";
+    $english_see_name = "see";
+    $see_name = $english_see_name;
   #  names in navigation panels
     $next_name = "Next";
     $up_name = "Up";
@@ -53,20 +68,23 @@ sub english_titles {
     $headto_name = "To";
     $cc_name = "cc";
 
-    @Month = ('', 'January', 'February', 'March', 'April', 'May',
-	      'June', 'July', 'August', 'September', 'October',
-	      'November', 'December');
+    @english_Month = ('', 'January', 'February', 'March', 'April', 'May',
+		      'June', 'July', 'August', 'September', 'October',
+		      'November', 'December');
+    @Month = @english_Month;
     $GENERIC_WORDS = "and|the|of|for|by|a|an|to";
 }
 
 
 sub english_today {
     local($today) = &get_date();
-    $today =~ s|(\d+)/0?(\d+)/|$2 $Month[$1] |;
+    $today =~ s|(\d+)/0?(\d+)/|$2 $english_Month[$1] |;
     join('',$today,$_[0]);
 }
 
-
+sub english_seename {
+  join('',$english_see_name,$_[0]);
+}
 
 # use'em
 &english_titles;

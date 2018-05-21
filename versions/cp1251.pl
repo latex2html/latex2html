@@ -469,7 +469,8 @@ sub russian_titles {
     $child_name = "Подсекции";
     $info_title = "Об этом документе ...";
     $also_name = "см. также";
-    $see_name = "см.";
+    $russian_see_name = "см.";
+    $see_name = $russian_see_name;
   #  names in navigation panels
     $next_name = "След.";
     $up_name = "Выше";
@@ -479,16 +480,21 @@ sub russian_titles {
     $headto_name = "вх.";
     $cc_name = "исх.";
 
-    @Month = ('', 'января', 'февраля', 'марта', 'апреля', 'мая',
-	      'июня', 'июля', 'августа', 'сентября', 'октября',
-	      'ноября', 'декабря');
+    @russian_Month = ('', 'января', 'февраля', 'марта', 'апреля', 'мая',
+		      'июня', 'июля', 'августа', 'сентября', 'октября',
+		      'ноября', 'декабря');
+    @Month = @russian_Month;
     $GENERIC_WORDS = "и|или|для|из|в|на";
 }
 
 sub russian_today {
     local($today) = &get_date();
-    $today =~ s|(\d+)/0?(\d+)/|$2 $Month[$1] |;
+    $today =~ s|(\d+)/0?(\d+)/|$2 $russian_Month[$1] |;
     join('',$today,$_[0],' г.');
+}
+
+sub russian_seename {
+  join('',$russian_see_name,$_[0]);
 }
 
 1;

@@ -818,6 +818,45 @@ if($opt{'IMAGES'}) {
   }
 }
   
+$newcfg{'PDFLATEX'} = '';
+
+if($opt{'IMAGES'}) {
+  my $pdflatex = &find_prog(&get_name('PDFLATEX',1));
+  if($pdflatex) {
+    $newcfg{'PDFLATEX'} = $pdflatex;
+  }
+  else {
+    $opt{'IMAGES'} = 0;
+    &warn_no_images();
+  }
+}
+  
+$newcfg{'LUALATEX'} = '';
+
+if($opt{'IMAGES'}) {
+  my $lualatex = &find_prog(&get_name('LUALATEX',1));
+  if($lualatex) {
+    $newcfg{'LUALATEX'} = $lualatex;
+  }
+  else {
+    $opt{'IMAGES'} = 0;
+    &warn_no_images();
+  }
+}
+  
+$newcfg{'DVILUALATEX'} = '';
+
+if($opt{'IMAGES'}) {
+  my $dvilualatex = &find_prog(&get_name('DVILUALATEX',1));
+  if($dvilualatex) {
+    $newcfg{'DVILUALATEX'} = $dvilualatex;
+  }
+  else {
+    $opt{'IMAGES'} = 0;
+    &warn_no_images();
+  }
+}
+  
 $newcfg{'INITEX'} = '';
 
 if($opt{'IMAGES'}) {
@@ -1017,6 +1056,15 @@ if($opt{'IMAGES'}) {
   my $dvipng = &find_prog(&get_name('DVIPNG',1));
   if($dvipng) {
     $newcfg{'DVIPNG'} = $dvipng;
+  }
+}
+
+$newcfg{'PDFCROP'} = '';
+
+if($opt{'IMAGES'}) {
+  my $pdfcrop = &find_prog(&get_name('PDFCROP',1));
+  if($pdfcrop) {
+    $newcfg{'PDFCROP'} = $pdfcrop;
   }
 }
 

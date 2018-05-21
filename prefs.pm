@@ -182,9 +182,12 @@ $prefs{'IMAGES'} = 'yes';
 # the TeX executable
 $prefs{'TEX'} = 'tex';
 
-# the LaTeX executable
+# the variants for LaTeX executable
 # needed for image generation
 $prefs{'LATEX'} = 'latex';
+$prefs{'PDFLATEX'} = 'pdflatex';
+$prefs{'LUALATEX'} = 'lualatex';
+$prefs{'DVILUALATEX'} = 'dvilualatex';
 
 # the initex executable
 $prefs{'INITEX'} = 'initex';
@@ -248,6 +251,9 @@ $prefs{'PNG'} = 1;
 
 # The dvipng executable.
 $prefs{'DVIPNG'} = 'dvipng';
+
+# the pdfcrop executable needed for cropping PDF images
+$prefs{'PDFCROP'} = 'pdfcrop';
 
 # Ghostscript
 # this is one of the crucial points. Use the most recent version of gs

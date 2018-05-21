@@ -76,7 +76,7 @@ sub do_cmd_No {join('', "&#8470;", $_[0]);}
 sub do_cmd_russianTeX {
     # Just in case we pass things to LaTeX
     $default_language = 'russian';
-    $latex_body .= "\\RussianTeX\n";
+    $latex_body .= "\\russianTeX\n";
     $encoding=$russian_encoding;
     @_[0];
 }

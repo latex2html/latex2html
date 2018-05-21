@@ -286,6 +286,9 @@ unless(GetOptions(\%opt, # all non-linked options go into %opt
         'mkdir',                \$MKDIR,
         'use_dvipng!',          \$USE_DVIPNG,
         'dvipng_dpi=s',         \$DVIPNG_DPI,
+        'use_pdftex!',          \$USE_PDFTEX,
+        'use_luatex!',          \$USE_LUATEX,
+        'use_luadvi!',          \$USE_LUADVI,
         'address=s',            \$ADDRESS,
         'noaddress',
         'subdir!',
@@ -528,6 +531,9 @@ $TMP_PREFIX = "l2h" unless ($TMP_PREFIX);
 $DVIPS_SAFE = 1;
 
 $CHARSET = $charset || 'iso-8859-1';
+
+# This will be set to 1 by polyglossia.perl to mark its own presence
+$POLYGLOSSIA = 0;
 
 $DVIPNG_DPI=200 unless $DVIPNG_DPI;
 ####################################################################
@@ -3816,8 +3822,21 @@ sub make_image_file {
 
 sub make_latex_images{
     &close_dbm_database if $DJGPP;
-    local($dd) = $dd; $dd = '/' if ($dd eq "\\"); 
-    local($latex_call) = "$LATEX .$dd${PREFIX}images.tex";
+    local($dd) = $dd; $dd = '/' if ($dd eq "\\");
+    local($latex_call);
+    if ($USE_PDFTEX) {
+      print "\nTranslating images to PDF using pdflatex ...\n";
+      $latex_call = "$PDFLATEX .$dd${PREFIX}images.tex";
+    } elsif ($USE_LUATEX) {
+      print "\nTranslating images to PDF using lualatex ...\n";
+      $latex_call = "$LUALATEX .$dd${PREFIX}images.tex";
+    } elsif ($USE_LUADVI) {
+      print "\nTranslating images to DVI using dvilualatex ...\n";
+      $latex_call = "$DVILUALATEX .$dd${PREFIX}images.tex";
+    } else {
+      print "\nTranslating images to DVI using latex ...\n";
+      $latex_call = "$LATEX .$dd${PREFIX}images.tex";
+    }
     print "$latex_call\n" if (($DEBUG)||($VERBOSITY > 1));
     L2hos->syswait($latex_call);
     &open_dbm_database if $DJGPP;
@@ -3831,13 +3850,27 @@ sub make_off_line_images {
 
 	&make_latex_images();
 
-	print $USE_DVIPNG? "\nGenerating images using dvipng ...\n":
-    "\nGenerating postscript images using dvips ...\n";
+	if ($USE_PDFTEX || $USE_LUATEX)	{
+	  print $USE_DVIPNG? "\nTransforming PDF images using gs/png16m ...\n":
+	    "\nTransforming PDF images to postscript using gs/ps2write ...\n";
+	} else {
+	  print $USE_DVIPNG? "\nGenerating images using dvipng ...\n":
+	    "\nGenerating postscript images using dvips ...\n";
+	}
 	&process_log_file(".$dd${PREFIX}images.log"); # Get eqn size info
 	unless ($LaTeXERROR) {
-    	    local($dvips_call) = 
-	$USE_DVIPNG? "$DVIPNG -D $DVIPNG_DPI -o$TMPDIR$dd$IMAGE_PREFIX%d.png -T tight .${dd}${PREFIX}images.dvi" :
-		"$DVIPS -S1 -i $DVIPSOPT -o$TMPDIR$dd${IMAGE_PREFIX} .${dd}${PREFIX}images.dvi";
+	    local($dvips_call);
+	    if ($USE_PDFTEX || $USE_LUATEX) {	# pdfcrop --hires --gscmd $GS
+	      $dvips_call = "$PDFCROP " . ($DEBUG ? '--debug ' : '')
+		. ".${dd}${PREFIX}images.pdf;$GS -q -dNOPAUSE -dNO_PAUSE -dBATCH -dSAFER "
+		. ($USE_DVIPNG ?
+		   "-sDEVICE=png16m -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images-crop.pdf" :
+		   "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf\n");
+	    } else {
+    	    $dvips_call = $USE_DVIPNG?
+	      "$DVIPNG -D $DVIPNG_DPI -o$TMPDIR$dd$IMAGE_PREFIX%d.png -T tight .${dd}${PREFIX}images.dvi" :
+	      "$DVIPS -S1 -i $DVIPSOPT -o$TMPDIR$dd${IMAGE_PREFIX} .${dd}${PREFIX}images.dvi";
+	    }
 	    print "$dvips_call\n" if (($DEBUG)||($VERBOSITY > 1));
 
 	    &close_dbm_database if $DJGPP;
@@ -3887,26 +3920,49 @@ sub make_images {
     if ( $latex_body =~ /newpage/) {
 	print "\n";
 	if ($LATEX_DUMP) {
+	    local ($plain_latex) = !($USE_PDFTEX || $USE_LUATEX || $USE_LUADVI);
 	    # dump a pre-compiled format
-	    if (!(-f "${PREFIX}images.fmt")) {
+	    if (!(-f "${PREFIX}images.fmt") && $plain_latex) {
 	        print "$INILATEX .$dd${PREFIX}images.tex\n" 
 		    if (($DEBUG)||($VERBOSITY > 1));
 	        print "dumping ${PREFIX}images.fmt\n"
 		    unless ( L2hos->syswait("$INILATEX .$dd${PREFIX}images.tex"));
 	    }
 	    local ($img_fmt) = (-f "${PREFIX}images.fmt");
-	    if ($img_fmt) {
+	    if ($img_fmt && $plain_latex) {
                 # use the pre-compiled format
 	        print "$TEX \"&.$dd${PREFIX}images\" .$dd${PREFIX}images.tex\n"
 		    if (($DEBUG)||($VERBOSITY > 1));
 	        L2hos->syswait("$TEX \"&.$dd${PREFIX}images\" .$dd${PREFIX}images.tex");
-	    } elsif (-f "${PREFIX}images.dvi") {
+	    } elsif (-f "${PREFIX}images.dvi" && $plain_latex) {
 	        print "${PREFIX}images.fmt failed, proceeding anyway\n";
 	    } else {
-	        print "${PREFIX}images.fmt failed, trying without it\n";
-		print "$LATEX .$dd${PREFIX}images.tex\n"
+	        if ($plain_latex) {
+		  print "${PREFIX}images.fmt failed, trying without it\n";
+		} else {
+		  print "${PREFIX}images.fmt cannot be created with pdftex or luatex\n";
+		}
+		if ($USE_PDFTEX) {
+		  print "\nTranslating images to PDF using pdflatex ...\n";
+		  print "$PDFLATEX .$dd${PREFIX}images.tex\n"
 		    if (($DEBUG)||($VERBOSITY > 1));
-		L2hos->syswait("$LATEX .$dd${PREFIX}images.tex");
+		  L2hos->syswait("$PDFLATEX .$dd${PREFIX}images.tex");
+		} elsif ($USE_LUATEX) {
+		  print "\nTranslating images to PDF using lualatex ...\n";
+		  print "$LUALATEX .$dd${PREFIX}images.tex\n"
+		    if (($DEBUG)||($VERBOSITY > 1));
+		  L2hos->syswait("$LUALATEX .$dd${PREFIX}images.tex");
+		} elsif ($USE_LUADVI) {
+		  print "\nTranslating images to DVI using dvilualatex ...\n";
+		  print "$DVILUALATEX .$dd${PREFIX}images.tex\n"
+		    if (($DEBUG)||($VERBOSITY > 1));
+		  L2hos->syswait("$DVILUALATEX .$dd${PREFIX}images.tex");
+		} else {
+		  print "\nTranslating images to DVI using latex ...\n";
+		  print "$LATEX .$dd${PREFIX}images.tex\n"
+		    if (($DEBUG)||($VERBOSITY > 1));
+		  L2hos->syswait("$LATEX .$dd${PREFIX}images.tex");
+		}
 	    }
 	} else { &make_latex_images() }
 #	    local($latex_call) = "$LATEX .$dd${PREFIX}images.tex";
@@ -3925,13 +3981,27 @@ sub make_images {
             if(-e $img_path && !-e $img);
     }
     elsif ((!$NOLATEX) && ($latex_body =~ /newpage/) && !($LaTeXERROR)) {
-	print $USE_DVIPNG? "\nGenerating images using dvipng ...\n":
-    "\nGenerating postscript images using dvips ...\n";
+	if ($USE_PDFTEX || $USE_LUATEX)	{
+	  print $USE_DVIPNG? "\nTransforming PDF images using gs/png16m ...\n":
+	    "\nTransforming PDF images to postscript using gs/ps2write ...\n";
+	} else {
+	  print $USE_DVIPNG? "\nGenerating images using dvipng ...\n":
+	    "\nGenerating postscript images using dvips ...\n";
+	}
 	$IMAGE_PREFIX =~ s/^_//o if ($TMPDIR);
 
-	local($dvips_call) = 
-	$USE_DVIPNG? "$DVIPNG -D $DVIPNG_DPI -T tight -o$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images.dvi" :
-		"$DVIPS -S1 -i $DVIPSOPT -o$TMPDIR$dd$IMAGE_PREFIX .${dd}${PREFIX}images.dvi\n";
+	local($dvips_call);
+	if ($USE_PDFTEX || $USE_LUATEX) {	# pdfcrop --hires --gscmd $GS
+	  $dvips_call = "$PDFCROP " . ($DEBUG ? '--debug ' : '')
+	    . ".${dd}${PREFIX}images.pdf;$GS -q -dNOPAUSE -dNO_PAUSE -dBATCH -dSAFER "
+	    . ($USE_DVIPNG ?
+	       "-sDEVICE=png16m -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images-crop.pdf" :
+	       "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf\n");
+	} else {
+	  $dvips_call = $USE_DVIPNG?
+	    "$DVIPNG -D $DVIPNG_DPI -T tight -o$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images.dvi" :
+	    "$DVIPS -S1 -i $DVIPSOPT -o$TMPDIR$dd$IMAGE_PREFIX .${dd}${PREFIX}images.dvi\n";
+	}
 	print $dvips_call if (($DEBUG)||($VERBOSITY > 1));
 	
 	if ((($PREFIX=~/\./)||($TMPDIR=~/\./)) && not($DVIPS_SAFE)) {
@@ -6945,7 +7015,9 @@ sub make_latex{
     do {
 	if ($ISOLATIN_CHARS) { $INPUTENC = $INPUTENC || 'latin1' };
 	$preamble .= "\n\\usepackage[".$INPUTENC."]\{inputenc\}\n";
-	} unless ($preamble =~ /\\inputenc/);
+	} unless ($preamble =~ /\\inputenc/    ||
+		  $preamble =~ /\\luainputenc/ ||
+		  $POLYGLOSSIA);      # inputenc is meaningless for polyglossia
 
     $aux_preamble = '' unless (($aux_preamble)&&($contents =~ /\\(hyper)?(ref|cite)/));
 
@@ -12721,6 +12793,22 @@ sub default_today {
     join('',$today,$_[0]);
 }
 
+sub do_cmd_seename {
+    local($lang);
+    if ($PREAMBLE) {
+	$lang = $TITLES_LANGUAGE || $default_language ;
+    } else {
+	$lang = $current_language || $default_language ;
+    }
+    local($seename) = $lang . '_seename';
+    if (defined &$seename) { join('', eval "&$seename()", $_[0]) }
+    else { join('', &default_seename(), $_[0]) }
+}
+
+sub default_seename {
+  join('',$see_name,$_[0]);
+}
+
 sub do_cmd_textbackslash { join('','&#92;', $_[0]);}
 sub do_cmd_textbar { join('','|', $_[0]);}
 sub do_cmd_textless { join('',';SPMlt;', $_[0]);}
@@ -17041,6 +17129,10 @@ S<[ B<->(B<no>)B<local_icons> ]>
 S<[ B<->(B<no>)B<scalable_fonts> ]>
 S<[ B<->(B<no>)B<images_only> ]>
 S<[ B<->(B<no>)B<show_section_numbers> ]>
+S<[ B<->(B<no>)B<use_dvipng> ]>
+S<[ B<->(B<no>)B<use_pdftex> ]>
+S<[ B<->(B<no>)B<use_luatex> ]>
+S<[ B<->(B<no>)B<use_luadvi> ]>
 S<[ B<->(B<no>)B<show_init> ]>
 S<[ B<-init_file> I<Perl_file> ]>
 S<[ B<-up_url> I<up_URL> ]>
@@ -17377,7 +17469,25 @@ is shown using the default symbol rather than the section number.
 
 =item B<->(B<no>)B<use_dvipng>
 
-MISSING_DESCRIPTION
+For intermediate DVI images produced by latex or dvilualatex:
+translate them with dvipng instead of dvips.
+For intermediate PDF images produced by pdflatex or lualatex:
+translate them with GhostScript png16m driver instead of ps2write driver.
+
+=item B<->(B<no>)B<use_pdftex>
+
+Generate intermediate images with pdflatex instead of plain latex.
+Produced PDF output will then be translated into images with GhostScript.
+
+=item B<->(B<no>)B<use_luatex>
+
+Generate intermediate images with lualatex instead of plain latex.
+Produced PDF output will then be translated into images with GhostScript.
+
+=item B<->(B<no>)B<use_luadvi>
+
+Generate intermediate images with dvilualatex instead of plain latex.
+Produced DVI output will then be translated into images with dvips or dvipng.
 
 =item B<->(B<no>)B<show_init>
 

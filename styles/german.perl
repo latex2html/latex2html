@@ -213,7 +213,8 @@ sub german_titles {
     $child_name = "Unterabschnitte";
     $info_title = "&Uuml;ber dieses Dokument ...";
     $also_name = "siehe auch";
-    $see_name = "siehe";
+    $german_see_name = "siehe";
+    $see_name = $german_see_name;
   #  names in navigation panels
     $next_name = "N&auml;chste Seite";
     $up_name = "Aufw&auml;rts";
@@ -224,9 +225,10 @@ sub german_titles {
     $headto_name = "An";
     $cc_name = "Verteiler";
 
-    @Month = ('', 'Januar', 'Februar', 'M&auml;rz', 'April', 'Mai',
-	      'Juni', 'Juli', 'August', 'September', 'Oktober',
-	      'November', 'Dezember');
+    @german_Month = ('', 'Januar', 'Februar', 'M&auml;rz', 'April', 'Mai',
+		     'Juni', 'Juli', 'August', 'September', 'Oktober',
+		     'November', 'Dezember');
+    @Month = @german_Month;
 
     local($uuml,$Uuml) = (&iso_map('u','uml'),&iso_map('U','uml'));
     $GENERIC_WORDS =
@@ -241,8 +243,12 @@ sub german_titles {
 #JCL introduced &get_date
 sub german_today {
     local($today) = &get_date;
-    $today =~ s|(\d+)/0?(\d+)/|$2. $Month[$1] |;
+    $today =~ s|(\d+)/0?(\d+)/|$2. $german_Month[$1] |;
     join('',$today,$_[0]);
+}
+
+sub german_seename {
+  join('',$german_see_name,$_[0]);
 }
 
 # ... and use it.
