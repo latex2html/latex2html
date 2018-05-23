@@ -112,8 +112,6 @@ ac_help="$ac_help
 ac_help="$ac_help
   --with-tifftopnm=PATH    path/name of the tifftopnm executable"
 ac_help="$ac_help
-  --with-picttoppm=PATH    path/name of the picttoppm executable"
-ac_help="$ac_help
   --with-anytopnm=PATH    path/name of the anytopnm executable"
 ac_help="$ac_help
   --with-bmptopnm=PATH    path/name of the bmptopnm executable"
@@ -1034,14 +1032,6 @@ else
   with_tifftopnm=${TIFFTOPNM:-}
 fi
 
-# Check whether --with-picttoppm or --without-picttoppm was given.
-if test "${with_picttoppm+set}" = set; then
-  withval="$with_picttoppm"
-  :
-else
-  with_picttoppm=${PICTTOPPM:-}
-fi
-
 # Check whether --with-anytopnm or --without-anytopnm was given.
 if test "${with_anytopnm+set}" = set; then
   withval="$with_anytopnm"
@@ -1264,7 +1254,6 @@ $PERL $srcdir/config/config.pl \
   JPEGTOPNM=$with_jpegtopnm \
   PNGTOPNM=$with_pngtopnm \
   TIFFTOPNM=$with_tifftopnm \
-  PICTTOPPM=$with_picttoppm \
   ANYTOPNM=$with_anytopnm \
   BMPTOPPM=$with_bmptoppm \
   PCXTOPNM=$with_pcxtopnm \
@@ -1279,8 +1268,8 @@ if test "$?" != "0"; then
   exit 1
 fi
 
-# this is used to get the values from the config file
-eval `perl -w -e 'use cfgcache; foreach(keys %cfg) { print qq($_='"'"'$cfg{$_}'"'"'\n);}'`
+# this was used to get the values from the config file
+# eval `perl -w -e 'require "./cfgcache.pm"; foreach(keys %cfgcache::cfg) { print qq($_='"'"'$cfgcache::cfg{$_}'"'"'\n);}'`
 
 
 

@@ -56,7 +56,6 @@ $cfg{'PERL'} = q|perl|;
 $cfg{'PERLFOOTER'} = '__END__';
 $cfg{'PERLHEADER'} = q" -*- perl -*- -w\n";
 $cfg{'PERLSCRIPTDIR'} = q'/usr/bin'; # not used with TeXlive
-$cfg{'PICTTOPPM'} = q|picttoppm|;
 $cfg{'PK_GENERATION'} = q|0|;
 $cfg{'PNMBLACK'} = q||;
 $cfg{'PNMCAT'} = q|pnmcat|;

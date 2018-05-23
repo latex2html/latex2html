@@ -342,9 +342,6 @@ $prefs{'PNGTOPNM'} = 'pngtopnm';
 # the tifftopnm executable for converting TIFF images to portable form
 $prefs{'TIFFTOPNM'} = 'tifftopnm';
 
-# the picttoppm executable for converting PICT images to portable form
-$prefs{'PICTTOPPM'} = 'picttoppm';
-
 # the anytopnm executable for converting arbitrary images to portable form
 $prefs{'ANYTOPNM'} = 'anytopnm';
 

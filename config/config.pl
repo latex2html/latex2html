@@ -1711,22 +1711,6 @@ if(1) {
 }
 
 # --------------------------------------------------------------------------
-# PICTTOPPM
-# --------------------------------------------------------------------------
-# used in  graphics-support.perl  for handling \includegraphics options
-
-$newcfg{'PICTTOPPM'} = '';
-
-if(1) {
-  my $picttoppm = &find_prog(&get_name('PICTTOPPM',1));
-  if($picttoppm) {
-    $newcfg{'PICTTOPPM'} = $picttoppm;
-  } else {
-     &warn_no_image_type('pict');
-  }
-}
-
-# --------------------------------------------------------------------------
 # ANYTOPNM
 # --------------------------------------------------------------------------
 # used in  graphics-support.perl  for handling \includegraphics options
