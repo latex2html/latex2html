@@ -4627,7 +4627,7 @@ sub balance_tags {
     $save_tags = join(',',@save_open_tags) if (@save_open_tags);
     $open_tags = join(',',@$open_tags_R) if (@$open_tags_R);
     if ($open_tags eq $save_tags) { return(); }
-    if ($save_tags =~ s/^$open_tags//) {
+    if ($save_tags =~ s/^\Q$open_tags\E//) {
 	@reopen_tags = split (',',$');
     } else {
 	@reopen_tags = @save_open_tags;
@@ -4637,7 +4637,7 @@ sub balance_tags {
 	    $declarations{$tag_cmd} =~ m|</.*$|;
 	    $tags .= $& unless ($` =~ /^<>$/);
 	    $open_tags = join(',',@$open_tags_R) if (@$open_tags_R);
-	    last if ( $save_tags =~ s/^$open_tags/
+	    last if ( $save_tags =~ s/^\Q$open_tags\E/
 		     @reopen_tags = split (',',$');''/e);
 	}
     }
