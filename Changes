@@ -112,6 +112,10 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- Support for packages luainputenc and polyglossia
+#		- Support for picture generation via pdflatex, lualatex
+#		  or dvilualatex (options -use_pdftex, -use_luatex,
+#		  -use_luadvi correspondingly)
 #		- perl 5.26: unescaped brace
 #		- polski.perl: no translation until \prefixing command 
 #

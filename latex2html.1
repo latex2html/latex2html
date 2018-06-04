@@ -531,6 +531,20 @@ dvips followed by gs.  This method produces better alignment of
 math formulas which extend significantly above or below
 the line of text in which they are contained.
 .TP
+.B -use_pdftex
+Generate intermediate images with pdflatex instead of plain latex.
+Produced PDF output will then be translated into images with GhostScript.
+Useful for pdflatex documents which cannot be translated by latex.
+.TP
+.B -use_luatex
+Generate intermediate images with lualatex instead of plain latex.
+Produced PDF output will then be translated into images with GhostScript.
+Useful for lualatex documents which cannot be translated by latex or pdflatex.
+.TP
+.B -use_luadvi
+Generate intermediate images with dvilualatex instead of plain latex.
+Useful for dvilualatex documents which cannot be translated by latex.
+.TP
 .B -ascii_mode
 Same as setting:
 .I $ASCII_MODE = $EXTERNAL_IMAGES = 1;

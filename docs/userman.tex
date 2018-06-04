@@ -712,6 +712,42 @@ The dvipng method also eliminates the ugly crop
 marks that appear with 12pt documents.
 It does not respect the \fn{\$MATH\_SCALE\_FACTOR} option.
 
+\index{use-pdftex}%
+\item [ -use\_pdftex \label{cs_use_pdftex}]
+Use the pdflatex program followed by pdfcrop and gs to generate images,
+rather than latex followed by dvips.  This method can be useful for
+pdfLaTeX documents which cannot be translated by latex.
+This method can sometimes produce slightly better alignment
+of math formulas and eliminate ugly crop marks.
+It does not respect the \fn{\$MATH\_SCALE\_FACTOR} option.
+
+This method uses the pdfwrite GhostScript driver by default.
+If called together with the -use\_dvipng option, it will use
+the png16m driver and produce slightly different math alignment.
+
+\index{use-luatex}%
+\item [ -use\_luatex \label{cs_use_luatex}]
+Use the lualatex program followed by pdfcrop and gs to generate images,
+rather than latex followed by dvips.  This method can be useful for
+LuaLaTeX documents which cannot be translated by latex or pdflatex.
+This method can sometimes produce slightly better alignment
+of math formulas and eliminate ugly crop marks.
+It does not respect the \fn{\$MATH\_SCALE\_FACTOR} option.
+
+This method uses the pdfwrite GhostScript driver by default.
+If called together with the -use\_dvipng option, it will use
+the png16m driver and produce slightly different math alignment.
+
+An example of using the -use\_luatex option can be seen
+on the file \texttt{tests/polyglossia.tex}.
+
+\index{use-luadvi}%
+\item [ -use\_luadvi \label{cs_use_luadvi}]
+Use the dvilualatex program instead of latex to generate images.
+This method can be useful for dvilualatex documents which cannot
+be translated by latex.
+It can be combined with the -use\_dvipng option as usually.
+
 \index{ascii-mode}% 
 \index{browser!character-based}%
 \item [ -ascii\_mode \label{cs_asciimode}]
