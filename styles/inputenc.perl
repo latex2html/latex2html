@@ -42,11 +42,6 @@ sub load_language_support {
 
     if ( require($file) ) {
         print STDERR "\nLoading $file";
-	if ($charset =~ /^utf\-\d$/) {
-	    $PREV_CHARSET = $CHARSET;
-	    $CHARSET = "iso-10646";
-	    &make_unicode_map;
-	};1;
     } else {
         print STDERR "\n*** could not load support for $enc encoding ***\n"; 0;
     }
@@ -113,7 +108,7 @@ sub do_inputenc_korean{&no_language_support('korean');}
 
 sub do_inputenc_utf7{&load_language_support('unicode');}
 sub do_inputenc_utf8{&load_language_support('unicode');}
-
+sub do_inputenc_utf8x{&load_language_support('unicode');}
 
 sub do_inputenc_cp1252{&load_language_support('cp1252');}
 sub do_inputenc_decmulti{&load_language_support('decmulti');}

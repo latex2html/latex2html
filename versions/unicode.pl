@@ -43,7 +43,7 @@ $CHARSET = $PREV_CHARSET if ($PREV_CHARSET);
 %unicode_table = ();
 
 $CHARSET = "iso-10646" unless ($PREV_CHARSET);
-$charset = ($NO_UTF ? ($PREV_charset ? $PREV_charset : $CHARSET) : 'utf-8');
+#$charset = ($NO_UTF ? ($PREV_charset ? $PREV_charset : $CHARSET) : 'utf-8');
 %unicode_table = ();
 
 # This creates a table of translations to Unicode #bignumber; entities,

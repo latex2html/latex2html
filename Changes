@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- unicode input and output by default
 #		- Support for packages luainputenc and polyglossia
 #		- Support for picture generation via pdflatex, lualatex
 #		  or dvilualatex (options -use_pdftex, -use_luatex,
