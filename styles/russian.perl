@@ -10,28 +10,7 @@ package russian;
 
 print " [russian]";
 
-sub main'russian_translation { @_[0] }
-
-
-package main;
-
-if (defined &addto_languages) { &addto_languages('russian') };
-
-if ($CHARSET eq 'iso-10646' || $CHARSET eq 'utf-8' || $INPUTENC eq '') {
-  &load_language_support('utf8ru');	# UTF-8 cannot be treated universally
-}
-
-# use'em
-&russian_titles;
-
-$default_language = 'russian';
-$TITLES_LANGUAGE = "russian";
-
-
-
-
 sub main'russian_translation {
-#print $_;
     local($_) = @_;
     s/;SPMquot;\-\-\-/&#8212;/go;
     s/\-\-\-/&#8212;/go;
@@ -48,8 +27,7 @@ sub main'russian_translation {
     s/\`\`/&#147;/go;
     s/\'\'/&#148;/go;
     $_;
- }
-
+}
 
 sub make_next_char_rx {
     local($chars) = @_;
@@ -61,6 +39,10 @@ sub make_next_char_rx {
 package main;
 
 if (defined &addto_languages) { &addto_languages('russian') };
+
+if ($CHARSET eq 'iso-10646' || $CHARSET eq 'utf-8' || $INPUTENC eq '') {
+  &load_language_support('utf8ru');	# UTF-8 cannot be treated universally
+}
 
 sub do_cmd_flqq {&do_cmd_guillemotleft( @_) }
 sub do_cmd_frqq {&do_cmd_guillemotright(@_)}
@@ -87,4 +69,10 @@ sub do_cmd_originalTeX {
     $latex_body .= "\\originalTeX\n";
     @_[0];
 }
+
+# use'em
+&russian_titles;
+$default_language = 'russian';
+$TITLES_LANGUAGE = "russian";
+
 1;				# Not really necessary...

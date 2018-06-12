@@ -2103,7 +2103,7 @@ sub convert_iso_latin_chars {
     # ...now do the conversions
     ($before, $after, $funct) = ('','','');
     @case_processed = ();
-    if (/$language_rx/o) {
+    if (/$language_rx/) { # Must NOT use the //o option!!!
 	($next_language, $pattern, $before, $after) = (($2||$1), $&, $`, $');
 	$before = &convert_iso_latin_chars($before) if ($before);
 #	push(@case_processed, $pattern, $before);
@@ -7080,6 +7080,15 @@ sub make_latex{
     \lthtmltypeout{^^J:#1:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
         \hbox to \z@{\vrule width 1pt height\lthtmlCropMarkHeight 
 	   depth \lthtmlCropMarkDepth\hskip 5pt \box\lthtmlPageBox}}%
+\long\def\lthtmlTightFBox#1#2{%
+    \adjustnormalsize\setbox\lthtmlPageBox=\vbox\bgroup %
+    \let\ifinner=\iffalse \let\)\liih@math %
+    {\catcode`\_=8 #2}%
+    \@next\next\@currlist{}{\def\next{\voidb@x}}%
+    \expandafter\box\next\egroup %
+    \lthtmlCropMarkHeight=\ht\lthtmlPageBox \advance \lthtmlCropMarkHeight 6pt
+    \lthtmltypeout{^^J:#1:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
+    \copy\lthtmlPageBox}%
     \long\def\lthtmlinlinemathA#1#2\lthtmlindisplaymathZ{\lthtmlTightVBox{#1}{#2}}
     \def\lthtmlinlineA#1#2\lthtmlinlineZ{\lthtmlTightVBox{#1}{#2}}
     \long\def\lthtmldisplayA#1#2\lthtmldisplayZ{\lthtmlTightVBox{#1}{#2}}
@@ -7089,8 +7098,9 @@ sub make_latex{
     \long\def\lthtmldisplayB#1#2\lthtmldisplayZ{\\edef\preveqno{(\theequation)}%
         \lthtmlTightVBox{#1}{\let\@eqnnum\relax#2}}
     \long\def\lthtmlfigureA#1#2\lthtmlfigureZ{\let\@savefreelist\@freelist
+        \lthtmlTightFBox{#1}{#2}\global\let\@freelist\@savefreelist}
+    \long\def\lthtmlpictureA#1#2\lthtmlpictureZ{\let\@savefreelist\@freelist
         \lthtmlTightVBox{#1}{#2}\global\let\@freelist\@savefreelist}
-    \long\def\lthtmlpictureA#1#2\lthtmlpictureZ{\lthtmlfigureA{#1}{#2}\lthtmlfigureZ}
 </dvipng>
     "\\newcommand\\lthtmlhboxmathA{\\adjustnormalsize\\setbox\\sizebox=\\hbox\\bgroup\\kern.05em }%\n" .
     "\\newcommand\\lthtmlhboxmathB{\\adjustnormalsize\\setbox\\sizebox=\\hbox to\\hsize\\bgroup\\hfill }%\n" .
