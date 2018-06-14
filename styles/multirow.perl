@@ -28,12 +28,14 @@ sub do_cmd_multirow {
     #$valign = &missing_braces unless (
     #    (s/$next_pair_pr_rx/$valign=$2;''/eo)
     #    ||(s/$next_pair_rx/$valign=$2;''/eo));
-    $vspec = ' VALIGN="TOP"' if $valign;
-    if ($valign =~ /m/i) { $vspec =~ s/TOP/MIDDLE/ }
-    elsif ($valign =~ /b/i) { $vspec =~ s/TOP/BOTTOM/ }
+    #$vspec = ' VALIGN="TOP"' if $valign;
+    #if ($valign =~ /m/i) { $vspec =~ s/TOP/MIDDLE/ }
+    #elsif ($valign =~ /b/i) { $vspec =~ s/TOP/BOTTOM/ }
+    #
+    #$colspec =~ s/VALIGN="\w+"// if $vspec; # avoid duplicate tags
+    #$colspec =~ s/>$content_mark/$vspec ROWSPAN=$rowspan WIDTH=$pxs$&/;
 
-    $colspec =~ s/VALIGN="\w+"// if $vspec; # avoid duplicate tags
-    $colspec =~ s/>$content_mark/$vspec ROWSPAN=$rowspan WIDTH=$pxs$&/;
+    $colspec =~ s/>$content_mark/ ROWSPAN=$rowspan WIDTH=$pxs$&/;
 
     $text = &styled_text_chunk('SPAN','mrow','','','','', $_);
     $text = &translate_commands($text) if ($text =~ /\\/);
