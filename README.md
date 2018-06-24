@@ -33,13 +33,13 @@ The LaTeX2HTML translator:
    within a document but between documents which may reside in
    remote locations, 
  * translates accent and special character
-   commands to the equivalent ISO-LATIN-1
-   character set where possible, 
+   commands to the equivalent HTML
+   character codes where possible, 
  * recognizes hypertext links (to multimedia resources or arbitrary
    internet services such as sound/video/ftp/http/news) and links which
    invoke arbitrary program scripts, all expressed as LaTeX commands, 
  * recognizes conditional text which is intended only for the hypertext
-   version, or only for the paper (DVI) version, 
+   version, or only for the paper (PDF) version, 
  * can include raw HTML in a LaTeX document (e.g. in order to specify
    interactive forms), 
  * can deal sensibly with all the commands and environments commonly used 
@@ -78,55 +78,17 @@ The requirements for using LaTeX2HTML depend on the kind of
 translation it is asked to perform as follows: 
 
  1. LaTeX commands but without equations, figures, tables, etc. 
-    * Perl 5.003 (Perl5 Patch level 3) or higher.
-
-    * DBM or NDBM, the Unix DataBase Management system.
-      Alternatively, Perl5's SDBM DataBase system.
-      Do not care unless you get misconfiguration errors from LaTeX2HTML.
+    * Perl 5.003 or higher.
 
  2. LaTeX commands with equations, figures, tables, etc. 
    As above plus 
-    * latex (version 2e recommended but 2.09 acceptable), 
-    * dvips (version 5.516 or later) or dvipsk.
-      Version 5.62 or higher enhances the performance of image creation
-      with a *significant* speed-up. See l2conf.pm for this
-      after you are done with the installation.
-      Do not use the 'dvips -E' feature unless you have 5.62, else you
-      will get broken images.
+    * latex (pdflatex is used by default)
     * gs (Ghostscript version 4.03 or later),
-      with the ppmraw device driver, or even better pnmraw.
-      Upgrade to 5.10 or later if you want to go sure about seldom problems
-      with 4.03 to avoid (yet unclarified).
-    * The netpbm library (ftp://ftp.x.org/R5contrib/).
-      Netpbm 1 March 1994 is recommended. Check with 'pnmcrop -version'.
-      Some of the filters in those libraries are used during the postscript
-      to image conversion.
-    * If you want PNG images, you need pnmtopng (current version is 2.31).
-      It is not part of netpbm and requires libpng (version 0.89c) and 
-      libz (1.0.4). pnmtopng supports transparency and interlace mode.
-
- 3. Transparent inlined GIFs
-   If you dislike the gray background color of the generated inlined images
-   then the best thing you can do is get the netpbm library (instead of
-   the older pbmplus) OR install the giftrans filter by Andreas Ley
-   <ley@rz.uni-karlsruhe.de>. Version 1.10.2 is known to work without
-   problems but later versions should also be OK.
-
-   LaTeX2HTML also supports the shareware program giftool (by Home Pages, Inc.,
-   version 1.0), too. It can also create interlaced GIFs.
-
-Because by default the translator makes use of inlined images in the final
-HTML output, it would be better to have a graphical browser.
-If only a character based browser is available or
-if you want the generated documents to be more portable, then the translator
-can be used with the -ascii_mode option. 
-
-If ghostscript or netpbm library are not available
-it is still possible to use the translator with the -no_images option. 
-
-If you intend to use any of the special features of the translator 
-then you have to include the html.sty file in any LaTeX documents that
-use them. 
+    * The netpbm library 
+    * If you want to process documents written for dvi-producing latex
+      (as opposed to pdflatex), you need either dvips or dvipng.
+      These are available through the texlive distribution.
+ 
 
 
 Installation

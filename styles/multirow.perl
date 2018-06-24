@@ -35,7 +35,7 @@ sub do_cmd_multirow {
     #$colspec =~ s/VALIGN="\w+"// if $vspec; # avoid duplicate tags
     #$colspec =~ s/>$content_mark/$vspec ROWSPAN=$rowspan WIDTH=$pxs$&/;
 
-    $colspec =~ s/>$content_mark/ ROWSPAN=$rowspan WIDTH=$pxs$&/;
+    $colspec =~ s/>$content_mark/ ROWSPAN=$rowspan $&/;
 
     $text = &styled_text_chunk('SPAN','mrow','','','','', $_);
     $text = &translate_commands($text) if ($text =~ /\\/);

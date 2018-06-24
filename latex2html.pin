@@ -1,7 +1,5 @@
 #- -*- perl -*-
 #
-# $Id: latex2html.pin,v 1.71 2004/01/06 23:49:54 RRM Exp $
-#
 # Comprises patches and revisions by various authors:
 #   See Changes, the log file of LaTeX2HTML.
 #
@@ -142,9 +140,6 @@ if($ENV{'L2HCONFIG'}) {
 $TEX2HTMLV_SHORT = $RELEASE;
 $TEX2HTMLVERSION = "$TEX2HTMLV_SHORT ($REVISION)";
 $TEX2HTMLADDRESS = "http://www.latex2html.org/";
-$AUTHORADDRESS = "http://cbl.leeds.ac.uk/nikos/personal.html";
-#$AUTHORADDRESS2 = "http://www-math.mpce.mq.edu.au/%7Eross/";
-$AUTHORADDRESS2 = "http://www.maths.mq.edu.au/&#126;ross/";
 
 # Set $HOME to what the system considers the home directory
 $HOME = L2hos->home();
@@ -4198,7 +4193,7 @@ sub extract_image { # clean
         &close_dbm_database if $DJGPP;
         my $imgpixeloverem=72.27/(15*$DVIPNG_DPI);
         $imgpixeloverem *=$EXTRA_IMAGE_SCALE if $EXTRA_IMAGE_SCALE ;
-        print "imgpixeloverem=$imgpixeloverem\n";
+        print "imgpixeloverem=$imgpixeloverem\n" if ($VERBOSITY > 2);
         if ( $name =~ /figure|table/ and $FIGURE_SCALE_FACTOR) 
             {$imgpixeloverem*= $FIGURE_SCALE_FACTOR;}
         else {$imgpixeloverem*=  $MATH_SCALE_FACTOR if $MATH_SCALE_FACTOR}
@@ -4209,9 +4204,6 @@ sub extract_image { # clean
         if ($TRANSPARENT_COLOR){$transparent= "-transparent='#$TRANSPARENT_COLOR'"}
         else{$transparent =''}
         my $PPMTO=$IMAGE_TYPE=~m/gif/i? $PPMTOGIF : $PNMTOPNG;
-        unless (-f "strut.$IMAGE_TYPE"){
-            open STRUT, "|$PPMTO --quiet -transparent='#FFFFFF'  >strut.$IMAGE_TYPE";
-            print STRUT "P5\n1 3\n255\nEEE\n"; close STRUT}
         #L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -sides|tee $p-.ppm|$PPMTO{$IMAGE_TYPE} --quiet $transparent >img$new_num.$IMAGE_TYPE;");
         if ($name =~ /figure|table/) {
 	  L2hos->syswait("$PNGTOPNM $p.png|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
@@ -4222,11 +4214,11 @@ sub extract_image { # clean
         m/^(\d+) (\d+)$/m;
         $pxdepth{$name}=$2-($cropmarkheight{$name}*$DVIPNG_DPI/72.27);
         $edepth{$name}=$pxdepth{$name}*$imgpixeloverem;
-        print "edepth{$name}=$edepth{$name}\n";
+        print "edepth{$name}=$edepth{$name}\n" if ($VERBOSITY > 2);
         open PPM,"<$p-.ppm"; read(PPM,$_,30);close PPM;
         m/^(\d+) (\d+)$/m; 
         $ewidth{$name}=$1*$imgpixeloverem; $eheigth{$name}=$2*$imgpixeloverem;
-        print "ewidth{$name}=$ewidth{$name}\n";
+        print "ewidth{$name}=$ewidth{$name}\n" if ($VERBOSITY > 2);
         &open_dbm_database if $DJGPP;
 	} else {
 	    # RRM: deal with size data
@@ -6381,7 +6373,7 @@ sub do_env_theorem_type {
 		if ($current_depth <= $MAX_SPLIT_DEPTH + $MAX_LINK_DEPTH);
 	$section_info{join(' ',@curr_sec_id)} = \
 	    "$current_depth$delim$CURRENT_FILE$delim$title$delim";
-	$title = join('',"<A NAME=\"SECTION$section_tag\"><B>"
+	$title = join('',"<A ID=\"SECTION$section_tag\"><B>"
 		      , $title , "</B></A>" );
     } else {
 	if ($ctr) {
@@ -7243,7 +7235,6 @@ sub new_level {
 
 sub make_head_and_body {
     local($title,$body,$before_body) = @_;
-    local($DTDcomment) = '';
     local($version,$isolanguage) = ($HTML_VERSION, 'EN');
     local(%isolanguages) = (  'english',  'EN'   , 'USenglish', 'EN-US'
 			    , 'original', 'EN'   , 'german'   , 'DE'
@@ -7265,14 +7256,15 @@ sub make_head_and_body {
 	$title = &custom_TITLE_hook($title, $toc_sec_title);
     }
 
-    if ($DOCTYPE =~ /\/\/[\w\.]+\s*$/) { # language spec included
-	$DTDcomment = '<!DOCTYPE HTML PUBLIC "'. $DOCTYPE .'"';
-    } else {
-	$DTDcomment = '<!DOCTYPE HTML PUBLIC "'. $DOCTYPE .'//'
-	    . ($ISO_LANGUAGE ? $ISO_LANGUAGE : $isolanguage) . '"'
+    if (!defined $DTDcomment) {
+	if ($DOCTYPE =~ /\/\/[\w\.]+\s*$/) { # language spec included
+	    $DTDcomment = '<!DOCTYPE HTML PUBLIC "'. $DOCTYPE .'"';
+	} else {
+	    $DTDcomment = '<!DOCTYPE HTML PUBLIC "'. $DOCTYPE .'//'
+					     . ($ISO_LANGUAGE ? $ISO_LANGUAGE : $isolanguage) . '"'
+	}
+	$DTDcomment .= ($PUBLIC_REF ? "\n  \"".$PUBLIC_REF.'"' : '' ) . '>'."\n";
     }
-    $DTDcomment .= ($PUBLIC_REF ? "\n  \"".$PUBLIC_REF.'"' : '' ) . '>'."\n";
-
     $STYLESHEET = $FILE.".css" unless defined($STYLESHEET);
 
     my ($this_charset) = $charset;
@@ -7288,11 +7280,13 @@ sub make_head_and_body {
 
     join("\n", (($DOCTYPE)? $DTDcomment : '' )
 	,"<!--Converted with LaTeX2HTML $TEX2HTMLVERSION"
-	    . " -->\n<HTML>\n<HEAD>\n<TITLE>".$title."</TITLE>"
+	    . " -->\n<HTML lang=\"". ($ISO_LANGUAGE ? $ISO_LANGUAGE : $isolanguage)
+	 . "\">\n<HEAD>\n<TITLE>".$title."</TITLE>"
 	, &meta_information($title)
 	,  ($CHARSET && $HTML_VERSION ge "2.1" ? 
 	      "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=$this_charset\">" 
-	      : "" )
+	    : "" )
+        , "<META NAME=\"viewport\" CONTENT=\"width=device-width, initial-scale=1.0\">"
 	, $LATEX2HTML_META
 	, ($BASE ? "<BASE HREF=\"$BASE\">" : "" )
 	, $STYLESHEET_CASCADE
@@ -7328,6 +7322,24 @@ sub style_sheet {
 .MATH    { font-family: \"Century Schoolbook\", serif; }
 .MATH I  { font-family: \"Century Schoolbook\", serif; font-style: italic }
 .BOLDMATH { font-family: \"Century Schoolbook\", serif; font-weight: bold }
+DIV.equation { text-align-last:justify; white-space: nowrap; } /* place eq nos */
+SPAN.MATH { display:inline-block; }	/* don't stretch spaces inside eqn */
+
+.LEFT    { text-align:left; }
+.CENTER  { text-align:center; }
+.CENTER > * { margin:auto; }
+.RIGHT   { text-align:right; }
+.TOP     { vertical-align:top; }
+.MIDDLE  { vertical-align:middle; }
+.BOTTOM  { vertical-align:bottom; }
+
+IMG.LEFT    { float:left; }
+IMG.RIGHT   { float:right; }
+IMG.TOP     { vertical-align:top; }
+IMG.BOTTOM  { vertical-align:baseline; }
+
+DL.COMPACT > dt { float:left; padding-right: 1em; }
+BODY { width:90%; max-width:50em; margin:auto; text-align:justify; }
 
 /* implement both fixed-size and relative sizes */
 SMALL.XTINY		{ font-size : xx-small }
@@ -7350,8 +7362,13 @@ H5		{  }
 
 /* mathematics styles */
 DIV.displaymath		{ }	/* math displays */
-TD.eqno			{ }	/* equation-number cells */
-
+TD.eqno			{ width:0; }	/* equation-number cells */
+TABLE.PAD TD	{ padding:3px; }
+TABLE.BORDER TD	{ border:1px solid black; }
+TABLE.equation	{ width:100%; }	/* place eq nos at right/left edge */
+TABLE.equation > *	{ vertical-align:baseline; }
+TABLE.equation TD	{ white-space:nowrap; }
+TABLE		{ border-collapse: collapse; }
 
 /* document-specific styles come next */
 EOF
@@ -7534,7 +7551,6 @@ sub post_process {
 	    $link[$depth] = 0;
 	    ($UP, $UP_TITLE) =
 		&add_link($up_visible_mark, $file, @link);
-	    &add_link_tag('up', $file, @link);
 
 	    if ($CONTENTS_IN_NAVIGATION) {
 		($CONTENTS, $CONTENTS_LINK) = 
@@ -7670,8 +7686,8 @@ sub post_replace_markers {
 	} /egom;
 
     # absorb named anchor (e.g. from index-entry) into preceding or following anchor
-#    s/(<A NAME=\"[^\"]+\")>\&#160;<\/A>\s*\b?<A( HREF=\"[^\"]+\">)/$1$2/gom;
-#    s/(<A HREF=\"[^\"]+\")(>\s*\b?([^<]+|<([^>\/]+|\/[^>A]+)>\s*)*<\/A>)\s*\b?<A( NAME=\"[^\"]+\")>\&#160;<\/A>/$1$5$2/gom;
+#    s/(<A ID=\"[^\"]+\")>\&#160;<\/A>\s*\b?<A( HREF=\"[^\"]+\">)/$1$2/gom;
+#    s/(<A HREF=\"[^\"]+\")(>\s*\b?([^<]+|<([^>\/]+|\/[^>A]+)>\s*)*<\/A>)\s*\b?<A( ID=\"[^\"]+\")>\&#160;<\/A>/$1$5$2/gom;
 
     # clean up empty table cells
     s/(<TD[^>]*>)\s*(<\/TD>)/<TD>$2/gom;
@@ -7741,22 +7757,23 @@ sub add_link {
             $title = &purify($title);
 	    $title = &get_first_words($title, $WORDS_IN_NAVIGATION_PANEL_TITLES);
 	}
-	return ("\n".&make_href($file, $icon), &make_href($file, "$title"))
+	return ("\n".&make_named_href('', $file, $icon),
+		&make_named_href('', $file, "$title"))
     }
 #    elsif ($icon eq $up_visible_mark && $file eq $current_file && $EXTERNAL_UP_LINK) {
     elsif ($icon eq $up_visible_mark && $EXTERNAL_UP_LINK) {
- 	return ("\n".&make_href($EXTERNAL_UP_LINK, $icon),
-		&make_href($EXTERNAL_UP_LINK, "$EXTERNAL_UP_TITLE"))
+	return ("\n".&make_named_href('', $EXTERNAL_UP_LINK, $icon),
+		&make_named_href('', $EXTERNAL_UP_LINK, "$EXTERNAL_UP_TITLE"))
     }
     elsif (($icon eq $previous_visible_mark || $icon eq $previous_page_visible_mark)
     	&& $EXTERNAL_PREV_LINK && $EXTERNAL_PREV_TITLE) {
-	return ("\n".&make_href($EXTERNAL_PREV_LINK, $icon),
-		&make_href($EXTERNAL_PREV_LINK, "$EXTERNAL_PREV_TITLE"))
+	return ("\n".&make_named_href('', $EXTERNAL_PREV_LINK, $icon),
+		&make_named_href('', $EXTERNAL_PREV_LINK, "$EXTERNAL_PREV_TITLE"))
     }
     elsif (($icon eq $next_visible_mark ||  $icon eq $next_page_visible_mark)
     	&& $EXTERNAL_DOWN_LINK && $EXTERNAL_DOWN_TITLE) {
-	return ("\n".&make_href($EXTERNAL_DOWN_LINK, $icon),
-		&make_href($EXTERNAL_DOWN_LINK, "$EXTERNAL_DOWN_TITLE"))
+	return ("\n".&make_named_href('', $EXTERNAL_DOWN_LINK, $icon),
+		&make_named_href('', $EXTERNAL_DOWN_LINK, "$EXTERNAL_DOWN_TITLE"))
     }
     (&inactive_img($icon), "");
 }
@@ -8021,7 +8038,7 @@ sub add_real_child_links {
 	    $what = "<strong>$child_name</strong>";
 	}
 	$list_class = ' CLASS="ChildLinks"' if ($USING_STYLES);
-	$first = "$childlinks_start\n<A NAME=\"CHILD_LINKS\">$what<\/A>\n";
+	$first = "$childlinks_start\n<A ID=\"CHILD_LINKS\">$what<\/A>\n";
     } elsif ($exclude) {
 	# remove any surrounding braces
 	$exclude =~ s/^($O|$OP)\d+($C|$CP)|($O|$OP)\d+($C|$CP)$//g;
@@ -8033,7 +8050,7 @@ sub add_real_child_links {
     } else {
 	$list_class = ' CLASS="ChildLinks"' if ($USING_STYLES);
 	$first = "$childlinks_start\n"
-	    . ($star ? '':"<A NAME=\"CHILD_LINKS\">$anchor_mark<\/A>\n");
+	    . ($star ? '':"<A ID=\"CHILD_LINKS\">$anchor_mark<\/A>\n");
     }
     my $startlist, $endlist;
     $startlist = "<UL$list_class>" unless $CHILD_NOLIST;
@@ -8269,7 +8286,7 @@ sub do_cmd_htmlurl {
 	||(s/$next_pair_rx/$br_id=$1;$url=$2;''/e));
     $url =~ s/\\(html)?url\s*($O|$OP)([^<]*)\2/$3/;
     $url =~ s/\\?~/;SPMtilde;/og;
-    join('','<TT>', &make_href($url,$url), '</TT>', $_);
+    join('','<kbd>', &make_href($url,$url), '</kbd>', $_);
 }
 sub do_cmd_url { &do_cmd_htmlurl(@_) }
 
@@ -8292,7 +8309,7 @@ sub make_real_href {
     # this should not be here; else TOC, List of Figs, etc. fail:
     # $link =~ s/^\Q$CURRENT_FILE\E(\#)/$1/ unless ($SEGMENT||$SEGMENTED);
     $text = &simplify($text);
-    "<A NAME=\"tex2html$href_name\"$htarget\n  HREF=\"$link\">$text</A>";
+    "<A ID=\"tex2html$href_name\"$htarget\n  HREF=\"$link\">$text</A>";
 }
 
 sub make_href_noexpand { # clean
@@ -8307,7 +8324,7 @@ sub make_href_noexpand { # clean
     # catch \url or \htmlurl
     $link =~ s/\\(html)?url\s*(($O|$OP)\d+($C|$CP))([^<]*)\2/$5/;
     $link =~ s:(<TT>)?<A [^>]*>([^<]*)</A>(</TT>)?(([^<]*)|$):$2$4:;
-    "<A NAME=\"$name\"\n HREF=\"$link\">$text</A>";
+    "<A ID=\"$name\"\n HREF=\"$link\">$text</A>";
 }
 
 sub make_named_href {
@@ -8320,8 +8337,8 @@ sub make_named_href {
     $link =~ s/\\(html)?url\s*(($O|$OP)\d+($C|$CP))([^<]*)\2/$5/;
     $link =~ s:(<TT>)?<A [^>]*>([^<]*)</A>(</TT>)?(([^<]*)|$):$2$4:;
     if (!($name)) {"<A\n HREF=\"$link\">$text</A>";}
-    elsif ($text =~ /^\w/) {"<A NAME=\"$name\"\n HREF=\"$link\">$text</A>";}
-    else {"<A NAME=\"$name\"\n HREF=\"$link\">$text</A>";}
+    elsif ($text =~ /^\w/) {"<A ID=\"$name\"\n HREF=\"$link\">$text</A>";}
+    else {"<A ID=\"$name\"\n HREF=\"$link\">$text</A>";}
 }
 
 sub make_section_heading {
@@ -8342,28 +8359,28 @@ sub make_section_heading {
     $text =~ s/$OP\d+$CP//g;
     if (!($text)) {
 	# anchor to a single `.' only
-	$text = "<A NAME=\"SECTION$section_tag\">.</A>$anchors\n";
+	$text = "<A ID=\"SECTION$section_tag\">.</A>$anchors\n";
     } elsif ($anchors) {
 #	# put anchors immediately after, except if title is too long
 #	if ((length($text)<60 )&&(!($align)||($align =~/left/))) {
-#	    $text = "<A NAME=\"SECTION$section_tag\">$text</A>\n" . $anchors;
+#	    $text = "<A ID=\"SECTION$section_tag\">$text</A>\n" . $anchors;
 	# ...put anchors preceding the title, on a separate when left-aligned
 #	} else {
-	    $text = "<A NAME=\"SECTION$section_tag\">$anchor_invisible_mark</A>$anchors"
+	    $text = "<A ID=\"SECTION$section_tag\">$anchor_invisible_mark</A>$anchors"
 		. (!($align)||($align =~ /left/i ) ? "<BR>" : "") . "\n". $text;
 #	}
     } elsif (!($text =~ /<A[^\w]/io)) {
 	# no embedded anchors, so anchor it all
-	$text = "<A NAME=\"SECTION$section_tag\">\n" . $text . "</A>";
+	$text = "<A ID=\"SECTION$section_tag\">\n" . $text . "</A>";
     } else {
 	# there are embedded anchors; these cannot be nested
 	local ($tmp) = $text;
 	$tmp =~ s/<//o ;	# find 1st <
 	if ($`) {		# anchor text before the first < 
-#	    $text = "<A NAME=\"SECTION$section_tag\">\n" . $` . "</A>\n<" . $';
-	    $text = "<A NAME=\"SECTION$section_tag\">\n" . $` . "</A>";
+#	    $text = "<A ID=\"SECTION$section_tag\">\n" . $` . "</A>\n<" . $';
+	    $text = "<A ID=\"SECTION$section_tag\">\n" . $` . "</A>";
 	    $pre_anchors = "<" . $';
-	    if ($pre_anchors =~ /^(<A NAME=\"[^\"]+>${anchor_invisible_mark}<\/A>\s*)+$/) {
+	    if ($pre_anchors =~ /^(<A ID=\"[^\"]+>${anchor_invisible_mark}<\/A>\s*)+$/) {
 		$pre_anchors .= "\n"
 	    } else { $text .= $pre_anchors; $pre_anchors = '' }
 	} else {
@@ -8371,16 +8388,16 @@ sub make_section_heading {
 	    local($after,$tmp) = ($','');
 	    if ( $after =~ /^A[^\w]/i ) {	
 		# it is an anchor already, so need a separate line
-		$text = "<A NAME=\"SECTION$section_tag\">$anchor_invisible_mark</A><BR>\n$text";
+		$text = "<A ID=\"SECTION$section_tag\">$anchor_invisible_mark</A><BR>\n$text";
 	    } else {
 		# Is it a tag enclosing the anchor ?
 		$after =~ s/^(\w)*[\s|>]/$tmp = $1;''/eo;
 		if ($after =~ /<A.*<\/$tmp>/) {
 		    # it encloses an anchor, so use anchor_mark + break
-		    $text = "<A NAME=\"SECTION$section_tag\">$anchor_invisible_mark</A><BR>\n$text";
+		    $text = "<A ID=\"SECTION$section_tag\">$anchor_invisible_mark</A><BR>\n$text";
 		} else {
 		    # take up to the anchor
-		    $text =~ s/^(.*)<A([^\w])/"<A NAME=\"SECTION$section_tag\">$1<A$2"/oe;
+		    $text =~ s/^(.*)<A([^\w])/"<A ID=\"SECTION$section_tag\">$1<A$2"/oe;
 		}
 	    }
 	}
@@ -8467,7 +8484,7 @@ sub extract_captions {
 	$this = &translate_environments("$O$br_id$C$this$O$br_id$C");
 	$optional_caption = &translate_commands($this);
 
-	$cap_anchors .= "<A NAME=\"$key\">$anchor_mark</A>";
+	$cap_anchors .= "<A ID=\"$key\">$anchor_mark</A>";
 	$_ = $optional_caption || $caption;
 
 
@@ -8612,7 +8629,7 @@ sub add_real_toc {
 sub make_half_href {
     local($link) = $_[0];
     $href_name++;
-    "<A NAME=\"tex2html$href_name\"\n HREF=\"$link\">";
+    "<A ID=\"tex2html$href_name\"\n HREF=\"$link\">";
 }
 
 
@@ -8859,7 +8876,7 @@ sub replace_cross_ref_marks {
     local($label,$id,$ref_label,$ref_mark,$after,$name);
     local($invis) = "<tex2html_anchor_invisible_mark></A>";
 #    s/$cross_ref_mark#([^#]+)#([^>]+)>$cross_ref_mark/
-    s/$cross_ref_mark#([^#]+)#([^>]+)>$cross_ref_mark<\/A>(\s*<A( NAME=\"\d+)\">$invis)?/
+    s/$cross_ref_mark#([^#]+)#([^>]+)>$cross_ref_mark<\/A>(\s*<A( ID=\"\d+)\">$invis)?/
 	do {($label,$id) = ($1,$2); $name = $4;
 	    $ref_label = $external_labels{$label} unless
 		($ref_label = $ref_files{$label});
@@ -8886,7 +8903,7 @@ sub replace_cross_ref_marks {
 #RRM: this simply absorbs the name from the invisible anchor following, 
 #     when the anchor itself is not already named.
 sub extend_ref {
-    if ($ref_label !=~ /NAME=/) { $label .= "\"\n".$name  }
+    if ($ref_label !=~ /ID=/) { $label .= "\"\n".$name  }
 }
 
 sub remove_cross_ref_marks {
@@ -10032,22 +10049,22 @@ sub embed_image {
     my $imgID = '';
     my $urlimg = $url;
     my $ismap = $map ? " ISMAP" : '';
+    my $imagesize;	# sting in format "WIDTH=X HEIGHT=X"
     print "\nembedding $url for $name, with $altst\n" if ($VERBOSITY > 1);
 
     if (! ($NO_IMAGES || $PS_IMAGES)) {
 	# for over-scaled GIFs with pre-determined sizes	# RRM 11-9-96
-        my $size;
 	if (($width{$name})&&(($exscale)||($EXTRA_IMAGE_SCALE))) {
 	    $exscale = $EXTRA_IMAGE_SCALE unless ($exscale);
 	    if ($name =~ /inline|indisplay|entity|equation|math|eqn|makeimage/){
-		($size, $imgID) = &get_image_size($url, $exscale);
+		($imagesize, $imgID) = &get_image_size($url, $exscale);
 	    } else {
-		($size, $imgID) = &get_image_size($url,'');
+		($imagesize, $imgID) = &get_image_size($url,'');
 	    }
 	} else {
-	    ($size,$imgID) = &get_image_size($url,'');
+	    ($imagesize,$imgID) = &get_image_size($url,'');
 	}
-	$image_size{$url} = $size 
+	$image_size{$url} = $imagesize
 	    unless ((! $size) || ($size eq "WIDTH=\"0\" HEIGHT=\"0\""));
 	$url = &find_unique($url);
     }
@@ -10063,25 +10080,32 @@ sub embed_image {
     if ($exstr =~ s/height\s*=\s*(\"?)([^\s,]+)\1($|\s|,)//io) { 
 	my ($pxs,$len) = &convert_length($2);
 	$usersize .= " HEIGHT=\"$pxs\"";
+	$imagesize = $usersize;
     }
 
-    my $border = '';
-    $border = "\" BORDER=\"0"
-	unless (($HTML_VERSION < 2.2 )||($exstr =~ /BORDER/i));
+    my $border = '';	# default border is 0
 
-    my $aalign;
-    if (($name =~ /figure|table|displaymath\d+|eqnarraystar/)&&(!$align)) {
-    } elsif ($name =~ /displaymath_/) {
-	$aalign = "MIDDLE".$border;
+    my $aalign;		# css style
+    if ($USE_DVIPNG){
+        if ($ewidth{$name}){
+	    $aalign = sprintf ( "width: \%.2fem; vertical-align: \%.2fem; line-height: \%.2fem",
+				$ewidth{$name} ,-$edepth{$name},$eheigth{$name}+1 );
+	} else {
+	    $aalign = sprintf ( "vertical-align: \%.0fpx", -$pxdepth{$name} );
+	}
+    } elsif (($name =~ /figure|table|displaymath\d+|eqnarraystar/)&&(!$align)) {
     } elsif (($name =~ /(equation|eqnarray)($|\d)/)&&(!$align)) {
 	if ($HTML_VERSION >= 3.2) {
-	    $aalign =  ($EQN_TAGS eq "L") ? "RIGHT" : "LEFT";
+	    $aalign =  ($EQN_TAGS eq "L") ? "float:RIGHT;" : "float:LEFT;";
 	}
     } elsif ($name =~ /inline|display|entity|xy|diagram/ && $depth{$name} != 0) {
-	$aalign = "MIDDLE".$border;
+	# ALIGN=MIDDLE aligns middle of image to baseline of text
+	my ($height_pxs) = ($imagesize =~ /HEIGHT=\"(\d+)\"/i);
+	my $depth = $height_pxs*$depth{$name}/($height{$name}+$depth{$name});
+	$aalign = "vertical-align:-${depth}px".$border;
     } elsif ($name =~ /inpar/m) {
-	$aalign = "TOP".$border;
-    } else {  $aalign = "BOTTOM".$border }
+	$aalign = "vertical-align:TOP;".$border;
+    } else {  $aalign = "".$border }
 
     $aalign = "\U$align" if $align;
     my $ausemp = $usemap ? "\UUSEMAP=$usemap" : '';
@@ -10096,23 +10120,15 @@ sub embed_image {
 	$altst = "\n ALT=\"$altst\"";
     }
 
-    my ($extern_image_mark,$imagesize);
+    my ($extern_image_mark);
     if ($thumbnail) {
 	print "\nmaking thumbnail" if ($VERBOSITY > 1);
 	if (($image_size{$thumbnail}) = &get_image_size($thumbnail,'')) {
 	    $thumbnail = &find_unique($thumbnail);
-	    $imagesize = " ".$image_size{$thumbnail};
-	    if ($HTML_VERSION < 2.2 ) {
-		# put the WIDTH/HEIGHT information into the ALT string
-		# first removing the quotes
-		my ($noquotes) = $imagesize;
-		$noquotes =~ s/\"//g;
-		$altst =~ s/"$/\% $noquotes "/m;
-		$imagesize = '';
-	    }
+	    my $th_imagesize = " ".$image_size{$thumbnail};
 	    $extern_image_mark = join('',"<IMG"
-		, "\n$imagesize" 
-		, (($aalign) ? " ALIGN=\"$aalign\"" : '')
+		, "\n$th_imagesize"
+		, (($aalign) ? " STYLE=\"vertical-align:$aalign\"" : '')
 		, ("$aalign$imagesize" ? "\n" : '' )
 		, " SRC=\"$thumbnail\"$altst>");
 	}
@@ -10147,8 +10163,6 @@ sub embed_image {
 #	    }
 #	}
 
-	$imagesize = $image_size{$url};
-	$imagesize = $usersize if (($usersize)&&($HTML_VERSION > 2.1 ));
 	if ($HTML_VERSION < 2.2 ) {
 	    # put the WIDTH/HEIGHT information into the ALT string
 	    # first removing the quotes
@@ -10171,11 +10185,13 @@ sub embed_image {
 	### Patched by <hswan@perc.Arco.com>:  Fixed \htmladdimg 
 	if ( $imagesize || $name eq "external image" || $NO_IMAGES || $PS_IMAGES) {
 	    $imagesize = '' if ($HTML_VERSION < 2.2 );
+	    $imagesize = '' if ($aalign =~ /WIDTH/i);
 	    if ($border =~ s/^"//) { $border .= '"' };
 	    $result = join(''
 		   , "<IMG$imgID"
 		   , "\n", ($imagesize ? " $imagesize" : '')
-		   , (($aalign)? " ALIGN=\"$aalign\"" : $border)
+		#		   , (($aalign)? " ALIGN=\"$aalign\"" : $border)
+		   , " STYLE=\"$aalign\""
 		   , $ismap );
 	    if ($ausemp) { $result .= " $ausemp" }
 	    $result .= "\n" unless (($result =~ /\n *$/m)|| !$imagesize);
@@ -10184,20 +10200,6 @@ sub embed_image {
 	    $result .= ">";
 	}
     }
-    if ($USE_DVIPNG){
-        $result=~s/(alt)(\=\"[^"]+\")/$1$2 title$2/is;
-        $result=~s/(height|align)(\=\"[^"]+\")//igs;
-        if ($EXTRA_IMAGE_SCALE){
-        $result=~s/(width)(\=\"[^"]+\")/sprintf "style=\"width: \%.2fem; margin-bottom: \%.2fem; line-height: \%.2fem\"",
-        $ewidth{$name} ,-$edepth{$name},$eheigth{$name}+1/esi;
-        $result.=sprintf "<IMG SRC=\"strut.$IMAGE_TYPE\" ALIGN=\"MIDDLE\" WIDTH=\"1\" HEIGHT=\"\%.0f\">",45*$edepth{$name} if $edepth{$name}>.3}
-        else
-	#{$result=~s/(width)(\=\"[^"]+\")/sprintf "style=\"margin-bottom: \%.2f; line-height: \%.2fem\"",
-        #-$pxdepth{$name},$eheigth{$name}+1/esi;}}
-	{$result=~s/(width)(\=\"[^"]+\")/sprintf "style=\"margin-bottom: \%.0f\"", -$pxdepth{$name}/esi;
-	 my $strutcoeff = ($name =~ /figure|table/) ? 1 : 2;
-        $result.=sprintf "<IMG SRC=\"strut.$IMAGE_TYPE\" ALIGN=\"MIDDLE\" WIDTH=\"1\" HEIGHT=\"\%.0f\">",$strutcoeff*$pxdepth{$name}+3 if $pxdepth{$name}>3
-        }}
     join('',$anch1, $result, $anch2);
 }
 
@@ -10969,7 +10971,7 @@ sub do_cmd_section_helper {
 
     local ($align, $dummy)=&get_next_optional_argument;
     if (($align =~/^(left|right|center)$/i)&&($HTML_VERSION > 2.0)) {
-        $align = "ALIGN=\"$1\"";
+        $align = "class=\"$1\"";
     } elsif ($align) {
 	# data was meant to be a running-head !
 	$br_id = ++$global{'max_id'};
@@ -11323,7 +11325,7 @@ sub do_env_itemize_compact{
     $_ = &translate_environments($_) unless ($bullet);
 
 	s/\n?$item_description_rx\s*($labels_rx8)?\s*/"<\/td><\/tr>\n<tr><td align=\"right\" valign=\"top\">". 
-	    (($9)? "<A NAME=\"$9\">$1<\/A>" : $1 ) ."<\/td><td valign=\"top\">&nbsp;"/egm;
+	    (($9)? "<A ID=\"$9\">$1<\/A>" : $1 ) ."<\/td><td valign=\"top\">&nbsp;"/egm;
         s/\<\/td\>\<\/tr\>\n//s;
   "<table width=\"90%\">$_</td></tr></table>\n";
 }
@@ -11521,7 +11523,7 @@ sub do_env_trivlist {
 
     # include \label anchors from [...] items
     s/$item_description_rx\s*($labels_rx8)?\s*/
-	(($9)? "<A NAME=\"$9\">$1<\/A>" : $1 ) ."\n"/eg;
+	(($9)? "<A ID=\"$9\">$1<\/A>" : $1 ) ."\n"/eg;
     # remove unwanted space before \item s
     s/[ \t]*\\item\b/\\item/g;
     
@@ -11590,10 +11592,10 @@ sub do_env_description {
     $compact = "" unless $compact;
     if ($compact) {		# itemize/enumerate with optional labels
 	s/\n?$item_description_rx\s*($labels_rx8)?\s*/"\n<\/DD>\n<DT>". 
-	    (($9)? "<A NAME=\"$9\">$1<\/A>" : $1 ) ."<\/DT>\n<DD>"/egm;
+	    (($9)? "<A ID=\"$9\">$1<\/A>" : $1 ) ."<\/DT>\n<DD>"/egm;
     } else {
 	s/\n?$item_description_rx\s*($labels_rx8)?\s*/"\n<\/DD>\n<DT>". 
-	    (($9)? "<A NAME=\"$9\"><STRONG>$1<\/STRONG><\/A>" 
+	    (($9)? "<A ID=\"$9\"><STRONG>$1<\/STRONG><\/A>"
 	     : "<STRONG>$1<\/STRONG>") ."<\/DT>\n<DD>"/egm;
     }
     # and just in case the description is empty ...
@@ -11650,7 +11652,7 @@ sub list_helper {
 	}
 	$etag = "\n</DD>";
 	s/$item_description_rx[\r\s]*($labels_rx8)?[\r\s]*/"<DT>" .
-	    (($9)? "<A NAME=\"$9\">$1<\/A>" : $1 ) ."\n<DD>"/egm;
+	    (($9)? "<A ID=\"$9\">$1<\/A>" : $1 ) ."\n<DD>"/egm;
     } else {
 	$item_sep = "\n</LI>\n<LI>";
 	$etag = "\n</LI>";
@@ -11709,7 +11711,7 @@ sub do_env_figure {
     # allow caption-alignment to be variable
     local($cap_align);
     if ($FIGURE_CAPTION_ALIGN =~ /^(TOP|BOTTOM|LEFT|RIGHT)/i) {
-	$cap_align = join('', ' ALIGN="', $&, $','"')};  
+	$cap_align = join('', ' class="', $&, $','"')};  
 
     local($cap_env, $captions,$has_minipage) = ('figure','');
     if ((/\\begin\s*($O\d+$C)\s*(makeimage|minipage)\s*\1|\\docode/)||
@@ -11758,7 +11760,7 @@ sub do_env_figure {
 	    s/^\s*|\s*$//g;
 	    join (''
 		    , $above_display_space
-		    , "\n<DIV", ($halign ? " ALIGN=\"$halign\"" :'')
+		    , "\n<DIV", ($halign ? " class=\"$halign\"" :'')
 		    , '>', $anchors , $cap_anchors
 		    , "\n$table\n<CAPTION", $cap_align, '>'
 		    , $captions , "</CAPTION>\n<TR><TD>"
@@ -11774,7 +11776,7 @@ sub do_env_figure {
 	    } else {
 		join (''
 			, $above_display_space
-			, "\n<DIV ALIGN=\"$halign\">\n"
+			, "\n<DIV class=\"$halign\">\n"
 			, ($anchors ? "\n<P>$anchors</P>" : '')
 			, $_
 			, "\n</DIV>"
@@ -11785,7 +11787,7 @@ sub do_env_figure {
 	    if ($border||($attributes)||$env_id) {
 		join (''
 			, $above_display_space
-			, "\n<DIV", ($halign ? " ALIGN=\"$halign\"":'')
+			, "\n<DIV", ($halign ? " class=\"$halign\"":'')
 			, '>'
 			, &make_table( $border, $attribs, $anchors, '', $halign, $_ )
 			, "\n</DIV><BR"
@@ -11796,7 +11798,7 @@ sub do_env_figure {
 	    } else {  
 		join (''
 			, $above_display_space
-			, "\n<DIV", ($halign ? " ALIGN=\"$halign\"":'')
+			, "\n<DIV", ($halign ? " class=\"$halign\"":'')
 			, ">$anchors\n" , $_ , "\n</DIV><BR"
 			, (($HTML_VERSION > 3.1)? " CLEAR=\"ALL\"" :'')
 			, '>'
@@ -11811,12 +11813,12 @@ sub do_env_figure {
 	if ($captions) {
 	    join('', "\n<BR>\n", (($anchors) ? "$anchors" : '')
 		, "$cap_anchors\n$captions\n<BR>" 
-		, "\n<P", ($halign ? " ALIGN=\"$halign\"":'')
+		, "\n<P", ($halign ? " class=\"$halign\"":'')
 		, '>', $_ , "\n</P>");
 	} elsif ($halign) {
 	    join ('', "<BR>\n$anchors", $_ , "\n<BR>" )
 	} else {
-	    join('', "<BR>\n<P", ($halign ? " ALIGN=\"$halign\"":'')
+	    join('', "<BR>\n<P", ($halign ? " class=\"$halign\"":'')
 		, ">$anchors\n" , $_ , "\n</P><BR>");
 	}
     }
@@ -11844,7 +11846,7 @@ sub do_env_table {
     # allow caption-alignment to be variable
     local($cap_align);
     if ($TABLE_CAPTION_ALIGN =~ /^(TOP|BOTTOM|LEFT|RIGHT)/i) {
-	$cap_align = join('', ' ALIGN="', $&, $','"')};  
+	$cap_align = join('', ' ALIGN="', $&, $','"')};
 
     if ((/\\(begin|end)\s*($O\d+$C)\s*makeimage\s*\2/)||
 	    ($HTML_VERSION > 2.0 && (
@@ -11888,7 +11890,7 @@ sub do_env_table {
 	    local($table) = '<TABLE';
 	    if ($border) { $table .= " BORDER=\"$border\"" } # no checking !!
 	    $table .= ">";
-	    join ('', "<BR><P></P>\n<DIV$env_id ALIGN=\"$halign\">"
+	    join ('', "<BR><P></P>\n<DIV$env_id class=\"$halign\">"
 		, "$anchors$cap_anchors\n$table\n<CAPTION", $cap_align, '>'
 		, $captions , "</CAPTION>\n<TR><TD>"
 		, $_ , "</TD></TR>\n</TABLE>\n</DIV><P></P><BR>" )
@@ -11902,7 +11904,7 @@ sub do_env_table {
 		join ('', "<BR>\n$anchors", $_ , "\n<BR>" )
 	    }
         } else {
-            join ('', "<BR><P></P>\n<DIV$env_id ALIGN=\"CENTER\">$anchors\n", $_ , "\n</DIV><BR>" )
+            join ('', "<BR><P></P>\n<DIV$env_id class=\"CENTER\">$anchors\n", $_ , "\n</DIV><BR>" )
         }
     } else {
         # MRO: replaced $* with /m
@@ -11910,11 +11912,11 @@ sub do_env_table {
         s/\n$//m;
         if ($captions) {
             join('', "<BR>\n", (($anchors) ? "$anchors" : ''), "$cap_anchors\n$captions\n<BR>"
-                , "\n<P ALIGN=\"$halign\">", $_, "\n</P><BR>");
+                , "\n<P class=\"$halign\">", $_, "\n</P><BR>");
         } elsif ($halign) {
             join ('', "<BR><P></P>\n$anchors", $_ , "\n<P></P>" )
         } else {
-            join('', "<BR>\n<P ALIGN=\"CENTER\">$anchors\n", $_, "\n</P><BR>");
+            join('', "<BR>\n<P class=\"CENTER\">$anchors\n", $_, "\n</P><BR>");
         }
     }
 }
@@ -11948,7 +11950,7 @@ sub do_env_minipage {
     	(s/$next_pair_pr_rx/$width=$2;''/e)
     	||(s/$next_pair_rx/$width=$2;''/e));
     local($pxs,$len) = &convert_length($width,$MATH_SCALE_FACTOR) if $width;
-    $width = " WIDTH=\"$pxs\"";
+    $width = " style=\"width:$pxs;\"";
     
     local ( %mpfootnotes, $mpfootnotes ) unless ($MINIPAGE);
     local ( $border, $attribs, $footfile);
@@ -12032,10 +12034,13 @@ sub make_table {
 	, $minipage_caption
 	,'</CAPTION>') if ($minipage_caption);
     $end = "</TD></TR>\n</TABLE>";
-    $table = join('', "<TABLE$env_id"
-	, ((($caption)&&!($attribs =~/WIDTH/i)) ? " WIDTH=\"100\%\"" : '')
-	, ((($border)&&!($attribs =~/BORDER/i)) ? " BORDER=\"$border\"" : '')
-	);
+    $table = "<TABLE$env_id ";
+    if ($attribs !~ /STYLE/i) {
+	$table .= "STYLE=\"" .
+	    ((($caption)&&!($attribs =~/WIDTH/i)) ? " WIDTH:100\%;" : '') .
+	    ((($border)&&!($attribs =~/BORDER/i)) ? " BORDER:$border;" : '') .
+	    "\"";
+    }
     if ($attribs) {
 	if (!($attribs =~ /=/)) {
 	    $Tattribs = &parse_valuesonly($attribs,"TABLE");
@@ -12047,7 +12052,7 @@ sub make_table {
     print STDOUT "\nTABLE: $table>" if ($VERBOSITY >2 );
     $table .= ">".$caption."\n<TR><TD>";
     if ($extra_cell) {
-	local($sep) = "</TD></TR>\n<TR ALIGN=\"LEFT\">\n<TD>";
+	local($sep) = "</TD></TR>\n<TR CLASS=\"LEFT\">\n<TD>";
 	join ('', $div, $anchors, $table, $_ , $sep, $extra_cell, $end );
     } else {
 	join ('', $div, $anchors, $table, $_ , $end );
@@ -12079,9 +12084,8 @@ sub do_env_thebibliography {
     $dummy = &missing_braces unless (
 	(s/$next_pair_pr_rx/$dummy=$2;''/e)
 	||(s/$next_pair_rx/$dummy=$2;''/e));
-    # MRO: replaced $* with /m
-    s/^\s*$//gm; # Remove empty lines (otherwise will have paragraphs!)
-    s/^\s*//m;
+
+    s/^$par_rx\s*//s; # discard any \par before 1st item
 
     # Replace non-breaking spaces, particularly in author names.
 #    s/([^\\])~/$1 /g; # Replace non-breaking spaces.
@@ -12092,7 +12096,7 @@ sub do_env_thebibliography {
     # RRM: collect all anchors from initial \label and \index commands
     local($anchors) = &extract_anchors('',1);
     $_ = '<DD>'.$_ unless ($_ =~ /^\s*<D(T|D)>/);
-    $citations = join('',"<DL COMPACT>", $_, "</DL>");
+    $citations = join('',"<DL class=\"COMPACT\">", $_, "</DL>");
     $citations{$bbl_nr} = $citations;
     local($br_id);
     if ((defined &do_cmd_bibname)||$new_command{'bibname'}) {
@@ -12688,8 +12692,8 @@ sub do_cmd_maketitle {
     local($the_title) = '';
     local($alignc, $alignl);
     if ($HTML_VERSION > 2.1) {
-	$alignc = " ALIGN=\"CENTER\""; 
-	$alignl = " ALIGN=\"LEFT\""; 
+	$alignc = " class=\"CENTER\"";
+	$alignl = " class=\"LEFT\"";
 	$alignl = $alignc if ($MULTIPLE_AUTHOR_TABLE);
     }
     if ($t_title) {
@@ -13614,7 +13618,7 @@ sub do_real_cmd_footnote {
     $marker = &get_footnote_mark($MINIPAGE);
     local($last_word) = &get_last_word();
     local($href) = &make_href("$footfile#foot$br_id",$marker);
-    if ($href =~ /NAME="([^"]*)"/) { $anchor_name=$1 }
+    if ($href =~ /ID="([^"]*)"/) { $anchor_name=$1 }
     $last_word .= $marker unless ($anchor_name);
     &process_footnote($footnote,$cnt,$br_id,$last_word,$mark
 	      ,($MINIPAGE? $marker : '')
@@ -13840,8 +13844,8 @@ sub process_footnote {
 	elsif ($br_id =~ /fnm\d+/) {
 	    $mark = "$footnotes{$cnt}";
 	    $footnotes{$cnt} = "$br_id";
-#	    $footnotes .= "\n<DT>$sfoot_style<A NAME=\"foot$br_id\">..."
-	    $footnotes .= "\n<DT>$sfoot_style<A NAME=\"$br_id\">..."
+#	    $footnotes .= "\n<DT>$sfoot_style<A ID=\"foot$br_id\">..."
+	    $footnotes .= "\n<DT>$sfoot_style<A ID=\"$br_id\">..."
 		. $last_word . "</A>$efoot_style</DT>\n<DD>\n"
 		. $space . "\n</DD>";
 	    return;
@@ -13866,24 +13870,24 @@ sub process_footnote {
 
     # catch a \footnotemark *after* the \footnotetext
     if ((!$footnote)&&($last_word)&&(!$mini)) {
-#	$footnotes .= "\n<DT>$sfoot_style<A NAME=\"foot$br_id\">..."
-	$footnotes .= "\n<DT>$sfoot_style<A NAME=\"$br_id\">..."
+#	$footnotes .= "\n<DT>$sfoot_style<A ID=\"foot$br_id\">..."
+	$footnotes .= "\n<DT>$sfoot_style<A ID=\"$br_id\">..."
 	    . $last_word
 	    . "</A>$efoot_style</DT>\n<DD>\n" . $space . "\n</DD>";
 
     } elsif ($mini) {
 	if ($HTML_VERSION < 3.0) { $mini .= "." }
-	$mpfootnotes .= "\n<DD>$sfoot_style<A NAME=\"foot$br_id\">$mini</A> " .
+	$mpfootnotes .= "\n<DD>$sfoot_style<A ID=\"foot$br_id\">$mini</A> " .
 	    $footnote . $efoot_style . "\n</DD>\n";
     } elsif ($same_page) {
 	local($link,$text);
 	$same_page =~ s/:/$text=$`;$link=$';''/e;
 	$same_page = &make_named_href("","$CURRENT_FILE\#$link",$text) if($link);
-	$footnotes .= "\n<DT>$sfoot_style<A NAME=\"foot$br_id\">...$last_word</A>"
+	$footnotes .= "\n<DT>$sfoot_style<A ID=\"foot$br_id\">...$last_word</A>"
 	    . $same_page . $efoot_style . "</DT>\n<DD>" . $sfoot_style
 	    . $footnote . $efoot_style . "\n". $space . "\n</DD>";
     } else {
-	$footnotes .= "\n<DT>$sfoot_style<A NAME=\"foot$br_id\">...$last_word</A>"
+	$footnotes .= "\n<DT>$sfoot_style<A ID=\"foot$br_id\">...$last_word</A>"
 		. $efoot_style . "</DT>\n<DD>" . $sfoot_style
 		. $footnote . "$efoot_style\n" . $space . "\n</DD>";
     }
@@ -14044,7 +14048,7 @@ sub real_anchor_label {
 	$ref_files{$label} = $filename;
 	$noresave{$label} = 0; $changed = 1; }
     print "<LABEL: $label>" if ($VERBOSITY > 3);
-    join('',"<A NAME=\"$label\">$anchor_mark</A>",$context);
+    join('',"<A ID=\"$label\">$anchor_mark</A>",$context);
 }
 
 sub do_cmd_cite {
@@ -14183,14 +14187,14 @@ sub do_real_bibitem {
         #RRM: apply any special styles, as defined below
 	$label = &bibitem_style($label) if (defined &bibitem_style);
 	# Create an anchor around the citation
-	join('',"<P></P><DT><A NAME=\"$cite_key\">$label</A>\n<DD>", $_);
+	join('',"<DT><A ID=\"$cite_key\">$label</A>\n<DD>", $_);
 
     } else {
 	print "Cannot find bibitem labels: $label\n";
 
 	#RRM: apply any special styles, as defined below
 	$label = &bibitem_style($label) if (defined &bibitem_style);
-	join('',"<P></P><DT>$label\n<DD>", $_); # AFEB added this line
+	join('',"<DT>$label\n<DD>", $_); # AFEB added this line
     }
 }
 
@@ -14262,18 +14266,12 @@ sub default_textohtmlinfopage {
     $_ = ($INFO && $INFO =~ /^\d+$/
       ? join('', $close_all
 	, "<STRONG>$t_title</STRONG><P>\nThis document was generated using the\n"
-	, "<A HREF=\"$TEX2HTMLADDRESS\"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A>"
+	, "<A HREF=\"$TEX2HTMLADDRESS\">LaTeX2HTML</A>"
 	, " translator Version $TEX2HTMLVERSION\n"
-	, "<P>Copyright &#169; 1993, 1994, 1995, 1996,\n"
-	, "Nikos Drakos, \n"
-	, "Computer Based Learning Unit, University of Leeds.\n"
-	, "<BR>Copyright &#169; 1997, 1998, 1999,\n"
-	, "<A HREF=\"$AUTHORADDRESS2\">Ross Moore</A>, \n"
-	, "Mathematics Department, Macquarie University, Sydney.\n"
 	, "<P>The command line arguments were: <BR>\n "
-	, "<STRONG>latex2html</STRONG> <TT>$argv</TT>\n"
+	, "<kbd>latex2html $argv</kbd>\n"
 	, (($SHOW_INIT_FILE && ($INIT_FILE ne ''))?
-	   "\n<P>with initialization from: <TT>$INIT_FILE</TT>\n$init_file_mark\n" :'')
+	   "\n<P>with initialization from: <kbd>$INIT_FILE</kbd>\n$init_file_mark\n" :'')
 	, "<P>The translation was initiated on $address_data[1]"
 	, $open_all, $_)
       : join('', $close_all, "$INFO\n", $open_all, $_));
@@ -15406,11 +15404,11 @@ sub do_cmd_textbf { &styled_text_chunk('B','CLASS="textbf"'
 
 
 # this gives a separate ID for each instance
-sub do_cmd_texttt { &styled_text_chunk('TT','','font','','', '', @_); }
+#sub do_cmd_texttt { &styled_text_chunk('TT','','font','','', '', @_); }
 
 # this uses a single CLASS for all instances
-#sub do_cmd_textit { &styled_text_chunk('TT','CLASS="textit"'
-#		    ,'font-family','monospace', '', '', @_); }
+sub do_cmd_texttt { &styled_text_chunk('TT','CLASS="texttt"'
+		    ,'font-family','monospace', '', '', @_); }
 #
 # this gives a separate ID for each instance
 #sub do_cmd_textit { &styled_text_chunk('I','','font','style'
@@ -15731,13 +15729,12 @@ sub initialise {
     $OUT_NODE = 0;		# Used in making filenames of HTML nodes unique
     $eqno_prefix = '';		# default prefix on equation numbers
     ($O , $C, $OP, $CP) = ('<<' , '>>', '<#', '#>'); # Open/Close Markers
-    $href_name = 0;		# Used in the HREF NAME= field
+    $href_name = 0;		# Used in the HREF ID= field
     $wrap_toggle = 'end';
     $delim = '%:%';		# Delimits items of sectioning information
 				# stored in a string
 
     $LATEX2HTML_META = '<META NAME="Generator" CONTENT="LaTeX2HTML v'.$TEX2HTMLV_SHORT.'">'
-	. "\n<META HTTP-EQUIV=\"Content-Style-Type\" CONTENT=\"text/css\">"
 	      unless ($LATEX2HTML_META);
 
     $TeXname = (($HTML_VERSION ge "3.0")? "T<SMALL>E</SMALL>X" : "TeX");
@@ -15830,7 +15827,7 @@ sub initialise {
     # unicode by default
     &do_require_extension('unicode');
 
-    if ($HTML_VERSION =~ /(2.0|3.0|3.2|4.0|4.1)/) {
+    if ($HTML_VERSION =~ /(2.0|3.0|3.2|4.0|4.1|5.0)/) {
 	# Require the version specific file 
 	do { $_ = "$LATEX2HTMLVERSIONS${dd}html$1.pl";
 	     if (!(-f $_)) {  s/(\d).(\d.pl)$/$1_$2/ };
@@ -15838,10 +15835,11 @@ sub initialise {
 	     require $_ || die "\n*** Could not load $_ ***\n";
 	     print "\nHTML version: loading $_\n";
 	} unless ($HTML_VERSION =~ /2.0/);
-	$DOCTYPE = "-//".(($HTML_VERSION eq "2.0")? "IETF" : "W3C")
-	    . "//DTD HTML $HTML_VERSION"
-	    .(($HTML_VERSION eq "3.2")? " Final" : "")
-	    .(($HTML_VERSION eq "4.0")? " Transitional" : "");
+	if (!defined $DOCTYPE) {
+	    $DOCTYPE = "-//".(($HTML_VERSION eq "2.0")? "IETF" : "W3C")
+		. "//DTD HTML $HTML_VERSION"
+		.(($HTML_VERSION eq "3.2")? " Final" : "")
+	}
 
 	if ($HTML_OPTIONS) {
 	    local($ext);
@@ -15970,11 +15968,11 @@ sub initialise {
      'par', '<P></P>',
      'samepage', '',
 #     'centering', '<DIV ALIGN="CENTER"></DIV>',
-     'center', '<DIV ALIGN="CENTER"></DIV>',
-     'flushleft', '<DIV ALIGN="LEFT"></DIV>',
-     'raggedright', '<DIV ALIGN="LEFT"></DIV>',
-     'flushright', '<DIV ALIGN="RIGHT"></DIV>',
-     'raggedleft', '<DIV ALIGN="RIGHT"></DIV>',
+     'center', '<DIV class="CENTER"></DIV>',
+     'flushleft', '<DIV class="LEFT"></DIV>',
+     'raggedright', '<DIV class="LEFT"></DIV>',
+     'flushright', '<DIV class="RIGHT"></DIV>',
+     'raggedleft', '<DIV class="RIGHT"></DIV>',
      %declarations
     ) if ($HTML_VERSION > 2.0 );
 
@@ -17040,7 +17038,7 @@ sub make_real_index_entry {
     # Save the reference
     $str = "$str###" . ++$global{'max_id'}; # Make unique
     $index{$str} .= &make_half_href($this_file."#$br_id");
-    "<A NAME=\"$br_id\">$anchor_invisible_mark<\/A>";
+    "<A ID=\"$br_id\">$anchor_invisible_mark<\/A>";
 }
 
 sub image_message { # clean

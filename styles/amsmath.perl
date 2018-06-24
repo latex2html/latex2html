@@ -359,7 +359,7 @@ sub do_cmd_maketitle {
     local($after) = @_;
     local($the_title) = '';
     if ($t_title) {
-	$the_title = "<H1 ALIGN=CENTER>$t_title</H1>\n";
+	$the_title = "<H1 class=\"CENTER\">$t_title</H1>\n";
     } else { &write_warnings("This document has no title."); }
 
     if (($#authors > 0)||$MULTIPLE_AUTHOR_TABLE) {
@@ -370,15 +370,15 @@ sub do_cmd_maketitle {
     }
 
     if (($t_translator)&&!($t_translator=~/^\s*(($O|$OP)\d+($C|$CP))\s*\1\s*$/)) {
-	$the_title .= "<BR><P ALIGN=CENTER>Translated by $t_translator</P>\n";}
+	$the_title .= "<BR><P class=\"CENTER\">Translated by $t_translator</P>\n";}
     if (($t_date)&&!($t_date=~/^\s*(($O|$OP)\d+($C|$CP))\s*\1\s*$/)) {
-	$the_title .= "<BR><P ALIGN=CENTER><B>Date:</B> $t_date</P>\n";}
+	$the_title .= "<BR><P class=\"CENTER\"><B>Date:</B> $t_date</P>\n";}
     if ($t_keywords) {
-	$the_title .= "<BR><P><P ALIGN=LEFT><FONT SIZE=-1>".
-	    "Key words and phrases: $t_keywords</FONT></P>\n";}
+	$the_title .= "<BR><P><P class=\"LEFT\"><SMALL>".
+	    "Key words and phrases: $t_keywords</SMALL></P>\n";}
     if ($t_subjclass) {
-	$the_title .= "<BR><P><P ALIGN=LEFT><FONT SIZE=-1>".
-	    "1991 Mathematics Subject Classification: $t_subjclass</FONT></P>\n";}
+	$the_title .= "<BR><P><P class=\"LEFT\"><SMALL>".
+	    "1991 Mathematics Subject Classification: $t_subjclass</SMALL></P>\n";}
 
     join("\n", $the_title, "<HR>", $after);
 }
@@ -388,14 +388,14 @@ sub make_singleauthor_title{
 	$t_address,$t_email,$t_authorURL) = @_;
     my $the_title = '';
     if ($t_author) {
-	$the_title .= "<P ALIGN=CENTER><STRONG>$t_author</STRONG>\n";
+	$the_title .= "<P class=\"CENTER\"><STRONG>$t_author</STRONG>\n";
     } else { &write_warnings("There is no author for this document."); }
     if (($t_affil)&&!($t_affil=~/^\s*(($O|$OP)\d+($C|$CP))\s*\1\s*$/)) {
 	$the_title .= "<BR><I>$t_affil</I>\n";}
     if ($t_address&&!($t_address=~/^\s*(($O|$OP)\d+($C|$CP))\s*\1\s*$/)) {
-	$the_title .= "<BR><FONT SIZE=-1>$t_address</FONT>\n"}
+	$the_title .= "<BR><SMALL>$t_address</SMALL>\n"}
     if ($t_email&&!($t_email=~/^\s*(($O|$OP)\d+($C|$CP))\s*\1\s*$/)) {
-	$the_title .= "<BR><FONT SIZE=-1>$t_email</FONT></P>\n";
+	$the_title .= "<BR><SMALL>$t_email</SMALL></P>\n";
     } else { $the_title .= "</P>" }
     $the_title;
 }

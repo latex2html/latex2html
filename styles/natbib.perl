@@ -658,7 +658,7 @@ sub make_cite_index {
     local ($br_id,$cite_key) =@_;
     local ($index_key)="$cite_short{$cite_key} ($cite_year{$cite_key})";
     local ($sort_key)="$cite_short{$cite_key}$cite_year{$cite_key}$cite_key";
-#    local ($bib_label)="<A NAME=\"III${cite_key}\"<\/A>";
+#    local ($bib_label)="<A ID=\"III${cite_key}\"<\/A>";
     if (defined  &named_index_entry ) {
 	&named_index_entry($br_id,"$sort_key\@$index_key") }
     elsif ($br_id > 0) {
@@ -801,7 +801,7 @@ sub make_cite_reference {
 	} else {
 	    $label = '<STRONG>'.$label.'</STRONG>';
 	};
-	join('',"\n<DT><A NAME=\"$cite_key\">$label</A>\n<DD>",$_);
+	join('',"\n<DT><A ID=\"$cite_key\">$label</A>\n<DD>",$_);
     } else {
 # For Author-year citation: Don't print the label to the bibliography
 # Use the first line of the bib entry as description title instead
@@ -817,7 +817,7 @@ sub make_cite_reference {
 	    } else {
 		$nbefore = join('','<STRONG>',$nbefore,'</STRONG>');
 	    }
-	    join('',"\n<DT><A NAME=\"$cite_key\">", $nbefore
+	    join('',"\n<DT><A ID=\"$cite_key\">", $nbefore
 		 , "</A>\n<DD>", &translate_commands($nafter));
 	} else {
 	    $found= /(\\bibitem|\\harvarditem)/o;
@@ -832,7 +832,7 @@ sub make_cite_reference {
 		}
 #		print "\nBIBITEM:$nafter";
 #		$nafter =~ s/\s*<P>\s*<BR>\s*<P>\s*$/\n/s;
-		join('',"\n<DT><A NAME=\"$cite_key\">", $nbefore
+		join('',"\n<DT><A ID=\"$cite_key\">", $nbefore
 		    ,"</A>\n<DD>", $nafter );
 # No call to &translate_commands on $': Avoid recursion
 	    } else {
@@ -844,7 +844,7 @@ sub make_cite_reference {
 		    $_ = join('','<STRONG>',$_,'</STRONG>');
 		}
 		# remove extraneous space between items
-		join('',"\n<DT><A NAME=\"$cite_key\">", $_,"</A>\n<DD>",' ');
+		join('',"\n<DT><A ID=\"$cite_key\">", $_,"</A>\n<DD>",' ');
 	    };
 	};
     }
@@ -932,7 +932,7 @@ sub make_harvard_reference {
     if ($NUMERIC) {
 	#RRM: apply any special styles
 	$label = &bibitem_style($label) if (defined &bibitem_style);
-	join('',"\n<DT><A NAME=\"$cite_key\"><STRONG>$label</STRONG></A>\n<DD>",$_);
+	join('',"\n<DT><A ID=\"$cite_key\"><STRONG>$label</STRONG></A>\n<DD>",$_);
     } else {
 # For Author-year citation: Don't print the label to the bibliography
 # Difference to &make_cite_reference:
@@ -945,19 +945,19 @@ sub make_harvard_reference {
 # Look for the year followed by anything and a punctuation character or newline
 	local ($found)= /$numyear(.*?)[.,:;\n]/s;
 	if ($found) {
-	    join('',"\n<DT><A NAME=\"$cite_key\"><STRONG>",
+	    join('',"\n<DT><A ID=\"$cite_key\"><STRONG>",
 		 &translate_commands($`.$&),"</STRONG></A>\n<DD>", 
 # No call to &translate_commands on $': Avoid recursion
 		 $')
 	} else {
 	    $found= /(\\bibitem|\\harvarditem)/o;
 	    if ($found) {
-		join('',"\n<DT><A NAME=\"$cite_key\"><STRONG>",
+		join('',"\n<DT><A ID=\"$cite_key\"><STRONG>",
 		     &translate_commands($`),"</STRONG></A>\n<DD>",
 # No call to &translate_commands on $': Avoid recursion
 		     $');
 	    } else {
-		join('',"\n<DT><A NAME=\"$cite_key\"><STRONG>",
+		join('',"\n<DT><A ID=\"$cite_key\"><STRONG>",
 		     &translate_commands($_),"</STRONG></A>\n<DD>",' ');
 	    };
 	};
@@ -1407,12 +1407,12 @@ sub do_env_thebibliography {
 	last unless  (@bibitems);
 	$this_kind = shift (@bibitems).'item';
     }
-    $citations = join('',"\n<DL COMPACT>",$citations,"\n</DL>");
+    $citations = join('',"\n<DL class=\"COMPACT\">",$citations,"\n</DL>");
     $citations{$bbl_nr} = $citations;
     if (defined &do_cmd_bibname) {
 	$title = &translate_commands('\bibname');
     } else { $title = $bib_title }
-    $_ = join('','<P>' , "\n<H2><A NAME=\"SECTIONREF\">"
+    $_ = join('','<P>' , "\n<H2><A ID=\"SECTIONREF\">"
 	      , "$title</A>\n</H2>\n$bbl_mark#$bbl_nr#");
     $bbl_nr++ if $bbl_cnt > 1;
     $_;

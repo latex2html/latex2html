@@ -1363,7 +1363,6 @@ if($opt{'have_pstoimg'}) {
 		$newcfg{'PNMCROPOPT'} = ' -sides ';
 	    }
 	} else { $newcfg{'PNMCROPOPT'} = ' -sides '; }
-	$pnmcrop .= ' -verbose ' if ($major_vers >= 10 || $sub_vers > 10);
 	print "\n$pnmcrop";
 	$msg = 'there is nothing to crop'; $stat = '';
     } else {

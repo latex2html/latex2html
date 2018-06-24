@@ -30,12 +30,12 @@ $display_env_rx = join('|', $display_env_rx
 sub do_htmlmath_array {
     local($colspec) = @_;
     if (defined &do_env_array) {
-	join('', $comment, "<P ALIGN=\"CENTER\">$sbig"
+	join('', $comment, "<P class=\"CENTER\">$sbig"
 	    , $labels, "\n<MATH CLASS=\"EQNARRAY\">"
 	    , &do_env_array("$O$max_id${C}$colspec$O$max_id$C$_")
 	    , "</MATH>\n$ebig</P>" )
     } else {
-	join('', $comment, '<P ALIGN="CENTER">', $labels,
+	join('', $comment, '<P class="CENTER">', $labels,
 	    , &process_undefined_environment($env, $id , $_),'</P>')
     }
 }
@@ -56,15 +56,7 @@ sub set_math_size {
 
 sub set_math_valign {
     local($numbering) = @_;
-    if (($numbering)&&(/^\s*\\begin<([<#])(\d+)([#>])>($array_env_rx)/)) {
-    #RRM: align on the middle, if a array-environment follows...
-    #  (since aligning to the top/bottom of a table looks terrible)
-	" VALIGN=\"MIDDLE\""
-    } else {
-    #  ...otherwise align on the baseline, where possible
-	join(''," VALIGN=\"",
-	    ($NETSCAPE_HTML)? "BASELINE" : "MIDDLE","\"");
-    }
+    "";
 }
 
 sub get_eqn_number {
@@ -121,7 +113,7 @@ sub start_math_display {
 
 sub end_math_display {
     join('', @_ , ((($doimage)||!($outer_math))? '' : 
-	"</DIV>\n<BR CLEAR=\"ALL\">" ));
+	"</DIV>\n" ));
 }
 
 sub embed_display {
@@ -133,29 +125,29 @@ sub embed_display {
 
     # at the outermost level
     if (($border)||($attribs)) {
-	join('',"<BR>\n<DIV$math_class>\n"
+	join('',"<DIV$math_class>\n"
 	    , &make_table( $border, $attribs, '', '', '', @_ )
-	    , "\n<BR CLEAR=\"ALL\">");
+	    , "\n");
     } else { join('', "<P></P>", @_ , "<P></P>") }
 }
 
 $smdiv_rx = "<(BR|DIV)";
-$spdisplay = (($HTML_VERSION > 3.1)? "<DIV ":"<P "). "ALIGN=\"CENTER\">";
-$epdisplay = (($HTML_VERSION > 3.1)? "</DIV>\n":'')."<BR CLEAR=\"ALL\">\n<P>";
-$mdisp_width = " WIDTH=\"100%\"";
+$spdisplay = (($HTML_VERSION > 3.1)? "<DIV ":"<P "). "class=\"CENTER\">";
+$epdisplay = (($HTML_VERSION > 3.1)? "</DIV>\n":'')."";
+$mdisp_width = "";#" style=\"width:100%\"";
 $smarray = "<TABLE";
-$smarrayB = " CELLPADDING=\"0\"";
+$smarrayB = " ";	# padding:0; by default
 $emarray = "\n</TABLE>";
 $smrow = "\n<TR"; # must be followed by alignment or ">"
 $emrow = "</TR>";
 $emtag = ">";
-$smncell = "\n<TD NOWRAP";
+$smncell = "\n<TD ";
 $smcell = "\n<TD";
 $emcell = "</TD>";
-$mcalign = " ALIGN=\"CENTER\">";
-$mlalign = " ALIGN=\"LEFT\">";
-$mralign = " ALIGN=\"RIGHT\">";
-$mvalign = " VALIGN=\"MIDDLE\"";
+$mcalign = " style=\"text-align:center;\">";
+$mlalign = " style=\"text-align:left;\">";
+$mralign = " style=\"text-align:right;\">";
+$mvalign = " ";	#  class equation specifies style=\"vertical-align:baseline;\"
 $smlcell = $smncell.$mlalign;
 $smccell = $smncell.$mcalign;
 $smrcell = $smncell.$mralign;
@@ -163,8 +155,8 @@ $mnocell = "\n<TD>";
 $mspace = "\&nbsp;";
 $mdlim = $html_specials{'&'};
 
-$lseqno = "$eqno_class WIDTH=\"10\" ALIGN=\"LEFT\">\n";
-$rseqno = "$eqno_class WIDTH=\"10\" ALIGN=\"RIGHT\">\n";
+$lseqno = "$eqno_class style=\"text-align:left;\">\n";
+$rseqno = "$eqno_class style=\"text-align:right\">\n";
 
 
 # do these indirectly, so that they only over-ride the existing
@@ -216,7 +208,7 @@ sub process_env_equation {
 	$falign = (($EQN_TAGS =~ /L/)? 'LEFT' : 'RIGHT') if $numbered;
 	local($fsdisplay,$fedisplay) = ($spdisplay,$epdisplay);
 	if (!($fsdisplay =~ s/(ALIGN\s*=\s*\")[^\"]*\"/$1$falign\"/)) {
-	    $fsdisplay .= "<DIV$env_id ALIGN=\"$falign\">";
+	    $fsdisplay .= "<DIV$env_id class=\"$falign\">";
 	    $fedisplay = '</DIV>'.$epdisplay;
 	}
 	$_ = join('', $fsdisplay, $labels, $comment, $_, $fedisplay);
@@ -236,7 +228,7 @@ sub process_env_equation {
 #	}
 
 	($sarray, $erow, $earray, $sempty, $calign) = ( 
-	    $smarray.$env_id.$smarrayB.($numbered?$mdisp_width:'').$mcalign
+	    $smarray.$env_id.$smarrayB.($numbered?$mdisp_width:'').">"
 	    , $emrow , $emarray, $emcell.$mnocell, $mcalign );
 	$env_id = '';
 
@@ -353,7 +345,7 @@ sub process_env_multline {
 	$falign = (($EQN_TAGS =~ /L/)? 'LEFT' : 'RIGHT') if $numbered;
 	local($fsdisplay,$fedisplay) = ($spdisplay,$epdisplay);
 	if (!($fsdisplay =~ s/(ALIGN\s*=\s*\")[^\"]*\"/$1$falign\"/)) {
-	    $fsdisplay .= "<DIV ALIGN=\"$falign\">";
+	    $fsdisplay .= "<DIV class=\"$falign\">";
 	    $fedisplay = '</DIV>'.$epdisplay;
 	}
 	$_ = join('', $fsdisplay, $labels, $comment, $_, $fedisplay);
@@ -370,7 +362,7 @@ sub process_env_multline {
 	    $env_style{$env} = "" unless ($env_style{$env});
 	}
 	($sarray, $erow, $earray, $sempty, $calign) = ( 
-	    $smarray.$env_id.$smarrayB.($numbered?$mdisp_width:'').$mcalign
+	    $smarray.$env_id.$smarrayB.($numbered?$mdisp_width:'').">"
 	    , $emrow , $emarray, $emcell.$mnocell, $mlalign );
 	$env_id = '';
 
@@ -655,7 +647,7 @@ sub process_env_align{
 	$falign = (($EQN_TAGS =~ /L/)? 'LEFT' : 'RIGHT') if $numbered;
 	local($fsdisplay,$fedisplay) = ($spdisplay,$epdisplay);
 	if (!($fsdisplay =~ s/(ALIGN\s*=\s*\")[^\"]*\"/$1$falign\"/)) {
-	    $fsdisplay .= "<DIV ALIGN=\"$falign\">";
+	    $fsdisplay .= "<DIV class=\"$falign\">";
 	    $fedisplay = '</DIV>'.$epdisplay;
 	}
 	$_ = join('', $fsdisplay, $labels, $comment, $_, $fedisplay);
@@ -667,11 +659,10 @@ sub process_env_align{
 
 	local($env_id) = $env_id;
 	if ($USING_STYLES) {
-	    $env_id =~ s/(CLASS=\")(\w+)/$1$outer_math/;
-	    $env_style{$env} = "" unless ($env_style{$env});
+	    $env_id = ' CLASS="equation"';
 	}
 	local($sarray, $erow, $earray, $sempty, $calign) = (
-	    $smarray.$env_id.$smarrayB.($numbered?$mdisp_width:'').$mcalign, $emrow
+	    $smarray.$env_id.$smarrayB.($numbered?$mdisp_width:'').">", $emrow
 	    , $emarray, $mnocell.$mspace, $mcalign );
 	$env_id = '';
 
@@ -859,7 +850,7 @@ sub do_env_split {
 	$falign = (($EQN_TAGS =~ /L/)? 'LEFT' : 'RIGHT') if $numbered;
 	local($fsdisplay,$fedisplay) = ($spdisplay,$epdisplay);
 	if (!($fsdisplay =~ s/(ALIGN\s*=\s*\")[^\"]*\"/$1$falign\"/)) {
-	    $fsdisplay .= "<DIV ALIGN=\"$falign\">";
+	    $fsdisplay .= "<DIV class=\"$falign\">";
 	    $fedisplay = '</DIV>'.$epdisplay;
 	}
 	$_ = join('', $fsdisplay, $labels, $comment, $_, $fedisplay);
@@ -878,7 +869,7 @@ sub do_env_split {
 	    $env_style{$env} = "" unless ($env_style{$env});
 	}
 	($sarray, $erow, $earray, $sempty, $calign) = ( 
-	    $smarray.$env_id.$smarrayB.$emtag, $emrow 
+	    $smarray.$env_id.$smarrayB.$emtag.">", $emrow 
 	    , $emarray, $mnocell.$mspace, $mcalign );
 	$env_id = '';
 

@@ -29,6 +29,10 @@ $DVIPNG = '@DVIPNG@';	# dvipng
 $PDFCROP = '@PDFCROP@';	# pdfcrop
 $GS = '@GS@';	# GhostScript
 
+#if @PDFLATEX@
+$USE_PDFTEX = 1;	# use pdflatex unless -nouse_pdftex on command line
+$USE_DVIPNG = 1;
+#fi
 
 #  give these too, to use the  -ldump  feature
 #
@@ -587,7 +591,7 @@ $DEBUG = 0;
 # -html_version
 # The default HTML version to be produced
 #
-$HTML_VERSION = '4.0';
+$HTML_VERSION = '5';
 
 
 # -no_math
@@ -617,13 +621,6 @@ $NETSCAPE_HTML = 0;
 #
 $INTERLACE = 1;
 
-
-# Set this to 1 if you like the old LaTeX2HTML style to have a
-# border around the navigation links.
-# Values > 1 are also possible.
-#
-$NAV_BORDER = 0;
-  
 
 ### Colors ###
 #
@@ -728,7 +725,7 @@ $DVIPS_MODE = '@METAMODE@';
 #   the metafont mode (e.g. `toshiba').
 #
 $METAFONT_DPI = @METADPI@;
-$DVIPNG_DPI = 120;	# for best appearance
+$DVIPNG_DPI = 240;	# for best appearance
 
 
 # Controls which markup shows up between page and its foot.
@@ -1156,7 +1153,6 @@ sub img_tag {
     local($iconmark) = @_;
     local($icon) = $icons{$iconmark};
     local($alt);
-    local($align) = " ALIGN=\"BOTTOM\" ";
 
     $alt = join ('|', "up", "next_group", "next_inactive", "previous_group"
 		, "next", "previous", "change_begin_right", "change_begin"
@@ -1165,27 +1161,24 @@ sub img_tag {
 
     if ($icon =~ /(gif|png)$/) {
 	$used_icons{$icon} = 1;
-	if ($iconmark =~ /change_(begin|end|delete)_right/) { $align = ' ' };
 	local($pre);
-	local($nav_border) = "\"$NAV_BORDER\"";
 	if ($iconmark =~ /($alt)/) {
 	    $pre = "\n";
 	    $alt = $1;
 	}
 	else {
 	    $pre = "";
-	    $nav_border = '"1"';
 	    $alt = '[*]';
 	 };
 
 	if ($LOCAL_ICONS) {
-	    return join('', $pre ,'<IMG ', $iconsizes{$alt} || '', $align
-			,'BORDER=', $nav_border, ' ALT="', $alt
+	    return join('', $pre ,'<IMG ', $iconsizes{$alt} || ''
+			,' ALT="', $alt
 			,'" SRC="', $icon, '">' );
 	}
 	else {
-	    return join('', $pre ,'<IMG ', $iconsizes{$alt} || '', $align
-			,'BORDER=', $nav_border, ' ALT="', $alt, "\"\n"
+	    return join('', $pre ,'<IMG ', $iconsizes{$alt} || ''
+			,' ALT="', $alt, "\"\n"
 			,' SRC="', $ICONSERVER, "/$icon", '">' );
 	}
     }

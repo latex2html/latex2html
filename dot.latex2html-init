@@ -12,6 +12,10 @@ $EXTERNAL_IMAGES = 0;   # 1 = leave the images outside the document
 
 $ASCII_MODE = 0;        # 1 = do not use any icons or internal images
 
+$USE_PDFTEX = 1;	# 0 = use plain dvi-producing latex
+
+$USE_DVIPNG = 1;	# 0 = use dvips -> pstoimg
+
 # 1 =  use links to external postscript images rather than inlined bitmap
 # images.
 $PS_IMAGES = 0;
