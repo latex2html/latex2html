@@ -33,8 +33,9 @@ sub get_image_size { # clean
 	}
 	elsif ($type =~ /jpe?g/){
 	  ($width,$height)=jpegsize(*IMAGE);
-	}
-	else {
+	} elsif($type =~ /svg/){
+	    # todo
+	} else {
 	  warn "\nUnknown image type for $imagefile"; }
 	close(IMAGE);
 

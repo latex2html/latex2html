@@ -241,6 +241,10 @@ $prefs{'EPS'} = 1;
 # of output pages. Rarely needed. Try 0 first.
 $prefs{'REVERSE'} = 0;
 
+# Try to implement SVG image support. Set to 0 if you want
+# to disable SVG support even if possible.
+$prefs{'SVG'} = 1;
+
 # Try to implement GIF image support. Set to 0 if you want
 # to disable GIF support even if possible.
 $prefs{'GIF'} = 1;
@@ -251,6 +255,9 @@ $prefs{'PNG'} = 1;
 
 # The dvipng executable.
 $prefs{'DVIPNG'} = 'dvipng';
+
+# The pdftocairo executable.
+$prefs{'PDFTOCAIRO'} = 'pdftocairo';
 
 # the pdfcrop executable needed for cropping PDF images
 $prefs{'PDFCROP'} = 'pdfcrop';

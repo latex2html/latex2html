@@ -26,6 +26,7 @@ $LUALATEX = '@LUALATEX@';	# LuaLaTeX
 $DVILUALATEX = '@DVILUALATEX@';	# dviLuaLaTeX
 $DVIPS = '@DVIPS@';	# dvips
 $DVIPNG = '@DVIPNG@';	# dvipng
+$PDFTOCAIRO = '@PDFTOCAIRO@';	# pdf to svg converter
 $PDFCROP = '@PDFCROP@';	# pdfcrop
 $GS = '@GS@';	# GhostScript
 
@@ -1092,8 +1093,8 @@ sub meta_information {
 ### Icons ################################################################
 
 # Icon names and real icon files. 
-
-foreach $typ (@IMAGE_TYPES) {
+# gif icons are also availble.  no svg icons available.
+foreach $typ ('png') {
     %{"icons_$typ"} = (
 	'cross_ref_visible_mark' ,"crossref.$typ",
 	'anchor_mark' , '', # ,'&#160;',
@@ -1120,7 +1121,7 @@ foreach $typ (@IMAGE_TYPES) {
     )
 };
 if (!%icons) {
-    %icons = %{"icons_$IMAGE_TYPE"};
+    %icons = %{"icons_png"};
 }
 
 if (!%iconsizes) {

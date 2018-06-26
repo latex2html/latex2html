@@ -359,7 +359,7 @@ sub process_env_multline {
 
 	local($env_id) = $env_id;
 	if ($USING_STYLES) {
-	    $env_style{$env} = "" unless ($env_style{$env});
+	    $env_id = ' CLASS="equation"';
 	}
 	($sarray, $erow, $earray, $sempty, $calign) = ( 
 	    $smarray.$env_id.$smarrayB.($numbered?$mdisp_width:'').">"

@@ -785,6 +785,7 @@ $opt{'have_pstoimg'} = 1; # be optimistic that pstoimg can be built
 $opt{'IMAGES'} = &is_true(&get_name('IMAGES'));
 $opt{'GIF'} = &is_true(&get_name('GIF'));
 $opt{'PNG'} = &is_true(&get_name('PNG'));
+$opt{'SVG'} = &is_true(&get_name('SVG'));
 
 unless($opt{'GIF'} || $opt{'PNG'}) {
   $opt{'IMAGES'} = 0;
@@ -1056,6 +1057,21 @@ if($opt{'IMAGES'}) {
   my $dvipng = &find_prog(&get_name('DVIPNG',1));
   if($dvipng) {
     $newcfg{'DVIPNG'} = $dvipng;
+  }
+}
+
+# --------------------------------------------------------------------------
+# pdftocairo
+# --------------------------------------------------------------------------
+
+$newcfg{'PDFTOCAIRO'} = '';
+
+if($opt{'IMAGES'}) {
+  my $pdftocairo = &find_prog(&get_name('PDFTOCAIRO',1));
+  if($pdftocairo) {
+    $newcfg{'PDFTOCAIRO'} = $pdftocairo;
+  } else {
+    $opt{'SVG'} = 0;
   }
 }
 
@@ -1572,6 +1588,9 @@ $newcfg{'IMAGE_TYPES'} = '';
 
 if($newcfg{'have_pstoimg'}) {
   my @imgtypes = ();
+  if($opt{'SVG'}) {
+    push(@imgtypes,'svg');
+  }
   if($opt{'PNG'}) {
     push(@imgtypes,'png');
   }

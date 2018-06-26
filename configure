@@ -52,6 +52,8 @@ ac_help="$ac_help
 ac_help="$ac_help
   --enable-png            add support of PNG images"
 ac_help="$ac_help
+  --enable-svg            add support of SVG images"
+ac_help="$ac_help
   --enable-pipes          use pipes to connect portable bitmap programs"
 ac_help="$ac_help
   --enable-paths          store absolute pathnames of external programs"
@@ -65,6 +67,8 @@ ac_help="$ac_help
   --with-dvips=PATH       path/name of the dvips executable"
 ac_help="$ac_help
   --with-dvipng=PATH      path/name of the dvipng executable"
+ac_help="$ac_help
+  --with-pdftocairo=PATH  path/name of the pdftocairo executable"
 ac_help="$ac_help
   --with-pdfcrop=PATH     path/name of the pdfcrop executable"
 ac_help="$ac_help
@@ -791,6 +795,14 @@ else
   enable_png=''
 fi
 
+# Check whether --enable-svg or --disable-svg was given.
+if test "${enable_svg+set}" = set; then
+  enableval="$enable_svg"
+  :
+else
+  enable_svg=''
+fi
+
 # Check whether --enable-pipes or --disable-pipes was given.
 if test "${enable_pipes+set}" = set; then
   enableval="$enable_pipes"
@@ -846,6 +858,14 @@ if test "${with_dvipng+set}" = set; then
   :
 else
   with_dvipng=${DVIPNG:-}
+fi
+
+# Check whether --with-pdftocairo or --without-pdftocairo was given.
+if test "${with_pdftocairo+set}" = set; then
+  withval="$with_pdftocairo"
+  :
+else
+  with_pdftocairo=${PDFTOCAIRO:-}
 fi
 
 # Check whether --with-pdfcrop or --without-pdfcrop was given.
@@ -1217,6 +1237,7 @@ $PERL $srcdir/config/config.pl \
   REVERSE=$enable_reverse \
   GIF=$enable_gif \
   PNG=$enable_png \
+  SVG=$enable_svg \
   PIPES=$enable_pipes \
   ABSPATHS=$enable_paths \
   PREFIX=$prefix \
@@ -1228,6 +1249,7 @@ $PERL $srcdir/config/config.pl \
   GS=$with_gs \
   DVIPS=$with_dvips \
   DVIPNG=$with_dvipng \
+  PDFTOCAIRO=$with_pdftocairo \
   PDFCROP=$with_pdfcrop \
   LATEX=$with_latex \
   PDFLATEX=$with_pdflatex \

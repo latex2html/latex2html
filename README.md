@@ -84,7 +84,9 @@ translation it is asked to perform as follows:
    As above plus 
     * latex (pdflatex is used by default)
     * gs (Ghostscript version 4.03 or later),
-    * The netpbm library 
+    * The netpbm library
+    * If you want to produce SVG images, pdftocairo
+      (available through the poppler-utils package).
     * If you want to process documents written for dvi-producing latex
       (as opposed to pdflatex), you need either dvips or dvipng.
       These are available through the texlive distribution.

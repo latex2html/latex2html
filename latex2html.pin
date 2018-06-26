@@ -3857,10 +3857,13 @@ sub make_off_line_images {
 	    local($dvips_call);
 	    if ($USE_PDFTEX || $USE_LUATEX) {	# pdfcrop --hires --gscmd $GS
 	      $dvips_call = "$PDFCROP " . ($DEBUG ? '--debug ' : '')
-		. ".${dd}${PREFIX}images.pdf;$GS -q -dNOPAUSE -dNO_PAUSE -dBATCH -dSAFER "
-		. ($USE_DVIPNG ?
-		   "-sDEVICE=png16m -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images-crop.pdf" :
-		   "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf\n");
+		  . ".${dd}${PREFIX}images.pdf";
+	      if ($IMAGE_TYPE ne 'svg') {
+		  $dvips_call .= ";$GS -q -dNOPAUSE -dNO_PAUSE -dBATCH -dSAFER "
+		      . ($USE_DVIPNG ?
+			 "-sDEVICE=png16m -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images-crop.pdf" :
+			 "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf\n");
+	      }
 	    } else {
     	    $dvips_call = $USE_DVIPNG?
 	      "$DVIPNG -D $DVIPNG_DPI -o$TMPDIR$dd$IMAGE_PREFIX%d.png -T tight .${dd}${PREFIX}images.dvi" :
@@ -3988,10 +3991,13 @@ sub make_images {
 	local($dvips_call);
 	if ($USE_PDFTEX || $USE_LUATEX) {	# pdfcrop --hires --gscmd $GS
 	  $dvips_call = "$PDFCROP " . ($DEBUG ? '--debug ' : '')
-	    . ".${dd}${PREFIX}images.pdf;$GS -q -dNOPAUSE -dNO_PAUSE -dBATCH -dSAFER "
-	    . ($USE_DVIPNG ?
-	       "-sDEVICE=png16m -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images-crop.pdf" :
-	       "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf\n");
+	    . ".${dd}${PREFIX}images.pdf";
+	  if ($IMAGE_TYPE ne 'svg') {
+	      $dvips_call .= ";$GS -q -dNOPAUSE -dNO_PAUSE -dBATCH -dSAFER "
+		  . ($USE_DVIPNG ?
+		     "-sDEVICE=png16m -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images-crop.pdf" :
+		     "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf\n");
+	  }
 	} else {
 	  $dvips_call = $USE_DVIPNG?
 	    "$DVIPNG -D $DVIPNG_DPI -T tight -o$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images.dvi" :
@@ -4119,7 +4125,12 @@ sub process_log_file {
 		}
 	        $before = '';
 	    }
-	} else {s/^\:([^:]*)\:lthtmlCropMarkHeight\:\=([0-9.]*)pt/$cropmarkheight{$1} = $2;''/e;}
+	} else {
+	    s/^\:([^:]*)\:lthtmlCropMarkHeight\:\=([0-9.]*)pt/$cropmarkheight{$1} = $2;''/e;
+	    s/^\:([^:]*)\:lthtmlCropMarkDepth\:\=([0-9.]*)pt\:1ex:=([0-9.]*)pt/$cropmarkdepth{$1} = $2;$pt_per_ex{$1} = $3;''/e;
+	    # $pt_per_ex contains the length of 1 ex measured in points,
+	    #  and is used to scale the image to the curent html font size
+	}
     $LaTeXERROR = 1 if (/^No pages of output./);
     }
 
@@ -4152,7 +4163,67 @@ sub process_log_file {
     close(LOG);
 }
 
-sub extract_image { # clean
+sub extract_image {
+    # dispatch to vector routine or bitmap routine
+    if ($IMAGE_TYPE eq 'svg') {
+	&extract_image_svg(@_);
+    } else {
+	&extract_image_bitmap(@_);
+    }
+}
+
+sub extract_image_svg {
+    my ($page_num,$name) = @_;
+
+    # The followin come out of %img_params
+    my ($scale, $external, $thumbnail, $map, $psimage, $align, $usemap,
+	  $flip, $aalias, $trans, $exscale, $alt, $exstr);
+
+    my ($lwidth, $val) = (0, '');
+    my ($custom_size,$color_depth,$height,$width,$croparg);
+
+    print STDOUT "\nextracting $name as $page_num\n" if ($VERBOSITY > 1);
+    # $global_num identifies this image in the original source file
+    # $new_num identifies this image in images.tex
+    my ($global_num, $new_num) = split(/#/, $page_num);
+    $name =~ s/\*/star/;
+    my ($env,$basename,$img) = ($name,"img$global_num",'');
+    $env =~ s/\d+$//;
+	$img = "$basename.$IMAGE_TYPE";
+	($scale, $external, $thumbnail, $map, $psimage, $align, $usemap, 
+	    $flip, $aalias, $trans, $exscale, $alt, $exstr) =
+            split('#', $img_params{$name});
+	$lwidth = ($align =~ s/nojustify/middle/) ? 0 : $LINE_WIDTH;
+	$alt = "ALT=\"$name\"" unless $alt;
+	$exscale = $EXTRA_IMAGE_SCALE unless($exscale);
+
+	$svg_cmd ="$PDFTOCAIRO -svg -f $new_num -l $new_num images-crop.pdf -";
+	print $svg_cmd, "\n" if ($VERBOSITY > 2);
+	open(PDF2SVG, "$svg_cmd|") || die;
+	open(SVG, ">img$new_num.svg") || die;
+	while (<PDF2SVG>) {	# filter svg file
+	    if (/^<svg .* width="(\d+)pt" height="(\d+)pt" /) {
+		if ($pt_per_ex{$name}) {
+		    $eheight{$name} = $2 / $pt_per_ex{$name};	# image height in ex
+		    $edepth{$name} = $cropmarkdepth{$name} / $pt_per_ex{$name};
+		}
+		if ($name =~ /$inline_env_rx/) {
+		    # remove image size so that image can scale with font size
+		    s/width="(\d+)pt" height="(\d+)pt" //;
+		}
+	    }
+	    print SVG;
+	}
+	close SVG;
+
+    print "\nextracted $name as $page_num\n" if ($VERBOSITY > 1);
+    &embed_image("${PREFIX}$img", $name, $external, $alt, $thumbnail, $map,
+        $align, $usemap, $exscale, $exstr);
+}
+
+
+
+sub extract_image_bitmap { # clean
     my ($page_num,$name) = @_;
 
     # The followin come out of %img_params
@@ -4191,14 +4262,13 @@ sub extract_image { # clean
         my $p="$TMPDIR$dd$IMAGE_PREFIX$new_num";
         die $! unless -f "$p.png";
         &close_dbm_database if $DJGPP;
-        my $imgpixeloverem=72.27/(15*$DVIPNG_DPI);
-        $imgpixeloverem *=$EXTRA_IMAGE_SCALE if $EXTRA_IMAGE_SCALE ;
-        print "imgpixeloverem=$imgpixeloverem\n" if ($VERBOSITY > 2);
+        my $imgpixeloverex=72.27/($pt_per_ex{$name}*$DVIPNG_DPI);
+        $imgpixeloverex *=$EXTRA_IMAGE_SCALE if $EXTRA_IMAGE_SCALE ;
+        print "imgpixeloverex=$imgpixeloverex\n" if ($VERBOSITY > 2);
         if ( $name =~ /figure|table/ and $FIGURE_SCALE_FACTOR) 
-            {$imgpixeloverem*= $FIGURE_SCALE_FACTOR;}
-        else {$imgpixeloverem*=  $MATH_SCALE_FACTOR if $MATH_SCALE_FACTOR}
+            {$imgpixeloverex*= $FIGURE_SCALE_FACTOR;}
         if ($name =~ /equation|eqnarray|display/){
-            $imgpixeloverem *= $DISP_SCALE_FACTOR if $DISP_SCALE_FACTOR}
+            $imgpixeloverex *= $DISP_SCALE_FACTOR if $DISP_SCALE_FACTOR}
         my $millimeter=int(.04*$DVIPNG_DPI); 
         $TRANSPARENT_COLOR='FFFFFF' unless defined $TRANSPARENT_COLOR;
         if ($TRANSPARENT_COLOR){$transparent= "-transparent='#$TRANSPARENT_COLOR'"}
@@ -4208,16 +4278,19 @@ sub extract_image { # clean
         if ($name =~ /figure|table/) {
 	  L2hos->syswait("$PNGTOPNM $p.png|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
 	} else {
-	  L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -left -right|tee $p-.ppm|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
+	    #	  L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -left -right|tee $p-.ppm|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
+	    L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCROP -left -right|tee $p-.ppm|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
+
 	}
         open PPM,"<$p.ppm"; read(PPM,$_,30);close PPM;
         m/^(\d+) (\d+)$/m;
         $pxdepth{$name}=$2-($cropmarkheight{$name}*$DVIPNG_DPI/72.27);
-        $edepth{$name}=$pxdepth{$name}*$imgpixeloverem;
+        $edepth{$name}=$cropmarkdepth{$name}/$pt_per_ex{$name};
         print "edepth{$name}=$edepth{$name}\n" if ($VERBOSITY > 2);
         open PPM,"<$p-.ppm"; read(PPM,$_,30);close PPM;
         m/^(\d+) (\d+)$/m; 
-        $ewidth{$name}=$1*$imgpixeloverem; $eheigth{$name}=$2*$imgpixeloverem;
+        $ewidth{$name}=$1*$imgpixeloverex; 
+	$eheight{$name}=$2*$imgpixeloverex;	# image height in ex
         print "ewidth{$name}=$ewidth{$name}\n" if ($VERBOSITY > 2);
         &open_dbm_database if $DJGPP;
 	} else {
@@ -7068,10 +7141,10 @@ sub make_latex{
 \long\def\lthtmlTightVBox#1#2{%
     \setbox\lthtmlPageBox\vbox{\catcode`\_=8 #2}%
     \lthtmlCropMarkHeight=\ht\lthtmlPageBox \advance \lthtmlCropMarkHeight 6pt
-    \lthtmlCropMarkDepth=-\lthtmlCropMarkHeight \advance \lthtmlCropMarkDepth 1pt
+    \lthtmlCropMarkDepth=\dp\lthtmlPageBox
     \lthtmltypeout{^^J:#1:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
-        \hbox to \z@{\vrule width 1pt height\lthtmlCropMarkHeight 
-	   depth \lthtmlCropMarkDepth\hskip 5pt \box\lthtmlPageBox}}%
+    \lthtmltypeout{^^J:#1:lthtmlCropMarkDepth:=\the\lthtmlCropMarkDepth:1ex:=\the \dimexpr 1ex}%
+        \hbox to \z@{\hskip 5pt \box\lthtmlPageBox}}%
 \long\def\lthtmlTightFBox#1#2{%
     \adjustnormalsize\setbox\lthtmlPageBox=\vbox\bgroup %
     \let\ifinner=\iffalse \let\)\liih@math %
@@ -7079,7 +7152,9 @@ sub make_latex{
     \@next\next\@currlist{}{\def\next{\voidb@x}}%
     \expandafter\box\next\egroup %
     \lthtmlCropMarkHeight=\ht\lthtmlPageBox \advance \lthtmlCropMarkHeight 6pt
+    \lthtmlCropMarkDepth=\dp\lthtmlPageBox
     \lthtmltypeout{^^J:#1:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
+    \lthtmltypeout{^^J:#1:lthtmlCropMarkDepth:=\the\lthtmlCropMarkDepth:1ex:=\the \dimexpr 1ex}%
     \copy\lthtmlPageBox}%
     \long\def\lthtmlinlinemathA#1#2\lthtmlindisplaymathZ{\lthtmlTightVBox{#1}{#2}}
     \def\lthtmlinlineA#1#2\lthtmlinlineZ{\lthtmlTightVBox{#1}{#2}}
@@ -10065,7 +10140,7 @@ sub embed_image {
 	    ($imagesize,$imgID) = &get_image_size($url,'');
 	}
 	$image_size{$url} = $imagesize
-	    unless ((! $size) || ($size eq "WIDTH=\"0\" HEIGHT=\"0\""));
+	    unless ((! $imagesize) || ($imagesize eq "WIDTH=\"0\" HEIGHT=\"0\""));
 	$url = &find_unique($url);
     }
 
@@ -10086,23 +10161,25 @@ sub embed_image {
     my $border = '';	# default border is 0
 
     my $aalign;		# css style
-    if ($USE_DVIPNG){
-        if ($ewidth{$name}){
-	    $aalign = sprintf ( "width: \%.2fem; vertical-align: \%.2fem; line-height: \%.2fem",
-				$ewidth{$name} ,-$edepth{$name},$eheigth{$name}+1 );
-	} else {
-	    $aalign = sprintf ( "vertical-align: \%.0fpx", -$pxdepth{$name} );
-	}
-    } elsif (($name =~ /figure|table|displaymath\d+|eqnarraystar/)&&(!$align)) {
+    if (($name =~ /figure|table|displaymath\d+|eqnarraystar/)&&(!$align)) {
     } elsif (($name =~ /(equation|eqnarray)($|\d)/)&&(!$align)) {
 	if ($HTML_VERSION >= 3.2) {
 	    $aalign =  ($EQN_TAGS eq "L") ? "float:RIGHT;" : "float:LEFT;";
 	}
-    } elsif ($name =~ /inline|display|entity|xy|diagram/ && $depth{$name} != 0) {
-	# ALIGN=MIDDLE aligns middle of image to baseline of text
-	my ($height_pxs) = ($imagesize =~ /HEIGHT=\"(\d+)\"/i);
-	my $depth = $height_pxs*$depth{$name}/($height{$name}+$depth{$name});
-	$aalign = "vertical-align:-${depth}px".$border;
+    } elsif ($name =~ /$inline_env_rx/) {
+	if ($eheight{$name}){
+	    # used with -use_dvipng and with -image_type svg
+	    $aalign = sprintf ( "height: \%.2fex; vertical-align: \%.2fex; ",
+				$eheight{$name} ,
+				-$edepth{$name} );
+	} elsif ($pxdepth{$name}) {
+	    $aalign = sprintf ( "vertical-align: \%.0fpx", -$pxdepth{$name} );
+	} else {
+	    # ALIGN=MIDDLE aligns middle of image to baseline of text
+	    my ($height_pxs) = ($imagesize =~ /HEIGHT=\"(\d+)\"/i);
+	    my $depth = $height_pxs*$depth{$name}/($height{$name}+$depth{$name});
+	    $aalign = "vertical-align:-${depth}px".$border;
+	}
     } elsif ($name =~ /inpar/m) {
 	$aalign = "vertical-align:TOP;".$border;
     } else {  $aalign = "".$border }
@@ -10183,13 +10260,13 @@ sub embed_image {
 
 	### MEH Add width and height to IMG
 	### Patched by <hswan@perc.Arco.com>:  Fixed \htmladdimg 
-	if ( $imagesize || $name eq "external image" || $NO_IMAGES || $PS_IMAGES) {
+#	if ( $imagesize || $name eq "external image" || $NO_IMAGES || $PS_IMAGES) {
 	    $imagesize = '' if ($HTML_VERSION < 2.2 );
-	    $imagesize = '' if ($aalign =~ /WIDTH/i);
+	    $imagesize = '' if ($aalign =~ /height/i);
 	    if ($border =~ s/^"//) { $border .= '"' };
 	    $result = join(''
 		   , "<IMG$imgID"
-		   , "\n", ($imagesize ? " $imagesize" : '')
+#		   , "\n", ($imagesize ? " $imagesize" : '')
 		#		   , (($aalign)? " ALIGN=\"$aalign\"" : $border)
 		   , " STYLE=\"$aalign\""
 		   , $ismap );
@@ -10198,7 +10275,7 @@ sub embed_image {
 	    $result .= " SRC=\"$url\"";
 	    if ($altst) { $result .= $altst }
 	    $result .= ">";
-	}
+#	}
     }
     join('',$anch1, $result, $anch2);
 }
@@ -17403,10 +17480,11 @@ until the end of all processing.
 
 =item B<-image_type> I<type>
 
-Specify the type of bitmap images to be generated. Depending on your setup,
-B<LaTeX2HTML> can generate B<gif> or B<png> images. Note: Gif images have
-certain legal restrictions, as their generation involves an algorithm
-patented by Unisys.
+Specify the type of images to be generated. Depending on your setup,
+B<LaTeX2HTML> can generate B<svg>, B<png> or B<gif> images.
+Vector formats such as B<svg> look better at high resolution, 
+while bitmap formats such as B<png> or B<gif> are generally
+faster to download and to render.
 
 =item B<->(B<no>)B<images>
 

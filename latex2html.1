@@ -982,7 +982,10 @@ script.
 .TP
 .B $IMAGE_TYPE = '<image-type>';
 Set in latex2html.config, the currently supported <image-type>s are:
-gif and png.
+svg, png and gif.  Vector formats such as svg look better at high resolution, 
+while bitmap formats such as png or gif are generally
+faster to download and to render.
+
 .TP
 .B $DVIPS = 'dvips';
 Read from latex2html.config by install-test, its value is checked to
