@@ -3744,7 +3744,7 @@ sub make_box {
 #	inline math --- horizontal mode, captures height/depth + \mathsurround
 sub make_hbox {
     local($id,$contents) = @_;
-    if ($id =~ /indisplay/ or $USE_DVIPNG) {
+    if ($id =~ /indisplay/ or $USE_DVIPNG or $IMAGE_TYPE eq 'svg') {
 	"\\lthtmlinlinemathA{". $id ."}%\n". $contents ."%\n\\lthtmlindisplaymathZ\n";
     } else {
 	"\\lthtmlinlinemathA{". $id ."}%\n". $contents ."%\n\\lthtmlinlinemathZ\n";
@@ -7134,7 +7134,7 @@ sub make_latex{
     " \\parindent=0pt\\abovedisplayskip=0pt\\belowdisplayskip=0pt}%\n" .
     " \\def\\phantompar{\\csname par\\endcsname}\\normalsize}%\n" .
     "\\def\\lthtmltypeout#1{{\\let\\protect\\string \\immediate\\write\\lthtmlwrite{#1}}}%\n" .
-    ($USE_DVIPNG? <<'</dvipng>' :
+    (($USE_DVIPNG || $IMAGE_TYPE eq 'svg') ? <<'</dvipng>' :
 \newbox\lthtmlPageBox
 \newdimen\lthtmlCropMarkHeight
 \newdimen\lthtmlCropMarkDepth
@@ -10174,7 +10174,7 @@ sub embed_image {
 				-$edepth{$name} );
 	} elsif ($pxdepth{$name}) {
 	    $aalign = sprintf ( "vertical-align: \%.0fpx", -$pxdepth{$name} );
-	} else {
+	} elsif ($depth{$name}) {
 	    # ALIGN=MIDDLE aligns middle of image to baseline of text
 	    my ($height_pxs) = ($imagesize =~ /HEIGHT=\"(\d+)\"/i);
 	    my $depth = $height_pxs*$depth{$name}/($height{$name}+$depth{$name});

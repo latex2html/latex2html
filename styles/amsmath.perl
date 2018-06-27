@@ -619,23 +619,6 @@ _IGNORED_CMDS_
 
 
 &process_commands_in_tex (<<_RAW_ARG_CMDS_);
-cases # <<\\endcases>>
-matrix # <<\\endmatrix>>
-bmatrix # <<\\endbmatrix>>
-Bmatrix # <<\\endBmatrix>>
-pmatrix # <<\\endpmatrix>>
-vmatrix # <<\\endvmatrix>>
-Vmatrix # <<\\endVmatrix>>
-smallmatrix # <<\\endsmallmatrix>>
-align # <<\\endalign>>
-alignat # <<\\endalignat>>
-xalignat # <<\\endxalignat>>
-xxalignat # <<\\endxxalignat>>
-aligned # <<\\endaligned>>
-alignedat # <<\\endalignedat>>
-flalign # <<\\endflalign>>
-gather # <<\\endgather>>
-multline # <<\\endmultline>>
 #overset # {} # {}
 #sideset # {} # {} # {}
 #underset # {} # {}
