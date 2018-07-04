@@ -112,6 +112,8 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- produce svg images using pdftocairo
+#		- use latex preview package to produce cropped images.pdf
 #		- pdflatex by default
 #		- dvipng by default
 #		- html 5

@@ -3845,37 +3845,9 @@ sub make_off_line_images {
 
 	&make_latex_images();
 
-	if ($USE_PDFTEX || $USE_LUATEX)	{
-	  print $USE_DVIPNG? "\nTransforming PDF images using gs/png16m ...\n":
-	    "\nTransforming PDF images to postscript using gs/ps2write ...\n";
-	} else {
-	  print $USE_DVIPNG? "\nGenerating images using dvipng ...\n":
-	    "\nGenerating postscript images using dvips ...\n";
-	}
 	&process_log_file(".$dd${PREFIX}images.log"); # Get eqn size info
 	unless ($LaTeXERROR) {
-	    local($dvips_call);
-	    if ($USE_PDFTEX || $USE_LUATEX) {	# pdfcrop --hires --gscmd $GS
-	      $dvips_call = "$PDFCROP " . ($DEBUG ? '--debug ' : '')
-		  . ".${dd}${PREFIX}images.pdf";
-	      if ($IMAGE_TYPE ne 'svg') {
-		  $dvips_call .= ";$GS -q -dNOPAUSE -dNO_PAUSE -dBATCH -dSAFER "
-		      . ($USE_DVIPNG ?
-			 "-sDEVICE=png16m -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images-crop.pdf" :
-			 "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf\n");
-	      }
-	    } else {
-    	    $dvips_call = $USE_DVIPNG?
-	      "$DVIPNG -D $DVIPNG_DPI -o$TMPDIR$dd$IMAGE_PREFIX%d.png -T tight .${dd}${PREFIX}images.dvi" :
-	      "$DVIPS -S1 -i $DVIPSOPT -o$TMPDIR$dd${IMAGE_PREFIX} .${dd}${PREFIX}images.dvi";
-	    }
-	    print "$dvips_call\n" if (($DEBUG)||($VERBOSITY > 1));
-
-	    &close_dbm_database if $DJGPP;
-	    L2hos->syswait($dvips_call) && print "Error: $!\n";
-	    undef $dvips_call;
-	    &open_dbm_database if $DJGPP;
-
+	    &call_dvips();
 	    # add suffix .ps to the file-names for each image
 	    if(opendir(DIR, $TMPDIR || '.')) {
                 #  use list-context instead; thanks De-Wei Yin <yin@asc.on.ca>
@@ -3897,6 +3869,50 @@ sub make_off_line_images {
         $page_num = $new_id_map{$name};
 	# Extract the page, convert and save it
 	&extract_image($page_num,$orig_name_map{$page_num});
+    }
+}
+
+# calls either dvips, dvipng, gs, or nothing as specified
+# by command line options
+sub call_dvips {
+    local($dvips_call);
+    if ($USE_PDFTEX || $USE_LUATEX) {
+	# svg images are produced directly from images.pdf,
+	# don't need to do anything here
+	if ($IMAGE_TYPE ne 'svg') {
+	    $dvips_call .= "$GS -q -dNOPAUSE -dNO_PAUSE -dBATCH -dSAFER ";
+	    if ($USE_DVIPNG) {
+		print "\nTransforming PDF images using gs/png16m ...\n";
+		$dvips_call .= "-sDEVICE=png16m -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images.pdf";
+	    } else {
+		# did not usepackage{preview}, need to crop
+		$dvips_call = "$PDFCROP --hires " . ($DEBUG ? '--debug ' : '')
+		    . ".${dd}${PREFIX}images.pdf"
+		    . ";" . $dvips_call;
+		print "\nTransforming PDF images to postscript using gs/ps2write ...\n";
+		$dvips_call .= "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf\n";
+	    }
+	}
+    } else {
+	# have dvi - not using pdftex or luatex
+	if ($IMAGE_TYPE ne 'svg') {
+	    if ($USE_DVIPNG) {
+		print "\nGenerating images using dvipng ...\n";
+		$dvips_call = "$DVIPNG -D $DVIPNG_DPI -o$TMPDIR$dd$IMAGE_PREFIX%d.png -T tight .${dd}${PREFIX}images.dvi";
+	    } else {
+		print "\nGenerating postscript images using dvips ...\n";
+		$dvips_call = "$DVIPS -S1 -i $DVIPSOPT -o$TMPDIR$dd${IMAGE_PREFIX} .${dd}${PREFIX}images.dvi";
+	    }
+	} else {
+	    die "Not implemented: -image_type svg with -nouse_pdftex";
+	    # could call dvipdf here and keep going
+	}
+    }
+    if ($dvips_call) {
+	print $dvips_call if (($DEBUG)||($VERBOSITY > 1));
+	&close_dbm_database if $DJGPP;
+	L2hos->syswait($dvips_call) && print "Error: $!\n";
+	&open_dbm_database if $DJGPP;
     }
 }
 
@@ -3979,41 +3995,8 @@ sub make_images {
             if(-e $img_path && !-e $img);
     }
     elsif ((!$NOLATEX) && ($latex_body =~ /newpage/) && !($LaTeXERROR)) {
-	if ($USE_PDFTEX || $USE_LUATEX)	{
-	  print $USE_DVIPNG? "\nTransforming PDF images using gs/png16m ...\n":
-	    "\nTransforming PDF images to postscript using gs/ps2write ...\n";
-	} else {
-	  print $USE_DVIPNG? "\nGenerating images using dvipng ...\n":
-	    "\nGenerating postscript images using dvips ...\n";
-	}
 	$IMAGE_PREFIX =~ s/^_//o if ($TMPDIR);
-
-	local($dvips_call);
-	if ($USE_PDFTEX || $USE_LUATEX) {	# pdfcrop --hires --gscmd $GS
-	  $dvips_call = "$PDFCROP " . ($DEBUG ? '--debug ' : '')
-	    . ".${dd}${PREFIX}images.pdf";
-	  if ($IMAGE_TYPE ne 'svg') {
-	      $dvips_call .= ";$GS -q -dNOPAUSE -dNO_PAUSE -dBATCH -dSAFER "
-		  . ($USE_DVIPNG ?
-		     "-sDEVICE=png16m -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images-crop.pdf" :
-		     "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf\n");
-	  }
-	} else {
-	  $dvips_call = $USE_DVIPNG?
-	    "$DVIPNG -D $DVIPNG_DPI -T tight -o$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images.dvi" :
-	    "$DVIPS -S1 -i $DVIPSOPT -o$TMPDIR$dd$IMAGE_PREFIX .${dd}${PREFIX}images.dvi\n";
-	}
-	print $dvips_call if (($DEBUG)||($VERBOSITY > 1));
-	
-	if ((($PREFIX=~/\./)||($TMPDIR=~/\./)) && not($DVIPS_SAFE)) {
-	    print " *** There is a '.' in $TMPDIR or $PREFIX filename;\n"
-	    	. "  dvips  will fail, so image-generation is aborted ***\n";
-	} else {
-	    &close_dbm_database if $DJGPP;
-	    L2hos->syswait($dvips_call) && print "Error: $!\n";
-	    &open_dbm_database if $DJGPP;
-	}
-
+	&call_dvips();
 	# append .ps suffix to the filenames
 	if(opendir(DIR, $TMPDIR || '.')) {
             # use list-context instead; thanks De-Wei Yin <yin@asc.on.ca>
@@ -4127,7 +4110,10 @@ sub process_log_file {
 	    }
 	} else {
 	    s/^\:([^:]*)\:lthtmlCropMarkHeight\:\=([0-9.]*)pt/$cropmarkheight{$1} = $2;''/e;
-	    s/^\:([^:]*)\:lthtmlCropMarkDepth\:\=([0-9.]*)pt\:1ex:=([0-9.]*)pt/$cropmarkdepth{$1} = $2;$pt_per_ex{$1} = $3;''/e;
+	    s/^\:([^:]*)\:lthtmlCropMarkDepth\:\=([0-9.]*)pt\:1ex:=([0-9.]*)pt//;
+	    $ptdepth{$1} = $2 + .5;
+	    # extra .5 pt in depth is border from latex 'preview' packagea
+	    $pt_per_ex{$1} = $3;
 	    # $pt_per_ex contains the length of 1 ex measured in points,
 	    #  and is used to scale the image to the curent html font size
 	}
@@ -4189,32 +4175,35 @@ sub extract_image_svg {
     $name =~ s/\*/star/;
     my ($env,$basename,$img) = ($name,"img$global_num",'');
     $env =~ s/\d+$//;
-	$img = "$basename.$IMAGE_TYPE";
-	($scale, $external, $thumbnail, $map, $psimage, $align, $usemap, 
-	    $flip, $aalias, $trans, $exscale, $alt, $exstr) =
-            split('#', $img_params{$name});
-	$lwidth = ($align =~ s/nojustify/middle/) ? 0 : $LINE_WIDTH;
-	$alt = "ALT=\"$name\"" unless $alt;
-	$exscale = $EXTRA_IMAGE_SCALE unless($exscale);
-
-	$svg_cmd ="$PDFTOCAIRO -svg -f $new_num -l $new_num images-crop.pdf -";
-	print $svg_cmd, "\n" if ($VERBOSITY > 2);
-	open(PDF2SVG, "$svg_cmd|") || die;
-	open(SVG, ">img$new_num.svg") || die;
-	while (<PDF2SVG>) {	# filter svg file
-	    if (/^<svg .* width="(\d+)pt" height="(\d+)pt" /) {
-		if ($pt_per_ex{$name}) {
-		    $eheight{$name} = $2 / $pt_per_ex{$name};	# image height in ex
-		    $edepth{$name} = $cropmarkdepth{$name} / $pt_per_ex{$name};
-		}
-		if ($name =~ /$inline_env_rx/) {
-		    # remove image size so that image can scale with font size
-		    s/width="(\d+)pt" height="(\d+)pt" //;
-		}
-	    }
-	    print SVG;
+    $img = "$basename.$IMAGE_TYPE";
+    ($scale, $external, $thumbnail, $map, $psimage, $align, $usemap, 
+     $flip, $aalias, $trans, $exscale, $alt, $exstr) =
+	split('#', $img_params{$name});
+    $lwidth = ($align =~ s/nojustify/middle/) ? 0 : $LINE_WIDTH;
+    $alt = "ALT=\"$name\"" unless $alt;
+    $exscale = $EXTRA_IMAGE_SCALE unless($exscale);
+    
+    # without -noshrink and -nocenter, pdftocairo scales image slightly
+    # due to internally rounding page size to nearest integer number of pt
+    $svg_cmd ="$PDFTOCAIRO -svg -noshrink -nocenter -f $new_num -l $new_num images.pdf -";
+    print $svg_cmd, "\n" if ($VERBOSITY > 2);
+    open(PDF2SVG, "$svg_cmd|") || die;
+    open(SVG, ">img$new_num.svg") || die;
+    while (<PDF2SVG>) {	# filter svg file
+      if (/^<svg .* width="([\d.]+)pt" height="([\d.]+)pt" /) {
+	if ($pt_per_ex{$name}) {
+	  $eheight{$name} = $2 / $pt_per_ex{$name};	# image height in ex
+	  $edepth{$name} = $ptdepth{$name} / $pt_per_ex{$name};
+	  # extra .5pt in depth is border from latex "preview" package
 	}
-	close SVG;
+	if ($name =~ /$inline_env_rx/) {
+	  # remove image size so that image can scale with font size
+	  s/width="([\d.]+)pt" height="([\d.]+)pt" //;
+	}
+      }
+      print SVG;
+    }
+    close SVG;
 
     print "\nextracted $name as $page_num\n" if ($VERBOSITY > 1);
     &embed_image("${PREFIX}$img", $name, $external, $alt, $thumbnail, $map,
@@ -4285,7 +4274,8 @@ sub extract_image_bitmap { # clean
         open PPM,"<$p.ppm"; read(PPM,$_,30);close PPM;
         m/^(\d+) (\d+)$/m;
         $pxdepth{$name}=$2-($cropmarkheight{$name}*$DVIPNG_DPI/72.27);
-        $edepth{$name}=$cropmarkdepth{$name}/$pt_per_ex{$name};
+        $edepth{$name}=$ptdepth{$name}/$pt_per_ex{$name};
+	# extra .5pt in depth is border from latex "preview" package
         print "edepth{$name}=$edepth{$name}\n" if ($VERBOSITY > 2);
         open PPM,"<$p-.ppm"; read(PPM,$_,30);close PPM;
         m/^(\d+) (\d+)$/m; 
@@ -7135,16 +7125,17 @@ sub make_latex{
     " \\def\\phantompar{\\csname par\\endcsname}\\normalsize}%\n" .
     "\\def\\lthtmltypeout#1{{\\let\\protect\\string \\immediate\\write\\lthtmlwrite{#1}}}%\n" .
     (($USE_DVIPNG || $IMAGE_TYPE eq 'svg') ? <<'</dvipng>' :
+\usepackage[tightpage,active]{preview}
 \newbox\lthtmlPageBox
 \newdimen\lthtmlCropMarkHeight
 \newdimen\lthtmlCropMarkDepth
 \long\def\lthtmlTightVBox#1#2{%
-    \setbox\lthtmlPageBox\vbox{\catcode`\_=8 #2}%
+    \setbox\lthtmlPageBox\vbox{\hbox{\catcode`\_=8 #2}}%
     \lthtmlCropMarkHeight=\ht\lthtmlPageBox \advance \lthtmlCropMarkHeight 6pt
     \lthtmlCropMarkDepth=\dp\lthtmlPageBox
     \lthtmltypeout{^^J:#1:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
     \lthtmltypeout{^^J:#1:lthtmlCropMarkDepth:=\the\lthtmlCropMarkDepth:1ex:=\the \dimexpr 1ex}%
-        \hbox to \z@{\hskip 5pt \box\lthtmlPageBox}}%
+    \begin{preview}\copy\lthtmlPageBox\end{preview}}}%
 \long\def\lthtmlTightFBox#1#2{%
     \adjustnormalsize\setbox\lthtmlPageBox=\vbox\bgroup %
     \let\ifinner=\iffalse \let\)\liih@math %
@@ -7155,7 +7146,7 @@ sub make_latex{
     \lthtmlCropMarkDepth=\dp\lthtmlPageBox
     \lthtmltypeout{^^J:#1:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
     \lthtmltypeout{^^J:#1:lthtmlCropMarkDepth:=\the\lthtmlCropMarkDepth:1ex:=\the \dimexpr 1ex}%
-    \copy\lthtmlPageBox}%
+    \begin{preview}\copy\lthtmlPageBox\end{preview}}%
     \long\def\lthtmlinlinemathA#1#2\lthtmlindisplaymathZ{\lthtmlTightVBox{#1}{#2}}
     \def\lthtmlinlineA#1#2\lthtmlinlineZ{\lthtmlTightVBox{#1}{#2}}
     \long\def\lthtmldisplayA#1#2\lthtmldisplayZ{\lthtmlTightVBox{#1}{#2}}
