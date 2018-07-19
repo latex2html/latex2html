@@ -11421,7 +11421,14 @@ sub do_env_enumerate {
 
 	# Search for [aAiI1] which is not between a pair of { }
 	# Other cases like "\theenumi" are not handled
-	@label_fields = $standard_label =~ /$enum_label_rx/;
+	# @label_fields = $standard_label =~ /$enum_label_rx/;
+	# 07/13 2018 shige
+	my $std_label = $standard_label;
+	$std_label =~ s/$any_next_pair_rx/\{$2\}/g;
+	@label_fields = $std_label =~ /$enum_label_rx/;
+	$label_fields[0] =~ s/[\{\}]//g;
+	$label_fields[$#label_fields] =~ s/[\{\}]//g;
+	$std_label =~ s/[\{\}]//g;
 	if (($standard_label =~ /^[aAiI1]$/)&&(not(/item\s*\[/))) {
 	    $enum_type = ' TYPE="'.$standard_label.'"';
 	    $standard_label = '';
@@ -11432,9 +11439,12 @@ sub do_env_enumerate {
 #	local($thislabel) = "\&$label_func";
 #	do { local($_) = $thislabel; &make_unique($_);
 #	     $enum{'theenum' . $rlevel} = $_; };
-	    $standard_label = 
+	    # $standard_label = 
+	    # 07/13 2018 shige
+	    $standard_label = ($#label_fields > 0) ?
 		"\"$label_fields[0]\" . eval(\$enum{\"theenum$rlevel\"})"
-		. ".\"$label_fields[$#label_fields]\"";
+		. ".\"$label_fields[$#label_fields]\"" :
+		$std_label;    
 	    $enum{'labelenum' . $rlevel} = $standard_label;
 	}
     }  elsif (s/^((.|\n)+?)\\item/$preitems=$1;"\\item"/es) {
@@ -11452,9 +11462,16 @@ sub do_env_enumerate {
 	    $label_part = '"'.$label_part.'"';
 	    $enum{$cmd} = $label_part;
         }
-	$standard_label = 
-	    "\"$label_fields[0]\" . eval(\$enum{\"theenum$rlevel\"})"
-	    . ".\"$label_fields[$#label_fields]\"" if ($cmd);
+	# $standard_label = 
+	#    "\"$label_fields[0]\" . eval(\$enum{\"theenum$rlevel\"})"
+	#    . ".\"$label_fields[$#label_fields]\"" if ($cmd);
+	# 07/13 2018 shige
+	if ($cmd) {
+	    $standard_label = ($#label_fields > 0) ? 
+		"\"$label_fields[0]\" . eval(\$enum{\"theenum$rlevel\"})"
+		. ".\"$label_fields[$#label_fields]\"" :
+		$std_label;
+	}
 	$_ = $pre_preitems . $preitems . $_ if ($pre_preitems||$preitems);
     } else {
 	@enum_default_type = ('A', '1', 'a', 'i', 'A') unless (@enum_default_type);
@@ -11503,7 +11520,9 @@ sub do_env_enumerate {
 		$item = "[$enum_label\]$item";
 		$enum_label =~ s/\.$//;
 	    }
-	    if ($standard_label) {
+	    # if ($standard_label) {
+	    # 07/13 2018 shige
+	    if ($standard_label && $standard_label !~ /eval\(/) {
 	        $item =~ s/(\\labelitem$rlevel|$standard_label)/$enum_label/g
 	    } else {
 	        $item =~ s/(\\labelitem$rlevel)/$enum_label/g
@@ -15493,12 +15512,8 @@ sub do_cmd_textit { &styled_text_chunk('I','CLASS="textit"'
 #		    ,'oblique', '', @_); }
 #
 # this uses a single CLASS for all instances
-#sub do_cmd_textsl { &styled_text_chunk('I','CLASS="textsl"'
-#		    ,'font-style','oblique', '', '', @_); }
-#
-# ... NS4 implements Italic, not oblique
 sub do_cmd_textsl { &styled_text_chunk('I','CLASS="textsl"'
-		    ,'font-style','italic', '', '', @_); }
+		    ,'font-style','oblique', '', '', @_); }
 
 
 # this gives a separate ID for each instance
@@ -15506,12 +15521,8 @@ sub do_cmd_textsl { &styled_text_chunk('I','CLASS="textsl"'
 #		    ,'sans-serif', '', @_); }
 #
 # this uses a single CLASS for all instances
-#sub do_cmd_textsf { &styled_text_chunk('I','CLASS="textsf"'
-#		    ,'font-family','sans-serif', '', '', @_); }
-#
-# ... NS4 doesn't implement sans-serif
 sub do_cmd_textsf { &styled_text_chunk('I','CLASS="textsf"'
-		    ,'font-style','italic', '', '', @_); }
+		    ,'font-family','sans-serif', '', '', @_); }
 
 
 #sub do_cmd_textsc {
@@ -16207,7 +16218,9 @@ sub fAlph{
 }
 sub Alph{
     local($num)=@_;
-    &falph(eval($enum{$num}));
+    # &falph(eval($enum{$num}));
+    # 07/13 2018 shige
+    &fAlph(eval($enum{$num}));
 }
 
 sub Roman{
@@ -16392,7 +16405,6 @@ partopsep # &ignore_numeric_argument
 penalty # &ignore_numeric_argument
 phantom # {}
 protect
-raggedright
 raggedbottom
 raise # &ignore_numeric_argument
 raisebox # {} # [] # []
@@ -16750,7 +16762,9 @@ sub make_isolatin1_rx {
     # used for labels in {enumerate} environments
     $standard_label_rx = 
 	"\\s*[[]\\s*((($any_next_pair_rx4)|([[][^]]*[]])|[^]])*)[]]";
-    $enum_label_rx = "^((({[^{}]*})|([^{}]))*)([aAiI1])(.*)";
+    # $enum_label_rx = "^((({[^{}]*})|([^{}]))*)([aAiI1])(.*)";
+    # 07/13 2018 shige
+    $enum_label_rx = "^(((\{[^\{\}]*\})|([^\{\}]))*)([aAiI1])(.*)";
     $enum_level = 0;	# level for enumerate (1-4, i-iv)
 
 

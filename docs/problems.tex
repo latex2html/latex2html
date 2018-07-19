@@ -177,8 +177,6 @@ No `perhaps' here; the processor has definitely fallen into an unending loop.
 See the previous item for how to detect which command or environment
 is causing the problem.
 
-\cbversion{98.1}\begin{changebar}
-%
 \item [\Perl{} cannot parse the \fn{latex2html} script: ]
 If \Perl{} refuses to start \latextohtml{} and issues errors, your
 \Perl{} version is not up to date.
@@ -191,12 +189,6 @@ In this case you will need help from the developers or experienced users;
 this can be obtained via the discussion list.
 
 
-\item [It crashes (dumps core) as soon as it starts\label{perl}: ]
-Update your \Perl{} to 5.003 or later.
-\end{changebar}
-
-
-\cbversion{98.1}\begin{changebar}
 \item [It does not show any of your images: ]
   You can't run \latextohtml{} in a subdirectory that contains a dot
   within the directory name, such as {\tt latex2html-98.1},
@@ -241,7 +233,6 @@ image output files here:
   See the previous item for the reason and `fix'. 
   This version of \latextohtml{} detects the problem 
   and will not allow images to be generated in the wrong place.
-\end{changebar}
 
 \item [\fn{dvips} complains about incorrect arguments:\label{dvips} ]
 Please use a version which supports the command-line options \Cs{M}, \Cs{S},
@@ -264,7 +255,6 @@ As a last resort you may consider increasing the virtual memory
 (swap space) of your machine.
 
 
-\cbversion{98.1}\begin{changebar}
 \item [\fn{install-test} issues ``dbm'' related error messages: ]\latex{~\\}%
 \latextohtml{} requires a DataBase Management system (\appl{NDBM},
 \appl{GDBM}, or \appl{SDBM}) in order to run.
@@ -286,7 +276,6 @@ You will need help from the list, here.
 If you get real error messages which cause \latextohtml{} to abort,
 run \fn{install-test} to check if your DataBase management works.
 You will probably need to re-install \Perl{ 5} (see above topic).
-\end{changebar}
 
 
 This can happen when an image is being created from a large piece
@@ -345,7 +334,6 @@ There is no quick fix other than suggesting that you put each
 \Lc{input} command on a line by itself, in the \LaTeX{} source files.
 
 \item [\Lc{input} commands in \env{verbatim} environments: ]
-\cbversion{98.1}\begin{changebar}
 These should no longer cause problems (actually since 97.1).
 \Lc{input} commands are also handled correctly within comment environments
 declared using \Lc{excludecomment} 
@@ -353,7 +341,6 @@ and when loading multiple \texttt{.aux} files,
 due to use of the \Lc{include} command.
 Alternatively you might want to use
 either the \env{verbatim} or the \env{verbatimfiles} package.
-\end{changebar}
 
 \item [Optional arguments in \env{description} environments: ]
 If~you have optional arguments for the \Lc{item} command in 
@@ -510,13 +497,13 @@ default font.
 \end{verbatim}
 \end{small}
 
-\cbversion{98.1}\begin{changebar}
+
 Nesting of font changing commands is now handled correctly.
 Such problems should no longer occur, though it always helps
 to use explicitly delimited `pseudo'-environments; e.g.
 \verb|{\bf ... }|, or \LaTeX's commands requiring an explicit argument,
 such as \Lc{textbf}.
-\end{changebar}
+
 
 \item [Cannot get it to generate inlined images: ]
 Run \latextohtml{} on your document, using the \Cs{debug} switch.

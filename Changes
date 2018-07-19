@@ -112,6 +112,11 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#
+#--------- v2018.3
+#
+#		- fix \sffamily
+#		  https://bugs.debian.org/111441
 #		- produce svg images using pdftocairo
 #		- use latex preview package to produce cropped images.pdf
 #		- pdflatex by default

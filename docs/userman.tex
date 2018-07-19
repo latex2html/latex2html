@@ -608,7 +608,6 @@ More than one initialisation file can be read in this way.%
 
 \index{index!codified links}%
 
-\cbversion{98.1}\begin{changebar}
 \index{forking!prevent}%
 \item [ -no\_fork\label{cs_no_fork}]
 \sameas{\fn{\$NOFORK}\texttt{ = 1;}}\\
@@ -625,7 +624,6 @@ are not consumed unnecessarily, perhaps resulting in a fatal \Perl{} error.
 This enables you to specify a different language type than
 \texttt{'EN'} to be used in the DTD entries of the \texttt{HTML}
 document, e.g. \texttt{'EN.US'}.
-\end{changebar}%
 
 \item [ -short\_index\label{cs_shortindex}]
 \sameas{\fn{\$SHORT\_INDEX}\texttt{ = 1;}}\\
@@ -652,12 +650,10 @@ All the styles \Lc{arabic}, \Lc{alph}, \Lc{roman}, \Lc{Alph} and \Lc{Roman}
 are available.
 
 \index{footnotes!numbering}
-\cbversion{98.1}\begin{changebar}
 \item [ -numbered\_footnotes\label{cs_numbered_footnotes}]
 \sameas{\fn{\$NUMBERED\_FOOTNOTES}\texttt{ = 1;}}\\
 If this is set you will get every footnote applied with a subsequent
 number, to ease readability.
-\end{changebar}
 
 \index{address!signature}%
 \index{address!using a subroutine}%
@@ -701,6 +697,13 @@ and whether anti-aliasing effects are used within the images themselves.
 
 \begin{htmllist}\htmlitemmark{PinkBall}%
 %
+\index{image-type}%
+\item [ -image\_type \label{cs_image_type}]
+Specify the type of images to be generated. Depending on your setup,
+LaTeX2HTML can generate svg, png or gif images. Vector formats such as
+svg look better at high resolution, while bitmap formats such as
+png or gif are generally faster to download and to render.
+
 \index{use-dvipng}%
 \item [ -use\_dvipng \label{cs_use_dvipng}]
 Use the dvipng program to generate png images, rather than
@@ -877,7 +880,6 @@ Although on-screen images of text are definitely improved using anti-aliasing,
 printed images can be badly blurred, even at 300dpi. 
 Higher resolution printers do a much better job with the resulting grey-scale images.
 
-\cbversion{98.1}\begin{changebar}
 \index{images!white background}%
 \item [ -white\label{cs_white}]
 \sameas{\fn{\$WHITE\_BACKGROUND}\texttt{ = 1;}} (Default is 1.)\\
@@ -903,7 +905,6 @@ since \LaTeX{} is called twice --- once to create the format-dump,
 then again to load and use it.
 The pay-off comes with the faster loading on subsequent runs. 
 Approximately 1 Meg of disk space is consumed by the dump file.
-\end{changebar}
 %
 \end{htmllist}
 
@@ -1212,7 +1213,7 @@ its value is used to locate the \fn{pstoimg} \Perl{} script.
 
 \item [\fn{\$IMAGE\_TYPE}\texttt{ = '\Meta{image-type}';}]
 Set in \fn{latex2html.config}, the currently supported \Meta{image-type}s
-are: \texttt{gif} and \texttt{png}.
+are: \texttt{svg}, \texttt{png} and \texttt{gif}.
 
 \item [\fn{\$DVIPS}\texttt{ = 'dvips';}]
 Read from \fn{latex2html.config} by \fn{install-test}, 

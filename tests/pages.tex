@@ -97,23 +97,23 @@
 %% Assure correct image order.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentstyle[12pt,theorem,epsf]{article}
-
+\documentclass[12pt]{article}
+\usepackage{graphicx}
 \parindent 0mm
 
 % Macro to handle figures
 \newcommand{\postscript}[3]{\begin{figure}[ht]%
-  \begin{center}\epsfbox{#1.eps}\leavevmode
+  \begin{center}\includegraphics{#1}\leavevmode
   \caption{#2}\label{#1}{\em #3}\end{center}\end{figure}}
 
 % The next macros produce three fake page entries in images.tex
-\theoremstyle{plain}
+%\theoremstyle{plain}
 \newtheorem{Defi}[equation]{Definition}
 \newtheorem{Theo}[equation]{Theorem}
 
-\theoremstyle{break}
+%\theoremstyle{break}
 \newtheorem{Pb}[equation]{Problem}
-\theoremheaderfont{\scshape}
+%\theoremheaderfont{\scshape}
 
 
 \begin{document}
@@ -294,6 +294,48 @@ end of prefix  type  description \\     \hrule
 
 
 
+{\raggedleft
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f}
+{\raggedright
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f}
+
+{\scshape
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f}
+
+{\slshape slshape
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f}
+
+
+{\sffamily sffamily
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f}
+
+\textsf{textsf
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f}
+
+\texttt{texttt
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f}
+
+\textsl{textsl
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f}
+
+\textit{textit
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f}
+
+{\tt tt
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f}
+
+{\sl sl
+afksadjfklj j sdfkljk;al fjdfklsdj ljd;jds a;kljf kl jkldsj f}
 
 
 

@@ -76,7 +76,7 @@
 \item[\gn{\$IDX\_WIDTH}] with frames, holds the initial width of the index-frame; default = 200 pixels
 \item[\gn{\$IMAGES\_ONLY}] if set, this run simply processes the \fn{images.tex} file generated on an earlier run
 \item[\gn{\$IMAGE\_PREFIX}] specifies part of the filename, excluding numbers, for the \PS\ files produced by \fn{dvips}
-\item[\gn{\$IMAGE\_TYPE}] specifies the graphics format for the images that may be generated; currently either \texttt{gif} or \texttt{png}
+\item[\gn{\$IMAGE\_TYPE}] specifies the graphics format for the images that may be generated; currently either \texttt{svg}, \texttt{png} or \texttt{gif}
 \item[\gn{\$INDEX}] when navigation panels are created, this holds a hyperlink to the \texttt{HTML} file that has the Index
 \item[\gn{\$INDEX\_BANNER}] with frames, raw \texttt{HTML} to precede the Index listing, following the title
 \item[\gn{\$INDEX\_FOOTER}] with frames, raw \texttt{HTML} to follow the Index listing

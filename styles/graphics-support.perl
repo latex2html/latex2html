@@ -172,7 +172,7 @@ sub do_cmd_graphicspath {
 
     #RRM: may only work correctly for Unix    
     # $dd  holds the directory-delimiter, usually / 
-    $paths =~ s/\s*({|})\s*/$1/g;
+    $paths =~ s/\s*(\{|\})\s*/$1/g;
     local(@paths) = split (/}/, $paths);
     if ($DESTDIR eq $FILE) {
 	# given paths are relative to parent directory

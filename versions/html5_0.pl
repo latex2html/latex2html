@@ -28,9 +28,10 @@ $declarations{'Huge'} = '<BIG CLASS="XHUGE"></BIG>';
 
 $declarations{'sl'} = '<I CLASS="slanted"></I>';
 $declarations{'slshape'} = '<I CLASS="slanted"></I>';
-$declarations{'sf'} = '<I CLASS="sans"></I>';
-$declarations{'sffamily'} = '<I CLASS="sans"></I>';
-$declarations{'scshape'} = '<I CLASS="smcaps"></I>';
+$declarations{'sf'} = '<SPAN style="font-family:sans-serif"></SPAN>';
+$declarations{'sffamily'} = '<SPAN style="font-family:sans-serif"></SPAN>';
+$declarations{'scshape'} = '<SPAN style="font-variant:small-caps"></SPAN>';
+$declarations{'tt'} = '<SPAN style="font-family:monospace"></SPAN>';
 
 ### Allow for alignment to work
 
@@ -40,16 +41,6 @@ sub do_env_flushright { &declared_env('flushright', @_) }
 sub do_env_flushleft { &declared_env('flushleft', @_) }
 sub do_env_raggedright { &declared_env('flushleft', @_) }
 sub do_env_raggedleft { &declared_env('flushright', @_) }
-
-sub do_cmd_centering { 
-    # MRO *opentags has no effect
-    local($_)= @_; &declared_env('center', $_) }
-sub do_cmd_raggedright {
-    # MRO *opentags has no effect
-    local($_) = @_; &declared_env('flushleft', $_) }
-sub do_cmd_raggedleftt {
-    # MRO *opentags has no effect
-    local($_) = @_; &declared_env('flushright', $_) }
 
 sub do_cmd_underline {
     &styled_text_chunk('U','','text','decoration','underline','',@_)}
