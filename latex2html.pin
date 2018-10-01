@@ -7405,19 +7405,19 @@ IMG.TOP     { vertical-align:top; }
 IMG.BOTTOM  { vertical-align:baseline; }
 
 DL.COMPACT > dt { float:left; padding-right: 1em; }
-BODY { width:90%; max-width:50em; margin:auto; text-align:justify; }
+BODY { width:95%; max-width:50em; margin:auto; }
 
 /* implement both fixed-size and relative sizes */
-SMALL.XTINY		{ font-size : xx-small }
-SMALL.TINY		{ font-size : x-small  }
-SMALL.SCRIPTSIZE	{ font-size : smaller  }
-SMALL.FOOTNOTESIZE	{ font-size : small    }
-SMALL.SMALL		{  }
-BIG.LARGE		{  }
-BIG.XLARGE		{ font-size : large    }
-BIG.XXLARGE		{ font-size : x-large  }
-BIG.HUGE		{ font-size : larger   }
-BIG.XHUGE		{ font-size : xx-large }
+.XTINY		{ font-size : xx-small }
+.TINY		{ font-size : x-small  }
+.SCRIPTSIZE	{ font-size : smaller  }
+.FOOTNOTESIZE	{ font-size : small    }
+.SMALL		{  }
+.LARGE		{  }
+.XLARGE		{ font-size : large    }
+.XXLARGE		{ font-size : x-large  }
+.HUGE		{ font-size : larger   }
+.XHUGE		{ font-size : xx-large }
 
 /* heading styles */
 H1		{  }
@@ -8728,7 +8728,7 @@ sub add_real_idx {
 	    $count++;
 	}
 	while ($count > $level) {
-	    $index .= "\n<DL COMPACT>";
+	    $index .= "\n<DL class=\"COMPACT\">";
 	    $level++;
 	}
 	while ($count < $level) {
@@ -8738,7 +8738,7 @@ sub add_real_idx {
 	foreach $term (@current[$count .. $#current-1]) {
 	    # need to "step in" a little
 #	    $index .= "<DT>" . $term . "\n<DL COMPACT>";
-	    $index .= "\n<DT>$sidx_style" . $term . "$eidx_style\n<DD><DL COMPACT>";
+	    $index .= "\n<DT>$sidx_style" . $term . "$eidx_style\n<DD><DL class=\"COMPACT\">";
 	    $level++;
 	}
 	$str = $current[$#current];
@@ -8759,7 +8759,7 @@ sub add_real_idx {
     $index =~ s/(<A [^>]*>)(<D(T|D)>)/$2$1/g;
     
 #    s/$idx_mark/<DL COMPACT>$index<\/DL>/o;
-    s/$idx_mark/$preindex\n<DL COMPACT>\n$index<\/DL>\n/o;
+    s/$idx_mark/$preindex\n<DL class=\"COMPACT\">\n$index<\/DL>\n/o;
 }
 
 sub keysort {
@@ -11531,7 +11531,7 @@ sub do_env_enumerate {
 	$_ = join("\\item ", $preitems, @items);
 
 	# Original, but $enum_result
-	$enum_result = &do_env_description($_, " COMPACT");
+	$enum_result = &do_env_description($_, " class=\"COMPACT\"");
     } else {
 	$enum_result = &list_helper($_, "OL$enum_type", '', '');
     }
@@ -11600,7 +11600,7 @@ sub do_env_list {
 
 sub do_env_trivlist {
     local($_) = @_;
-    local($compact,$item_sep,$pre_items) = ' COMPACT';
+    local($compact,$item_sep,$pre_items) = ' class="COMPACT"';
     &protect_useritems($_);
 
     # assume no styles initially for this list
@@ -11729,7 +11729,7 @@ sub list_helper {
 
     # This deals with \item[xxx] ...
     if ($tag =~ /DL/) {
-	$compact = ' COMPACT';
+	$compact = ' class="COMPACT"';
 	# include \label anchors in the <DT> part
 	# and  $pre_item  tags in the <DD> part:
 	if ($labels && $lengths) { 

@@ -13,18 +13,18 @@ $eqno_class = ' CLASS="eqno"';
 
 # Note that htmlx.x.pl prior modules are *NOT*already loaded.
 
-$declarations{'tiny'} = '<SMALL CLASS="TINY"></SMALL>';
-$declarations{'Tiny'} = '<SMALL CLASS="XTINY"></SMALL>';
-$declarations{'scriptsize'} = '<SMALL CLASS="SCRIPTSIZE"></SMALL>';
-$declarations{'small'} = '<SMALL CLASS="SMALL"></SMALL>';
-$declarations{'Small'} = '<SMALL CLASS="FOOTNOTESIZE"></SMALL>';
-$declarations{'SMALL'} = '<SMALL CLASS="SCRIPTSIZE"></SMALL>';
-$declarations{'footnotesize'} = '<SMALL CLASS="FOOTNOTESIZE"></SMALL>';
-$declarations{'large'} = '<BIG CLASS="LARGE"></BIG>';
-$declarations{'Large'} = '<BIG CLASS="XLARGE"></BIG>';
-$declarations{'LARGE'} = '<BIG CLASS="XXLARGE"></BIG>';
-$declarations{'huge'} = '<BIG CLASS="HUGE"></BIG>';
-$declarations{'Huge'} = '<BIG CLASS="XHUGE"></BIG>';
+$declarations{'tiny'} = '<SPAN CLASS="TINY"></SPAN>';
+$declarations{'Tiny'} = '<SPAN CLASS="XTINY"></SPAN>';
+$declarations{'scriptsize'} = '<SPAN CLASS="SCRIPTSIZE"></SPAN>';
+$declarations{'small'} = '<SPAN CLASS="SPAN"></SPAN>';
+$declarations{'Small'} = '<SPAN CLASS="FOOTNOTESIZE"></SPAN>';
+$declarations{'SMALL'} = '<SPAN CLASS="SCRIPTSIZE"></SPAN>';
+$declarations{'footnotesize'} = '<SPAN CLASS="FOOTNOTESIZE"></SPAN>';
+$declarations{'large'} = '<SPAN CLASS="LARGE"></SPAN>';
+$declarations{'Large'} = '<SPAN CLASS="XLARGE"></SPAN>';
+$declarations{'LARGE'} = '<SPAN CLASS="XXLARGE"></SPAN>';
+$declarations{'huge'} = '<SPAN CLASS="HUGE"></SPAN>';
+$declarations{'Huge'} = '<SPAN CLASS="XHUGE"></SPAN>';
 
 $declarations{'sl'} = '<I CLASS="slanted"></I>';
 $declarations{'slshape'} = '<I CLASS="slanted"></I>';
@@ -1025,7 +1025,7 @@ sub process_tabular {
 #	$cap_anchors = '';
     } else { 
 	$return = join('', "<TABLE$env_id$lang class=\"PAD $border\" style=\""
-		, $tab_width, ">");
+		, $tab_width, "\">");
     }
     $env_id = '';
 
