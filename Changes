@@ -112,6 +112,9 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- fallback for unknown column types, such as those
+#		  introduced by \newcolumntype.
+#		  https://bugs.debian.org/899306
 #
 #--------- v2018.3
 #

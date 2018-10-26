@@ -681,13 +681,6 @@ sub translate_colspec {
 	    $at_text = $after_text = '';
 	    $cols++;
 
-	} elsif ( $char =~ /^(l|X)$/ ) {
-	    if ($at_text) { $at_text = $art_br.$at_text; $after_text = $art_br; }
-	    push(@colspec
-	        ,"$cellopen=\"LEFT\"$NOWRAP>$at_text$content_mark$after_text$cellclose");
-	    $at_text = $after_text = '';
-	    $cols++;
-
 	} elsif ( $char eq "r" ) {
 	    if ($at_text) { $at_text = $art_br.$at_text; $after_text = $art_br; }
 	    push(@colspec
@@ -835,6 +828,14 @@ sub translate_colspec {
 		$repeat--;
 	    };
 	    $colspec = $celldata . $colspec;
+	} elsif ( $char =~ /^(l|X)$/ ||
+		  $char =~ /^.$/ ) {	# also the fallback for unknown column types
+	    if ($at_text) { $at_text = $art_br.$at_text; $after_text = $art_br; }
+	    push(@colspec
+	        ,"$cellopen=\"LEFT\"$NOWRAP>$at_text$content_mark$after_text$cellclose");
+	    $at_text = $after_text = '';
+	    $cols++;
+
 	};
     };
     $colspec[$#colspec] =~ s/($art_br)?$cellclose/$at_text$1$cellclose/
