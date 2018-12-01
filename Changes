@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- fix "make test"
 #		- ppmtopng syntax works with all versions of ppmtopng
 #		- respect ./configure --with-perl=/bin/perl
 #		- fallback for unknown column types, such as those

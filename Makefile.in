@@ -91,7 +91,7 @@ test: all
 	done ; \
 	if test -n "$$latex2html"; then \
 	  echo "*** Running test on $$latex2html"; \
-	  cd tests ; ${PERL} ../$$latex2html -test_mode ${ARGS} ${TESTCASE} ; \
+	  ./$$latex2html -test_mode ${ARGS} tests/${TESTCASE} ; \
 	fi
 
 test_clean:
