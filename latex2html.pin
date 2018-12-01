@@ -4259,9 +4259,13 @@ sub extract_image_bitmap { # clean
         if ($name =~ /equation|eqnarray|display/){
             $imgpixeloverex *= $DISP_SCALE_FACTOR if $DISP_SCALE_FACTOR}
         my $millimeter=int(.04*$DVIPNG_DPI); 
-        $TRANSPARENT_COLOR='FFFFFF' unless defined $TRANSPARENT_COLOR;
-        if ($TRANSPARENT_COLOR){$transparent= "-transparent='#$TRANSPARENT_COLOR'"}
-        else{$transparent =''}
+        if ($TRANSPARENT_FIGURES) {
+	    my $TRANSPARENT_COLOR=
+		$ENV{'TRANSPARENT_COLOR'} || '#FFFFFF';
+	    $transparent= "-transparent '$TRANSPARENT_COLOR'";
+	} else {
+	    $transparent ='';
+	}
         my $PPMTO=$IMAGE_TYPE=~m/gif/i? $PPMTOGIF : $PNMTOPNG;
         #L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -sides|tee $p-.ppm|$PPMTO{$IMAGE_TYPE} --quiet $transparent >img$new_num.$IMAGE_TYPE;");
         if ($name =~ /figure|table/) {
