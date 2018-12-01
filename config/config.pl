@@ -619,7 +619,11 @@ my $extrapath = $opt{EXTRAPATH} || $prefs{EXTRAPATH} || '';
 
 # only perl gets an absolute pathname
 my $abs_path_names = 1;
-$newcfg{'PERL'} = &find_prog($^X); # take the perl internal executable name
+if($opt{'PERL'}) {
+  $newcfg{'PERL'} = &find_prog(&get_name('PERL',1));
+} else {
+  $newcfg{'PERL'} = &find_prog($^X); # take the perl internal executable name
+}
 &checking('perl version');
 &result($]);
 
