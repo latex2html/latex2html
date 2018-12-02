@@ -1817,10 +1817,6 @@ probably not work on Win32 and vice versa.
 
 =head1 BUGS
 
-This is a major enhancement release, so there may be a few bugs. As
-the user inteface changed a bit, some of your tools that were using
-pstoimg may not work any more. 
-
 Please report bugs to latex2html@tug.org, stating the (debug) output
 of pstoimg, your perl version and the versions of the external tools.
 Best is to include the cfgcache.pm file from the configuration procedure.

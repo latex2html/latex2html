@@ -87,7 +87,7 @@
 #     has to be on a separate line.
 # 11. Everything behind a `%' that isn't preceded by a `\' is regarded as
 #     a comment, i.e. it is printed but not interpreted.
-# 12. If any command listed in 10. is preceded by an occurence of `\verb' or
+# 12. If any command listed in 10. is preceded by an occurrence of `\verb' or
 #    `\latex' then it is NOT interpreted. This crashes on lines like this:
 #        blah blah \verb+foo foo+ \input{bar} % bar won't be loaded!
 # 13. Packages provided via \usepackage are handled the same way as
@@ -603,7 +603,7 @@ sub main {
 #     => $active false, $mute false
 #
 # Any environment may extend over several include files.
-# Any environement except verbatim and latexonly may have its
+# Any environment except verbatim and latexonly may have its
 # opening or closing tag on different input levels.
 # The comment and verbatim environments cannot be nested, as
 # is with LaTeX.
