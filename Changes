@@ -112,6 +112,8 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- remove obsolete "table" option
+#		  https://bugs.debian.org/276037
 #		- fix "make test"
 #		- ppmtopng syntax works with all versions of ppmtopng
 #		- respect ./configure --with-perl=/bin/perl

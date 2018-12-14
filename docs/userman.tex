@@ -462,12 +462,11 @@ when there are alternative strategies for implementing portions of \LaTeX{} code
 %
 \index{HTML version@\texttt{HTML} version}%
 \index{HTML@\texttt{HTML}!non-standard extensions}%
-\item [ -html\_version \texttt{(2.0|3.0|3.2)[,(math|i18n|table)]*}\label{cs_htmlversion}]
+\item [ -html\_version \texttt{(2.0|3.2|4.0|5.0)[,(math|i18n)]*}\label{cs_htmlversion}]
 ~\\\sameas{\fn{\$HTML\_VERSION}\texttt{ = \char34 ... \char34;}}\\
 This specifies both the \texttt{HTML}~\htmlref{version}{version} to generate, 
 and any extra (non-standard) \texttt{HTML} features that may be required.\html{\\}
-The version number corresponds to a published DTD for an \texttt{HTML} standard
-(although 3.0 was never accepted and subsequently withdrawn).
+The version number corresponds to a published DTD for an \texttt{HTML} standard.
 A corresponding \Perl{} file in the \fn{versions/} subdirectory is loaded;
 these files are named `\texttt{html}\Meta{num}\texttt{.pl}'.
 
@@ -479,14 +478,8 @@ can no longer be expected to validate with the specified DTD.
 An exception is \Ve{math} when the \htmlref{\Cs{no\_math}}{nomath} 
 switch is also used, which should still validate.
 
-Currently, versions 2.0, 3.2 and 4.0 are available.
-(and also 2.1, 2.2, 3.0 and 3.1, for hoistorical reasons). 
-The extensions \Ve{i18n}, \Ve{tables}, \Ve{math}
-correspond roughly to what used to be called versions `2.1', `2.2', `3.1'
-respectively, in releases of \latextohtml{} up to 1996.
-Now these extensions can be loaded with any of `2.0', `3.2' or `4.0' 
-as the specified standard.\\  
-The default version is usually set to be `3.2', within \fn{latex2html.config}\,.%
+Currently, versions 2.0, 3.2. 4.0 and 5.0 are available.
+The default version is usually set to be `5.0', within \fn{latex2html.config}\,.%
 
 \index{extensions!disabled}%
 \index{extensions!TeX defs@\TeX definitions}%
@@ -716,15 +709,19 @@ marks that appear with 12pt documents.
 It does not respect the \fn{\$MATH\_SCALE\_FACTOR} option.
 
 \index{use-pdftex}%
-\item [ -use\_pdftex \label{cs_use_pdftex}]
-Use the pdflatex program followed by pdfcrop and gs to generate images,
+\item [ -(no)use\_pdftex \label{cs_use_pdftex}]
+  By default, pdflatex is used to process input files.
+  Specify -nouse\_pdftex for documents that rely on
+  standard, dvi-producing latex.
+
+  The pdflatex method uses the pdflatex program followed by pdfcrop and gs to generate images,
 rather than latex followed by dvips.  This method can be useful for
 pdfLaTeX documents which cannot be translated by latex.
-This method can sometimes produce slightly better alignment
-of math formulas and eliminate ugly crop marks.
+The pdflatex method generally produces better alignment
+of math formulas and eliminates ugly crop marks.
 It does not respect the \fn{\$MATH\_SCALE\_FACTOR} option.
 
-This method uses the pdfwrite GhostScript driver by default.
+The pdflatex method uses the pdfwrite GhostScript driver by default.
 If called together with the -use\_dvipng option, it will use
 the png16m driver and produce slightly different math alignment.
 

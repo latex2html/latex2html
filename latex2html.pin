@@ -10831,7 +10831,7 @@ sub do_cmd_lq {
 
 sub do_leftquote {
     # MRO: use $_[0] : local(*_) = @_;
-    local($quote,$lquo) = ('',($HTML_VERSION<5)? '&#8216;' : ';SPMlsquo;');
+    local($quote,$lquo) = ('',($HTML_VERSION<4)? '&#8216;' : ';SPMlsquo;');
     # select whole quotation, if \lq matches \rq
     if ($_[0] =~ /^(.*)((\\rq\\rq|'')*)(\\rq)/) {
 	$quote = $1.$2; $_[0] = $';
@@ -15941,7 +15941,7 @@ sub initialise {
     } else {
 	print "\n You specified an invalid version: $HTML_VERSION\n"
 	    . "In future please request extensions by name:\n"
-	    . "  i18n  table  math  frame  latin1  unicode  etc.\n";
+	    . "  i18n  math  frame  latin1  unicode  etc.\n";
 
     # Require all necessary version specific files
 	foreach ( sort <$LATEX2HTMLVERSIONS${dd}html[1-9].[0-9].pl> ) {
@@ -17658,9 +17658,9 @@ Here is the type of extra information that is shown at each level:
 =item B<-html_version> I<list>
 
 Which HTML version should be generated. Currently available are:
-C<2.0>, C<3.0>, C<3.2>, C<4.0>. Some additional options that may be
+C<2.0>, C<3.2>, C<4.0>, C<5.0>. Some additional options that may be
 added are: C<math> (parse mathematics), C<i18n> (?), 
-C<table> (generate tables), C<frame> (generate frames),
+C<frame> (generate frames),
 C<latin1>...C<latin9> (use ISO-Latin-x encoding),
 C<unicode> (generate unicode characters). Separate the options with ',',
 e.g. C<4.0,math,frame>.
@@ -17757,7 +17757,7 @@ and modified by L. Peter Deutsch (Aladdin Enterprises).
 See the WWW online documentation or the F<$LATEX2HTMLDIR/doc/manual.ps>
 file for more detailed information and examples.
 
-L<pstoing>, L<texexpand>
+L<pstoimg>, L<texexpand>
 
 =cut
 

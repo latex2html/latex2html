@@ -43,41 +43,11 @@ with different versions supporting different features.
 In order to make your documents viewable by the widest possible audience,
 you should use the most advanced \texttt{HTML} version with widely-accepted usage.
 
-Currently the most advanced is \HTMLIV. 
-However this has only recently become an officially recommended version.
-Not all of its features are fully implemented in popular browsers,
-and the level of usage is unclear.
-Hence the default version for \latextohtml, version 98.1 remains at \HTMLIII.
-Further work is required before \latextohtml{} can fully exploit the
-features available using \HTMLIV.
-
 \index{iso-latin1@ISO--Latin--1|see{\htmlref{character set}{IIIcharset}}}%
 \index{iso-8879@ISO--8879|see{\htmlref{character set}{IIIcharset}}}%
 \index{character set!ISO-8879@ISO--8879 (ISO--Latin--1)}%
 \index{HTML@\texttt{HTML}!interactive forms}%
 \index{HTML@\texttt{HTML}!image-maps}%
-This provides support for alignment of headings, images and text
-(including text-flow around images), tables with separate captions
-and alignment of rows and columns, variable sizes and colors for
-text and color or patterns for the background
-as well as images, server-side image-maps, interactive forms, 
-and the minimal typographic elements (bold, italic and teletype)
-that were supported already in \texttt{HTML} version 2.0\,.
-Furthermore, \texttt{HTML} version 3.2 
-adheres to the \htmladdnormallink{ISO--Latin--1}%
-{http://www.w3.org/hypertext/WWW/MarkUp/html-spec_9.html\#SEC9.7.2}
-(ISO--8879) character set.
-
-\medskip\noindent
-\textbf{Note: }Although many people still use old browsers 
-that implement only features available with \texttt{HTML} 2.0, 
-this is \emph{not} a good reason to limit translation of documents 
-to using only these effects. Most of the translation done by \latextohtml{} 
-will still give acceptable results on older browsers. 
-The deficiencies due to lack of super/subscripts, tables 
-and some alignment effects should eventually convince such users 
-to overcome the inertia, and update their browsers to later versions that
-correctly support these effects.
 
 \medskip\noindent
 Sometimes it is known that the audience, for which a specific document 
@@ -128,43 +98,6 @@ or any browser yet available.
 However the `\texttt{i18n}' extension to \latextohtml\ is in preparation
 for when such browsers do become available, and such characters
 will be required in Web-accessible documents. 
-
-
-\index{HTML@\texttt{HTML}!Version 2.2, now `table' extension}%
-\index{HTML@\texttt{HTML}!HTML3 Tables@\texttt{HTML3} Table Model }%
-\index{tables!as HTML mark-up@as \texttt{HTML} mark-up}%
-\index{Netscape@\textsl{Netscape Navigator}!HTML3 Tables@\texttt{HTML3} Tables}%
-\item[tables (\texttt{HTML3} model)\label{tables3}\strikeout{Version 2.2}]
-Although \texttt{HTML} 3.2 implements tables using \HTMLtag{TABLE} tags,
-the capabilities available to specify details of the table-layout
-are not as extensive as were originally proposed in the
-\htmladdnormallink{\texttt{HTML3} Table Model}%
-{http://www.w3.org/pub/WWW/TR/WD-tables}.
-This extension (formerly referred to as \texttt{HTML} version 2.2)
-provides the full capabilities of this model.
-
-Note that current browsers may not correctly interpret all
-the features of tables constructed using this extension.
-Tables will be constructed, perhaps with some cells mis-aligned
-or without the desired merging of adjacent cells, etc.
-This feature was already available in many \texttt{HTML} browsers,
-including \appl{Netscape Navigator} V1.2, so should be still
-available with later versions of these browsers.
-
-
-\index{HTML@\texttt{HTML}!Version 3.0}%
-\item[\texttt{HTML} 3.0\label{html30}]
-This version of \texttt{HTML} was never accepted to become
-a recognised standard; perhaps because some of its models
-were ``too advanced'' at the time 
-(notably the \htmlref{\texttt{HTML-Math}}{math3} 
-and the \htmlref{Table Model}{tables3}).
-The proposed \htmladdnormallink{\texttt{HTML} 3.0}%
-{http://www.w3.org/pub/WWW/MarkUp/html3/}
-``standard'' was withdrawn and re-drafted to create
-the \texttt{HTML} 3.2 standard which is in current use.
-Standard textual formatting features, including centering, flush-right,
-flush-left and underlining are among the features retained.
 
 
 \index{HTML@\texttt{HTML}!Version 3.0, \texttt{HTML-Math} model}%

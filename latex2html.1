@@ -273,7 +273,7 @@ alternative strategies for implementing portions of
 .B LaTeX 
 code.
 .TP
-.B -html_version (2.0|3.0|3.2)[,(math|i18n|table)]*
+.B -html_version (2.0|3.2|4.0|5.0)[,(math|i18n)]*
 Same as setting:
 .I $HTML_VERSION = "... ";
 This specifies both the 
@@ -284,8 +284,7 @@ version to generate, and any extra
 features that may be required.
 The version number corresponds to a published DTD for an 
 .B HTML 
-standard
-(although 3.0 was never accepted and subsequently withdrawn). A
+standard. A
 corresponding 
 .B Perl 
 file in the versions/ subdirectory is loaded; these
@@ -296,15 +295,8 @@ versions/ subdirectory. When such a file is loaded the resulting HTML
 code can no longer be expected to validate with the specified DTD. An
 exception is math when the -no_math switch is also used, which should
 still validate.
-Currently, versions 2.0, 3.2 and 4.0 are available. 
-The extensions i18n, tables,
-math correspond roughly to what used to be called versions `2.1',
-`2.2', `3.1' respectively, in releases of 
-.B LaTeX2HTML 
-up to 1996. Now
-these extensions can be loaded with any of `2.0', `3.2' or `4.0' as the
-specified standard.
-The default version is usually set to be `4.0', within
+Currently, versions 2.0, 3.2, 4.0 and 5.0 are available. 
+The default version is usually set to be `5.0', within
 latex2html.config.
 .TP
 .B -no_tex_defs
