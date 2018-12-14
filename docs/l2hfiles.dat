@@ -220,7 +220,6 @@
 \item[\gn{amsfonts.perl}] contains code to recognise or implement features of the \env{amsfonts} package for \LaTeX{}
 \item[\gn{amstex.perl}] contains code to recognise or implement features of the \env{amstex} package for \LaTeX{}
 \item[\gn{\textsl  {anonymous ftp}}] pseudonym for use of the \appl{ftp} program as the \texttt{anonymous} user, for file-transfers 
-\item[\gn{\textsl  {Archie}}] publicly-accessible database of files and programs available via \appl{anonymous ftp} or \htmladdnormallinkfoot{using the Web}{http://www.pvv.unit.no/archie/}
 \item[\gn{\textsl  {Arena}}] \htmladdnormallinkfoot{Web-browser}{http://www.w3.org/hypertext/WWW/Arena}; currently the only one which displays \texttt{HTML} 3.1 math markup 
 \item[\gn{article.perl}] implements section-numbering conventions, etc. for the \emph{article} document-class
 \item[\gn{bash}] a unix shell, does not directly support use of \latextohtml

@@ -492,6 +492,9 @@ sub do_cmd_internal{
 	||(s/$next_pair_rx/$prefix = $2; ''/eo));
 ##    s/$next_pair_pr_rx/$prefix = $2; ''/eo;
     $file = "${prefix}$type.pl";
+    if ($file !~ /^\Q$dd\E/) {
+	$file = ".$dd$file";
+    }
     unless (-f $file) {
 	print "\nCould not find file: $file \n";
 	return ($_);
