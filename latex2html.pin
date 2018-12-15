@@ -8420,7 +8420,7 @@ sub make_section_heading {
     # separate any invisible anchors or alignment, if this has not already been done
     if (!($anchors)){ ($anchors,$text) = &extract_anchors($text) }
     else { 
-	$anchors =~ s/(ALIGN=\"\w*\")/$align = " $1";''/e;
+	$anchors =~ s/(class=\"\w*\")/$align = " $1";''/e;
 	$align = '' if ($HTML_VERSION < 2.2);
 	$anchors = &translate_commands($anchors) if ($anchors =~ /\\/);
     }
@@ -11043,7 +11043,7 @@ sub do_cmd_section_helper {
 
     local ($align, $dummy)=&get_next_optional_argument;
     if (($align =~/^(left|right|center)$/i)&&($HTML_VERSION > 2.0)) {
-        $align = "class=\"$1\"";
+        $align = "class=\"".uc($1)."\"";
     } elsif ($align) {
 	# data was meant to be a running-head !
 	$br_id = ++$global{'max_id'};
