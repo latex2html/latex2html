@@ -441,8 +441,8 @@ use L2hos;
 use vars qw(%prefs %cfg %newcfg);
 
 # This is the central place to modify the release name and date!!!
-my $RELEASE = '2018.3';
-my $VERSION = 'Released July 19, 2018';
+my $RELEASE = '2019';
+my $VERSION = 'Released January 1, 2019';
 
 # --------------------------------------------------------------------------
 # Open log
