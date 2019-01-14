@@ -7676,7 +7676,7 @@ sub post_process {
 #
 	    $top_navigation = (defined(&top_navigation_panel) ?
 			       &top_navigation_panel : &navigation_panel)
-		unless $NO_NAVIGATION;
+		unless $NO_NAVIGATION || !$TOP_NAVIGATION;
 	    $bot_navigation = (defined(&bot_navigation_panel) ?
 			       &bot_navigation_panel : &navigation_panel)
 		unless $NO_NAVIGATION;

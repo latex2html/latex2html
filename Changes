@@ -112,6 +112,10 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- fix -notop_navigation (had no effect)
+#
+#--------- v2019
+#
 #		- remove obsolete "table" option
 #		  https://bugs.debian.org/276037
 #		- fix "make test"
