@@ -4185,10 +4185,10 @@ sub extract_image_svg {
     
     # without -noshrink and -nocenter, pdftocairo scales image slightly
     # due to internally rounding page size to nearest integer number of pt
-    $svg_cmd ="$PDFTOCAIRO -svg -noshrink -nocenter -f $new_num -l $new_num images.pdf -";
+    $svg_cmd ="$PDFTOCAIRO -svg -noshrink -nocenter -f $new_num -l $new_num ${PREFIX}images.pdf -";
     print $svg_cmd, "\n" if ($VERBOSITY > 2);
     open(PDF2SVG, "$svg_cmd|") || die;
-    open(SVG, ">img$new_num.svg") || die;
+    open(SVG, ">${PREFIX}img$new_num.svg") || die;
     while (<PDF2SVG>) {	# filter svg file
       if (/^<svg .* width="([\d.]+)pt" height="([\d.]+)pt" /) {
 	if ($pt_per_ex{$name}) {
@@ -4269,10 +4269,10 @@ sub extract_image_bitmap { # clean
         my $PPMTO=$IMAGE_TYPE=~m/gif/i? $PPMTOGIF : $PNMTOPNG;
         #L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -sides|tee $p-.ppm|$PPMTO{$IMAGE_TYPE} --quiet $transparent >img$new_num.$IMAGE_TYPE;");
         if ($name =~ /figure|table/) {
-	  L2hos->syswait("$PNGTOPNM $p.png|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
+	  L2hos->syswait("$PNGTOPNM $p.png|$PPMTO --quiet $transparent >${PREFIX}img$new_num.$IMAGE_TYPE;");
 	} else {
 	    #	  L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -left -right|tee $p-.ppm|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
-	    L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCROP -left -right|tee $p-.ppm|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
+	    L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCROP -left -right|tee $p-.ppm|$PPMTO --quiet $transparent >${PREFIX}img$new_num.$IMAGE_TYPE;");
 
 	}
         open PPM,"<$p.ppm"; read(PPM,$_,30);close PPM;
