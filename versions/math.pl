@@ -907,7 +907,7 @@ sub do_env_array {
 
 ### Delimiters
 
-$math_delimiters_rx = "^\\s*(\\[|\\(|\\\\{|\\\\lfloor|\\\\lceil|\\\\langle|\\/|\\||\\)|\\]|\\\\}|\\\\rfloor|\\\\rceil|\\\\rangle|\\\\backslash|\\\\\\||\\\\uparrow|\\\\downarrow|\\\\updownarrow|\\\\Uparrow|\\\\Downarrow|\\\\Updownarrow|\\.)";
+$math_delimiters_rx = "^\\s*(\\[|\\(|\\\\\\{|\\\\lfloor|\\\\lceil|\\\\langle|\\/|\\||\\)|\\]|\\\\}|\\\\rfloor|\\\\rceil|\\\\rangle|\\\\backslash|\\\\\\||\\\\uparrow|\\\\downarrow|\\\\updownarrow|\\\\Uparrow|\\\\Downarrow|\\\\Updownarrow|\\.)";
 
 %ord_brackets = ( 'le' , '{', 're', '}', 'lk', '[', 'rk', ']' );
 
@@ -1986,11 +1986,13 @@ sub parse_math_toks {
 	    } elsif (($mathentities{$cmd})||($latexsyms{$cmd})) {
 		$ent = ($mathentities{$cmd} || $latexsyms{$cmd});
 		do {
-		    local($cset) = "${CHARSET}_character_map{$ent}";
+		    my $character_map = ((($CHARSET =~ /utf/)&&!$NO_UTF)?
+					 'iso_10646' : $CHARSET );
+		    local($cset) = "${character_map}_character_map{$ent}";
 		    $cset =~ s/\-/_/go;
 		    local($char); eval "\$char = \$$cset";
 		    do {
-			$cset = "${CHARSET}_character_map{$cmd}";
+			$cset = "${character_map}_character_map{$cmd}";
 			$cset =~ s/\-/_/go; eval "\$char = \$$cset";
 			$ent = $cmd if ($char);
 		    } unless ($char);

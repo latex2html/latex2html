@@ -9736,7 +9736,8 @@ sub revert_to_raw_tex {
     local($_) = @_;
     local($character_map) = "";
     if ( $CHARSET && $HTML_VERSION ge "2.1" ) {
-	$character_map = $CHARSET;
+	$character_map = ((($CHARSET =~ /utf/)&&!$NO_UTF)?
+			  'iso_10646' : $CHARSET );
 	$character_map =~ tr/-/_/; }
     while (s/$O\s*\d+\s*$C/\{/o) { s/$&/\}/;}
     while (s/$O\s*\d+\s*$C/\{/o) { s/$&/\}/;} #repeat this.

@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- fix unicode in -html_version 5.0,math
 #		- fix -notop_navigation (had no effect)
 #
 #--------- v2019

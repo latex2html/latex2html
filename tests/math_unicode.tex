@@ -1,0 +1,26 @@
+% test unicode symbols in formulas and in file names from section headings
+% latex2html -long_titles 20 -html_version 5.0,math math_unicode.tex
+
+\documentclass{article}
+
+\begin{document}
+
+
+\section{The symbol $\alpha$}
+
+This should be in the file \texttt{symbol\_alpha.html}.$\alpha$
+
+test unicode beta: β
+
+\'e
+
+\section{The symbol $\beta$}
+
+This should be in the file \texttt{symbol\_beta.html}. $\beta = 1 + a \ldots$
+
+\section{\textit{Another} section}
+
+This should be in the file \texttt{symbol\_beta.html}.$\beta$
+
+\end{document}
+
