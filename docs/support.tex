@@ -29,13 +29,6 @@ such as applying source level patches.
 Windows users will probably want to read the section about
 \htmlref{installation on Windows}{windowsinst}.
 
-In case you find one of the URLs below broken, use the search
-engine on the TUG home page \CTANtug{} in order to locate the tool.
-Other Web-searching facilities such as Altavista or \appl{FTP search}%
-\htmladdnormallinkfoot{\html{ }}{http://ftpsearch.ntnu.no/ftpsearch}
-will also do the job.
-
-\medskip\noindent
 For the best use of \latextohtml{} you want to get the latest
 versions of all the utilities that it uses. (It will still work
 with earlier versions, but some  special effects may not be possible. 
@@ -201,8 +194,7 @@ below. Thanks to Jens Berger (\texttt{jberger@mail.zedat.fu-berlin.de})
 for providing this list!
 \begin{itemize}
 \item install \fn{WinZip};
-\item install \TeX/\LaTeXe{} and \fn{dvips};\\
-   E.g. the \fn{MikTeX} $1.20$ distribution from \MikTeXURL.
+\item install \TeX/\LaTeXe{} and \fn{dvips};
 \item install \fn{Perl};\\
    E.g. \fn{ActivePerl} $509$ or higher from \ActiveStateURL.
    Windows $95$ users will also need \fn{DCOM}, it is listed on
@@ -247,30 +239,8 @@ for providing this list!
 package managers for Linux, and the macports package manager for MacOS.
 
 \index{source code}%
-\index{source code!from CTAN}%
-\index{CTAN}%
-Releases of \latextohtml\ may also be obtained through one of the 
-\htmladdnormallink{Comprehensive \TeX{} Archive Network (CTAN)}%
-{\CTANtug{}} sites.
-They are located at
-\begin{htmllist}\htmlitemmark{GreenBall}
-\item [US ]
-United States:
-\htmladdnormallink{\path{https://www.ctan.org/}}{https://www.ctan.org/}\,,
-\item [DE ]
-Germany:
-\htmladdnormallink{\path{ftp://ftp.dante.de/}}%
-{ftp://ftp.dante.de/}\,.
-\end{htmllist}
-In the directory \htmladdnormallink{\CTANA/}{\CTANtug{\CTANA}} 
-should be the latest version, as a compressed archive.
-
-\smallskip\noindent
-There are also many mirrors.
-To find the mirror nearest to you, use:
-\htmladdnormallink{\path{http://mirror.ctan.org/}\CTANA}%
-{http://mirror.ctan.org/\CTANA}.
-
+Releases of \latextohtml\ may also be obtained at
+\htmladdnormallink{\path{https://www.github.com/latex2html/latex2html/releases}}{https://www.github.com/latex2html/latex2html/releases}\,,
 
 \bigskip
 \index{source code!developer's repository}\label{cvsrepos}%
@@ -282,21 +252,17 @@ still under development and not yet sufficiently tested for release.
 A daily updated compressed archive of the developers' work may be
 downloaded from \CVSlatest\,.
 
-\begin{quote}
-\textbf{Warning: }Use the files from this site at your own risk.
-\end{quote}%
-
 \htmlrule\index{source code!compressed}%
 \medskip\noindent
 Having obtained a compressed \fn{tar} version, save it into a file 
-\fn{latex2html-98.1.tar.gz} say,
+\fn{latex2html-2019.tar.gz} say,
 then extract its contents with 
 %begin{latexonly}
 \begin{small}
 %end{latexonly}
 \begin{verbatim}
-% gzip -d latex2html-98.1.tar.gz
-% tar xvf latex2html-98.1.tar
+% gzip -d latex2html-2019.tar.gz
+% tar xvf latex2html-2019.tar
 \end{verbatim} 
 %begin{latexonly}
 \end{small}

@@ -22,7 +22,6 @@
   \url{http://www.latex2html.org/current/}}
 %  \url{http://www-dsed.llnl.gov/files/programs/unix/latex2html/sources/}}
 % \def\sourceB{\htmlurl{ftp://ftp.mpn.com/pub/nikos/latex2html-98.1.tar.gz}}
- \def\sourceB{\CTANtug{\CTANA}}
  \def\sourceC{\htmlurl{http://ftp.rzg.mpg.de/pub/software/latex2html/sources/}}
 % \def\CVSsite{\url{http://cdc-server.cdc.informatik.tu-darmstadt.de/\~{}latex2html/}}
 % \def\CVSrepos{\url{http://cdc-server.cdc.informatik.tu-darmstadt.de/\~{}latex2html/user/}}
@@ -32,8 +31,6 @@
  \def\CVSrepos{\htmlurl{https://www.github.com/latex2html/latex2html/}}
 % \def\CVSlatest{\htmlurl{http://saftsack.fs.uni-bayreuth.de/~latex2ht/l2h-latest.tar.gz}}
  \def\CVSlatest{\htmlurl{https://www.github.com/latex2html/latex2html/archive/master.zip}}
- \newcommand{\CTANtug}[1]{\htmlurl{http://mirrors.ctan.org/#1}}
- \def\CTANA{support/latex2html}
  \def\tugURL{\htmlurl{http://www.tug.org/}}
  \def\danteURL{\htmlurl{http://www.dante.de/}}
 % \def\ListURL{\htmlurl{http://www.xray.mpe.mpg.de/mailing-lists/latex2html/}}
@@ -71,14 +68,6 @@
 
 \newcommand{\texdev}[1]{\htmladdnormallink
  {\texdevURL/#1}{\texdevURL/#1}}
-\newcommand{\ctan}{http://ctan.tug.org/ctan}
-\newcommand{\ctanTUG}{\htmladdnormallinkfoot
- {TUG's searchable CTAN site}{\ctan}}
-\newcommand{\ctanURL}[1]{\htmladdnormallink
- {CTAN:\texttt{.../#1}}{\ctan/#1}}
-\newcommand{\ctanURLbr}[1]{\htmladdnormallink
- {CTAN:\texttt{.../#1}}{\ctan/#1}}
-\newcommand{\ctanTUGurl}[2]{\ctanURL{#2}}
 \newcommand{\indichtml}{l2h/indic/IndicHTML/}
 
 \end{htmlonly}
@@ -279,7 +268,7 @@
 \htmladdnormallink{\LaTeX{3}}{http://www.tex.ac.uk/CTAN/latex/latex3}}
 %
 \newcommand{\Engberg}{\index{Uffe Engberg}%
-\htmladdnormallinkfoot{Uffe Engberg}{http://www.brics.dk/\~{}engberg}} 
+{Uffe Engberg}} 
 
 \newcommand{\texdevINDIC}{\texdev\indic}
 %\endinput

@@ -17,7 +17,7 @@
 # These are the usual calls to application programs
 #
 DVIPS = dvips
-DVIPDF = dvipdf
+DVIPDF = dvipdfm
 # set TEXINPUTS to use the html.sty included in this package
 LATEX = TEXINPUTS=../texinputs:: latex
 MAKEINDEX = makeindex
@@ -135,8 +135,8 @@ LSEC7	  = $(COMMON) -prefix C -dir $(TOP)  -info 0  \
 #  dvi- and  PostScript versions
 #
 
-manual.pdf:      manual.dvi
-	$(DVIPDF) manual.dvi $@
+manual.pdf:      manual.ps
+	ps2pdf manual.ps
 
 manual.ps:      manual.dvi
 	$(DVIPS) manual.dvi -o $@

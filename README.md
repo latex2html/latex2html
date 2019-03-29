@@ -55,17 +55,14 @@ The LaTeX2HTML program includes its own manual page.
 The manual page can be viewed by saying "perldoc latex2html"
 or "latex2html -help".
 
-See the documentation at 
-   http://mirrors.ctan.org/support/latex2html/manual.pdf
-for more information and examples.
+See the manual in the docs directory for more information and
+examples.
 
 Other useful links can be found at:  www.latex2html.org
 and at the mailing-list site:
 	http://tug.org/mailman/listinfo/latex2html
 
-In particular see the pages:
- support.html , Snode1.html , Snode2.html , Snode3.html 
-for instructions on how to install the program 
+See the file INSTALL for instructions on how to install the program
 and make your own local copy of the manual in HTML.
 
 Requirements

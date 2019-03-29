@@ -1,22 +1,13 @@
-LaTeX2HTML 99.2 Installation Manual
+LaTeX2HTML Installation Manual
 ===================================
-
-The installation procedure has changed substantially from version 98.3 on.
-It now resembles more closely the GNU installation scheme, while providing
-alternatives for Win32 and OS/2 users.
 
 Step by step cookbook
 =====================
 
-Perl version 5.8 and below uses old style multiline regex matching.
-Perl version 5.10 and above uses new style multiline regex matching.
-Perl version 5.18 is buggy and prevents LaTeX2HTML from working correctly.
-Perl version 5.22 seems to be OK.
-
 A. UNIX
 -------
 
-(Win 95, 98, NT and OS/2 users see below)
+(Windows users see below)
 
 0. Unpacking
 
@@ -120,7 +111,7 @@ See below "Further General Aspects" for information on useful site-wide
 configuration.
 
 
-B. DOS, Win32, OS/2
+B. DOS, Win32
 -------------------
 
 0. Unpacking
@@ -129,20 +120,6 @@ Unpack the tar file into a temporary area. This has changed: Do not unpack
 the tar file to the final desired location (e.g. /usr/local/latex2html).
 Read the INSTALL file. Oops, you are already here...
 
-On OS/2, rename CONFIG.BAT to CONFIG.CMD and modfify the PERL environment
-setting (in CONFIG.CMD) in the following way:
-
-set PERL=perl_
-
-This is needed because this "version" of the Perl executable has some
-additional features that are required by LaTeX2HTML.
-If you want to make use of the Makefiles on OS/2 (this works if you have
-the GNU utilities installed), then you should include a line
-
-SHELL=.../sh.exe
-
-with ... being the path to the bourne shell executable. Thanks to 
-Uli Wortmann for this hint.
 
 1. Configuring
 
@@ -151,8 +128,7 @@ should not have to change much apart from the path where LaTeX2HTML should
 be installed on your system. The executables are found automatically if
 located in the directories specified in your PATH environment. If your perl
 interpreter is not named "perl" or if you have more than one perl installed,
-you should edit CONFIG.BAT (or CONFIG.CMD on OS/2, in the following CONFIG.*
-is used for brevity) and specify the exact path to your (desired) perl
+you should edit CONFIG.BAT and specify the exact path to your (desired) perl
 interpreter.
 If you have just installed some of the required external utilities and
 have not yet added the paths to the PATH environment, you may specify
@@ -182,7 +158,7 @@ automatically, using the settings found in the previous step.
 
 3. Testing
 
-The CONFIG.* script created a TEST.BAT (TEST.CMD on OS/2) file that
+The CONFIG.* script created a TEST.BAT file that
 compiles a small test document located in the "tests" subdirectory.
 You may specify additional LaTeX2HTML options (up to arguments) on the
 TEST.* command line.
@@ -195,8 +171,7 @@ stored to your PATH environment.
 
 4. Installing
 
-Install LaTeX2HTML in its final location by running INSTALL.BAT 
-(INSTALL.CMD on OS/2).
+Install LaTeX2HTML in its final location by running INSTALL.BAT.
 
 5. Cleaning up
 
