@@ -112,6 +112,10 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- convert -- to &ndash; and --- to &mdash;
+#		  If you want "--", use "-{}-", even inside \texttt{}
+#		  Behavior of \textt{--} in latex depends on font encoding.
+#		  https://bugs.debian.org/75416
 #		- fix unicode in -html_version 5.0,math
 #		- fix -notop_navigation (had no effect)
 #

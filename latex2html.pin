@@ -9207,9 +9207,10 @@ sub text_cleanup {
     # MRO: replaced $* with /m
     s/(\s*\n){3,}/\n\n/gom;	# Replace consecutive blank lines with one
     s/<(\/?)P>\s*(\w)/<$1P>\n$2/gom;      # clean up paragraph starts and ends
+    s/(<!)?---(>)?/(length($1) || length($2)) ? "$1---$2" : "&mdash;"/ge;
+    s/(<!)?--(>)?/(length($1) || length($2)) ? "$1--$2" : "&ndash;"/ge;
     s/$O\d+$C//go;		# Get rid of bracket id's
     s/$OP\d+$CP//go;		# Get rid of processed bracket id's
-    s/(<!)?--?(>)?/(length($1) || length($2)) ? "$1--$2" : "-"/ge;
     # Spacing commands
     s/\\( |$)/ /go;
     #JKR: There should be no more comments in the source now.
