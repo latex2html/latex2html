@@ -26,25 +26,4 @@ $charset = $utf8_str;
 $USE_UTF = 1;
 $NO_UTF = '';
 
-sub convert_to_utf8 {
-    $_[0] =~ s/([\200-\377])/print $1;&to_utf8(ord($1))/egs;
-    $_[0] =~ s/\&#(\d{2,});/print $&;&to_utf8($1)/egs;
-}
-
-sub to_utf8 {
-    local($code) = @_;
-    return () unless ($code);
-    if ($code < 128 ) {return chr($code) };
-    my ($str,$top,$level) = ('',128,64);
-    while (($code > 63)&&($level>4)) {
-        $top += $level; $level /= 2;
-	$str = chr(128+$code%64).$str;
-        $code = int($code/64);
-    }
-    if ($top+$code > 255) {
-        print STDERR  "\n*** character $_[0] out of range for UTF-8 ***"; 
-	'';
-    } else { chr($top+$code).$str }
-}
-
 1;

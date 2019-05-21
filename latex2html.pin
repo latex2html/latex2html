@@ -2118,8 +2118,6 @@ sub convert_iso_latin_chars {
 		"\nCould not find translation function for $default_language.\n\n")
 	    }
 	);
-	if ($USE_UTF ||(!$NO_UTF &&(%unicode_table)&&length(%unicode_table)>2)) {
-	    &convert_to_unicode($_)};
     }
     $_ = join('', @case_processed, $_); undef(@case_processed);
     $_;
@@ -7736,7 +7734,7 @@ sub post_process {
 }
 
 sub adjust_encoding {
-    &convert_to_utf8($_) if ($USE_UTF);
+    &convert_to_utf8($_) if ($CHARSET eq 'utf-8' && !$NO_UTF);
     &lowercase_tags($_) if $LOWER_CASE_TAGS;
 }
 
