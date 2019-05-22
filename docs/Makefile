@@ -24,7 +24,7 @@ MAKEINDEX = makeindex
 BIBTEX = bibtex
 
 # L2H = latex2html  -no_math -html_version 3.2,math -scalable_fonts
-L2H = latex2html  -no_math -html_version 4.0,math
+L2H = latex2html -no_use_pdftex -image_type png -no_use_dvipng -no_math -html_version 4.0,math
 
 
 #
@@ -175,15 +175,6 @@ $(TOP).html: $(TOP).aux
 
 fresh:
 	$(L2H) $(LTOP);
-	$(L2H) $(LSEC3); $(L2H) $(LSEC4);
-	$(L2H) $(LSEC5);
-	$(L2H) $(LSEC2);
-	$(L2H) $(LSEC6);
-	$(L2H) $(LSEC1);
-	$(L2H) $(LSEC3); $(L2H) $(LSEC4);
-	$(L2H) $(LTOP);
-	touch $(TOP)/[HEMPSO]$(INT) $(TOP)/$(INT);
-	touch [HEMPSO].stamp $(TOP).stamp;
 
 html:
 	$(MAKE) $(TOP).stamp;

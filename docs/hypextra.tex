@@ -1,13 +1,4 @@
-\begin{htmlonly}
-\documentclass[dvips,a4paper]{article}
-\usepackage{html,htmllist,makeidx}
-\input{manhtml.tex}
-%
-\input{hypextra.ptr}    % Input counters and section
-\end{htmlonly}
-\startdocument
-%
-%\section{Hypertext Extensions to \LaTeX\label{sec:hyp}\index{special}}%
+\section{Hypertext Extensions to \LaTeX}
 \label{sec:hyp}\index{special}
 \index{hypertext!extensions}\index{extensions!hypertext}
 
@@ -406,8 +397,7 @@ The \Lc{htmladdnormallink} command expects some text as the first argument
 and a URL as the second argument. 
 When processed by \LaTeX{}  (i.e. in the \texttt{.dvi} or \texttt{.ps} output files), 
 the URL will have no effect. But when processed by the translator, 
-\htmladdnormallink{the URL will be used to provide an active hypertext link}
-{http://www.ncsa.uiuc.edu/demoweb/url-primer.html} 
+the URL will be used to provide an active hypertext link
 (to another file, picture, sound-file, movie, etc.) e.g.
 \begin{quote}
 %begin{latexonly}
@@ -574,7 +564,7 @@ So, what do think (comments please): <BR>
 \begin{latexonly}
 \begin{figure}[h]
     \begin{center}
-    \fbox{\scalebox{.7}{\includegraphics{psfiles/eform.ps}}}
+    \fbox{\scalebox{.7}{\includegraphics{psfiles/eform}}}
     \end{center}
   \caption{An electronic form.
   In the online version the form would be active.}
@@ -715,7 +705,7 @@ was constructed using this feature; its \LaTeX{} source follows.
 \begin{latexonly}
 \begin{figure}[ht]
 \begin{center}
-  \fbox{\scalebox{.7}{\includegraphics{psfiles/HTMLtab.ps}}}
+  \fbox{\scalebox{.7}{\includegraphics{psfiles/HTMLtab}}}
  \caption{Example use of macros for raw \texttt{HTML} code.}
  \label{ex:HTMLcode}
 \end{center}
@@ -895,7 +885,7 @@ used \hyperref[page]{earlier in}{on page~}{ of}{eform} this manual:
 \begin{verbatim}
 \begin{figure}
     \begin{center}
-    \fbox{\includegraphics[width=4in]{psfiles/eform.ps}}
+    \fbox{\includegraphics[width=4in]{psfiles/eform}}
     \end{center}
     \caption{An electronic form. Of course in the online version of this
      document the form above would be active.}
@@ -1316,13 +1306,6 @@ Note that it would be sensible to put the \texttt{@string} commands
 into a separate file, \fn{urls.bib} say, 
 loaded with the main file via\html{\\} \verb|\bibliography{urls,...}|.%
 
-\smallskip\index{citations!Harvard style}%
-\index{bibliography!Harvard style}\label{harvard}\html{\\}%
-\noindent
-For those who use the Harvard style for references
-\htmladdnormallinkfoot{there exists a special conversion add-on package}%
-{http://www.arch.su.edu.au/\~{}peterw/latex/harvard/}.
-
 \index{citations!natbib@\env{natbib} package}%
 \index{bibliography!natbib@\env{natbib} package}%
 \index{citations!Harvard style!handled@handled by \env{natbib}}%
@@ -1623,8 +1606,7 @@ looking at the \fn{labels.pl} file or by asking the author!} as follows:
 This will be translated into the appropriate hyper-link to this page.
 If there are any changes in this document and you would like to
 bring your document up-to date, you have to copy 
-\htmladdnormallink{\fn{labels.pl}}%
-{http://cbl.leeds.ac.uk/nikos/tex2html/doc/manual/labels.pl} again
+\fn{labels.pl} again
 and rerun the translator on your document. Of course if I move the 
 directory containing the \texttt{HTML} files for this document somewhere else, 
 then you would have to make a change in the argument of the 
@@ -1871,9 +1853,7 @@ which associates the coordinates of each active region in
 the map with a destination URL.  
 Usually this map file is kept on the server machine, 
 however \texttt{HTML} 3.2 also allows it 
-to reside on the \htmladdnormallink{client side}%
-{http://ds.internic.net/internet-drafts/draft-seidman-clientsideimagemap-02.txt} 
-for faster response.  
+to reside on the client side for faster response.  
 Both configurations are supported by \latextohtml{} 
 through the \Lc{htmlimage} options
 `\texttt{map=}' and `\texttt{usemap=}' respectively.

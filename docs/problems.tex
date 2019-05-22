@@ -1,14 +1,4 @@
-\begin{htmlonly}
-\documentclass[dvips,a4paper]{article}
-\usepackage{html,htmllist,makeidx}
-\input{manhtml.tex}
-%
-\input{problems.ptr}    % Input counters and section
-\end{htmlonly}
-\internal{}%
-\startdocument
-%
-%\section{Known Problems\label{sec:prb}\index{problems|(}}%
+\section{Known Problems}
 \label{sec:prb}\index{problems|(}%
 \tableofchildlinks*\htmlrule\index{bugs}\html{\\}%
 \noindent
@@ -306,7 +296,7 @@ any character other than quotes; e.g. \Lc{verb+ABC+}.
 \item [Cannot get the ``tilde'' (\~{}) to show: \hfill]
 The trick here is to use \verb|\~{}|.\html{\\}
 Alternatively try using something like:
-\url{\htmladdnormallink{mylink}{http://host/\%7Eme/path/file.html}}. 
+\verb|{\htmladdnormallink{mylink}{http://host/\%7Eme/path/file.html}}|. 
 
 \textbf{Warning:} Some browsers may not be able to interpret the \verb|%7E|
 as a ``tilde'' character.

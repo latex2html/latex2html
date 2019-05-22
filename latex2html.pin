@@ -7137,7 +7137,7 @@ sub make_latex{
     \lthtmlCropMarkDepth=\dp\lthtmlPageBox
     \lthtmltypeout{^^J:#1:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
     \lthtmltypeout{^^J:#1:lthtmlCropMarkDepth:=\the\lthtmlCropMarkDepth:1ex:=\the \dimexpr 1ex}%
-    \begin{preview}\copy\lthtmlPageBox\end{preview}}}%
+    \begin{preview}\copy\lthtmlPageBox\end{preview}}%
 \long\def\lthtmlTightFBox#1#2{%
     \adjustnormalsize\setbox\lthtmlPageBox=\vbox\bgroup %
     \let\ifinner=\iffalse \let\)\liih@math %

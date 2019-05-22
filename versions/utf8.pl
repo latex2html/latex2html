@@ -19,6 +19,10 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+# latex2html -html_version 5.0,utf8
+# can be used to produce utf-8 output even when input is, for example,
+# latin1 in a file with \usepackage[latin1]{inputenc}
+
 package main;
 
 $utf8_str = 'utf-8';

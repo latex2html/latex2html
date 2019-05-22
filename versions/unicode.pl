@@ -837,7 +837,7 @@ $raw_arg_cmds{'oe'} = $raw_arg_cmds{'OE'} = -1 ;
 
 # translate &#233; to utf8 characters
 sub convert_to_utf8 {
-    $_[0] =~ s/\&#(\d{2,});/print $&;&to_utf8($1)/egs;
+    $_[0] =~ s/\&#(\d{2,});/&to_utf8($1)/egs;
 }
 
 sub to_utf8 {

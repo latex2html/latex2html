@@ -225,7 +225,7 @@
 \item[\gn{bash}] a unix shell, does not directly support use of \latextohtml
 \item[\gn{bibtex}] bibliography data-base program, used with \LaTeX
 \item[\gn{book.perl}] implements section-numbering conventions, etc. for the \emph{book} document-class
-\item[\gn{\textsl  {CERN}}] originally named ``Conseil Europeen pour la Recherche Nucleaire'', now known as the \htmladdnormallinkfoot{``European Laboratory for Particle Physics''}{http://www.cern.ch/Welcome.html}, located near Geneva; also where the \htmladdnormallinkfoot{World-Wide Web}{http://www.w3.org/hypertext/WWW/TheProject.html} was originally conceived
+\item[\gn{\textsl  {CERN}}] originally named ``Conseil Europeen pour la Recherche Nucleaire'', now known as the \htmladdnormallinkfoot{``European Laboratory for Particle Physics''}{http://www.cern.ch}, located near Geneva; also where the \htmladdnormallinkfoot{World-Wide Web}{http://www.w3.org/hypertext/WWW/TheProject.html} was originally conceived
 \item[\gn{changebar.sty}] \LaTeXe\ package to mark changes in documentation; this super\-cedes an earlier package
 \item[\gn{Changes}] text file, recording the changes made to \latextohtml{} since it was first released in July 1993, until V96.1 and revisions during 1996
 \item[\gn{changes.tex}] input file for the \latextohtml{} manual; normally loaded only with the \texttt{HTML} version
@@ -339,7 +339,7 @@
 \item[\gn{mybutton.gif}] file-name used in example code for an image as a button to a hyperlink
 \item[\gn{natbib.perl}] implements the commands in the \env{natbib} package, allowing flexible styles for citations
 \item[\gn{\textsl  {NCSA}}] ``National Center for Supercomputing Applications'' located at University of Illinois at Urbana--Champaign
-\item[\gn{\textsl  {NCSA Mosaic}}] Web-browser, \htmladdnormallinkfoot{freely available}{http://www.ncsa.uiuc.edu/SDG/Software/Mosaic/Docs/help-about.html} for most platforms
+\item[\gn{\textsl  {NCSA Mosaic}}] Web-browser, freely available for most platforms
 \item[\gn{\textsl  {NDBM}}] alternative Database Management utility for Unix
 \item[\gn{netpbm}] suite of Unix \htmladdnormallinkfoot{graphics utilities}{ftp://ftp.x.org/contrib/utilities/}; alternative to \fn{pbmplus}
 \item[\gn{\textsl  {Netscape Navigator}}] popular Web-browser, \htmladdnormallinkfoot{commercially available}{http://home.netscape.com} for most platforms and free to academic institutions

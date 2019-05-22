@@ -3,7 +3,6 @@
 \documentclass[dvips,a4paper]{article}
 \usepackage{graphicx}
 %\usepackage{xcolor}
-% \usepackage{times}
 
 \usepackage{html,htmllist,makeidx,enumerate}
 %\usepackage{frames}
@@ -80,7 +79,6 @@
 %
 \begin{htmlonly}
  \def\makeglossary{}
- \pagecolor[named]{White}
 \end{htmlonly}
 
 \input manhtml.tex
@@ -270,20 +268,15 @@ describes how to obtain and install it, and how to use it effectively.
 \relax   %% this is important, else the next segment doesn't get processed
 
 %%% START XTRACTFAQ (END is somewhere within that segment)
-\segment{overview}{section}{Overview}
-\latex{\vfil\goodbreak}
+\input{overview.tex}
 %%% START XTRACTFAQ
-\segment{support}{section}{Installation and Further Support}
+\input{support.tex}
 %%% END XTRACTFAQ
-\latex{\vfil\goodbreak}
-\segment{features}{section}{Environments and Special Features}
-\latex{\vfil\goodbreak}
-\segment{hypextra}{section}{Hypertext Extensions to \LaTeX{}}
-\latex{\vfil\goodbreak}
-\segment{userman}{section}{Customising the Layout of HTML pages}
-\latex{\vfil\goodbreak}
+\input{features.tex}
+\input{hypextra.tex}
+\input{userman.tex}
 %%% START XTRACTFAQ
-\segment{problems}{section}{Known Problems}
+\input{problems.tex}
 %%% END XTRACTFAQ
 
 %\segment{changes}{section}{Changes from Previous Versions
