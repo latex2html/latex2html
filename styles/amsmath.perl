@@ -197,14 +197,14 @@ sub do_cmd_author {
         ||(s/$next_pair_rx/$next = $2;''/seo));
 	$after = $_;
    }
-    if ($next =~ /\\and/) {
-        my @author_list = split(/\s*\\and\s*/, $next);
+    if ($next =~ /\\and/i) {
+        my @author_list = split(/\s*\\and\s*/i, $next);
         my $t_author, $t_affil, $t_address;
         foreach (@author_list) {
             $t_author = &translate_environments($_);
             $t_author =~ s/\s+/ /g;
             $t_author = &simplify(&translate_commands($t_author));
-            ($t_author,$t_affil,$t_address) = split (/\s*<BR>s*/, $t_author);
+            ($t_author,$t_affil,$t_address) = split (/\s*<BR>s*/, $t_author, 3);
             push @authors, $t_author;
             push @affils, $t_affil;
             push @addresses, $t_address;
@@ -213,7 +213,7 @@ sub do_cmd_author {
         $_ = &translate_environments($next);
         $next = &translate_commands($_);
         ($t_author) = &simplify($next);
-        ($t_author,$t_affil,$t_address) = split (/\s*<BR>s*/, $t_author);
+        ($t_author,$t_affil,$t_address) = split (/\s*<BR>s*/, $t_author, 3);
         push @authors, $t_author;
         push @affils, $t_affil if $t_affil;
         push @addresses, $t_address if $t_address;
@@ -391,11 +391,11 @@ sub make_singleauthor_title{
 	$the_title .= "<P class=\"CENTER\"><STRONG>$t_author</STRONG>\n";
     } else { &write_warnings("There is no author for this document."); }
     if (($t_affil)&&!($t_affil=~/^\s*(($O|$OP)\d+($C|$CP))\s*\1\s*$/)) {
-	$the_title .= "<BR><I>$t_affil</I>\n";}
+	$the_title .= "<BR>$t_affil\n";}
     if ($t_address&&!($t_address=~/^\s*(($O|$OP)\d+($C|$CP))\s*\1\s*$/)) {
-	$the_title .= "<BR><SMALL>$t_address</SMALL>\n"}
+	$the_title .= "<BR>$t_address\n"}
     if ($t_email&&!($t_email=~/^\s*(($O|$OP)\d+($C|$CP))\s*\1\s*$/)) {
-	$the_title .= "<BR><SMALL>$t_email</SMALL></P>\n";
+	$the_title .= "<BR>$t_email</P>\n";
     } else { $the_title .= "</P>" }
     $the_title;
 }

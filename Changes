@@ -112,6 +112,8 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- format author block consistently
+#		  https://bugs.debian.org/223565
 #		- convert -- to &ndash; and --- to &mdash;
 #		  If you want "--", use "-{}-", even inside \texttt{}
 #		  Behavior of \textt{--} in latex depends on font encoding.
