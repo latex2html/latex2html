@@ -841,19 +841,30 @@ sub convert_to_utf8 {
 }
 
 sub to_utf8 {
-    local($code) = @_;
-    return () unless ($code);
-    if ($code < 128 ) {return chr($code) };
-    my ($str,$top,$level) = ('',128,64);
-    while (($code > 63)&&($level>4)) {
-        $top += $level; $level /= 2;
-	$str = chr(128+$code%64).$str;
-        $code = int($code/64);
+    local($codepoint) = @_;
+    return () unless ($codepoint);
+    if ($codepoint < 0x80) {
+	return pack 'C', $codepoint;
     }
-    if ($top+$code > 255) {
-        print STDERR  "\n*** character $_[0] out of range for UTF-8 ***"; 
-	'';
-    } else { chr($top+$code).$str }
+    elsif ($codepoint < 0x800) {
+	return pack 'CC',
+	    $codepoint >>  6 | 0b11000000,
+	    $codepoint       & 0b00111111 | 0b10000000;
+    }
+    elsif ($codepoint < 0x10000) {
+	return pack 'CCC',
+	    $codepoint >> 12 | 0b11100000,
+	    $codepoint >>  6 & 0b00111111 | 0b10000000,
+	    $codepoint       & 0b00111111 | 0b10000000;
+    }
+    else {
+	return pack 'CCCC',
+	    $codepoint >> 18 | 0b11110000,
+	    $codepoint >> 12 & 0b00111111 | 0b10000000,
+	    $codepoint >>  6 & 0b00111111 | 0b10000000,
+	    $codepoint       & 0b00111111 | 0b10000000;
+    }
+
 }
 
 1;

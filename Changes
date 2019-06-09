@@ -112,6 +112,9 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#
+#		- generate higher numbered UTF8 chars
+#
 #--------- v2019.2
 #
 #		- format author block consistently
