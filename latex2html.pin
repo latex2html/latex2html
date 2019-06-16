@@ -10599,34 +10599,25 @@ sub iso_map {
     my($character_map,$enc);
     local ($this);
 
-    if ( $CHARSET && $HTML_VERSION ge "2.1" ) {
+    if (($CHARSET =~ /utf/)&&!$NO_UTF) {
+	# utf8 is default output
+	$enc = $iso_10646_character_map{"$char$kind"};
+	if (!$enc && $iso_10646_combining_character_map{"$kind"}) {
+	    # use combining accents for characters not in main table: \dot{A}
+	    $enc = $char.$iso_10646_combining_character_map{"$kind"};
+	}
+    } else {
 	# see if it is a character in the charset
-	$character_map = ((($charset =~ /utf/)&&!$NO_UTF)?
-			  'iso_10646' : $CHARSET );
+	$character_map = $CHARSET;
 	$character_map =~ tr/-/_/;
 	eval "\$enc = \$${character_map}_character_map\{\"$char$kind\"\}";
 	print "\n no support for $CHARSET: $@ " if ($@);
+	$enc =~ /^\&\#(\d{3});$/;
+	# numeric character references in html refer to unicode
+	# we need to convert this char to an 8-bit character
+	if ($1 && ($1<=255)) { $enc = chr($1) }
     }
     if ($USE_ENTITY_NAMES && $enc) { return(";SPM$char$kind;") }
-
-    if ($enc) {
-	$enc =~ /^\&\#(\d{3});$/;
-	# maybe convert it to an 8-bit character
-	if ($NO_UTF && !$USE_UTF && ($1<=255)) { $enc = chr($1) }
-#	elsif (!$USE_UTF &&($1>127)&&($1<160)) { $enc = chr($1) }
-	elsif ($character_map !~ /^iso_(8859_1|10646)/) {
-	# get its latin1 or unicode entity encoding
-	    $enc = $iso_8859_1_character_map{"$char$kind"}
-	        ||$iso_8859_1A_character_map{"$char$kind"}
-	        ||$iso_10646_character_map{"$char$kind"}
-	}
-     } else {
-	# get its latin1 or unicode entity encoding, if available
-	$enc = $iso_8859_1_character_map{"$char$kind"}
-	    ||$iso_8859_1A_character_map{"$char$kind"}
-	    ||$iso_10646_character_map{"$char$kind"};
-    }
-
     if ($enc) {
 	$ISOLATIN_CHARS = 1; $enc;
     } elsif (!$image_made{"$char$kind"}) {

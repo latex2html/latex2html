@@ -224,7 +224,7 @@ sub do_cmd_textregistered { join('', &iso_map("reg", ""), $_[0]);}
 sub do_cmd_texttrademark { join('', '&#152;', $_[0]);}
 sub do_cmd_times { join('', &iso_map("times", ""), $_[0]);}
 
-%koi8_character_map
+%koi8_r_character_map
      = (
 #    '\\CYRDJE' , '&#128', 
 #    '\\@tabacckludge\'\CYRG' , '&#129', 

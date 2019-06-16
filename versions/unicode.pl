@@ -835,6 +835,24 @@ $raw_arg_cmds{'oe'} = $raw_arg_cmds{'OE'} = -1 ;
 
 	);
 
+%iso_10646_combining_character_map = (
+    'grave', '&#x300;',
+    'acute', '&#x301;',
+    'circ', '&#x302;',
+    'tilde', '&#x303;',
+    'macr', '&#x304;',
+    'breve', '&#x306;',
+    'dot', '&#x307;',
+    'uml', '&#x308;',
+    'ring', '&#x30A;',
+    'dblac', '&#x30B;',
+    'caron', '&#x30C;',
+    'cedil', '&#x327;',
+    'bdot', '&#x323;',
+    'b', '&#x331;',
+    't', '&#x361;'
+    );
+
 # translate &#233; to utf8 characters
 sub convert_to_utf8 {
     $_[0] =~ s/\&#(\d{2,});/&to_utf8($1)/egs;
