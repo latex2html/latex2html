@@ -3902,8 +3902,8 @@ sub call_dvips {
 		$dvips_call = "$DVIPS -S1 -i $DVIPSOPT -o$TMPDIR$dd${IMAGE_PREFIX} .${dd}${PREFIX}images.dvi";
 	    }
 	} else {
-	    die "Not implemented: -image_type svg with -nouse_pdftex";
-	    # could call dvipdf here and keep going
+	    $dvips_call = "$DVIPS .${dd}${PREFIX}images.dvi; ps2pdf .${dd}${PREFIX}images.ps";
+	    print $dvips_call, "\n";
 	}
     }
     if ($dvips_call) {
@@ -7431,7 +7431,7 @@ H4		{  }
 H5		{  }
 
 /* mathematics styles */
-DIV.displaymath		{ }	/* math displays */
+DIV.displaymath		{ text-align:center; }	/* math displays */
 TD.eqno			{ width:0; }	/* equation-number cells */
 TABLE.PAD TD	{ padding:3px; }
 TABLE.BORDER TD	{ border:1px solid black; }
@@ -10159,6 +10159,9 @@ sub embed_image {
 
     my $aalign;		# css style
     if (($name =~ /figure|table|displaymath\d+|eqnarraystar/)&&(!$align)) {
+	if ($eheight{$name}){
+	    $aalign = sprintf ( "height: \%.2fex; ", $eheight{$name} );
+	}
     } elsif (($name =~ /(equation|eqnarray)($|\d)/)&&(!$align)) {
 	if ($HTML_VERSION >= 3.2) {
 	    $aalign =  ($EQN_TAGS eq "L") ? "float:RIGHT;" : "float:LEFT;";

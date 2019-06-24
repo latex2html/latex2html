@@ -113,6 +113,9 @@
 # the top.
 #
 #
+#		- output height with displaymath, center displaymath
+#		- enable -nouse_pdftex -image_type svg
+#		- fall back to unicode combining characters for accents
 #		- generate higher numbered UTF8 chars
 #
 #--------- v2019.2

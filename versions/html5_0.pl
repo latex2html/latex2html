@@ -8,7 +8,7 @@ $DOCTYPE = "HTML";
 $DTDcomment = "<!DOCTYPE HTML>\n";
 
 $USING_STYLES = 1;
-$math_class = ' CLASS="mathdisplay"';
+$math_class = ' CLASS="displaymath"';
 $eqno_class = ' CLASS="eqno"';
 
 # Note that htmlx.x.pl prior modules are *NOT*already loaded.
