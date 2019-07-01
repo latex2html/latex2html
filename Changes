@@ -113,6 +113,7 @@
 # the top.
 #
 #
+#		- allow verbatim in figure
 #		- output height with displaymath, center displaymath
 #		- enable -nouse_pdftex -image_type svg
 #		- fall back to unicode combining characters for accents

@@ -1434,7 +1434,7 @@ sub do_env_displaymath {
 	if (($DISP_SCALE_FACTOR)&&($DISP_SCALE_FACTOR >= 1.2 ));
     ($labels, $comment, $_) = &process_math_env($math_mode,$_);
     if ($failed) {
-	$_ = &process_undefined_environment("displaymath", $id, $saved);
+	$_ = &process_math_in_latex("indisplay",'','',$saved);
 	s/^[ \t]*\n?/\n/; s/\n?[ \t]*$/\n/; 
 	$_ = (($comment.$labels)? "$comment$labels\n":''). $_;
     } else {
