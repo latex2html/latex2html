@@ -113,6 +113,7 @@
 # the top.
 #
 #
+#		- fix figure size with png
 #		- allow verbatim in figure
 #		- output height with displaymath, center displaymath
 #		- enable -nouse_pdftex -image_type svg

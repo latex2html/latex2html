@@ -552,8 +552,8 @@ if ($SCALABLE_FONTS) {
 }
 
 if ($PK_GENERATION) {
-    if ($MATH_SCALE_FACTOR <= 0) { $MATH_SCALE_FACTOR = 2; }
-    if ($FIGURE_SCALE_FACTOR <= 0) { $FIGURE_SCALE_FACTOR = 2; }
+    if ($MATH_SCALE_FACTOR <= 0) { $MATH_SCALE_FACTOR = 1; }
+    if ($FIGURE_SCALE_FACTOR <= 0) { $FIGURE_SCALE_FACTOR = 1; }
     my $saveMSF = $MATH_SCALE_FACTOR;
     my $saveFSF = $FIGURE_SCALE_FACTOR;
     my $desired_dpi = int($MATH_SCALE_FACTOR*75);
@@ -4267,23 +4267,19 @@ sub extract_image_bitmap { # clean
         my $PPMTO=$IMAGE_TYPE=~m/gif/i? $PPMTOGIF : $PNMTOPNG;
         #L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -sides|tee $p-.ppm|$PPMTO{$IMAGE_TYPE} --quiet $transparent >img$new_num.$IMAGE_TYPE;");
         if ($name =~ /figure|table/) {
-	  L2hos->syswait("$PNGTOPNM $p.png|$PPMTO --quiet $transparent >${PREFIX}img$new_num.$IMAGE_TYPE;");
+	  L2hos->syswait("$PNGTOPNM $p.png|tee $p.ppm|$PPMTO --quiet $transparent >${PREFIX}img$new_num.$IMAGE_TYPE;");
 	} else {
 	    #	  L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -left -right|tee $p-.ppm|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
-	    L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCROP -left -right|tee $p-.ppm|$PPMTO --quiet $transparent >${PREFIX}img$new_num.$IMAGE_TYPE;");
+	    L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PPMTO --quiet $transparent >${PREFIX}img$new_num.$IMAGE_TYPE;");
 
 	}
-        open PPM,"<$p.ppm"; read(PPM,$_,30);close PPM;
-        m/^(\d+) (\d+)$/m;
-        $pxdepth{$name}=$2-($cropmarkheight{$name}*$DVIPNG_DPI/72.27);
         $edepth{$name}=$ptdepth{$name}/$pt_per_ex{$name};
 	# extra .5pt in depth is border from latex "preview" package
         print "edepth{$name}=$edepth{$name}\n" if ($VERBOSITY > 2);
-        open PPM,"<$p-.ppm"; read(PPM,$_,30);close PPM;
+        open PPM,"<$p.ppm"; read(PPM,$_,30);close PPM;
         m/^(\d+) (\d+)$/m; 
-        $ewidth{$name}=$1*$imgpixeloverex; 
 	$eheight{$name}=$2*$imgpixeloverex;	# image height in ex
-        print "ewidth{$name}=$ewidth{$name}\n" if ($VERBOSITY > 2);
+        print "eheight{$name}=$ehieight{$name}\n" if ($VERBOSITY > 2);
         &open_dbm_database if $DJGPP;
 	} else {
 	    # RRM: deal with size data
@@ -10175,8 +10171,6 @@ sub embed_image {
 	    $aalign = sprintf ( "height: \%.2fex; vertical-align: \%.2fex; ",
 				$eheight{$name} ,
 				-$edepth{$name} );
-	} elsif ($pxdepth{$name}) {
-	    $aalign = sprintf ( "vertical-align: \%.0fpx", -$pxdepth{$name} );
 	} elsif ($depth{$name}) {
 	    # ALIGN=MIDDLE aligns middle of image to baseline of text
 	    my ($height_pxs) = ($imagesize =~ /HEIGHT=\"(\d+)\"/i);

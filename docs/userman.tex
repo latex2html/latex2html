@@ -1412,9 +1412,9 @@ This requires \htmlref{graphics utilities}{graphicsutils} %
 to be available which can specify the color to be made transparent.
 
 
-\item [\fn{\$FIGURE\_SCALE\_FACTOR}\texttt{ = 1.6;}\label{figscale}]
+\item [\fn{\$FIGURE\_SCALE\_FACTOR}\texttt{ = 1;}\label{figscale}]
 Scale factor applied to all images of \env{figure} and other environments, 
-when being made into an image.
+when being made into a bitmapped image.
 
 \smallskip\noindent
 Note that this does not apply to recognised mathematics environments, 
@@ -1422,7 +1422,7 @@ which instead use the contents of \fn{\$MATH\_SCALE\_FACTOR}
 and \fn{\$DISP\_SCALE\_FACTOR} to specify scaling.
 
 
-\item [\fn{\$MATH\_SCALE\_FACTOR}\texttt{ = 1.6;}\label{mathscale}]
+\item [\fn{\$MATH\_SCALE\_FACTOR}\texttt{ = 1;}\label{mathscale}]
 Scale factor applied to all images of mathematics, both inline
 and displayed. 
 A value of 1.4 is a good alternative, with anti-aliased images.

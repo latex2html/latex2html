@@ -455,7 +455,7 @@ This is to compensate for the reduced resolution of a computer screen
 compared with laser-print.  
 The amount of this scaling is given by the
 value of a configuration variable \fn{\$MATH\_SCALE\_FACTOR},
-by default set to 1.6 in \fn{latex2html.config}. 
+by default set to 1 in \fn{latex2html.config}. 
 A further variable \fn{\$DISP\_SCALE\_FACTOR} is used with
 `displayed math' equations and formulas.
 This value multiplies the \fn{\$MATH\_SCALE\_FACTOR} 
@@ -645,8 +645,10 @@ applies to image-generating \LaTeX{} environments
 \index{images!math scale-factor}%
 \index{images!display scale-factor}%
 \index{images!figure scale-factor}%
-\index{images!scale-factor, default 1.6}\html{\\}%
+\index{images!scale-factor, default 1}\html{\\}%
 \noindent
+These parameters apply only to bitmapped image types,
+and have no effect with the default SVG image type.
 The size of all ``small images'' depends on a configuration variable
 \fn{\$MATH\_SCALE\_FACTOR} which specifies how much to enlarge or 
 reduce them in relation to their original size in the \PS\  
@@ -658,14 +660,14 @@ intermediate image files. A scale-factor will only be effective
 if it is greater than 0. 
 The configuration variable \fn{\$FIGURE\_SCALE\_FACTOR} performs
 a similar function for ``figures''. 
-Both of these variables are initially set to have value 1.6.
+Both of these variables are initially set to have value 1.
 
 A further variable \fn{\$DISP\_SCALE\_FACTOR} is used with
 `displayed math' equations and formulas;
 this value multiplies the \fn{\$MATH\_SCALE\_FACTOR} 
 to give the actual scaling used.
-With the improved clarity of anti-aliased images, a scaling of 1.6
-may be a little excessive for inline images.
+Values greater than 1 can be used to counteract readability problems
+with bitmapped images.
 Accordingly this manual actually uses values of 1.4 and 1.2 respectively,
 for \fn{\$MATH\_SCALE\_FACTOR} and \fn{\$DISP\_SCALE\_FACTOR}.
 These go well with the browser's text-font set at 14\,pt. 
