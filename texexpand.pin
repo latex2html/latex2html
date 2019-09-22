@@ -669,7 +669,8 @@ sub main {
 #   ``Document Segmentation'' of the LaTeX2HTML manual.
 #
 sub process_file {
-    my ($infile) = @_;
+    my ($infile, $cmd) = @_;
+    # $infile is filename, $cmd is \input, \include or undef
     local(*IN);
     local($comments,$before,$orig);
 
@@ -682,7 +683,7 @@ sub process_file {
 
     # if we don't include this file marker LaTeX2HTML won't split
     # the document at this point
-    print OUT "%%% TEXEXPAND: INCLUDED FILE MARKER $infile\n"
+    print OUT "%%% TEXEXPAND: $cmd FILE MARKER $infile\n"
 	if ($includelevel > 1 && $active);
 
     if ($segmentfile) {
@@ -1027,7 +1028,7 @@ sub interprete {
 
 sub process_input_include_file {
     local($_) = @_;
-    local($before,$after,$class,$styles);
+    local($before,$after,$class,$styles,$cmd);
     $_ =~ s/\n$//;
 
     print STDERR "$prompt %--- Found include at level $includelevel: $_"
@@ -1038,11 +1039,11 @@ sub process_input_include_file {
 
     # $class serves as temporary storage
     if (/(\\input|\\include)\s*$arg_rx/o) {
-	($before,$after,$class,$filename) = ($`, $', $&, $2);
+	($before,$after,$class,$filename,$cmd) = ($`, $', $&, $2, $1);
 	$filename =~ s/\s//g;
     }
     elsif (/(\\input|\\include)\s+(\S+)(?=\s|$)/o) {
-	($before,$after,$class,$filename) = ($`, $', $&, $2);
+	($before,$after,$class,$filename,$cmd) = ($`, $', $&, $2, $1);
 	$filename =~ s/\s//g;
     }
     else {
@@ -1074,7 +1075,7 @@ sub process_input_include_file {
 		print OUT "$before";
 
 		# recursive call
-		&process_file($fname);
+		&process_file($fname,$cmd);
 
 		print OUT $after if($after =~ /\S+/);
 		print STDERR "$prompt %--- successfully included $filename"

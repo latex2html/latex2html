@@ -113,6 +113,7 @@
 # the top.
 #
 #
+#		- fork on \include, not on \input
 #		- fix figure size with png
 #		- allow verbatim in figure
 #		- output height with displaymath, center displaymath
