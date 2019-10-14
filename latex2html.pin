@@ -227,7 +227,7 @@ if ($PK_GENERATION && ! $DVIPS_MODE) {
 }
 
 # language of the DTD specified in the <DOCTYPE...> tag
-$ISO_LANGUAGE = 'EN' unless $ISO_LANGUAGE;
+$ISO_LANGUAGE = 'en' unless $ISO_LANGUAGE;
 
 # Save the command line arguments, quote where necessary
 $argv = join(' ', map {/[\s#*!\$%]/ ? "'$_'" : $_ } @ARGV);
@@ -359,9 +359,6 @@ if(defined $opt{'link'}) {
         &usage;
         die "Error: Unrecognised value for -link: $opt{'link'}\n";
     }
-}
-unless ($ISO_LANGUAGE =~ /^[A-Z.]+$/) {
-    die "Error: Language (-iso_language) must be uppercase and dots only: $ISO_LANGUAGE\n";
 }
 if ($HTML_VALIDATE && !$HTML_VALIDATOR) {
     die "Error: Need a HTML_VALIDATOR when -validate is specified.\n";
@@ -4391,7 +4388,7 @@ sub extract_image_bitmap { # clean
 		. (($custom_size)? "-geometry $custom_size " : '' )
                 . $croparg
 		. (($scale != 1)? "-scale $scale " : '' )
-		. ((($exscale)&&($exscale != 1)&&
+		. ((($exscale == int($exscale))&&($exscale != 1)&&
 		    !($ANTI_ALIAS_TEXT &&($LATEX_COLOR)))? 
 			"-shoreup $exscale$under " :'')
 		. ((($TRANSPARENT_FIGURES ||($trans))
@@ -4422,7 +4419,7 @@ sub extract_image_bitmap { # clean
 		. (($INTERLACE) ? "-interlace " : '' )
 		. ((($ANTI_ALIAS_TEXT||($aalias))&&(!($aalias =~ /no/)))?
 		    "-antialias -depth 1 " :'')
-		. ((($exscale)&&($exscale != 1)&&
+		. ((($exscale == int($exscale))&&($exscale != 1)&&
 		    !($ANTI_ALIAS_TEXT &&($LATEX_COLOR)))? 
 			"-shoreup $exscale " :'')
 		. (($scale ne 1) ? "-scale $scale " : '' )
@@ -17273,11 +17270,13 @@ Stop showing child nodes at this depth.
 
 =item B<-toc_depth> I<num>
 
-MISSING_DESCRIPTION
+Sectioning levels down to I<num> are to be included within the
+Table-of-Contents tree.
 
 =item B<->(B<no>)B<toc_stars>
 
-MISSING_DESCRIPTION
+Sections created using the starred form of sectioning commands are
+included within the Table of Contents.
 
 =item B<->(B<no>)B<short_extn>
 
@@ -17286,7 +17285,7 @@ C<.html>. This is helpful when shipping the document to PC systems.
 
 =item B<-iso_language> I<lang>
 
-MISSING_DESCRIPTION
+Language code for the HTML lang attribute.  Default is "en".
 
 =item B<->(B<no>)B<validate>
 
@@ -17397,11 +17396,14 @@ where "basename" is the base name of the file being translated.
 
 =item B<-long_titles> I<num>
 
-MISSING_DESCRIPTION
+The filenames for each HTML page are constructed from the first I<num>
+words of the section heading for that page, separated by the `_'
+character.
 
 =item B<->(B<no>)B<custom_titles>
 
-MISSING_DESCRIPTION
+The filenames for each HTML page are constructed by a user-specified
+perl subroutine.
 
 =item B<-title>|B<-t> I<top_page_title>
 
@@ -17446,7 +17448,8 @@ generated. If a custom string is given, it is used as the info page.
 
 =item B<->(B<no>)B<auto_link>
 
-MISSING_DESCRIPTION
+Creates hard link to index.html, or other filename specified
+in config file.
 
 =item B<-reuse> I<num> | B<-noreuse>
 

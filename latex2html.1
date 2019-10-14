@@ -423,7 +423,6 @@ processed, so the contents of the file may change any of the values of
 any of the variables that were previously established, as well as any
 default options. More than one initialisation file can be read in this
 way.
-[change_begin]98.1
 .TP
 .B -no_fork
 Same as setting:
@@ -441,10 +440,9 @@ error.
 .TP
 .B -iso_language <type>
 This enables you to specify a different language type than 'EN' to be
-used in the DTD entries of the 
+used in the lang attribute of the 
 .B HTML 
-document, e.g. 'EN.US'.
-[change_end] 98.1
+document, e.g. 'en-US'.
 .TP
 .B -short_index
 Same as setting:
@@ -466,14 +464,12 @@ is done as in
 using code such as follows.
 \\renewcommand{\\thefootnote}{\\arabic{footnote}}
 All the styles \\arabic, \\alph, \\roman, \\Alph and \\Roman are available.
-[change_begin]98.1
 .TP
 .B -numbered_footnotes
 Same as setting:
 .I $NUMBERED_FOOTNOTES = 1;
 If this is set you will get every footnote applied with a subsequent
 number, to ease readability.
-[change_end] 98.1
 .TP
 .B -address <author-address>
 Same as setting:
@@ -654,7 +650,6 @@ effects. Although on-screen images of text are definitely improved
 using anti-aliasing, printed images can be badly blurred, even at
 300dpi. Higher resolution printers do a much better job with the
 resulting grey-scale images.
-[change_begin]98.1
 .TP
 .B -white
 Same as setting:
@@ -688,7 +683,6 @@ is called twice -- once to create the format-dump, then again to
 load and use it. The pay-off comes with the faster loading on
 subsequent runs. Approximately 1 Meg of disk space is consumed by the
 dump file.
-[change_end] 98.1
 .SH Switches controlling Navigation Panels
 The following switches govern whether to include one or more navigation
 panels on each 
@@ -1110,7 +1104,7 @@ the appropriate time the value of
 is the document name, which
 usually coincides with the name of the working directory.
 .TP
-.B $CHARSET = 'iso_8859_1';
+.B $CHARSET = 'utf-8';
 This specifies the character set used within the 
 .B HTML 
 pages produced by
