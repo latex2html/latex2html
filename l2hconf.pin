@@ -27,6 +27,7 @@ $DVILUALATEX = '@DVILUALATEX@';	# dviLuaLaTeX
 $DVIPS = '@DVIPS@';	# dvips
 $DVIPNG = '@DVIPNG@';	# dvipng
 $PDFTOCAIRO = '@PDFTOCAIRO@';	# pdf to svg converter
+$PS2PDF = '@PS2PDF@';	# ps to pdf converter
 $PDFCROP = '@PDFCROP@';	# pdfcrop
 $GS = '@GS@';	# GhostScript
 

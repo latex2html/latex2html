@@ -70,6 +70,8 @@ ac_help="$ac_help
 ac_help="$ac_help
   --with-pdftocairo=PATH  path/name of the pdftocairo executable"
 ac_help="$ac_help
+  --with-ps2pdf=PATH      path/name of the ps2pdf executable"
+ac_help="$ac_help
   --with-pdfcrop=PATH     path/name of the pdfcrop executable"
 ac_help="$ac_help
   --with-latex=PATH       path/name of the LaTeX executable"
@@ -868,6 +870,14 @@ else
   with_pdftocairo=${PDFTOCAIRO:-}
 fi
 
+# Check whether --with-ps2pdf or --without-ps2pdf was given.
+if test "${with_ps2pdf+set}" = set; then
+  withval="$with_ps2pdf"
+  :
+else
+  with_ps2pdf=${PS2PDF:-}
+fi
+
 # Check whether --with-pdfcrop or --without-pdfcrop was given.
 if test "${with_pdfcrop+set}" = set; then
   withval="$with_pdfcrop"
@@ -1251,6 +1261,7 @@ $PERL $srcdir/config/config.pl \
   DVIPS=$with_dvips \
   DVIPNG=$with_dvipng \
   PDFTOCAIRO=$with_pdftocairo \
+  PS2PDF=$with_ps2pdf \
   PDFCROP=$with_pdfcrop \
   LATEX=$with_latex \
   PDFLATEX=$with_pdflatex \

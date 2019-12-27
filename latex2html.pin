@@ -3899,7 +3899,7 @@ sub call_dvips {
 		$dvips_call = "$DVIPS -S1 -i $DVIPSOPT -o$TMPDIR$dd${IMAGE_PREFIX} .${dd}${PREFIX}images.dvi";
 	    }
 	} else {
-	    $dvips_call = "$DVIPS .${dd}${PREFIX}images.dvi; ps2pdf .${dd}${PREFIX}images.ps";
+	    $dvips_call = "$DVIPS .${dd}${PREFIX}images.dvi && $PS2PDF .${dd}${PREFIX}images.ps";
 	    print $dvips_call, "\n";
 	}
     }

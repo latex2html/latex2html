@@ -259,6 +259,9 @@ $prefs{'DVIPNG'} = 'dvipng';
 # The pdftocairo executable.
 $prefs{'PDFTOCAIRO'} = 'pdftocairo';
 
+# The ps2pdf executable.
+$prefs{'PS2PDF'} = 'ps2pdf';
+
 # the pdfcrop executable needed for cropping PDF images
 $prefs{'PDFCROP'} = 'pdfcrop';
 
