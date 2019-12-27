@@ -80,6 +80,7 @@ translation it is asked to perform as follows:
  2. LaTeX commands with equations, figures, tables, etc. 
    As above plus 
     * latex (pdflatex is used by default)
+    * latex preview package
     * gs (Ghostscript version 4.03 or later),
     * The netpbm library
     * If you want to produce SVG images, pdftocairo
