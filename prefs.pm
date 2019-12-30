@@ -275,7 +275,9 @@ if($::newcfg{'plat'} eq 'os2') {
   $prefs{'GS'} = 'gsos2';
 }
 elsif($::newcfg{'plat'} eq 'win32') {
-  $prefs{'GS'} = 'gswin32c';
+  #$prefs{'GS'} = 'gswin32c';
+  # 2019-12-12 shige: 2-24)
+  $prefs{'GS'} = 'rungs,gswin32c';
 }
 else {
   $prefs{'GS'} = 'gs';

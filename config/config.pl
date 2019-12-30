@@ -1266,10 +1266,16 @@ EOF
         my @right_paths = ();
         my $gs_lib = 0;
         my $gs_fonts = 0;
+	# 2017-04-11 shige: 2-24)
+	my $gs_stand_ps;
         Gslibpaths: foreach $path (@try_path) {
           foreach('',"$dd$gs_version","${dd}gs$gs_version") {
             my $testpath = $path . $_;
-            if(!$gs_lib && -d $testpath && -s "$testpath${dd}gs_init.ps") {
+            # if(!$gs_lib && -d $testpath && -s "$testpath${dd}gs_init.ps") {
+	    # 2017-04-11, 2019-12-03 shige: 2-24)
+	    if ($testpath =~ /tlgs/) { $gs_stand_ps = "landscape.ps"; }
+	    else { $gs_stand_ps = "gs_init_ps"; }
+            if(!$gs_lib && -d $testpath && -s "$testpath${dd}$gs_stand_ps") {
               push(@right_paths,L2hos->path2os($testpath));
               $gs_lib = 1;
             }
@@ -1296,7 +1302,8 @@ Hint:    Search for the file 'gs_init.ps'. This directory and the 'fonts'
 EOF
         }
         else {
-           push(@right_paths,'.');
+           #push(@right_paths,'.');
+	   # 2019-12-16 shige: 2-24) 
            my $item;
            foreach $item (@right_paths) {
              $item = &simplify_path($item);

@@ -421,7 +421,9 @@ if (defined $opt{math_parsing}) {
 }
 &set_if_false($NO_ISOLATIN, $opt{latin});
 if ($INIT_FILE) {
-    if ($INIT_FILE !~ /^[.$dd$dd]/) {	# should start with / or .
+    # if ($INIT_FILE !~ /^[.$dd$dd]/) {	# should start with / or .
+    # 2019-12-18 shige: 2-43)
+    if ($INIT_FILE !~ /^\./ && !L2hos->is_absolute_path($INIT_FILE)) {
 	$INIT_FILE = ".$dd$INIT_FILE";	# so that value of @INC has no effect
     }
     if (-f $INIT_FILE && -r _) {
@@ -3870,7 +3872,9 @@ sub make_off_line_images {
 # calls either dvips, dvipng, gs, or nothing as specified
 # by command line options
 sub call_dvips {
-    local($dvips_call);
+    # local($dvips_call);
+    # 2019-12-27 shige: 2-44)
+    local($dvips_call, $dvips_call2);
     if ($USE_PDFTEX || $USE_LUATEX) {
 	# svg images are produced directly from images.pdf,
 	# don't need to do anything here
@@ -3881,11 +3885,16 @@ sub call_dvips {
 		$dvips_call .= "-sDEVICE=png16m -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images.pdf";
 	    } else {
 		# did not usepackage{preview}, need to crop
-		$dvips_call = "$PDFCROP --hires " . ($DEBUG ? '--debug ' : '')
-		    . ".${dd}${PREFIX}images.pdf"
-		    . ";" . $dvips_call;
+		# $dvips_call = "$PDFCROP --hires " . ($DEBUG ? '--debug ' : '')
+		#     . ".${dd}${PREFIX}images.pdf"
+		#     . ";" . $dvips_call;
+		# 2019-12-27 shige: 2-44)
 		print "\nTransforming PDF images to postscript using gs/ps2write ...\n";
-		$dvips_call .= "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf\n";
+		# $dvips_call .= "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf\n";
+		# 2019-12-27 shige: 2-44)
+		$dvips_call2 = $dvips_call . "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf";
+		$dvips_call = "$PDFCROP --hires " . ($DEBUG ? '--debug ' : '')
+		    . ".${dd}${PREFIX}images.pdf";
 	    }
 	}
     } else {
@@ -3899,7 +3908,10 @@ sub call_dvips {
 		$dvips_call = "$DVIPS -S1 -i $DVIPSOPT -o$TMPDIR$dd${IMAGE_PREFIX} .${dd}${PREFIX}images.dvi";
 	    }
 	} else {
-	    $dvips_call = "$DVIPS .${dd}${PREFIX}images.dvi && $PS2PDF .${dd}${PREFIX}images.ps";
+	    # $dvips_call = "$DVIPS .${dd}${PREFIX}images.dvi && $PS2PDF .${dd}${PREFIX}images.ps";
+	    # 2019-10-29, 2019-12-27 shige: 2-41)
+	    $dvips_call = "$DVIPS .${dd}${PREFIX}images.dvi";
+	    $dvips_call2 = "$PS2PDF .${dd}${PREFIX}images.ps";
 	    print $dvips_call, "\n";
 	}
     }
@@ -3907,6 +3919,9 @@ sub call_dvips {
 	print $dvips_call if (($DEBUG)||($VERBOSITY > 1));
 	&close_dbm_database if $DJGPP;
 	L2hos->syswait($dvips_call) && print "Error: $!\n";
+	if ($dvips_call2) {
+	    L2hos->syswait($dvips_call2) && print "Error: $!\n";
+	}
 	&open_dbm_database if $DJGPP;
     }
 }
@@ -4264,16 +4279,24 @@ sub extract_image_bitmap { # clean
         my $PPMTO=$IMAGE_TYPE=~m/gif/i? $PPMTOGIF : $PNMTOPNG;
         #L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -sides|tee $p-.ppm|$PPMTO{$IMAGE_TYPE} --quiet $transparent >img$new_num.$IMAGE_TYPE;");
         if ($name =~ /figure|table/) {
-	  L2hos->syswait("$PNGTOPNM $p.png|tee $p.ppm|$PPMTO --quiet $transparent >${PREFIX}img$new_num.$IMAGE_TYPE;");
+	  #L2hos->syswait("$PNGTOPNM $p.png|tee $p.ppm|$PPMTO --quiet $transparent >${PREFIX}img$new_num.$IMAGE_TYPE;");
+	  # 2019-12-12: 2-44)
+	  L2hos->syswait("$PNGTOPNM $p.png >$p.ppm");
+	  L2hos->syswait("$PPMTO --quiet $transparent $p.ppm >${PREFIX}img$new_num.$IMAGE_TYPE;");
 	} else {
 	    #	  L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PNMCUT -top $millimeter |$PNMCROP -left -right|tee $p-.ppm|$PPMTO --quiet $transparent >img$new_num.$IMAGE_TYPE;");
-	    L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PPMTO --quiet $transparent >${PREFIX}img$new_num.$IMAGE_TYPE;");
+	    # L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides|tee $p.ppm|$PPMTO --quiet $transparent >${PREFIX}img$new_num.$IMAGE_TYPE;");
+	    # 2019-12-12: 2-44)
+	    L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides >$p.ppm");
+	    L2hos->syswait("$PPMTO --quiet $transparent $p.ppm >${PREFIX}img$new_num.$IMAGE_TYPE;");
 
 	}
         $edepth{$name}=$ptdepth{$name}/$pt_per_ex{$name};
 	# extra .5pt in depth is border from latex "preview" package
         print "edepth{$name}=$edepth{$name}\n" if ($VERBOSITY > 2);
-        open PPM,"<$p.ppm"; read(PPM,$_,30);close PPM;
+        # open PPM,"<$p.ppm"; read(PPM,$_,30);close PPM;
+	# 2019-12-12 shige: 2-44)
+        open PPM,"<$p.ppm"; binmode(PPM); read(PPM,$_,30);close PPM;
         m/^(\d+) (\d+)$/m; 
 	$eheight{$name}=$2*$imgpixeloverex;	# image height in ex
         print "eheight{$name}=$ehieight{$name}\n" if ($VERBOSITY > 2);
@@ -4388,7 +4411,7 @@ sub extract_image_bitmap { # clean
 		. (($custom_size)? "-geometry $custom_size " : '' )
                 . $croparg
 		. (($scale != 1)? "-scale $scale " : '' )
-		. ((($exscale == int($exscale))&&($exscale != 1)&&
+		. (($exscale && ($exscale == int($exscale))&&($exscale != 1)&&
 		    !($ANTI_ALIAS_TEXT &&($LATEX_COLOR)))? 
 			"-shoreup $exscale$under " :'')
 		. ((($TRANSPARENT_FIGURES ||($trans))
@@ -4419,7 +4442,7 @@ sub extract_image_bitmap { # clean
 		. (($INTERLACE) ? "-interlace " : '' )
 		. ((($ANTI_ALIAS_TEXT||($aalias))&&(!($aalias =~ /no/)))?
 		    "-antialias -depth 1 " :'')
-		. ((($exscale == int($exscale))&&($exscale != 1)&&
+		. (($exscale && ($exscale == int($exscale))&&($exscale != 1)&&
 		    !($ANTI_ALIAS_TEXT &&($LATEX_COLOR)))? 
 			"-shoreup $exscale " :'')
 		. (($scale ne 1) ? "-scale $scale " : '' )
