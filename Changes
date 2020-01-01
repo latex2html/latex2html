@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#--------- v2020
 #
 #		- fork on \include, not on \input
 #		- fix figure size with png
