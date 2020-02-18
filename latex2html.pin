@@ -9463,7 +9463,7 @@ sub reuse {
     $print_dir = $this_dir.$dd unless ($print_dir);
     if (-f "$this_dir$dd${PREFIX}images.pl") {
 	print STDOUT "Reusing directory $print_dir:\n";
-	if ($this_dir !~ /^\Q$dd\E/) {
+	if (!L2hos->is_absolute_path($this_dir)) {
 	    $this_dir = ".$dd$this_dir";
 	}
 	local($key);

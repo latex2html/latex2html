@@ -606,7 +606,7 @@ if(&is_true(&get_name('TEXLIVE'))) {
 # --------------------------------------------------------------------------
 
 my $extrapath = $opt{EXTRAPATH} || $prefs{EXTRAPATH} || '';
-@paths = grep(-d, uniquify(@paths, split(/[:;]/,$extrapath)));
+@paths = grep(-d, uniquify(@paths, split(/\Q$pathd/,$extrapath)));
 #logit("DEBUG: EXTRAPATH=$extrapath\n");
 #logit("DEBUG: PATH=" . join(':',@paths) . "\n");
 
@@ -906,10 +906,11 @@ if($texpath eq 'no') {
 elsif(!$texpath && $kpath) {
   my @texpaths = ();
   chomp($kpath);
-  foreach(split(/[:;]/,$kpath)) {
+  foreach(split(/\Q$pathd/,$kpath)) {
     s/^!+//; # strip leading !'s
     s:[/\\]+$::; # strip trailing path delims
-    if(!/^[\.\w]/ && -d) {
+    $_ = L2hos->path2os($_);
+    if(L2hos->is_absolute_path($_) && -d) {
       push(@texpaths,$_);
     }
   }
