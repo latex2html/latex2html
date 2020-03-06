@@ -1274,8 +1274,8 @@ EOF
             my $testpath = $path . $_;
             # if(!$gs_lib && -d $testpath && -s "$testpath${dd}gs_init.ps") {
 	    # 2017-04-11, 2019-12-03 shige: 2-24)
-	    if ($testpath =~ /tlgs/) { $gs_stand_ps = "landscape.ps"; }
-	    else { $gs_stand_ps = "gs_init_ps"; }
+	    if ($testpath =~ /tlgs/) { $gs_stand_ps = "landscap.ps"; }
+	    else { $gs_stand_ps = "gs_init.ps"; }
             if(!$gs_lib && -d $testpath && -s "$testpath${dd}$gs_stand_ps") {
               push(@right_paths,L2hos->path2os($testpath));
               $gs_lib = 1;
@@ -1389,9 +1389,9 @@ if($opt{'have_pstoimg'}) {
         $vers = $1;
         ($major_vers) = $vers =~ /^(\d+)/;
     }
+    &checking('if pnmcrop can crop from one direction');
     if ($major_vers =~ /^199/) {
 	# try left crop
-	&checking('if pnmcrop can crop from one direction');
         my $timg = "config${dd}timg.pnm";
 	($stat,$msg,$err) = &get_out_err("$pnmcrop -l $timg");
     } elsif ($major_vers > 8) {
@@ -1408,7 +1408,6 @@ if($opt{'have_pstoimg'}) {
 		$newcfg{'PNMCROPOPT'} = ' -sides ';
 	    }
 	} else { $newcfg{'PNMCROPOPT'} = ' -sides '; }
-	print "\n$pnmcrop";
 	$msg = 'there is nothing to crop'; $stat = '';
     } else {
 	print "\nThis $vers for $pnmcrop is not recognisable.";
@@ -1525,8 +1524,8 @@ if(1) {
     $msg = $msg || $err;
     my $vers = '';
     if ($msg =~ /(^|\s*)Version.*\s([\d\.]+)\s*([\n\r]|$)/is) { $vers = $2; }
+    &checking('if ppmtogif can make transparent GIFs');
     if ($vers =~ /^199/) {
-	&checking('if ppmtogif can make transparent GIFs');
 	# '-h' is an invalid option. Nevertheless it forces ppmtogif to output a
 	# usage information to stderr. We'll have a closer look at that.
 	($stat,$msg,$err) = &get_out_err("$ppmtogif -h");

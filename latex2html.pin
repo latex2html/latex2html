@@ -2295,7 +2295,7 @@ sub translate {
 
     if (-f "${PREFIX}internals.pl") {
 	my $file = "${PREFIX}internals.pl";
-	if ($file !~ /^\Q$dd\E/) {
+	if (!L2hos->is_absolute_path($file)) {
 	    $file = ".$dd$file";
 	}
 	require ($file);
@@ -3569,10 +3569,14 @@ sub process_undefined_environment {
 #	    }
 	    # quotes will not be there with HTML 2.0
 	    $size =~ s/\"//g if ($HTML_VERSION < 2.2);
-	    if ($size && /\s$size\s/) {
+	    # if ($size && /\s$size\s/) {
+	    # 2020-03-03 shige:
+	    if ($size && /;$size$/) {
 		# Size is OK; recycle it!
 		++$global_page_num;
 		$_ = $cached ;    # ...perhaps restoring the desired size.
+		# 2020-03-03 shige:
+		s/;$size$//;
 		s/(${PREFIX}T?img)\d+\.($IMAGE_TYPE|html)/
 			&rename_html($&,"$1$global_page_num.$2")/geo;
 	    } else {
@@ -3939,6 +3943,8 @@ sub call_dvips {
 sub make_images {
     local($name, $contents, $raw_contents, $uucontents, $page_num,
 	  $uucontents, %page_map, $img);
+    # 2020-03-03 shige:
+    local $imgsize;
     # It is necessary to run LaTeX this early because we need the log file
     # which contains information used to determine equation alignment
     if ( $latex_body =~ /newpage/) {
@@ -4036,7 +4042,9 @@ sub make_images {
 	$contents = $latex_body{$name};
 	if ($page_num =~ /^\d+\#\d+$/) { # If it is a page number
 	    do {		# Extract the page, convert and save it
-		$img = &extract_image($page_num,$orig_name_map{$page_num});
+		# $img = &extract_image($page_num,$orig_name_map{$page_num});
+		# 2020-03-03 shige:
+		($img, $imgsize) = &extract_image($page_num,$orig_name_map{$page_num});
 		if ($contents =~ /$htmlimage_rx/) {
 		    $uucontents = &special_encoding($env,$2,$contents);
 		} elsif ($contents =~ /$htmlimage_pr_rx/) {
@@ -4046,6 +4054,8 @@ sub make_images {
 		}
 		if (($HTML_VERSION >=3.2)||!($contents=~/$order_sensitive_rx/)){
 		    $cached_env_img{$uucontents} = $img;
+		    # 2020-03-03 shige:
+		    if ($imgsize) { $cached_env_img{$uucontents} .= ";$imgsize"; }
 		} else {
                     # Blow it away so it is not saved for next time
 		    delete $cached_env_img{$uucontents};
@@ -10288,7 +10298,9 @@ sub embed_image {
 	    $result .= ">";
 #	}
     }
-    join('',$anch1, $result, $anch2);
+    # join('',$anch1, $result, $anch2);
+    # 2020-03-03 shige:
+    (join('',$anch1, $result, $anch2), $imagesize);
 }
 
 # MRO: added PNG support
