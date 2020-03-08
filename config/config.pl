@@ -1232,7 +1232,7 @@ EOF
 
         # Set up the Ghostscript library path
 
-        &checking('for ghostscript library and font paths');
+        &checking('for ghostscript library path');
         my @try_path = @gs_lib_path;
 
         # Filter valid paths from environment, if set
@@ -1258,7 +1258,7 @@ EOF
             /usr/local/share/gs /usr/local/lib/gs));
         }
 
-        # Now look for "gs_init.ps" and the "fonts" directory. Also try to add
+        # Now look for "gs_init.ps". Also try to add
         # - the Ghostscript version or
         # - "gs<version>"
         # to the path. This should cover a large number of configurations.
@@ -1266,7 +1266,6 @@ EOF
         my $path;
         my @right_paths = ();
         my $gs_lib = 0;
-        my $gs_fonts = 0;
 	# 2017-04-11 shige: 2-24)
 	my $gs_stand_ps;
         Gslibpaths: foreach $path (@try_path) {
@@ -1280,24 +1279,19 @@ EOF
               push(@right_paths,L2hos->path2os($testpath));
               $gs_lib = 1;
             }
-            $testpath .= "${dd}fonts" unless($testpath =~ /\Q$dd\Efonts$/i);
-            if(!$gs_fonts && -d $testpath) {
-              push(@right_paths,L2hos->path2os($testpath));
-              $gs_fonts = 1;
-            }
-            last Gslibpaths if($gs_lib && $gs_fonts); # got both directories
+            last Gslibpaths if($gs_lib);
           }
         }
 
         my @additional_paths = ();
-        unless($gs_lib && $gs_fonts) {
+        unless($gs_lib) {
           &result('no');
           logit(<<"EOF");
 Warning: Could not determine GS_LIB path.
          Ghostscript may not work due to missing startup files.
          You need to set the value of GS_LIB manually in $CFGFILE.
-Hint:    Search for the file 'gs_init.ps'. This directory and the 'fonts'
-         directory (usually same level) should be set in GS_LIB.
+Hint:    Search for the file 'gs_init.ps'. 
+         This directory should be set in GS_LIB.
          Separate the entries with the "$pathd" character. The current
          directory "." should be included, too.
 EOF
