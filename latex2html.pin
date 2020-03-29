@@ -2410,8 +2410,8 @@ sub translate {
 	###MEH -- starred sections don't show up in TOC ...
 	# RRM:  ...unless $TOC_STARS is set
 #	$toc_sec_title = &simplify($toc_sec_title);
-	$toc_sec_title = &purify($toc_sec_title);# if $SEGMENT;
-	$toc_sec_title = &purify($TITLE) unless ($toc_sec_title);	
+#	$toc_sec_title = &purify($toc_sec_title);# if $SEGMENT;
+	$toc_sec_title = $TITLE unless ($toc_sec_title);
 
 	if ($TOC_STARS) {
 	    $toc_section_info{join(' ',@curr_sec_id)} =
