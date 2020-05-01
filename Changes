@@ -112,6 +112,10 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#
+#		- fix false matches when reusing images for long environments.
+#		   https://bugs.debian.org/201731
+#
 #--------- v2020
 #
 #		- fork on \include, not on \input

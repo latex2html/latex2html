@@ -332,8 +332,10 @@ sub do_includegraphics {
       (L2hos->Copy($src,$dst) or # Would be nice to preserve timestamps, too.
        &write_warnings("\\includegraphics couldn't copy $src to tree: $!\n"))
 	unless (-f $dst) && (-M $dst < -M $src); 
-      join('',embed_image($dst,'web image',0,"Image $name", '','','','','',
-			  qq(WIDTH="$w" HEIGHT="$h")),$save); }
+      my ($img, $imgsize) = embed_image($dst,'web image',0,"Image $name", 
+					'','','','','',
+					qq(WIDTH="$w" HEIGHT="$h"));
+      join('',$img,$save); }
     # --------------------------------------------------
     # Complicated case: but if netpbm utilities are not available...
     elsif ($ALWAYS_USE_LATEX) {
@@ -429,9 +431,12 @@ sub do_includegraphics {
         print "\ngraphics: $pipe\n" if ($VERBOSITY > 1);
 	system($pipe)==0 || 
 	  &write_warnings("\\includegraphics processing of $src failed! $!");
-	$img = embed_image($dst,'web image',0,"Image $name", '','','','','',
-			   qq(WIDTH="$w" HEIGHT="$h")); 
+	my $imgsize;
+	($img, $imgsize) = embed_image($dst,'web image',0,"Image $name",
+				       '','','','','',
+				       qq(WIDTH="$w" HEIGHT="$h"));
 	$cached_env_img{$cacheid}=$img; }
+
       join('',$img,$save);
 	} # end of 'pipe through netpbm utilities'
     } # end of 'work with the web image'

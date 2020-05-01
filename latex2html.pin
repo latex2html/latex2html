@@ -3547,7 +3547,7 @@ sub process_undefined_environment {
     } else {
 	$uucontents = &encode(&addto_encoding($env,$contents));
     }
-    $cached = $cached_env_img{$uucontents};
+    $cached = $cached_env_img{$uucontents} if $uucontents;
     print STDOUT "\nCACHED: $uucontents:\n$cached\n" if ($VERBOSITY > 4);
     if ($NOLATEX) { 
 	$id_map{$name} = "[$name]";
@@ -3590,7 +3590,7 @@ sub process_undefined_environment {
 	s/$PREFIX$img_rx\.new/$PREFIX$1.$IMAGE_TYPE/go; # Point to the actual image file(s)
 	$id_map{$name} = $_;
 	s/$PREFIX$img_rx\.$IMAGE_TYPE/$PREFIX$1.new/go;	# But remember them as used.
-	$cached_env_img{$uucontents} = $_;
+	$cached_env_img{$uucontents} = $_ if $uucontents;
     }
 
     if (! defined($cached)) {				# Must generate it anew.
@@ -3599,7 +3599,7 @@ sub process_undefined_environment {
 	$new_id_map{$name} = $id_map{$name} = ++$global_page_num . "#" .
 	    ++$new_page_num;
 	$orig_name_map{$id_map{$name}} = $name;
-	$cached_env_img{$uucontents} = $id_map{$name} if ($REUSE == 2);
+	$cached_env_img{$uucontents} = $id_map{$name} if ($uucontents && $REUSE == 2);
 
 	#RRM: this (old) code frequently crashes NDBM, so do it in 2 steps
 #	$img_params{$name} = join('#', &extract_parameters($contents));
@@ -4052,7 +4052,7 @@ sub make_images {
 		} else {
 		    $uucontents = &encode(&addto_encoding($contents,$contents));
 		}
-		if (($HTML_VERSION >=3.2)||!($contents=~/$order_sensitive_rx/)){
+		if ($uucontents && ($HTML_VERSION >=3.2)||!($contents=~/$order_sensitive_rx/)){
 		    $cached_env_img{$uucontents} = $img;
 		    # 2020-03-03 shige:
 		    if ($imgsize) { $cached_env_img{$uucontents} .= ";$imgsize"; }
@@ -7561,7 +7561,8 @@ sub encode_title {
 
 # Encodes the contents of enviroments that are passed to latex. The code
 # is then used as key to a hash table pointing to the URL of the resulting
-# picture.
+# picture.  Returns "" if contents are too long.  Long keys do not work with
+# some DBM modules, and are unlikely to reappear verbatim in the latex files.
 sub encode {
     local($_) = @_;
     # Remove invocation-specific stuff
@@ -7573,8 +7574,11 @@ sub encode {
     s/\//slash/g;		# replace funnies, may cause problems in a hash key
     s/\$|\/|\\//g;		# remove funnies, may cause problems in a hash key
     s/\s*|\n//g;		# Remove spaces  and newlines
-    s/^(.{80}).*(.{80})$/$1$2/;		# truncate to avoid DBM problems
-    $_;
+    if (length($_) > 160) {
+	"";			# no caching for long environments
+    } else {
+	$_;
+    }
 }
 
 
