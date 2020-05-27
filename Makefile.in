@@ -84,14 +84,14 @@ l2hconf.pm: ${cfgfile} ${srcdir}/${buildcmd} l2hconf.pin
 	touch l2hconf.pm
 
 test: all
-	LATEX2HTMLDIR=${srcdir}; export LATEX2HTMLDIR ; \
+	LATEX2HTMLDIR=$(realpath ${srcdir}); export LATEX2HTMLDIR ; \
 	latex2html='' ; \
 	for file in latex2html bin/latex2html* bin/${PLAT}/latex2html*; do \
 	  test -s $$file && latex2html=$$file break ; \
 	done ; \
 	if test -n "$$latex2html"; then \
 	  echo "*** Running test on $$latex2html"; \
-	  ./$$latex2html -test_mode ${ARGS} tests/${TESTCASE} ; \
+	  cd tests; ../$$latex2html -test_mode ${ARGS} ${TESTCASE} ; \
 	fi
 
 test_clean:

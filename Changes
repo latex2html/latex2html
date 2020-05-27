@@ -113,8 +113,9 @@
 # the top.
 #
 #
+#		- fix "make test"
 #		- fix false matches when reusing images for long environments.
-#		   https://bugs.debian.org/201731
+#		  https://bugs.debian.org/201731
 #
 #--------- v2020
 #
