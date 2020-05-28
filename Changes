@@ -113,6 +113,7 @@
 # the top.
 #
 #
+#		- fix eqnarray*
 #		- fix "make test"
 #		- fix false matches when reusing images for long environments.
 #		  https://bugs.debian.org/201731
