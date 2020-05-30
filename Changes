@@ -113,6 +113,9 @@
 # the top.
 #
 #
+#		- gs 9.50: -dNOSAFER to write to tmp dir
+#		- css fix: put caption below figure
+#		- fix bug with gif with >256 colors
 #		- fix eqnarray*
 #		- fix "make test"
 #		- fix false matches when reusing images for long environments.

@@ -519,10 +519,11 @@ dvips followed by gs.  This method produces better alignment of
 math formulas which extend significantly above or below
 the line of text in which they are contained.
 .TP
-.B -use_pdftex
-Generate intermediate images with pdflatex instead of plain latex.
-Produced PDF output will then be translated into images with GhostScript.
-Useful for pdflatex documents which cannot be translated by latex.
+.B -nouse_pdftex
+Generate intermediate images with plain latex instead of pdflatex.
+If your document is written for pdflatex, run ``pdflatex'' first and
+then ``latex2html''.  If your document is written for plain, dvi-producing
+latex, run ``latex'' first and then ``latex2html -nouse_pdftex''.
 .TP
 .B -use_luatex
 Generate intermediate images with lualatex instead of plain latex.

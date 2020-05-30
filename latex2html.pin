@@ -3883,19 +3883,17 @@ sub call_dvips {
 	# svg images are produced directly from images.pdf,
 	# don't need to do anything here
 	if ($IMAGE_TYPE ne 'svg') {
-	    $dvips_call .= "$GS -q -dNOPAUSE -dNO_PAUSE -dBATCH -dSAFER ";
+	    $dvips_call .= "$GS -q -dNOPAUSE -dNO_PAUSE -dBATCH -dNOSAFER ";
+	    # -dNOSAFER is so that we can write to $TMPDIR - gs 9.50
 	    if ($USE_DVIPNG) {
-		print "\nTransforming PDF images using gs/png16m ...\n";
-		$dvips_call .= "-sDEVICE=png16m -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images.pdf";
+		my $device = $IMAGE_TYPE eq 'gif' ?
+		    'png256' :		# at most 256 colors for gif
+		    'png16m';		# 24 bit color for png
+		print "\nTransforming PDF images using gs/$device ...\n";
+		$dvips_call .= "-sDEVICE=$device -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images.pdf";
 	    } else {
 		# did not usepackage{preview}, need to crop
-		# $dvips_call = "$PDFCROP --hires " . ($DEBUG ? '--debug ' : '')
-		#     . ".${dd}${PREFIX}images.pdf"
-		#     . ";" . $dvips_call;
-		# 2019-12-27 shige: 2-44)
 		print "\nTransforming PDF images to postscript using gs/ps2write ...\n";
-		# $dvips_call .= "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf\n";
-		# 2019-12-27 shige: 2-44)
 		$dvips_call2 = $dvips_call . "-sDEVICE=ps2write -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%.3d.ps .${dd}${PREFIX}images-crop.pdf";
 		$dvips_call = "$PDFCROP --hires " . ($DEBUG ? '--debug ' : '')
 		    . ".${dd}${PREFIX}images.pdf";
@@ -7432,6 +7430,8 @@ IMG.LEFT    { float:left; }
 IMG.RIGHT   { float:right; }
 IMG.TOP     { vertical-align:top; }
 IMG.BOTTOM  { vertical-align:baseline; }
+
+CAPTION.BOTTOM { caption-side:bottom; }
 
 DL.COMPACT > dt { float:left; padding-right: 1em; }
 BODY { width:95%; max-width:50em; margin:auto; }

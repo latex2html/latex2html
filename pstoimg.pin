@@ -1199,7 +1199,7 @@ EOF
   #fi
 #fi - texlive
   if($opt{debug}) {
-    print "$prompt: Running $GS $gs_quiet -sDEVICE=$GSDEVICE $gs_size $gs_density $gs_aalias $gs_out $out_redirect\n";
+    print "$prompt: Running $GS $gs_quiet -dNOSAFER -sDEVICE=$GSDEVICE $gs_size $gs_density $gs_aalias $gs_out $out_redirect\n";
 #if !@have_geometry@ && @PNMFLIP@ && @GSLANDSCAPE@
     print "GS>$GSROTATE\n" if($GSROTATE);
 #fi
@@ -1208,7 +1208,7 @@ EOF
     print "GS>showpage\n" if ($epsf);
     print "GS>quit\n";
     }
-  open (GS, "|$GS $gs_quiet -sDEVICE=$GSDEVICE $gs_size $gs_density $gs_aalias $gs_out $out_redirect");
+  open (GS, "|$GS $gs_quiet -dNOSAFER -sDEVICE=$GSDEVICE $gs_size $gs_density $gs_aalias $gs_out $out_redirect");
 #if !@have_geometry@ && @PNMFLIP@ && @GSLANDSCAPE@
   print GS "$GSROTATE\n" if ($GSROTATE);
 #fi
