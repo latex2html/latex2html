@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#--------- v2020.2
 #
 #		- gs 9.50: -dNOSAFER to write to tmp dir
 #		- css fix: put caption below figure
