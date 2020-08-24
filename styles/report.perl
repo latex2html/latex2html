@@ -86,4 +86,14 @@ sub do_cmd_thetable {
     join('', (($chap =~ /^(0\.)?$/)? '' : $chap)
         , &do_cmd_arabic("${O}0${C}table${O}0$C"), @_[0]) }
 
+# bibliography title comes from \bibname
+sub make_bibliography_title {
+    local($br_id, $title);
+    if ((defined &do_cmd_bibname)||$new_command{'bibname'}) {
+	$br_id=++$global{'max_id'};
+	$title = &translate_environments("$O$br_id$C\\bibname$O$br_id$C");
+    } else { $title = $bib_title }
+    return $title;
+}
+
 1;	# Must be last line

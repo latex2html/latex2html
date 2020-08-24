@@ -482,7 +482,7 @@ sub do_math_cmd_thick_sp {
 
 do {
     local($key, $val);
-    foreach $key (keys %mathnomacros) {
+    foreach $key (sort keys %mathnomacros) {
 	$val = $mathnomacros{$key};
 	$LaTeXmacros .= "\\providecommand{\\$key}{\\textrm{$val}}\n";
     }

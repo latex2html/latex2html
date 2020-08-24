@@ -7028,7 +7028,7 @@ sub add_to_preamble {
     }
 }
 
-sub make_latex{
+sub make_latex {
 # This is the environment in which to process constructs that cannot be
 # translated to HTML.
 # The environment tex2html_wrap will be wrapped around any shorthand
@@ -9095,8 +9095,13 @@ sub replace_cite_marks {
 	$text = $cite_info{$1} unless $text;
 	if ($checking_caption){
 	    "$label"
+	} elsif ($citefiles{$cite2bbl_nr{$label}}){
+	    $file = $citefiles{$cite2bbl_nr{$label}};
+            $file =~ s:\#.*$::;
+	    &make_named_href('', "$file#$label","$text");
 	} elsif ($citefiles{$2}){
-	    $file = $citefiles{$2}; $file =~ s:\#.*$::;
+	    $file = $citefiles{$2};
+            $file =~ s:\#.*$::;
 	    &make_named_href('', "$file#$label","$text");
 	} elsif ($PREAMBLE) {
 	    $text || "\#!$1!\#" ;
@@ -11724,6 +11729,9 @@ sub do_env_description {
     "<DL$compact>\n$_\n</DD>\n</DL>";
 }
 
+# add html tags for list and for individual list items
+# $tag is UL OL or DL
+# replaces \item in $_ with <LI> or <DT>..<DD>
 sub list_helper {
     local($_, $tag, $labels, $lengths) = @_;
     local($item_sep,$pre_items,$compact,$etag,$ctag);
@@ -11782,21 +11790,23 @@ sub list_helper {
 
     #RRM: cannot have anything before the first <LI>
     local($savedRS) = $/; $/='';
-    $_ =~ /\Q$item_sep\E|<DT>|<LI>/s;
+    $_ =~ /\Q$item_sep\E|<DT>|<LI>|$/s;
     #RRM: ...try putting it before the list-open tag
     if ($`) { 
 	$preitems = $`; $_ = $&.$';
 	$preitems =~ s/<P( [^>]*)?>//gm;
-	$close_tags .= "\n".$preitems if $preitems;
+	    $close_tags .= "\n".$preitems if $preitems;
     }
-    $_ =~ s/^\s*<\/[^>]+>\s*//s;
-
     # remove \n from end of the last item
     $_ =~ s/\n$//s;
+    $_ .= $etag."\n";
+    # remove extra </li> before first item
+    $_ =~ s/^\s*<\/[^>]+>\s*//s;
+
     $/ = $savedRS;
 
     join('' , $close_tags , "\n<$tag$compact>\n" 
-	 , $_ , "$etag\n</$ctag>" , $reopens);
+	 , $_ , "</$ctag>" , $reopens);
 }
 
 
@@ -12190,6 +12200,17 @@ sub do_cmd_etalchar {
     $etalchar . $_
 }
 
+# title of bibliography comes from \refname
+# this function is redefined in book and report classes
+sub make_bibliography_title {
+    local($br_id, $title);
+    if ((defined &do_cmd_refname)||$new_command{'refname'}) {
+	$br_id=++$global{'max_id'};
+	$title = &translate_environments("$O$br_id$C\\refname$O$br_id$C");
+    } else { $title = $ref_name }
+    return $title;
+}
+
 sub do_env_thebibliography {
     # Sets $citefile and $citations defined in translate
     local($_) = @_;
@@ -12214,17 +12235,8 @@ sub do_env_thebibliography {
     $_ = '<DD>'.$_ unless ($_ =~ /^\s*<D(T|D)>/);
     $citations = join('',"<DL class=\"COMPACT\">", $_, "</DL>");
     $citations{$bbl_nr} = $citations;
-    local($br_id);
-    if ((defined &do_cmd_bibname)||$new_command{'bibname'}) {
-	$br_id=++$global{'max_id'};
-	$title = &translate_environments("$O$br_id$C\\bibname$O$br_id$C");
-    } else { $title = $bib_title }
-    if (! $title ) {
-	if ((defined &do_cmd_refname)||$new_command{'refname'}) {
-	    $br_id=++$global{'max_id'};
-	    $title = &translate_environments("$O$br_id$C\\refname$O$br_id$C");
-	} else { $title = $ref_name }
-    }
+    # $title is "References" or "Bibliography" depending on document class
+    $title = &make_bibliography_title();
     local($closures,$reopens) = &preserve_open_tags();
     $toc_sec_title = $title ;
     local $bib_head = $section_headings{'bibliography'};
@@ -14302,6 +14314,8 @@ sub do_real_bibitem {
 
         #RRM: apply any special styles, as defined below
 	$label = &bibitem_style($label) if (defined &bibitem_style);
+	# keep track of which bibliography this citation is defined in
+	$cite2bbl_nr{$cite_key} = $bbl_nr;
 	# Create an anchor around the citation
 	join('',"<DT><A ID=\"$cite_key\">$label</A>\n<DD>", $_);
 
@@ -14340,10 +14354,7 @@ sub do_cmd_newblock {
 sub do_cmd_bibliography { &do_real_bibliography($CURRENT_FILE, @_) }
 sub do_real_bibliography {
     local($thisfile, $after) = @_;
-    if ((defined &do_cmd_bibname)||$new_command{'bibname'}) {
-	local($br_id)=++$global{'max_id'};
-	$TITLE = &translate_environments("$O$br_id$C\\bibname$O$br_id$C");
-    } else { $TITLE = $bib_title }
+    $TITLE = &make_bibliography_title();
     $toc_sec_title = $TITLE;
     return($_[0]) if ($making_name);
     local($bibfile);

@@ -112,6 +112,15 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#
+#
+#		- fix infinite loop on empty itemize env
+#		  https://bugs.debian.org/385276
+#		- make link to correct bibliography if there is more than one
+#		  https://bugs.debian.org/37982
+#		- "References" by default, "Bibliography" for book
+#		  https://bugs.debian.org/279961
+#
 #--------- v2020.2
 #
 #		- gs 9.50: -dNOSAFER to write to tmp dir
