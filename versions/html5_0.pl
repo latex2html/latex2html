@@ -1359,9 +1359,9 @@ sub do_env_equation {
     local($math_start,$math_end)= ($sbig,$ebig);
 
     local($eqno);
-    local($seqno) = join('',"\n"
-#                         , (($EQN_TAGS =~ /L/)? 'LEFT': 'RIGHT')
-		         , "\n");
+    local($seqno) = join('',"<SPAN class=\""
+                         , (($EQN_TAGS =~ /L/)? 'FLOATLEFT': 'FLOATRIGHT')
+		         , "\">\n");
     do { # get the equation number
 	$global{'eqn_number'}++;
 	$eqno = &translate_commands('\theequation');
@@ -1389,7 +1389,7 @@ sub do_env_equation {
     if ($EQN_TAGS =~ /L/) {
 	# equation number on left
 	($math_start,$math_end) =
-	    ($seqno . $eqno
+	    ($seqno . $eqno . "</SPAN>"
 		. "$sbig $halign"
 	    , "$ebig\n");
 	$border = $attribs = $env_id = '';
@@ -1397,7 +1397,7 @@ sub do_env_equation {
 	# equation number on right
 	($math_start,$math_end) =
 	    ("$halign $sbig"
-	    , $ebig .' '. $seqno . $eqno ."\n");
+	    , $ebig .' '. $seqno . $eqno ."</SPAN>\n");
 	$border = $attribs = $env_id = '';
     }
 

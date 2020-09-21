@@ -7413,15 +7413,17 @@ sub style_sheet {
 .MATH    { font-family: \"Century Schoolbook\", serif; }
 .MATH I  { font-family: \"Century Schoolbook\", serif; font-style: italic }
 .BOLDMATH { font-family: \"Century Schoolbook\", serif; font-weight: bold }
-DIV.equation { text-align-last:justify; white-space: nowrap; } /* place eq nos */
+DIV.equation { text-align:center; margin-top:1em; margin-bottom:1em; }
 SPAN.MATH { display:inline-block; }	/* don't stretch spaces inside eqn */
 
 DIV.author_info { text-align:center; } /* latex centers author */
 
 .LEFT    { text-align:left; }
+.FLOATLEFT    { float:left; }
 .CENTER  { text-align:center; }
 .CENTER > * { margin:auto; }
 .RIGHT   { text-align:right; }
+.FLOATRIGHT   { float:right; }
 .TOP     { vertical-align:top; }
 .MIDDLE  { vertical-align:middle; }
 .BOTTOM  { vertical-align:bottom; }
