@@ -1409,9 +1409,7 @@ sub do_env_thebibliography {
     }
     $citations = join('',"\n<DL class=\"COMPACT\">",$citations,"\n</DL>");
     $citations{$bbl_nr} = $citations;
-    if (defined &do_cmd_bibname) {
-	$title = &translate_commands('\bibname');
-    } else { $title = $bib_title }
+    $title = &make_bibliography_title();
     $_ = join('','<P>' , "\n<H2><A ID=\"SECTIONREF\">"
 	      , "$title</A>\n</H2>\n$bbl_mark#$bbl_nr#");
     $bbl_nr++ if $bbl_cnt > 1;

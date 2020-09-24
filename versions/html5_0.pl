@@ -1342,9 +1342,7 @@ sub do_env_tex2html_wrap_inline {
 
 
 # produces a <DIV class="equation">
-# containing three words:  &nbsp; <IMG> (eqno)
-# use with css: DIV.equation { text-align-last:justify; white-space: nowrap; }
-# to place <IMG> in center of line and (eqno) at right edge 
+# eq no is a <SPAN class="FLOATRIGHT">
 sub do_env_equation {
     local($_) = @_;
     local($math_mode, $failed, $labels, $comment) = ("equation",'','');

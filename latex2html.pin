@@ -7433,7 +7433,8 @@ IMG.RIGHT   { float:right; }
 IMG.TOP     { vertical-align:top; }
 IMG.BOTTOM  { vertical-align:baseline; }
 
-CAPTION.BOTTOM { caption-side:bottom; }
+/* captions for latex tables and figures appear at bottom */
+CAPTION { caption-side:bottom; }
 
 DL.COMPACT > dt { float:left; padding-right: 1em; }
 BODY { width:95%; max-width:50em; margin:auto; }
@@ -12256,7 +12257,7 @@ sub do_env_theindex { "" }
 # This is defined in html.sty
 sub do_env_comment { "" }
 
-
+# overridden in html5_0.pl
 sub do_env_equation{
     local($_)=@_;  
     local($attribs, $border, $no_num);
