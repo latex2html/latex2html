@@ -26,7 +26,7 @@ Run
    ./configure --help
 
 This gives you a brief overview of configuration options. Note that for
-each --enable-someting there is also a --disable-something. Anyway, the
+each --enable-something there is also a --disable-something. Anyway, the
 defaults are reasonable and robust, so you should give it a first try
 with only specifying the --prefix (see below) if you don't like /usr/local.
 
