@@ -1409,11 +1409,11 @@ sub do_env_equation {
 	$_ = join('', $comment, $labels, $math_start, $_, $math_end );
     }
     if ($border||($attribs)) { 
-	join('',"\n<DIV class=\"equation\">\n"
+	join('',"\n<DIV$math_class>\n"
 	    , &make_table( $border, $attribs, '', '', '', $_ )
 	    , "\n");
     } else { 
-	join('', "\n<DIV class=\"equation\">\n"
+	join('', "\n<DIV$math_class>\n"
 	    , $_ ."</DIV>");
     }
 }
@@ -1440,12 +1440,12 @@ sub do_env_displaymath {
 	$_ = (($comment.$labels)? "$comment$labels\n":'').$sbig.$_.$ebig;
     }
     if ($border||($attribs)) {
-	join('',"<BR>\n<DIV$math_class>\n"
+	join('',"<DIV$math_class>\n"
             , &make_table( $border, $attribs, '', '', '', $_ )
-	    , "</DIV>\n<BR CLEAR=\"ALL\">");
+	    , "</DIV>\n");
     } else { 
-        join('',"<BR><P></P>\n<DIV$math_class>",$_
-            ,"</DIV><BR CLEAR=\"ALL\">\n<P></P>");
+        join('',"<DIV$math_class>",$_
+            ,"</DIV>\n");
     }
 }
 
@@ -1472,16 +1472,16 @@ sub do_env_eqnarray {
 #	||((/$htmlimage_rx|$htmlimage_pr_rx/)&&($& =~/thumb/))) {
 	# image of whole environment, no equation-numbers
 	$failed = 1;
-	$falign = (($EQN_TAGS =~ /L/)? 'LEFT' : 'RIGHT')
-	    unless $no_eqn_numbers;
+	local($fclass) = " class=" . (($EQN_TAGS =~ /L/)? 'FLOATLEFT': 'FLOATRIGHT');
+	if ($no_eqn_numbers) {
+	    $fclass = " class=CENTER";
+	}
 	$_ = join ('', $comment
 	    , &process_undefined_environment(
 		"eqnarray".(($no_eqn_numbers) ? "star" : '')
 		, $id, $saved));
-	local($fclass) = $math_class;
-	$fclass =~ s/(ALIGN=\")[^"]*/$1$falign/;
-	$_ = join('',"<P></P><DIV$fclass>"
-	    , $_, "</DIV><BR CLEAR=\"ALL\"><P></P>\n");
+	$_ = join('',"<DIV$fclass>"
+	    , $_, "</DIV>\n");
     } else {
 	$failed = 0;
 	s/$htmlimage_rx/$doimage = $&;''/eo ; # force an image
@@ -1515,7 +1515,7 @@ sub do_env_eqnarray {
 	$#rows-- if ( $rows[$#rows] =~ /^\s*$/ );
 	$return = join(''
 	    , (($border||($attribs))? '': "<BR>")
-	    , (($doimage)? '' : "\n<DIV ALIGN=\"CENTER\">")
+	    , (($doimage)? '' : "\n<DIV$math_class>")
 	    , (($labels)? $labels : "\n") , $comment, $sarray);
 	foreach (@rows) { # displaymath
 	    $eqno = '';
@@ -1638,9 +1638,9 @@ sub do_env_eqnarray {
     if ($border||($attribs)) { 
 	join('' #,"<BR>\n<DIV$math_class>"
 	    , &make_table( $border, $attribs, '', '', '', $_ )
-	    , "\n</DIV><P></P><BR CLEAR=\"ALL\">");
+	    , "\n</DIV>");
     } else {
-	join('', $_ ,"<BR CLEAR=\"ALL\"><P></P>");
+	join('', $_ ,"");
     }
 }
 
@@ -1682,18 +1682,14 @@ sub do_env_eqnarraystar {
     if ($border||($attribs)) { 
 	join('' #,"<BR>\n<DIV$math_class>"
 	    , &make_table( $border, $attribs, '', '', '', $_ )
-	    , "\n</DIV><P></P><BR CLEAR=\"ALL\">");
+	    , "\n</DIV>");
     } elsif ($failed) {
 	$_ =~ s/^[ \t]*\n?/\n/; 
 	$_ =~ s/\n?[ \t]*/\n/;
-	join('', "<BR><P></P>\n<DIV$math_class>"
-	    , $_ ,"\n</DIV><P></P><BR CLEAR=\"ALL\">");
-    } elsif ($_ =~ s!(</TABLE></DIV>)\s*(<BR[^>]*><P></P>)?\s*$!$1!si) {
-	join('', $_ ,"<BR>\n");
-    } elsif ($_ =~ m!<P></P>\s*$!si) { # below-display space present 
-	$_
+	join('', "<DIV$math_class>"
+	    , $_ ,"\n</DIV>>");
     } else {
-	join('', $_ ,"<BR CLEAR=\"ALL\"><P></P>");
+	$_;
     }
 }
 

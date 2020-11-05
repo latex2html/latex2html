@@ -7413,7 +7413,6 @@ sub style_sheet {
 .MATH    { font-family: \"Century Schoolbook\", serif; }
 .MATH I  { font-family: \"Century Schoolbook\", serif; font-style: italic }
 .BOLDMATH { font-family: \"Century Schoolbook\", serif; font-weight: bold }
-DIV.equation { text-align:center; margin-top:1em; margin-bottom:1em; }
 SPAN.MATH { display:inline-block; }	/* don't stretch spaces inside eqn */
 
 DIV.author_info { text-align:center; } /* latex centers author */
@@ -7459,7 +7458,8 @@ H4		{  }
 H5		{  }
 
 /* mathematics styles */
-DIV.displaymath		{ text-align:center; }	/* math displays */
+DIV.displaymath { text-align:center; margin-top:1em; margin-bottom:1em; }
+	/* math displays: margins for \abovedisplayskip \belowdisplayskip */
 TD.eqno			{ width:0; }	/* equation-number cells */
 TABLE.PAD TD	{ padding:3px; }
 TABLE.BORDER TD	{ border:1px solid black; }
