@@ -1488,7 +1488,7 @@ sub do_env_eqnarray {
 	s/$htmlimage_pr_rx/$doimage .= $&;''/eo ; # force an image
 	local($sarray, $srow, $slcell, $elcell, $srcell, $ercell, $erow, $earray);
 	($sarray, $elcell, $srcell, $erow, $earray, $sempty) = ( 
-	    "\n<TABLE$env_id$lang CELLPADDING=\"0\" ALIGN=\"CENTER\""
+	    "\n<TABLE$env_id$lang CLASS=\"equation\""
 	    , "</TD>\n<TD ALIGN=\"CENTER\" NOWRAP>"
 	    , "</TD>\n<TD ALIGN=\"LEFT\" NOWRAP>"
 	    , "</TD></TR>", "\n</TABLE>", "</TD>\n<TD>" );
