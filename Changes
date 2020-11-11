@@ -114,6 +114,8 @@
 #
 #
 #
+#		- adjust spacing for eqnarray
+#		- fix alignment of eq numbers for safari
 #		- fix infinite loop on empty itemize env
 #		  https://bugs.debian.org/385276
 #		- make link to correct bibliography if there is more than one

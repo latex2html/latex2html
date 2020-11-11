@@ -1687,7 +1687,7 @@ sub do_env_eqnarraystar {
 	$_ =~ s/^[ \t]*\n?/\n/; 
 	$_ =~ s/\n?[ \t]*/\n/;
 	join('', "<DIV$math_class>"
-	    , $_ ,"\n</DIV>>");
+	    , $_ ,"\n</DIV>");
     } else {
 	$_;
     }
