@@ -772,8 +772,9 @@ $WORDS_IN_NAVIGATION_PANEL_TITLES = 4;
 # or "minipage".
 # Effective values are those greater than 0.
 # Sensible values are between 0.1 - 4.
+# Adequate sizes of inlined images are achieved with the value near 1.6
 #
-$MATH_SCALE_FACTOR = 1;
+$MATH_SCALE_FACTOR = 1.6;
 
 
 # This number, when defined, determines extra scaling for displayed equations.
@@ -788,8 +789,9 @@ $MATH_SCALE_FACTOR = 1;
 # image generating environments such as "figure", "table" or "minipage".
 # Effective values are those greater than 0.
 # Sensible values are between 0.1 - 4.
+# Adequate image sizes are achieved with the value near 1.6
 #
-$FIGURE_SCALE_FACTOR = 1;
+$FIGURE_SCALE_FACTOR = 1.6;
 
 
 # This is yet another scaling factor which has a special use.
@@ -840,6 +842,7 @@ $PNMPAD = '@PNMPAD@';
 $PNMROTATE = '@PNMROTATE@';
 $PNMSCALE = '@PNMSCALE@';
 $PNMCROP = '@PNMCROP@';
+$PPMQUANT = '@PPMQUANT@';
 
 $GIFTOPNM = '@GIFTOPNM@';
 $JPEGTOPNM = '@JPEGTOPNM@';

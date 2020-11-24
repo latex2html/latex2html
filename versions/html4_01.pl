@@ -949,13 +949,14 @@ sub process_tabular {
     s/\\\\\s*\[([^]]+)\]/\\\\/g;  # TKM - get rid of [N.n pc] on end of rows...
     s/\\newline\s*\[([^]]+)\]/\\newline/g;
     s/\n\s*\n/\n/g;	# Remove empty lines (otherwise will have paragraphs!)
+    s/\\\\\s*\n\s*$par_rx\s*\n/\\\\\n/g; # don't start next row with a \par
     local($i,@colspec,$char,$cols,$cell,$htmlcolspec,$frames,$rules);
     local(@rows,@cols,$border,$frame);
     local($colspan,$cellcount);
-    
+
     # set a flag to indicate whether there are any \multirow cells
     my $has_multirow = 1 if (/\\multirow/s);
-    
+
     # convert \\s inside \parbox commands to \newline s;
     # catch nestings
 
@@ -976,7 +977,7 @@ sub process_tabular {
 
     if ($color_env) {
 	local($color_test) = join(',',@$open_tags_R);
-	if ($color_test =~ /(color\{[^}]*})/g ) {
+	if ($color_test =~ /(color\{[^}]*\})/g ) {
 	    $color_env = $1;
 	}
     }
@@ -1109,7 +1110,10 @@ sub process_tabular {
 
 	for ( $i = 0; $i <= $#colspec; $i++ ) {
 	    # skip this cell if it is covered by a \multirow
-	    next if ($has_multirow && @row_spec[$i] > 0);
+	    if ($has_multirow && @row_spec[$i] > 0) {
+	        shift(@cols);
+	        next;
+	    }
 
 	    $colspec = $colspec[$i];
 	    if (!($colspec =~ $content_mark)) {

@@ -24,7 +24,7 @@ MAKEINDEX = makeindex
 BIBTEX = bibtex
 
 # L2H = latex2html  -no_math -html_version 3.2,math -scalable_fonts
-L2H = latex2html -no_use_pdftex -image_type png -no_use_dvipng -no_math -html_version 4.0,math
+L2H = latex2html -nouse_pdftex -image_type png -nouse_dvipng -nomath -html_version 4.0,math
 
 
 #
@@ -80,12 +80,12 @@ GLOSS	= "Glossary"
 
 
 
-COMMON	  = -external_file $(TOP) -dir $(TOP) -info 0 -short_index \
+COMMON	  = -external_file $(TOP) -dir $(TOP) -mkdir -info 0 -short_index \
 		-contents $(CONTENTS).html -index $(INDEXNODE).html \
-		-biblio $(REFNODE) -no_auto_link -no_footnode \
+		-biblio $(REFNODE) -noauto_link -nofootnode \
 		-split 6 -link 6 -up_url $(TOP).html -up_title $(TOPTITLE)
 
-LTOP	  =  -short_index -split 4 -link 5 -no_auto_link\
+LTOP	  =  -short_index -split 4 -link 5 -noauto_link\
 		 -t $(TOPTITLE) $(TOP).tex
 
 LSEC1	  = $(COMMON) -prefix O  \
@@ -126,7 +126,7 @@ LSEC6	  = $(COMMON) -prefix P \
 #		-down_url ../$(TOP)/$(CHGNODE).html -down_title $(CHGTITLE)  $(PRO).tex
 
 
-LSEC7	  = $(COMMON) -prefix C -dir $(TOP)  -info 0  \
+LSEC7	  = $(COMMON) -prefix C -dir $(TOP) -mkdir -info 0  \
 		-prev_url ../$(TOP)/$(PRO).html -prev_title $(S6TITLE) \
 		-down_url ../$(TOP)/$(GLOSSNODE).html -down_title $(GLOSS)  $(CHA).tex
 
@@ -193,7 +193,7 @@ twosteps:
 	make noimages; make images;  fi ;
 
 noimages:
-	$(L2H) -short_index -no_images manual.tex
+	$(L2H) -short_index -noimages manual.tex
 
 images:
 	$(L2H) -short_index -images_only manual.tex

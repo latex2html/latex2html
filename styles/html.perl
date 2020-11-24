@@ -8,6 +8,17 @@
 # Extension to LaTeX2HTML to translate hypermedia extensions
 # to LaTeX defined in html.sty to equivalent HTML commands.
 #
+# WARNING: \hyperref is also declared in hyperref.sty / hyperref.perl.
+# Interfaces of both instances are incompatible.
+# Therefore we declare additional command  \hyperrefhyper
+# whose interface is like that of \hyperref from hyperref.sty.
+#
+# If both hyperref.sty and html.sty are necessary,
+# and \hyperref from hyperref.sty is needed, the following workaround may do:
+#
+# \usepackage{hyperref}
+# \usepackage{html}
+# \renewcommand{\hyperref}[2][]{\hyperrefhyper[#1]{#2}}
 #
 #
 # Modifications (Initials see Changes):
@@ -268,8 +279,9 @@ sub do_cmd_htmladdimg{
     	$alt = $url unless $alt;
     }
     $url = &revert_to_raw_tex($url);
-    join('',&embed_image($url,$name,'',$alt,'',$map,$align
-		,'','',$opts),$_);
+    my($img, $imgsize) =
+      &embed_image($url,$name,'',$alt,'',$map,$align,'','',$opts);
+    join('', $img, $_);
 }
 
 sub do_cmd_externallabels{
@@ -559,6 +571,8 @@ sub do_cmd_externalcite {
     &process_cite("external",'');
 }
 
+# Provide the \hyperref command with interface of the html package.
+# Will redefine \hyperref of hyperref package if both are used.
 sub do_cmd_hyperref {
     local($_) = @_;
     local($text,$url,$hypopt);
@@ -595,6 +609,33 @@ sub do_cmd_hyperref {
     s/$next_pair_pr_rx//o; # Throw this away ...
     s/$next_pair_pr_rx//o unless ($opt =~ /no/);
     &process_ref($cross_ref_mark,$cross_ref_mark,$text);
+}
+
+# Provide the \hyperrefhyper command
+# emulating \hyperref interface of the hyperref package
+sub do_cmd_hyperrefhyper {
+    local($_) = @_;
+    local($text,$url);
+    local($opt, $dummy) = &get_next_optional_argument;
+    if ($opt) {
+	$text = &missing_braces unless
+	    ((s/$next_pair_pr_rx/$text = $2; ''/eo)
+	    ||(s/$next_pair_rx/$text = $2; ''/eo));
+	local($br_id) = ++$global{'max_id'};
+	$_ = join('', $OP.$br_id.$CP
+		    , $opt 
+		    , $OP.$br_id.$CP , $_ );
+	return (&process_ref($cross_ref_mark,$cross_ref_mark,$text));
+    }
+    $url = &missing_braces unless
+	((s/$next_pair_pr_rx/$url = $2; ''/eo)
+	||(s/$next_pair_rx/$url = $2; ''/eo));
+    s/$next_pair_pr_rx/$url.="\#$2.";''/eo;
+    s/$next_pair_pr_rx/$url.= (($url=~ m|\.$|)? '':'#').$2;''/e;
+    $text = &missing_braces unless
+	((s/$next_pair_pr_rx/$text = $2; ''/eo)
+	||(s/$next_pair_rx/$text = $2; ''/eo));
+    &make_href($url,$text);
 }
 
 sub do_cmd_hypercite {

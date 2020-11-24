@@ -17,11 +17,15 @@ package main;
 sub do_env_wrapfigure{
     local($_) = @_;
 
-    $contents =~ s/$optional_arg_rx//o;	   # ditch [nlines]
-    $contents =~ s/$next_pair_rx//o;	   # ditch {placement}
-    $contents =~ s/$next_pair_rx//o;	   # ditch {width}
+    s/$optional_arg_rx//o;	   # ditch [nlines]
+    s/$next_pair_rx//o;		   # ditch {placement}
+    $wrapfigure_width = &missing_braces unless ( # save {width}
+      (s/$next_pair_pr_rx/$wrapfigure_width=$2;''/eo)
+      ||(s/$next_pair_rx/$wrapfigure_width=$2;''/eo));
 #   &process_environment("figure", $global{'max_id'}++);
-    &do_env_figure($_);
+    $_ = &do_env_figure($_);
+    $wrapfigure_width = '';	# clear width
+    $_;
 }
 
 &process_commands_in_tex (<<_RAW_ARG_CMDS_);

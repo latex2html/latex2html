@@ -70,9 +70,11 @@ sub convert_to_unicode {
     # MRO: by reference; local(*_) = @_;
     my $char, $uchar;
     return($_[0]) if ($NO_UTF && !$USE_UTF);
-    $_[0] =~ s/([\200-\377])/$char="\&#".ord($1).";";
+    $_[0] = decode_utf8($_[0]);			# enable unicode matches
+    $_[0] =~ s/([\N{U+0080}-\N{U+FFFF}])/$char="\&#".ord($1).";";
 	$unicode_table{$char}||$char
     /eg;
+    $_[0] = encode_utf8($_[0]);			# and convert back to UTF
 #	$uchar = $unicode_table{$char};($uchar ? $uchar : $char)/eg;
 }
 

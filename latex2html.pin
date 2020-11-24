@@ -54,6 +54,7 @@ use 5.003; # refuse to work with old and buggy perl version
 use Getopt::Long;
 use Fcntl;
 use AnyDBM_File;
+use POSIX;						# for ceil()
 use Encode qw(decode_utf8 encode_utf8);			# for russian UTF-8 hack
 
 # The following are global variables that also appear in some modules
@@ -942,6 +943,7 @@ sub open_dbm_database {
     dbmopen(%verb, "$TMP_${dd}verb",0755);
 #    dbmopen(%verbatim, "$TMP_${dd}verbatim",0755);
     dbmopen(%verb_delim, "$TMP_${dd}verb_delim",0755);
+    dbmopen(%verb_lstopt, "$TMP_${dd}verb_lstopt",0755);
     dbmopen(%expanded,"$TMP_${dd}expanded",0755);
 # Holds max_id, verb_counter, verbatim_counter, eqn_number
     dbmopen(%global, "$TMP_${dd}global",0755);
@@ -982,6 +984,7 @@ sub close_dbm_database {
     dbmclose(%verb); undef %verb;
 #    dbmclose(%verbatim); undef %verbatim;
     dbmclose(%verb_delim); undef %verb_delim;
+    dbmclose(%verb_lstopt); undef %verb_lstopt;
     dbmclose(%expanded); undef %expanded;
     dbmclose(%global); undef %global;
     dbmclose(%env_style); undef %env_style;
@@ -1571,16 +1574,25 @@ sub pre_process {
     my $vbmark = $verb_mark;
     while (s/\\verb(\t*\*\t*)(\S)/"<verb$1".++$id.">$2"/e ||
 	    s/\\verb()(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$2"/e ||
-	    s/\\verb(\t\t*)([^*\s])/"<verb$1".++$id.">$2"/e) {
+	    s/\\verb(\t\t*)([^*\s])/"<verb$1".++$id.">$2"/e ||
+	    s/\\(lstinline)\s*(\[[^]]*\])?\s*(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$3"/e ||
+	    s/\\(lstinline)\s*(\[[^]]*\])?\s*([^*\s])/"<verb$1".++$id.">$3"/e) {
 
-	$del = $2;
-	#RRM: retain knowledge of whether \verb* or \verb
-	$vb_mark = ($1 =~/^\s*\*/? $verbstar_mark : $verb_mark);
+	if ($1 eq 'lstinline') {
+	    #SGE: retain knowledge and options of \lstinline
+	    $del = $3;
+	    $vb_mark = $verblst_mark;
+	    $verb_lstopt{$id} = $2;
+	} else {
+	    $del = $2;
+	    #RRM: retain knowledge of whether \verb* or \verb
+	    $vb_mark = ($1 =~/^\s*\*/? $verbstar_mark : $verb_mark);
+	}
 	$esc_del = &escape_rx_chars($del);
 	$esc_del = '' if (length($del) > 2);
 
 	# try to find closing delimiter and substitute the complete
-	# statement with $verb_mark or $verbstar_mark
+	# statement with $verb_mark or $verbstar_mark or $verblst_mark
 #	s/(<verb[^\d>]*$id>[\Q$del\E])([^$esc_del\n]*)([\Q$del\E]|$comment_mark(\d+)\n?)/
 	s/(<verb[^\d>]*$id>\Q$del\E)([^$esc_del\n]*?)(\Q$del\E|$comment_mark(\d+)\n?)/
 	    $contents=$2;
@@ -3170,7 +3182,7 @@ sub read_style_info {
     
     if ($style_names) { $envS = "$style_names" }
     elsif (($envS =~ /^pre$/)&&
-	(/^\\begin.*preform($O|$OP)\d+($C|$CP)$verbatim_mark(\w*[vV]erbatim)(\*?)/))
+	(/^\\begin.*preform($O|$OP)\d+($C|$CP)$verbatim_mark(\w*[vV]erbatim|lstlisting)(\*?)/))
 	    { $envS = $3.($4 ? 'star' : '') };
     $env_style{$envS} = " " unless (($style_names)||($env_style{$envS}));
     $env_id = " ID=\"$env_id\"".(($envS) ? " CLASS=\"$envS\"" : '');
@@ -3887,7 +3899,8 @@ sub call_dvips {
 	    # -dNOSAFER is so that we can write to $TMPDIR - gs 9.50
 	    if ($USE_DVIPNG) {
 		my $device = $IMAGE_TYPE eq 'gif' ?
-		    'png256' :		# at most 256 colors for gif
+		    #'png256' :		# png256 provides bad dithering
+		    'png16m' :		# better use png16m and quantize later
 		    'png16m';		# 24 bit color for png
 		print "\nTransforming PDF images using gs/$device ...\n";
 		$dvips_call .= "-sDEVICE=$device -r$DVIPNG_DPI -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=$TMPDIR$dd$IMAGE_PREFIX%d.png .${dd}${PREFIX}images.pdf";
@@ -3940,7 +3953,7 @@ sub call_dvips {
 
 sub make_images {
     local($name, $contents, $raw_contents, $uucontents, $page_num,
-	  $uucontents, %page_map, $img);
+	  %page_map, $img);
     # 2020-03-03 shige:
     local $imgsize;
     # It is necessary to run LaTeX this early because we need the log file
@@ -4238,7 +4251,16 @@ sub extract_image_bitmap { # clean
 	  $flip, $aalias, $trans, $exscale, $alt, $exstr);
 
     my ($lwidth, $val) = (0, '');
-    my ($custom_size,$color_depth,$height,$width,$croparg);
+    my ($custom_size,$color_depth,$color_quant,$height,$width,$croparg);
+    my ($ehfull,$ehbot,$ehshift);
+
+    # The combination -use_pdftex -use_dvipng uses gs driver png16m
+    # which can be incompatible with gif format (>256 colors).
+    $color_depth = $color_quant = '';
+    if (($USE_PDFTEX || $USE_LUATEX) && $USE_DVIPNG && $IMAGE_TYPE =~ /gif/) {
+        $color_depth = "-depth 8 ";
+        $color_quant = "|$PPMQUANT -floyd 256";
+    }
 
     print STDOUT "\nextracting $name as $page_num\n" if ($VERBOSITY > 1);
     # $global_num identifies this image in the original source file
@@ -4280,22 +4302,40 @@ sub extract_image_bitmap { # clean
         if ($TRANSPARENT_FIGURES) {
 	    my $TRANSPARENT_COLOR=
 		$ENV{'TRANSPARENT_COLOR'} || '#FFFFFF';
-	    $transparent= "-transparent \"$TRANSPARENT_COLOR\"";
+	    # The '=' sign before color value specifies the exact color
+	    # and prevents netpbm from selecting other random color
+	    # if the actual image eventually has no transparency.
+	    $transparent= "-transparent \"=$TRANSPARENT_COLOR\"";
 	} else {
 	    $transparent ='';
 	}
         my $PPMTO=$IMAGE_TYPE=~m/gif/i? $PPMTOGIF : $PNMTOPNG;
         if ($name =~ /figure|table/) {
-	  L2hos->syswait("$PNGTOPNM $p.png >$p.ppm");
+	  L2hos->syswait("$PNGTOPNM $p.png $color_quant >$p.ppm");
 	  L2hos->syswait("$PPMTO --quiet $transparent $p.ppm >${PREFIX}img$new_num.$IMAGE_TYPE");
 	} else {
-	    L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides >$p.ppm");
-	    L2hos->syswait("$PPMTO --quiet $transparent $p.ppm >${PREFIX}img$new_num.$IMAGE_TYPE");
+	    L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides $color_quant >$p.ppm");
 
+	    L2hos->syswait("$PNGTOPNM $p.png >$p-full.ppm");
+	    L2hos->syswait("$PNMCROP -sides -bottom $p-full.ppm >$p-bot.ppm");
+	    L2hos->syswait("$PNMCROP -sides $p-full.ppm $color_quant >$p.ppm");
+	    L2hos->syswait("$PPMTO --quiet $transparent $p.ppm >${PREFIX}img$new_num.$IMAGE_TYPE");
 	}
         $edepth{$name}=$ptdepth{$name}/$pt_per_ex{$name};
 	# extra .5pt in depth is border from latex "preview" package
         print "edepth{$name}=$edepth{$name}\n" if ($VERBOSITY > 2);
+        open PPM,"<$p-full.ppm"; binmode(PPM); read(PPM,$_,30);close PPM;
+        m/^(\d+) (\d+)$/m; 
+	$ehfull = $2;			# full image height in pixels
+        open PPM,"<$p-bot.ppm"; binmode(PPM); read(PPM,$_,30);close PPM;
+        m/^(\d+) (\d+)$/m; 
+	$ehbot = $2;			# image height cropped at bottom
+	# Image should not be cropped at bottom more than latex-preview border
+	$ehshift = ($ehfull-$ehbot)*$imgpixeloverex-0.5/$pt_per_ex{$name};
+	$ehshift = 0
+	    if ($ehfull-$ehbot <= ceil(0.5/$imgpixeloverex/$pt_per_ex{$name}));
+	# Correct image depth if it was cropped at bottom too much
+	$edepth{$name} -= $ehshift;
         # open PPM,"<$p.ppm"; read(PPM,$_,30);close PPM;
 	# 2019-12-12 shige: 2-44)
         open PPM,"<$p.ppm"; binmode(PPM); read(PPM,$_,30);close PPM;
@@ -4403,15 +4443,18 @@ sub extract_image_bitmap { # clean
 		    $under = "d" if (($name =~/inline|indisplay/)&&($depth{$name}));
 		}
 		print "\nIMAGE: $name  scaled by $scale \n" if ($VERBOSITY > 2);
+		$color_depth = ''
+		    if (($ANTI_ALIAS_TEXT || $aalias) && $aalias !~ /no/);
 		(L2hos->syswait( "$PSTOIMG -type $IMAGE_TYPE "
 		. ($DEBUG ? '-debug ' : '-quiet ' )
 		. ($TMPDIR ? "-tmp $TMPDIR " : '' )
 		. (($DISCARD_PS)? "-discard " : '' )
 		. (($INTERLACE)? "-interlace " : '' )
-		. ((($ANTI_ALIAS_TEXT||($aalias))&&($aalias !=~/no/))? 
+		. ((($ANTI_ALIAS_TEXT||($aalias))&&($aalias !~ /no/))? 
 		    "-antialias -depth 1 " :'')
 		. (($custom_size)? "-geometry $custom_size " : '' )
                 . $croparg
+		. ($color_depth || '')
 		. (($scale != 1)? "-scale $scale " : '' )
 		. (($exscale && ($exscale == int($exscale))&&($exscale != 1)&&
 		    !($ANTI_ALIAS_TEXT &&($LATEX_COLOR)))? 
@@ -4437,6 +4480,8 @@ sub extract_image_bitmap { # clean
 		    $under = "d" if (($name =~/inline|indisplay/)&&($depth{$name}));
 		} elsif ($mathscale) { $scale = $mathscale; }
 
+		$color_depth = ''
+		    if (($ANTI_ALIAS_TEXT || $aalias) && $aalias !~ /no/);
 		(L2hos->syswait("$PSTOIMG -type $IMAGE_TYPE "
 		. ($DEBUG ? '-debug ' : '-quiet ' )
 		. ($TMPDIR ? "-tmp $TMPDIR " : '' )
@@ -4450,6 +4495,7 @@ sub extract_image_bitmap { # clean
 		. (($scale ne 1) ? "-scale $scale " : '' )
 		. (($custom_size) ? "-geometry $custom_size " : '' )
                 . $croparg
+		. ($color_depth || '')
 #		.  (($name =~ /(equation|eqnarray)/) ? "-rightjustify $lwidth " : '')
 #		.  (($name =~ /displaymath/) ? "-center $lwidth " : '')
 		. (($name =~ /inline|indisplay/ && (!($custom_size))&&$depth{$name}!= 0) ?
@@ -4467,6 +4513,18 @@ sub extract_image_bitmap { # clean
 	    } else { } #L2hos->Unlink("$psname.ps") unless $DEBUG }
 	    &open_dbm_database if $DJGPP;
 	}
+    }
+    # embed_image does not know how to scale unrecognized environments
+    # dvips used to use some empirical scaling coefficient (=1.6)
+    # in dvipng mode try to rescale them relative to the scaling of dvips
+    # and transfer to embed_image as the $exscale parameter
+    if ($USE_DVIPNG && $DVIPNG_DPI && !$exscale &&
+	$name !~ /inline|display|entity|equation|math|eqn|makeimage|figure|tab/)
+    {
+	$exscale = 1;
+	$exscale = $MATH_SCALE_FACTOR if ($MATH_SCALE_FACTOR > 0);
+	$exscale = $scale if ($scale);
+	$exscale = $DVIPNG_DPI/72/$exscale;
     }
     print "\nextracted $name as $page_num\n" if ($VERBOSITY > 1);
     &embed_image("${PREFIX}$img", $name, $external, $alt, $thumbnail, $map,
@@ -7481,7 +7539,7 @@ EOF
             print STYLESHEET "SPAN.$env\t\t{ $style }\n";
         } elsif ($env =~ /\./) {
             print STYLESHEET "$env\t\t{ $style }\n";
-        } elsif ($env =~ /^(preform|\w*[Vv]erbatim(star)?)$/) {
+        } elsif ($env =~ /^(preform|lstlisting|\w*[Vv]erbatim(star)?)$/) {
             print STYLESHEET "PRE.$env\t\t{ $style }\n";
         } elsif ($env =~ /figure|table|tabular|equation|$array_env_rx/) {
             print STYLESHEET "TABLE.$env\t\t{ $style }\n";
@@ -7997,7 +8055,7 @@ sub replace_sensitive_markers {
     if (defined &replace_verbatim_hook) {&replace_verbatim_hook;}
     else {&replace_verbatim_marks if /$verbatim_mark/;}
     if (defined &replace_verb_hook) {&replace_verb_hook;}
-    else {&replace_verb_marks if /$verb_mark|$verbstar_mark/;}
+    else {&replace_verb_marks if /$verb_mark|$verbstar_mark|$verblst_mark/;}
     s/;SPMdollar;/\$/g; s/;SPMtilde;/\~/g; s/;SPMpct;/\%/g;
     s/;SPM/\&/go;
     s/$percent_mark/%/go;
@@ -8904,6 +8962,8 @@ sub replace_verbatim_marks {
     s!$verbatim_mark(\w*[vV]erbatim\*?|tex2html_code)(\d+)#\n?!$tmp=$verbatim{$2};
 	$tmp.(($tmp =~/\n\s*$/s)? '':"\n")!eg;
 #	"\n".$tmp.(($tmp =~/\n\s*$/s)? '':"\n")!eg;
+    s/(<PRE[^>]*>)?$verbatim_mark(lstlisting|lstset|lststyle|lstfile)(\d+)#(<\/PRE>)?\n?/
+        &process_lstlisting($1, $4, $2, $verbatim{$3})/eg;
 #    s/$verbatim_mark(rawhtml)(\d+)#/$verbatim{$2}/eg; # Raw HTML
     s/$verbatim_mark(imagesonly)(\d+)#//eg; # imagesonly is *not* replaced
     # Raw HTML, but replacements may have protected characters
@@ -8911,6 +8971,8 @@ sub replace_verbatim_marks {
     s/$verbatim_mark$keepcomments_rx(\d+)#/$verbatim{$2}/ego; # Raw TeX
     s/$unfinished_mark$keepcomments_rx(\d+)#/$verbatim{$2}/ego; # Raw TeX
 }
+
+# Actual lstlisting engine, except initialization, moved to styles/listings.perl
 
 # TeX's special characters may have been escaped with a '\'; remove it.
 sub unprotect_raw_html {
@@ -8932,16 +8994,20 @@ sub remove_verbatim_marks {
 #    s/$verbatim_mark(verbatim\*?)(\d+)#//go;
     s/$verbatim_mark(\w*[Vv]erbatim\w*\*?)(\d+)#//go;
     s/$verbatim_mark(rawhtml|imagesonly)(\d+)#//go;
+    s/$verbatim_mark(lstlisting)(\d+)#//go;
     s/$verbatim_mark$keepcomments_rx(\d+)#//go;
     s/$unfinished_mark$keepcomments_rx(\d+)#//go;
 }
 
 sub replace_verb_marks {
     # Modifies $_
-    s/(?:$verb_mark|$verbstar_mark)(\d+)$verb_mark/
-	$code = $verb{$1};
+    s/($verb_mark|$verbstar_mark|$verblst_mark)(\d+)$verb_mark/
+	$code = $verb{$2};
 	$code = &replace_comments($code) if ($code =~ m:$comment_mark:);
-	"<code>$code<\/code>"/ego;
+	if ($1 eq $verblst_mark)
+	{$code=&process_lstinline($verb_lstopt{$2},$code);}
+	else {$code="<code>$code<\/code>";}
+	$code/eg;
 }
 
 sub replace_comments{
@@ -8953,7 +9019,7 @@ sub replace_comments{
 
 sub remove_verb_marks {
     # Modifies $_
-    s/($verb_mark|$verbstar_mark)(\d+)$verb_mark//go;
+    s/($verb_mark|$verbstar_mark|$verblst_mark)(\d+)$verb_mark//go;
 }
 
 # This is used by revert_to_raw_tex
@@ -8961,6 +9027,7 @@ sub revert_verbatim_marks {
     # Modifies $_
 #    s/$verbatim_mark(verbatim)(\d+)#/\\begin{verbatim}$verbatim{$2}\\end{verbatim}\n/go;
     s/$verbatim_mark(\w*[Vv]erbatim)(\d+)#/\\begin{$1}\n$verbatim{$2}\\end{$1}\n/go;
+    s/$verbatim_mark(lstlisting)(\d+)#/\\begin{lstlisting}\n$verbatim{$2}\\end{lstlisting}\n/go;
     s/$verbatim_mark(rawhtml)(\d+)#/\\begin{rawhtml}\n$verbatim{$2}\\end{rawhtml}\n/go;
     s/$verbatim_mark(imagesonly|tex2html_code)(\d+)#\n?/$verbatim{$2}/go;
     s/$verbatim_mark$image_env_rx(\d+)#/\\begin{$1}\n$verbatim{$2}\\end{$1}\n/go;
@@ -8971,6 +9038,7 @@ sub revert_verb_marks {
     # Modifies $_
     s/$verbstar_mark(\d+)$verb_mark/\\verb*$verb_delim{$1}$verb{$1}$verb_delim{$1}/go;
     s/$verb_mark(\d+)$verb_mark/\\verb$verb_delim{$1}$verb{$1}$verb_delim{$1}/go;
+    s/$verblst_mark(\d+)$verb_mark/\\lstinline$verb_lstopt{$1}$verb_delim{$1}$verb{$1}$verb_delim{$1}/go;
 }
 
 sub replace_cross_ref_marks {
@@ -9005,7 +9073,7 @@ sub replace_cross_ref_marks {
 #RRM: this simply absorbs the name from the invisible anchor following, 
 #     when the anchor itself is not already named.
 sub extend_ref {
-    if ($ref_label !=~ /ID=/) { $label .= "\"\n".$name  }
+    if ($ref_label !~ /ID=/) { $label .= "\"\n".$name  }
 }
 
 sub remove_cross_ref_marks {
@@ -10018,7 +10086,7 @@ sub get_last_word {
     local($pre_bit);
     if ($lastbit =~/>([^>]*)$/) { 
 	$word = $1; $pre_bit = $`.'>';
-	if ($pre_bit =~ /($verb_mark|$verbstar_mark)$/) {
+	if ($pre_bit =~ /($verb_mark|$verbstar_mark|$verblst_mark)$/) {
 	    $word = $lastbit;
 	} elsif ($pre_bit =~ /<\w+_mark>$/) {
 	    $word = $& . $word;
@@ -10170,6 +10238,10 @@ sub embed_image {
 	    } else {
 		($imagesize, $imgID) = &get_image_size($url,'');
 	    }
+	} elsif ($USE_DVIPNG && $DVIPNG_DPI && $exscale &&
+		 $name !~ /inline|display|entity|equation|math|eqn|makeimage|figure|tab/) {
+	    # use scaling calculated by extract_image for dvipng mode
+	    ($imagesize,$imgID) = &get_image_size($url, $exscale);
 	} else {
 	    ($imagesize,$imgID) = &get_image_size($url,'');
 	}
@@ -10189,8 +10261,8 @@ sub embed_image {
     if ($exstr =~ s/height\s*=\s*(\"?)([^\s,]+)\1($|\s|,)//io) { 
 	my ($pxs,$len) = &convert_length($2);
 	$usersize .= " HEIGHT=\"$pxs\"";
-	$imagesize = $usersize;
     }
+    $imagesize = $usersize if ($usersize ne '');
 
     my $border = '';	# default border is 0
 
@@ -10294,14 +10366,19 @@ sub embed_image {
 	}
 
 	### MEH Add width and height to IMG
-	### Patched by <hswan@perc.Arco.com>:  Fixed \htmladdimg 
+	### Patched by <hswan@perc.Arco.com>:  Fixed \htmladdimg
+	### SGE: if user size (as $exstr) or dvipng scaling (as $exscale)
+	### specified, then add width and height to ensure desired image size
 #	if ( $imagesize || $name eq "external image" || $NO_IMAGES || $PS_IMAGES) {
 	    $imagesize = '' if ($HTML_VERSION < 2.2 );
 	    $imagesize = '' if ($aalign =~ /height/i);
 	    if ($border =~ s/^"//) { $border .= '"' };
 	    $result = join(''
 		   , "<IMG$imgID"
-#		   , "\n", ($imagesize ? " $imagesize" : '')
+		   , "\n", (($usersize ||
+			     ($USE_DVIPNG && $DVIPNG_DPI && $exscale &&
+			      $name !~ /inline|display|entity|equation|math|eqn|makeimage|figure|tab/))
+			    ? " $imagesize" : '')
 		#		   , (($aalign)? " ALIGN=\"$aalign\"" : $border)
 		   , " STYLE=\"$aalign\""
 		   , $ismap );
@@ -11403,6 +11480,8 @@ sub do_env_tex2html_nomath_inline {
 # not produce the same bullets as in the dvi output.
 sub do_env_itemize {
     local($_) = @_;
+    local($dum1, $dum2);
+    ($dum,$dum2) = &get_next_optional_argument; # discard optional argument
     $itemize_level++;
     #RRM - catch nested lists
     &protect_useritems($_);
@@ -11436,6 +11515,8 @@ sub do_env_itemize_compact{
 }
 sub do_env_enumerate {
     local($_) = @_;
+    local($dum1, $dum2);
+    ($dum,$dum2) = &get_next_optional_argument; # discard optional argument
 # Reiner Miericke provided the main code; integrated by RRM: 14/1/97
 # works currently only with 'enumerate' and derived environments
 # explicit styled labels are computed for each \item
@@ -11708,6 +11789,8 @@ sub protect_useritems {
 
 sub do_env_description {
     local($_, $compact, $bullet) = @_;
+    local($dum1, $dum2);
+    ($dum,$dum2) = &get_next_optional_argument; # discard optional argument
     #RRM - catch nested lists
     &protect_useritems($_);
     $_ = &translate_environments($_) unless ($bullet);
@@ -12078,7 +12161,8 @@ sub do_env_minipage {
     $width = &missing_braces unless (
     	(s/$next_pair_pr_rx/$width=$2;''/e)
     	||(s/$next_pair_rx/$width=$2;''/e));
-    local($pxs,$len) = &convert_length($width,$MATH_SCALE_FACTOR) if $width;
+    local($pxs,$len);
+    ($pxs,$len) = &convert_length($width,$MATH_SCALE_FACTOR) if $width;
     $width = " style=\"width:$pxs;\"";
     
     local ( %mpfootnotes, $mpfootnotes ) unless ($MINIPAGE);
@@ -12086,6 +12170,7 @@ sub do_env_minipage {
     $global{'mpfootnote'} = 0 unless ($MINIPAGE);
     $MINIPAGE++;
     print "\n *** doing minipage *** " if ($VERBOSITY > 1);
+    $minipage_width[$MINIPAGE-1] = $pxs if ($MINIPAGE);
     local($open_tags_R) = [ @$open_tags_R ];
     local($close_tags,$reopens) = &close_all_tags();
     local(@save_open_tags) = @$open_tags_R;
@@ -13040,9 +13125,10 @@ sub do_cmd_newline { join('',"<BR>", $_[0]); }
 sub do_cmd_endgraf { join('',"<BR>", $_[0]); }
 
 sub do_cmd_space { join(''," ",$_[0]); }
-sub do_cmd_enspace { join('',"\&nbsp;",$_[0]); }
-sub do_cmd_quad { join('',"\&nbsp;"x4,$_[0]); }
-sub do_cmd_qquad { join('',"\&nbsp;"x8,$_[0]); }
+sub do_cmd_enspace { join('',";SPMnbsp;",$_[0]); }
+sub do_cmd_senspace { join('',";SPMnbsp;",$_[0]); }
+sub do_cmd_quad { join('',";SPMnbsp;"x4,$_[0]); }
+sub do_cmd_qquad { join('',";SPMnbsp;"x8,$_[0]); }
 
 sub do_cmd_par {
     local ($_) = @_;
@@ -15893,6 +15979,7 @@ sub initialise {
     $unfinished_mark = '<tex2html_unfinished_mark>';
     $verb_mark = '<tex2html_verb_mark>';
     $verbstar_mark = '<tex2html_verbstar_mark>';
+    $verblst_mark = '<tex2html_verblst_mark>';
     $image_mark = '<tex2html_image_mark>';
     $mydb_mark =  '<tex2html_mydb_mark>';
     $percent_mark = '<tex2html_percent_mark>';
@@ -16175,7 +16262,7 @@ sub initialise {
 		  , '~', 'tilde', '.', 'dot', '=', 'bar'
 		  , '{', 'lbrace' , '}', 'rbrace', '|', 'Vert'
 		  , '#', 'esc_hash', '$', 'esc_dollar'
-          , ',', 'enspace'      
+		  , ',', 'enspace', ';', 'senspace'
       );
 
     %text_accent = (  'cedil','c', 'bdot','d', 'b','b' , 'tilde','~'
@@ -16290,7 +16377,9 @@ sub roman{
 }
 
 
-    %unitscale = ("in",72,"pt",72.27/72,"pc",12,"mm",72/25.4,"cm",72/2.54
+    %unitscale = ("in",72,"pt",72/72.27,"pc",12*72/72.27
+                  ,"mm",72/25.4,"cm",72/2.54
+    	          ,"ex",72/25.4*5,"em",72/25.4*5
 		  ,"\\hsize",100,"\\vsize",100
 		  ,"\\textwidth",100,"\\textheight",100
 		  ,"\\pagewidth",100,"\\linewidth",100
@@ -16302,17 +16391,49 @@ sub convert_length { # clean
     my ($this,$scale) = @_;
     $scale = 1 unless $scale;
     my ($pxs,$len,$full);
-    if ( $this =~ /([\d.]*)\s*(in|pt|pc|mm|cm|\\[hv]size|\\\w+(width|height))?/ ) {
-	$len = ($1 ? $1 : 1); $full = $2;
-	if ($full &&($full =~ /\\([hv]size|\w+(width|height))/)) { $scale = 1;};
+    if ( $this =~ /([\d.]*)\s*(in|pt|pc|mm|cm|ex|em|\\[hv]size|\\\w+(width|height))?/ ) {
+	$len = (($1 ne '') ? $1 : 1); $full = $2;
+	if ($full &&($full =~ /\\([hv]size|\w+(width|height))/)) { $scale = 1;}
+	else { $scale *= $FIGURE_SCALE_FACTOR*0.8; }
+	if ($full eq 'em' || $full eq 'ex') {
+	    $unitscale{$full} = $LATEX_FONT_SIZE;
+	    $unitscale{$full} = 12 if ($unitscale{$full} < 1);
+	}
 	$pxs = (($full) ? int($len * $unitscale{$full}*$scale + 0.5)
 		 : int($len*$scale + .5) );
 	if ( $full =~ /\\([hv]size|\w+(width|height))/) { $pxs .= '%';};
     };
     ($pxs,$len);
 }
- 
 
+    # Initializations block for verbatim-like lstlisting environment
+    # Actual lstlisting engine moved to styles/listings.perl
+    # Currently default option values for lstlisting environment
+    %lstset_current = (
+      'numbers'         => 'none',
+      'stepnumber'      => 1,
+      'numberfirstline' => 'false',
+      'numbersep'       => '10pt',
+      'firstnumber'     => 'auto',
+      'name'            => '',
+      'title'           => '',
+      'caption'         => '',
+      'captionpos'      => 't',
+      'basicstyle'      => '',
+      'style'           => '',
+      'inputpath'       => '',
+      'frame'           => 'none',
+      'framesep'        => '3pt',
+      'framerule'       => '0.4pt',
+      'backgroundcolor' => '',
+      'rulecolor'       => '' );
+    # Option sets defined by lstdefinestyle
+    %lstset_style = ();
+    # Placeholder for \lstname
+    $lst_name = '';
+    # For line counters
+    $lst_last_counter = 1;
+    %lst_auto_counter = ();
 
 
     # Inclusion in this list will cause a command or an environment to be ignored.
@@ -16786,6 +16907,7 @@ sub make_isolatin1_rx {
 
     $opt_arg_rx = "\\s*\\[([^\\]]*)\\]\\s*";	# Cannot handle nested []s!
     $optional_arg_rx = "^\\s*\\[([^]]*)\\]";	# Cannot handle nested []s!
+    $verb_braces_rx = "\\s*\\{([^}]*)\\}\\s*";	# Cannot handle nested {}s!
 
     $block_close_rx = "^<\\/(DIV|P|BLOCKQUOTE)>\$";
     $all_close_rx = "^<\\/(BODY|PRE|OL|UL|DL|FORM|ADDRESS)>\$";
@@ -16944,7 +17066,7 @@ sub make_isolatin1_rx {
 
     # Matches environments that should not be touched during the translation
 #   $verbatim_env_rx = "\\s*{(verbatim|rawhtml|LVerbatim)[*]?}";
-    $verbatim_env_rx = "\\s*(\\w*[Vv]erbatim|rawhtml|imagesonly|tex2html_code)[*]?";
+    $verbatim_env_rx = "\\s*(\\w*[Vv]erbatim|lstlisting|rawhtml|imagesonly|tex2html_code)[*]?";
     $image_env_rx = "\\s*(picture|xy|diagram)[*]?";
     $keepcomments_rx = "\\s*(picture|makeimage|xy|diagram)[*]?";
 

@@ -255,14 +255,99 @@ sub do_cmd_DeclareGraphicsRule {
 
 # convert_length rounds up to 1 & uses %. Not quite right for here.
 #  [convert_length(@_)]->[0];
-%BP_conversions=(pt=>72/72.27, pc=>12/72.27, in=>72, bp=>1,
+%BP_conversions=(pt=>72/72.27, pc=>12*(72/72.27), in=>72, bp=>1,
 		 cm=>72/2.54, mm=>72/25.4, dd=>(72/72.27)*(1238/1157),
-		 cc=>12*(72/72.27)*(1238/1157),sp=>72/72.27/65536);
+		 cc=>12*(72/72.27)*(1238/1157),sp=>(72/72.27)/65536);
 sub to_bp { 
   my($x)=@_;
-  $x =~ /^\s*([+-]?[\d\.]+)(\w*)\s*$/;
-  my($v,$u)=($1,$2);
-  $v*($u ? $BP_conversions{$u} : 1); }
+  my($v,$u);
+  $x =~ /^\s*(([+-]?[\d\.]+)?)\s*(\w*|\\\w+(width|height))\s*$/;
+  $v = ($1 ? $1 : 1);
+  $u = $3;
+  # Induce using native image dimensions if given size totally unrecognized
+  return '' if($1 eq '' && $3 eq '');
+  if ($u =~ /\\\w+(width|height)/) {
+    my($w,$h);
+    if ($PAPERSIZE) { ($w,$h) = &get_text_size($PAPERSIZE); }
+    else { ($w,$h) = &get_text_size("a5"); }
+    if ($u =~ /height/) { $u = $h; }
+    else { $u = $w; }
+  }
+  elsif ($u eq 'em' || $u eq 'ex') {
+    $u = $LATEX_FONT_SIZE;
+    $u = 12 if ($u < 1);
+  }
+  else { $u = $u ? $BP_conversions{$u} : 1; }
+  #$u *= $FIGURE_SCALE_FACTOR*0.8;	# just an extra empirical coefficient
+  $v*$u; }
+
+# Return numeric width and height of text area depending on paper format
+# Analogous to adjust_textwidth, used for \includegraphics
+sub get_text_size {
+    local($_) = @_;
+    local($width,$length) = ('','');
+    if (/a4/) {$width = 595; $length= 842; }
+    elsif (/letter/) {$width = 612; $length= 792; }
+    elsif (/legal/) {$width = 612; $length= 1008; }
+    elsif (/note/) {$width = 540; $length= 720; }
+    elsif (/b5/) {$width = 501; $length= 709; }
+    elsif (/a5/) {$width = 421; $length= 595; }
+    elsif (/a6/) {$width = 297; $length= 421; }
+    elsif (/a7/) {$width = 210; $length= 297; }
+    elsif (/a8/) {$width = 148; $length= 210; }
+    elsif (/a9/) {$width = 105; $length= 148; }
+    elsif (/a10/) {$width = 74; $length= 105; }
+    elsif (/b4/) {$width = 709; $length= 1002; }
+    elsif (/a3/) {$width = 842; $length= 1190; }
+    elsif (/b3/) {$width = 1002; $length= 1418; }
+    elsif (/a2/) {$width = 1190; $length= 1684; }
+    elsif (/b2/) {$width = 1418; $length= 2004; }
+    elsif (/a1/) {$width = 1684; $length= 2380; }
+    elsif (/b1/) {$width = 2004; $length= 2836; }
+    elsif (/a0/) {$width = 2380; $length= 3368; }
+    elsif (/b0/) {$width = 2836; $length= 4013; }
+    else {
+	&write_warnings("\nPAPERSIZE: $_ unknown, using a5.");
+	$width = 421; $length= 595;
+    }
+    if ($width > 500) { $width = $width - 144; $length = $length - 288; }
+    elsif ($width > 250) { $width = $width - 72; $length = $length - 144; }
+    elsif ($width > 125) { $width = $width - 36; $length = $length - 72; }
+
+    # Evtl adjust according to wrapfigure dimensions
+    if ($wrapfigure_width) {	# defined inside wrapfigure only
+      my($pxs,$len) = &convert_length($wrapfigure_width, 1);
+      if ($pxs =~ s/%$//) {	# scale width and length by percent
+	$width  *= $pxs/100;
+	$length *= $pxs/100;
+      } else { # revert scaling, set explicit width, recalculate length
+	$pxs /= $FIGURE_SCALE_FACTOR*0.8;
+	$length *= $pxs/$width;
+	$width = $pxs;
+      }
+    }
+
+    # Evtl adjust according to minipage dimensions (possibly nested)
+    if ($MINIPAGE) {
+      my($i, $mw);
+      for ($i=0; $i<$MINIPAGE; $i++) {
+	$mw = $minipage_width[$i];
+	if ($mw =~ s/%$//) {	# scale width and length by percent
+	  $width  *= $mw/100;
+	  $length *= $mw/100;
+	} else { # revert scaling, set explicit width, recalculate length
+	  $mw /= $MATH_SCALE_FACTOR*$FIGURE_SCALE_FACTOR*0.8;
+	  $length *= $mw/$width;
+	  $width = $mw;
+	}
+      }
+    }
+
+    # Round results and return
+    $width  = sprintf("%.0f", $width);
+    $length = sprintf("%.0f", $length);
+    ($width, $length);
+}
 
 sub scaled_image_size {
   my($imagew,$imageh, $reqw,$reqh,$scale,$keepaspect)=@_;

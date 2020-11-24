@@ -80,8 +80,8 @@ sub do_cmd_verbatimlisting {
 
     #insert numbers for every line
     #but not the first line if it's empty (LaTeX'ism?)
-    local($firstemptyline);
-    $firstemptyline = $1 if s/^([ \t]+\n)//;
+    local($first);
+    $first = $1 if s/^([ \t]+\n)//;
 
     #and not the last end of line
     s/\n$//;

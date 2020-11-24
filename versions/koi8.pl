@@ -172,8 +172,10 @@ sub do_cmd_cyrz {join('', 'Ú', $_[0]);}
 sub do_cmd_CYRZ {join('', 'ú', $_[0]);}
 #sub do_cmd_dots { join('', &iso_map("hellip", ""), $_[0]);}
 sub do_cmd_dots { join('', '&#133;', $_[0]);}
-sub do_cmd_guillemotleft { join('', &iso_map("laquo", ""), $_[0]);}
-sub do_cmd_guillemotright { join('', &iso_map("raquo", ""), $_[0]);}
+#sub do_cmd_guillemotleft { join('', &iso_map("laquo", ""), $_[0]);}
+sub do_cmd_guillemotleft { join('', '&#171;', $_[0]);}
+#sub do_cmd_guillemotright { join('', &iso_map("raquo", ""), $_[0]);}
+sub do_cmd_guillemotright { join('', '&#187;', $_[0]);}
 #sub do_cmd_guilsinglleft { join('', &iso_map("lsaquo", ""), $_[0]);}
 sub do_cmd_guilsinglleft { join('', '&#139;', $_[0]);}
 #sub do_cmd_guilsinglright { join('', &iso_map("rsaquo", ""), $_[0]);}
@@ -187,14 +189,17 @@ sub do_cmd_minus { join('', &iso_map("minus", ""), $_[0]);}
 #sub do_cmd_minus { join('', &iso_map("shy", ""), $_[0]);}
 sub do_cmd_mu {join('', &iso_map("mu", ""), $_[0]);}
 #sub do_cmd_nobreakspace {join('', 'š', $_[0]);}
-sub do_cmd_nobreakspace {join('', &iso_map("nbsp", ""), $_[0]);}
-sub do_cmd_P { join('', &iso_map("para", ""), $_[0]);}
+#sub do_cmd_nobreakspace {join('', &iso_map("nbsp", ""), $_[0]);}
+sub do_cmd_nobreakspace {join('', '&#160;', $_[0]);}
+#sub do_cmd_P { join('', &iso_map("para", ""), $_[0]);}
+sub do_cmd_P { join('', '&#182;', $_[0]);}
 sub do_cmd_pm { join('', &iso_map("plusmn", ""), $_[0]);}
 sub do_cmd_pounds { join('', &iso_map("pound", ""), $_[0]);}
 sub do_cmd_quotedblbase { join('', &iso_map("dbquo", ""), $_[0]);}
 #sub do_cmd_quotesinglbase { join('', &iso_map("sbquo", ""), $_[0]);}
 sub do_cmd_quotesinglbase { join('', '&#130;', $_[0]);}
-sub do_cmd_S { join('', &iso_map("sect", ""), $_[0]);}
+#sub do_cmd_S { join('', &iso_map("sect", ""), $_[0]);}
+sub do_cmd_S { join('', '&#167;', $_[0]);}
 sub do_cmd_ss { join('', &iso_map("sz", "lig"), $_[0]);}
 sub do_cmd_textbrokenbar { join('', &iso_map("brvbar", ""), $_[0]);}
 #sub do_cmd_textbullet { join('', &iso_map("bull", ""), $_[0]);}
@@ -202,7 +207,8 @@ sub do_cmd_textbullet { join('', '&#149;', $_[0]);}
 sub do_cmd_textcent { join('', &iso_map("cent", ""), $_[0]);}
 sub do_cmd_textcurrency { join('', &iso_map("curren", ""), $_[0]);}
 #sub do_cmd_textdegree {join('', 'œ', $_[0]);}
-sub do_cmd_textdegree { join('', &iso_map("deg", ""), $_[0]);}
+#sub do_cmd_textdegree { join('', &iso_map("deg", ""), $_[0]);}
+sub do_cmd_textdegree { join('', '&#176;', $_[0]);}
 #sub do_cmd_textemdash { join('', &iso_map("mdash", ""), $_[0]);}
 sub do_cmd_textemdash { join('', '&#151;', $_[0]);}
 #sub do_cmd_textendash { join('', &iso_map("ndash", ""), $_[0]);}

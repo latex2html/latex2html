@@ -580,13 +580,14 @@ sub process_tabular {
     s/\\\\\s*\[([^]]+)\]/\\\\/g;  # TKM - get rid of [N.n pc] on end of rows...
     s/\\newline\s*\[([^]]+)\]/\\newline/g;
     s/\n\s*\n/\n/g;	# Remove empty lines (otherwise will have paragraphs!)
+    s/\\\\\s*\n\s*$par_rx\s*\n/\\\\\n/g; # don't start next row with a \par
     local($i,@colspec,$char,$cols,$cell,$htmlcolspec,$frames,$rules);
     local(@rows,@cols,$border,$frame);
     local($colspan,$cellcount);
-    
+
     # set a flag to indicate whether there are any \multirow cells
     my $has_multirow = 1 if (/\\multirow/s);
-    
+
     # convert \\s inside \parbox commands to \newline s;
     # catch nestings
 
@@ -607,7 +608,7 @@ sub process_tabular {
 
     if ($color_env) {
 	local($color_test) = join(',',@$open_tags_R);
-	if ($color_test =~ /(color\{[^}]*})/g ) {
+	if ($color_test =~ /(color\{[^}]*\})/g ) {
 	    $color_env = $1;
 	}
     }
@@ -693,7 +694,7 @@ sub process_tabular {
 	$return = join('', "<TABLE CELLPADDING=3"
 		, $border
 		, ($halign ? " ALIGN=\"$halign\"" : '')
-		, $tab_width, ">")
+		, $tab_width, ">");
     }
     local($firstrow) = 1;
     local($lastrow) = '';
@@ -736,8 +737,11 @@ sub process_tabular {
 
 	for ( $i = 0; $i <= $#colspec; $i++ ) {
 	    # skip this cell if it is covered by a \multirow
-	    next if ($has_multirow && @row_spec[$i] > 0);
-	    
+	    if ($has_multirow && @row_spec[$i] > 0) {
+	        shift(@cols);
+	        next;
+	    }
+
 	    $colspec = $colspec[$i];
 	    if (!($colspec =~ $content_mark)) {
 		# no data required in this column
@@ -893,43 +897,6 @@ sub do_cmd_multicolumn {
     $malign =~s!^(\w)($OP\d+$CP)\s*(\d|\d*\.\d+)\2$!$1\{$3\\textwidth\}!;
 
     ($dmy1,$dmy2,$dmy3,$dmy4,$colspec) = &translate_colspec($2, $celltag);
-    s/$next_pair_pr_rx/$text=$2;''/eo;
-    $text = &translate_commands($text) if ($text =~ /\\/);
-    $text;
-}
-sub do_cmd_multirow {
-    local($_) = @_;
-    local($dmy1,$dmy2,$dmy3,$dmy4,$spanrows,$pxs,$rwidth,$valign,$vspec,$text);
-    $spanrows = &missing_braces unless (
-	(s/$next_pair_pr_rx/$spanrows=$2;''/eo)
-        ||(s/$next_pair_rx/$spanrows=$2;''/eo));
-    my $rowspan = 0+$spanrows;
-    # set the counter for this column to the number of rows covered
-    @row_spec[$i] = $rowspan;
-
-    $colspec =~ /^<([A-Z]+)/;
-    local($celltag) = $1;
-
-    # read the width, save it for later use
-    $rwidth = &missing_braces unless (
-	(s/$next_pair_pr_rx/$rwidth=$2;''/eo)
-	||(s/$next_pair_rx/$rwidth=$2;''/eo));
-
-    # catch cases where the \textwidth has been discarded
-    $rwidth =~s!^(\w)($OP\d+$CP)\s*(\d|\d*\.\d+)\2$!$1\{$3\\textwidth\}!;
-
-    ($pxs,$rwidth) = &convert_length($rwidth);
-
-    $valign = &missing_braces unless (
-        (s/$next_pair_pr_rx/$valign=$2;''/eo)
-        ||(s/$next_pair_rx/$valign=$2;''/eo));
-    $vspec = ' VALIGN="TOP"' if $valign;
-    if ($valign =~ /m/i) { $vspec =~ s/TOP/MIDDLE/ }
-    elsif ($valign =~ /b/i) { $vspec =~ s/TOP/BOTTOM/ }
-
-    $colspec =~ s/VALIGN="\w+"// if $vspec; # avoid duplicate tags
-    $colspec =~ s/>$content_mark/$vspec ROWSPAN=$rowspan WIDTH=$pxs$&/;
-
     s/$next_pair_pr_rx/$text=$2;''/eo;
     $text = &translate_commands($text) if ($text =~ /\\/);
     $text;

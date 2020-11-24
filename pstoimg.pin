@@ -1507,7 +1507,7 @@ sub crop_scale_etc {
 #fi
 #if @gif_trans@ eq 'netpbm'
     if($TRANSPARENT) {
-      $pnmtoimg .= ' -trans ' . L2hos->quote($trans_color);
+      $pnmtoimg .= ' -trans ' . L2hos->quote('='.$trans_color);
     }
 #fi
   }
@@ -1519,7 +1519,7 @@ sub crop_scale_etc {
       $pnmtoimg .= ' -interlace';
     }
     if($TRANSPARENT) {
-      $pnmtoimg .= ' -trans ' . L2hos->quote($trans_color);
+      $pnmtoimg .= ' -trans ' . L2hos->quote('='.$trans_color);
     }
   }
 #fi - png

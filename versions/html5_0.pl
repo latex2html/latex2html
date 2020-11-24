@@ -68,7 +68,7 @@ $percent_type = "\^\\d+(%|\\%|$percent_mark)?\$";
 $coord_type = "\^\\s*(\$|\\d+(\\s*,\\s*\\d+)+\\s*\$)";  # comma-separated list of numbers
 $pixel_type = "\^\\d+\$";
 $length_type = "\^\\d+\%?\$";
-$name_type = "\^[A-Za-z]([A-Za-z\\d\\-\\.]*\$";
+$name_type = "\^[A-Za-z][A-Za-z\\d\\-\\.]*\$";
 $string_type = $URL_type = $script_type = $ISOdate_type = $Internet_type =
 	$CDATA_type = "\^.*\$";
 $id_list_type = "\^\\s*\$name_type(\\s+$name_type)*\\s*\$";
@@ -917,6 +917,7 @@ sub process_tabular {
     s/\\\\\s*\[([^]]+)\]/\\\\/g;  # TKM - get rid of [N.n pc] on end of rows...
     s/\\newline\s*\[([^]]+)\]/\\newline/g;
     s/\n\s*\n/\n/g;	# Remove empty lines (otherwise will have paragraphs!)
+    s/\\\\\s*\n\s*$par_rx\s*\n/\\\\\n/g; # don't start next row with a \par
     local($i,@colspec,$char,$cols,$cell,$htmlcolspec,$frames,$rules);
     local(@rows,@cols,$border,$frame);
     local($colspan,$cellcount);
@@ -1073,7 +1074,10 @@ sub process_tabular {
  
 	for ( $i = 0; $i <= $#colspec; $i++ ) {
 	    # skip this cell if it is covered by a \multirow
-	    next if ($has_multirow && @row_spec[$i] > 0);
+	    if ($has_multirow && @row_spec[$i] > 0) {
+	        shift(@cols);
+	        next;
+	    }
 
 	    $colspec = $colspec[$i];
 	    if (!($colspec =~ $content_mark)) {
