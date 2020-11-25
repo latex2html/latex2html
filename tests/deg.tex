@@ -1,0 +1,55 @@
+\documentclass[10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{gensymb}
+
+% Testing math picture generation
+%
+% pdflatex test (may be do it twice to be sure)
+%
+% latex2html -html_version 4.0 -use_pdftex -use_dvipng -image_type gif -local_icons test.tex
+% In index.html you will see '180 degree' as an embedded image in the first line
+% and something like '>_._' as an image around the last line.
+%
+% rm -rf test
+% latex2html -html_version 4.0,math -use_pdftex -use_dvipng -image_type gif -local_icons test.tex
+% Now in the first line '180' will be text, and the degree symbol will be
+% not near the top of a digit, but at the baseline at the bottom.
+% In the last line both underscores will be invisible. There is underscore
+% in the corresponding inlined image, but it is totally transparent.
+%
+% The underscores appear normally with either of the following options:
+% \documentclass[12pt]{article} (instead of [10pt])
+% -image_type png (instead of gif)
+% -notransparent (but -noantialias and -noantialias_text do not help)
+%
+% -nouse_dvipng (with $MATH_SCALE_FACTOR=1.6) gives good aligned images.
+% latex2html version 2018.2 with -use_dvipng gives good aligned images.
+% latex2html version 2020.2 corrected with patch gives good aligned images.
+
+\begin{document}
+
+This effect acts only in one direction which can vary up to an angle
+of $180\degree$ with these parameters:
+
+\begin{description}
+\item[Length:] distance between original image and final blur step;
+  corresponds to the distance of the fields.
+\item[Angle:] angle of motion in one direction for linear blur
+\item[Steps:] number of blur steps to be used in the calculation.
+  Increasing the number takes more CPU.
+\item[Channels:] R,G,B,A.
+\item[Clear] With the Clear buttons we can bring the slider to default
+  values without affecting the other parameters.
+\end{description}
+
+In order to provide some types of help, the Menu Bar Shell Commands
+are available for customization purposes. In the main window on the
+top line containing the \textit{File}, \textit{Edit}, {\dots}
+\textit{Window} pulldown menus, all the way to the right hand side is
+the \textit{shell cmds} icon. You might see a small gold-color
+bordered box with the $>\_.\_$ inside and if you mouse over it, the
+tooltip says \textit{shell cmds}.
+
+\end{document}
