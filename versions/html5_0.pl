@@ -1690,8 +1690,8 @@ sub do_env_eqnarraystar {
     } elsif ($failed) {
 	$_ =~ s/^[ \t]*\n?/\n/; 
 	$_ =~ s/\n?[ \t]*/\n/;
-	join('', "<DIV$math_class>"
-	    , $_ ,"\n</DIV>");
+	join('', "<DIV>"	# padding included in image
+	    , $_ ,"\n</DIV>");	# so don't need $math_class
     } else {
 	$_;
     }
