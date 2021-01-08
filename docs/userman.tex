@@ -402,6 +402,29 @@ so as to encourage the use of particular sections as stand-alone documents.
 \strikeout{In order to be shown, 
 section titles must be unique and must not contain inlined graphics.}
 
+\index{cross references!marker style}
+\index{cross references!numbering}
+\index{add-ref-name}%
+\item [ -add\_ref\_name \label{cs_add_ref_name}]
+\sameas{\fn{\$ADD\_REF\_NAME}\texttt{ = 1;}}\\
+Usually cross reference text contains only the caption number as a
+hyperlink to the corresponding \LaTeX{} label. However, it could be
+handy to see the name of the object referenced, if the reference text
+would contain both the caption number and the caption name.
+With -add\_ref\_name the caption name is shown additionally.
+
+\index{cross references!marker style}
+\index{cross references!numbering}
+\index{cut-ref-num}%
+\item [ -cut\_ref\_num \label{cs_cut_ref_num}]
+\sameas{\fn{\$CUT\_REF\_NUM}\texttt{ = 1;}}\\
+Usually cross reference text contains only the caption number as a
+hyperlink to the corresponding \LaTeX{} label. With -add\_ref\_name the
+caption name can be shown additionally. If the caption number is not
+desired, it can be cut out with -cut\_ref\_num. If -cut\_ref\_num is
+given and -add\_ref\_name is not, then the cross reference text is
+suppressed completely and a cross reference button shown instead.
+
 \index{segmentation!unsegment}
 
 \item [ -unsegment\label{cs_unsegment}]

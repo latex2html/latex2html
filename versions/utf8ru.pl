@@ -406,6 +406,8 @@ sub russian_titles {
   $ref_title = "Список литературы";
 #  $ref_title = "Ссылки";
   $bib_title = "Литература";
+#  $nom_title = "Список обозначений";
+  $nom_title = "Обозначения";
   $abs_title = "Аннотация";
   $app_title = "Приложение";
   $pre_title = "Предисловие";

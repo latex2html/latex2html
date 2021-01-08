@@ -36,6 +36,7 @@ sub english_titles {
     $idx_title = "Index";
     $ref_title = "References";
     $bib_title = "Bibliography";
+    $nom_title = "Nomenclature";
     $abs_title = "Abstract";
     $app_title = "Appendix";
     $pre_title = "Preface";

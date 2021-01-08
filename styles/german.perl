@@ -192,6 +192,7 @@ sub german_titles {
     $idx_title = "Index";
     $ref_title = "Literaturverzeichnis";
     $bib_title = "Literatur";
+    $nom_title = "Symbolverzeichnis";
     $abs_title = "Zusammenfassung";
     $app_title = "Anhang";
     $pre_title = "Vorwort";

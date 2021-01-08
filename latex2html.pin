@@ -311,6 +311,8 @@ unless(GetOptions(\%opt, # all non-linked options go into %opt
         'local_icons!',         \$LOCAL_ICONS,
         'scalable_fonts!',      \$SCALABLE_FONTS,
         'images_only!',         \$IMAGES_ONLY,
+        'cut_ref_num!',         \$CUT_REF_NUM,
+        'add_ref_name!',        \$ADD_REF_NAME,
         'show_section_numbers!',\$SHOW_SECTION_NUMBERS,
         'show_init!',           \$SHOW_INIT_FILE,
         'init_file=s',          \$INIT_FILE,
@@ -2288,7 +2290,7 @@ sub translate {
 #    local(%section_info, %toc_section_info, $CURRENT_FILE, %cite_info, %ref_files);
     local($CURRENT_FILE);
     # These filenames may be set when translating the corresponding commands.
-    local($tocfile, $loffile, $lotfile, $footfile, $citefile, $idxfile,
+    local($tocfile, $loffile, $lotfile, $nomfile, $footfile, $citefile, $idxfile,
 	  $figure_captions, $table_captions, $footnotes, $citations, %font_size, %index,
 	  %done, $t_title, $t_author, $t_date, $t_address, $t_affil, $changed);
     local(@authors,@affils,@addresses,@emails,@authorURLs);
@@ -4695,7 +4697,7 @@ sub replace_macro_expansion {
 }
 
 sub translate_aux_commands {
-    s/^(.*)$/&translate_commands($1)/s;
+    s/^(.*)$/&translate_commands($1)/es;
 }
 
 sub translate_commands {
@@ -9058,6 +9060,19 @@ sub replace_cross_ref_marks {
 	    '"' . "$ref_label#$label" . "\">" . $ref_mark . "<\/A>"
 	}/geo;
 
+    # This is for namerefs, section name without section number
+    s/$cross_ref_mark#([^#]+)#([^>]+)>$name_ref_mark<\/A>(\s*<A( ID=\"\d+)\">$invis)?/
+	do {($label,$id) = ($1,$2); $name = $4;
+	    $ref_label = $external_labels{$label} unless
+		($ref_label = $ref_files{$label});
+	    print "\nXLINK<: $label : $id :$name " if ($VERBOSITY > 3);
+	    $ref_label = '' if ($ref_label eq $CURRENT_FILE);
+	    $ref_mark = &get_name_ref_mark($label,$id);
+	    &extend_ref if ($name); $name = '';
+	    print "\nXLINK: $label : $ref_label : $ref_mark " if ($VERBOSITY > 3);
+	    '"' . "$ref_label#$label" . "\">" . $ref_mark . "<\/A>"
+	}/geo;
+
     # This is for pagerefs which cannot have symbolic labels ??? 
 #    s/$cross_ref_mark#(\w+)#\w+>/
     s/$cross_ref_mark#([^#]+)#[^>]+>/
@@ -9108,12 +9123,49 @@ sub remove_external_ref_marks {
 
 sub get_ref_mark {
     local($label,$id) = @_;
-    ( ( $SHOW_SECTION_NUMBERS && $symbolic_labels{"$label$id"}) ||
-     $latex_labels{"userdefined$label$id"} ||
-     $symbolic_labels{"$label$id"} ||
-     $latex_labels{$label} ||
-     $external_latex_labels{$label} ||
-     $cross_ref_visible_mark );
+    local($val,$tmp,$valno,$valnam);
+    $val = ( ( $SHOW_SECTION_NUMBERS && $symbolic_labels{"$label$id"}) ||
+	     $latex_labels{"userdefined$label$id"} ||
+	     $symbolic_labels{"$label$id"} ||
+	     $latex_labels{$label} ||
+	     $external_latex_labels{$label} ||
+	     $cross_ref_visible_mark );
+    # Cut out section name, or number, or both, depending on the option given
+    $tmp = $val;
+    if ((($tmp =~ s/$next_pair_pr_rx/$valno=$&;''/eo) ||
+	 ($tmp =~ s/$next_pair_rx/$valno=$&;''/eo)) &&
+	($tmp =~ s/^\s*//o) &&
+	(($tmp =~ s/$next_pair_pr_rx/$valnam=$&;''/eo) ||
+	 ($tmp =~ s/$next_pair_rx/$valnam=$&;''/eo)) &&
+	$tmp eq '') {
+      $valno  = '' if ($CUT_REF_NUM);
+      $valnam = '' unless ($ADD_REF_NAME);
+      $tmp = ' ' if ($valno ne '' && $valnam ne '');
+      $val = join ($tmp, $valno, $valnam);
+      $val = $cross_ref_visible_mark if ($val eq '');
+    }
+    $val;
+}
+
+sub get_name_ref_mark {
+    # a version of &get_ref_mark without section number, for namerefs
+    local($label,$id) = @_;
+    local($val,$tmp,$valno,$valnam);
+    $val = ( ( $SHOW_SECTION_NUMBERS && $symbolic_labels{"$label$id"}) ||
+	     $latex_labels{"userdefined$label$id"} ||
+	     $symbolic_labels{"$label$id"} ||
+	     $latex_labels{$label} ||
+	     $external_latex_labels{$label} ||
+	     $cross_ref_visible_mark );
+    $tmp = $val;
+    $val = $valnam if (
+      (($tmp =~ s/$next_pair_pr_rx/$valno=$&;''/eo) ||
+       ($tmp =~ s/$next_pair_rx/$valno=$&;''/eo)) &&
+      ($tmp =~ s/^\s*//o) &&
+      (($tmp =~ s/$next_pair_pr_rx/$valnam=$&;''/eo) ||
+       ($tmp =~ s/$next_pair_rx/$valnam=$&;''/eo)) &&
+      $tmp eq '');
+    $val;
 }
 
 sub replace_bbl_marks {
@@ -9452,6 +9504,10 @@ sub set_depth_levels {
 	, 'textohtmlindex', $level
         , %unnumbered_section_commands
         );
+
+    # This command should mark new section only if requested explicitly
+    $unnumbered_section_commands{'printnomenclature'} = $level
+        if ($styles_loaded{'nomencl_intoc'});
 
     %section_commands = ( 
 	  %unnumbered_section_commands
@@ -10767,6 +10823,7 @@ sub translate_titles {
     $idx_title = &translate_commands($idx_title) if ($idx_title =~ /\\/);
     $ref_title = &translate_commands($ref_title) if ($ref_title =~ /\\/);
     $bib_title = &translate_commands($bib_title) if ($bib_title =~ /\\/);
+    $nom_title = &translate_commands($nom_title) if ($nom_title =~ /\\/);
     $abs_title = &translate_commands($abs_title) if ($abs_title =~ /\\/);
     $app_title = &translate_commands($app_title) if ($app_title =~ /\\/);
     $pre_title = &translate_commands($pre_title) if ($pre_title =~ /\\/);
@@ -12295,7 +12352,7 @@ sub make_bibliography_title {
     if ((defined &do_cmd_refname)||$new_command{'refname'}) {
 	$br_id=++$global{'max_id'};
 	$title = &translate_environments("$O$br_id$C\\refname$O$br_id$C");
-    } else { $title = $ref_name }
+    } else { $title = $ref_title; }
     return $title;
 }
 
@@ -14141,6 +14198,7 @@ sub do_cmd_contentsname { $toc_title . $_[0] }
 sub do_cmd_datename { $date_name . $_[0] }
 sub do_cmd_refname { $ref_title . $_[0] }
 sub do_cmd_bibname { $bib_title . $_[0] }
+sub do_cmd_nomname { $nom_title . $_[0] }
 sub do_cmd_figurename { $fig_name . $_[0] }
 sub do_cmd_listfigurename { $lof_title . $_[0] }
 sub do_cmd_tablename { $tab_name . $_[0] }
@@ -14559,18 +14617,52 @@ sub do_cmd_jobname { $FILE . $_[0] }
 # This is used in $FILE.aux
 sub do_cmd_newlabel {
     local($_) = @_;
-    local($label,$val,$tmp);
+    local($label,$val,$tmp,$valno,$valpag,$valnam);
+    # 1st argument is always label
     $label = &missing_braces unless (
 	(s/$next_pair_pr_rx/$label = $2;''/eo)
 	||(s/$next_pair_rx/$label = $2;''/eo));
+    $label =~ s/$label_rx/_/g;	# Replace non alphanumeric characters
+    # next argument is a bracketed container
     $tmp = &missing_braces unless (
 	(s/$next_pair_pr_rx/$tmp=$2;''/eo)
 	||(s/$next_pair_rx/$tmp=$2;''/eo));
-    $val = &missing_braces unless (
-	($tmp =~ s/$next_pair_pr_rx/$val=$2;''/eo)
-	||($tmp =~ s/$next_pair_rx/$val=$2;''/eo));
-    $val =~ s/(^\s+|\s+$)//gs;
-    $label =~ s/$label_rx/_/g;	# Replace non alphanumeric characters
+    # 2nd argument may be either cap number or another bracketed container
+    $valno = '' unless (
+	($tmp =~ s/$next_pair_pr_rx/$valno=$&;''/eo)
+	||($tmp =~ s/$next_pair_rx/$valno=$&;''/eo));
+    $valno =~ s/(^\s+|\s+$)//gs;
+    # 3rd argument is always page number
+    $valpag = &missing_braces unless (
+	($tmp =~ s/$next_pair_pr_rx/$valpag=$2;''/eo)
+	||($tmp =~ s/$next_pair_rx/$valpag=$2;''/eo));
+    $valpag =~ s/(^\s+|\s+$)//gs;
+    if ($tmp eq '') {
+        # memoir/hyperref: unwrap and parse 2nd argument
+        $tmp = &missing_braces unless (
+	    ($valno =~ s/$next_pair_pr_rx/$tmp=$2;''/eo)
+	    ||($valno =~ s/$next_pair_rx/$tmp=$2;''/eo));
+	# 1st part of 2nd argument is actual cap number (memoir/hyperref)
+	$valno = '' unless (
+	    ($tmp =~ s/$next_pair_pr_rx/$valno=$&;''/eo)
+	    ||($tmp =~ s/$next_pair_rx/$valno=$&;''/eo));
+	$valno =~ s/(^\s+|\s+$)//gs;
+	# 2nd part of 2nd argument is actual cap text (memoir/hyperref)
+	$valnam = '' unless (
+	    ($tmp =~ s/$next_pair_pr_rx/$valnam=$&;''/eo)
+	    ||($tmp =~ s/$next_pair_rx/$valnam=$&;''/eo));
+	$valnam =~ s/(^\s+|\s+$)//gs;
+    } else {
+        # No memoir/hyperref: 4th argument is cap text
+        $valnam = '' unless (
+	    ($tmp =~ s/$next_pair_pr_rx/$valnam=$&;''/eo)
+	    ||($tmp =~ s/$next_pair_rx/$valnam=$&;''/eo));
+	$valnam =~ s/(^\s+|\s+$)//gs;
+    }
+    # Now combine number and text together, separated by one space
+    $tmp = '';
+    $tmp = ' ' if ($valno ne '' && $valnam ne '');
+    $val = join ($tmp, $valno, $valnam);
     $latex_labels{$label} = $val;
     &do_labels_helper($label);
     $_;
@@ -15959,6 +16051,7 @@ sub initialise {
 	unless $AtBeginDocument_hook;
     $cross_ref_mark = '<tex2html_cr_mark>';
     $external_ref_mark = '<tex2html_ext_cr_mark>';
+    $name_ref_mark = '<tex2html_name_cr_mark>';
     $cite_mark = '<tex2html_cite_mark>';
     $hash_mark = '<tex2html_hash_mark>';
     $protected_hash = '<tex2html_protected_hash>';
@@ -16214,7 +16307,7 @@ sub initialise {
     # These need their own custom code but are treated as sectioning commands
     %section_headings =
 	('tableofcontents', 'H2', 'listoffigures', 'H2', 'listoftables', 'H2'
-	, 'bibliography', 'H2', 'textohtmlindex', 'H2'
+	, 'bibliography', 'H2', 'nomenclature', 'H2', 'textohtmlindex', 'H2'
 	, %standard_section_headings
 	, %section_headings);
 
@@ -17378,6 +17471,8 @@ S<[ B<->(B<no>)B<local_icons> ]>
 S<[ B<->(B<no>)B<scalable_fonts> ]>
 S<[ B<->(B<no>)B<images_only> ]>
 S<[ B<->(B<no>)B<show_section_numbers> ]>
+S<[ B<->(B<no>)B<add_ref_name> ]>
+S<[ B<->(B<no>)B<cut_ref_num> ]>
 S<[ B<->(B<no>)B<use_dvipng> ]>
 S<[ B<->(B<no>)B<use_pdftex> ]>
 S<[ B<->(B<no>)B<use_luatex> ]>
@@ -17722,6 +17817,20 @@ by LaTeX.
 Hiding the section numbers encourages use of particular sections 
 as standalone documents. In this case the cross reference to a section 
 is shown using the default symbol rather than the section number.
+
+=item B<->(B<no>)B<add_ref_name>
+
+=item B<->(B<no>)B<cut_ref_num>
+
+Usually cross reference text contains only the caption number as a
+hyperlink to the corresponding B<LaTeX> label. However, it could be handy
+to see the name of the object referenced, if the reference text would
+contain both the caption number and the caption name.
+With B<-add_ref_name> the caption name is shown additionally.
+With B<-cut_ref_num> the caption number is cut out leaving the optional
+name only. If B<-cut_ref_num> is given and B<-add_ref_name> is not,
+then the cross reference text is suppressed and a cross reference
+button shown instead.
 
 =item B<->(B<no>)B<use_dvipng>
 

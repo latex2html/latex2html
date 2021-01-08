@@ -237,6 +237,29 @@ to encourage the use of particular sections as stand-alone documents.
 In order to be shown, section titles must be unique and must not
 contain inlined graphics.
 .TP
+.B -add_ref_name
+Same as setting:
+.I $ADD_REF_NAME = 1;
+Usually cross reference text contains only the caption number as a
+hyperlink to the corresponding
+.B LaTeX
+label. However, it could be
+handy to see the name of the object referenced, if the reference text
+would contain both the caption number and the caption name.
+With -add_ref_name the caption name is shown additionally.
+.TP
+.B -cut_ref_num
+Same as setting:
+.I $CUT_REF_NUM = 1;
+Usually cross reference text contains only the caption number as a
+hyperlink to the corresponding
+.B LaTeX
+label. With -add_ref_name the
+caption name can be shown additionally. If the caption number is not
+desired, it can be cut out with -cut_ref_num. If -cut_ref_num is
+given and -add_ref_name is not, then the cross reference text is
+suppressed completely and a cross reference button shown instead.
+.TP
 .B -unsegment
 Same as setting:
 .I $UNSEGMENT = 1;

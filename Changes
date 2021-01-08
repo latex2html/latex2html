@@ -112,6 +112,9 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- package nomencl.sty
+#		- package nameref.sty
+#		- options -cut_ref_num -add_ref_name
 #
 #--------- v2021
 #

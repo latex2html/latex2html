@@ -2,6 +2,7 @@
 \item[\gn{.latex2html-init}] initialisation file for \latextohtml{}
 \item[\gn{\$ACCENT\_IMAGES}] holds the \LaTeX\ style to be used when making images of accented characters which are not present in the character encoding being used
 \item[\gn{\$ADDRESS}] contains information to be included as a signature at the bottom of each \texttt{HTML} page
+\item[\gn{\$ADD\_REF\_NAME}] when set, caption name is shown additionally to caption number in cross references
 \item[\gn{\$ALTERNATIVE\_ICONS}] contains the location of special icons, other than the standard ones
 \item[\gn{\$ANTI\_ALIAS}] when set, specifies that anti-aliasing be used with generated images of figures and included images
 \item[\gn{\$ANTI\_ALIAS\_TEXT}] when set (the default), specifies that anti-aliasing be used with generated images of maths and typeset text
@@ -24,6 +25,7 @@
 \item[\gn{\$CUSTOM\_BUTTONS}] variable available to link to customised buttons in navigation panels 
 \item[\gn{\$CUSTOM\_ICONS}] when set, a copy of each icon actually used is included in the directory along with the \texttt{.html} files and images
 \item[\gn{\$CUSTOM\_TITLES}] when set, a customised subroutine is used to determine the filename for each \texttt{HTML} page 
+\item[\gn{\$CUT\_REF\_NUM}] when set, caption number is cut out in cross references
 \item[\gn{\$DEBUG}] when non-zero, \latextohtml\ shows messages that would otherwise be ignored
 \item[\gn{\$DESTDIR}] specifies the directory into which all the generated files will be placed
 \item[\gn{\$DISCARD\_PS}] when set, specifies that the temporary \PS\ files created by \fn{dvips} be discarded immediately after use

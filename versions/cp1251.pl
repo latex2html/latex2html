@@ -448,6 +448,8 @@ sub russian_titles {
     $idx_title = "Предметный указатель";
     $ref_title = "Список литературы";
     $bib_title = "Литература";
+  # $nom_title = "Список обозначений";
+    $nom_title = "Обозначения";
     $abs_title = "Аннотация";
     $app_title = "Приложение";
     $pre_title = "Предисловие";

@@ -574,6 +574,25 @@ $DISCARD_PS = 1;
 $SHOW_SECTION_NUMBERS = 0;
 
 
+# -add_ref_name
+# -cut_ref_num
+# Usually cross reference text contains only the caption number as a
+# hyperlink to the corresponding LaTeX label. However, it could be
+# handy to see the name of the object referenced, if the reference text
+# would contain both the caption number and the caption name.
+# If $ADD_REF_NAME is 1, (option -add_ref_name), then the caption name
+# is shown additionally.
+# If $CUT_REF_NUM is 1, (option -cut_ref_num), then the caption number
+# is cut out, leaving the optional name only.
+# If $CUT_REF_NUM = 0 and $ADD_REF_NAME = 1, both caption number and
+# name are shown.
+# If $CUT_REF_NUM = 1 and $ADD_REF_NAME = 0, the cross reference text
+# is suppressed and a cross reference button shown instead.
+#
+$ADD_REF_NAME = 0;
+$CUT_REF_NUM  = 0;
+
+
 # -short_index
 # If this is set then  makeidx.perl  will construct codified names
 # for the text of index references.
@@ -899,6 +918,7 @@ sub english_titles {
     $idx_title = "Index";
     $ref_title = "References";
     $bib_title = "Bibliography";
+    $nom_title = "Nomenclature";
     $abs_title = "Abstract";
     $app_title = "Appendix";
     $pre_title = "Preface";
