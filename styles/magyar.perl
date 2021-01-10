@@ -16,8 +16,6 @@ package main;
 
 if (defined &addto_languages) { &addto_languages('magyar') };
 
-&do_require_extension ('latin2');
-
 sub magyar_titles {
     $toc_title = 'Tartalomjegyz&eacute;k';
     $lof_title = '&Aacute;br&aacute;k jegyz&eacute;ke';

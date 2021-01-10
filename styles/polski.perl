@@ -35,8 +35,6 @@ package main;
 
 if (defined &addto_languages) { &addto_languages('polski') };
 
-&do_require_extension('unicode');
-
 sub polski_titles {
 #    $toc_title = "Spis rzeczy";
     $toc_title = "Spis tre\\'sci";

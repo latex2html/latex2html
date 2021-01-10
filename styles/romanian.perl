@@ -16,8 +16,6 @@ package main;
 
 if (defined &addto_languages) { &addto_languages('romanian') };
 
-&do_require_extension ('latin10');
-
 sub romanian_titles {
     $toc_title = "Cuprins";
     $lof_title = "List&#103; de figuri";

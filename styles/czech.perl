@@ -16,8 +16,6 @@ package main;
 
 if (defined &addto_languages) { &addto_languages('czech') };
 
-&do_require_extension ('latin2');
-
 sub czech_titles {
     $toc_title = "Obsah";
     $lof_title = "Seznam obr&aacute;zk&uring;";
