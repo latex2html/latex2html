@@ -9123,7 +9123,7 @@ sub remove_external_ref_marks {
 
 sub get_ref_mark {
     local($label,$id) = @_;
-    local($val,$tmp,$valno,$valnam);
+    local($val,$tmp,$valno,$valnam,$tmpno,$tmpnam);
     $val = ( ( $SHOW_SECTION_NUMBERS && $symbolic_labels{"$label$id"}) ||
 	     $latex_labels{"userdefined$label$id"} ||
 	     $symbolic_labels{"$label$id"} ||
@@ -9132,17 +9132,17 @@ sub get_ref_mark {
 	     $cross_ref_visible_mark );
     # Cut out section name, or number, or both, depending on the option given
     $tmp = $val;
-    if ((($tmp =~ s/$next_pair_pr_rx/$valno=$&;''/eo) ||
-	 ($tmp =~ s/$next_pair_rx/$valno=$&;''/eo)) &&
+    if ((($tmp =~ s/$next_pair_pr_rx/$valno=$&;$tmpno=$2;''/eo) ||
+	 ($tmp =~ s/$next_pair_rx/$valno=$&;$tmpno=$2;''/eo)) &&
 	($tmp =~ s/^\s*//o) &&
-	(($tmp =~ s/$next_pair_pr_rx/$valnam=$&;''/eo) ||
-	 ($tmp =~ s/$next_pair_rx/$valnam=$&;''/eo)) &&
+	(($tmp =~ s/$next_pair_pr_rx/$valnam=$&;$tmpnam=$2;''/eo) ||
+	 ($tmp =~ s/$next_pair_rx/$valnam=$&;$tmpnam=$2;''/eo)) &&
 	$tmp eq '') {
-      $valno  = '' if ($CUT_REF_NUM);
-      $valnam = '' unless ($ADD_REF_NAME);
-      $tmp = ' ' if ($valno ne '' && $valnam ne '');
+      $valno  = $tmpno  = '' if ($CUT_REF_NUM);
+      $valnam = $tmpnam = '' unless ($ADD_REF_NAME);
+      $tmp = ' ' if ($tmpno ne '' && $tmpnam ne '');
       $val = join ($tmp, $valno, $valnam);
-      $val = $cross_ref_visible_mark if ($val eq '');
+      $val = $cross_ref_visible_mark if ($tmpno eq '' && $tmpnam eq '');
     }
     $val;
 }
@@ -14617,7 +14617,8 @@ sub do_cmd_jobname { $FILE . $_[0] }
 # This is used in $FILE.aux
 sub do_cmd_newlabel {
     local($_) = @_;
-    local($label,$val,$tmp,$valno,$valpag,$valnam);
+    local($label,$val,$tmp,$tmp2,$valno,$valpag,$valnam);
+
     # 1st argument is always label
     $label = &missing_braces unless (
 	(s/$next_pair_pr_rx/$label = $2;''/eo)
@@ -14637,28 +14638,38 @@ sub do_cmd_newlabel {
 	($tmp =~ s/$next_pair_pr_rx/$valpag=$2;''/eo)
 	||($tmp =~ s/$next_pair_rx/$valpag=$2;''/eo));
     $valpag =~ s/(^\s+|\s+$)//gs;
+
     if ($tmp eq '') {
-        # memoir/hyperref: unwrap and parse 2nd argument
+        # either article or memoir: try to unwrap and parse 2nd argument
+	$tmp2 = $valno;
         $tmp = &missing_braces unless (
-	    ($valno =~ s/$next_pair_pr_rx/$tmp=$2;''/eo)
-	    ||($valno =~ s/$next_pair_rx/$tmp=$2;''/eo));
-	# 1st part of 2nd argument is actual cap number (memoir/hyperref)
-	$valno = '' unless (
-	    ($tmp =~ s/$next_pair_pr_rx/$valno=$&;''/eo)
-	    ||($tmp =~ s/$next_pair_rx/$valno=$&;''/eo));
-	$valno =~ s/(^\s+|\s+$)//gs;
-	# 2nd part of 2nd argument is actual cap text (memoir/hyperref)
-	$valnam = '' unless (
-	    ($tmp =~ s/$next_pair_pr_rx/$valnam=$&;''/eo)
-	    ||($tmp =~ s/$next_pair_rx/$valnam=$&;''/eo));
-	$valnam =~ s/(^\s+|\s+$)//gs;
+	    ($tmp2 =~ s/$next_pair_pr_rx/$tmp=$2;''/eo)
+	    ||($tmp2 =~ s/$next_pair_rx/$tmp=$2;''/eo));
+	# 1st part of 2nd argument is either empty or actual new cap number
+	$tmp2 = '' unless (
+	    ($tmp =~ s/$next_pair_pr_rx/$tmp2=$&;''/eo)
+	    ||($tmp =~ s/$next_pair_rx/$tmp2=$&;''/eo));
+	$tmp2 =~ s/(^\s+|\s+$)//gs;
+	if ($tmp2 eq '') {
+	    # article: keep old cap number, cap text unavailable
+	    $valnam = '';
+	} else {
+	    # memoir: reassign new cap number, cap text following
+	    $valno = $tmp2;
+	    # memoir: 2nd part of 2nd argument is actual cap text
+	    $valnam = '' unless (
+	        ($tmp =~ s/$next_pair_pr_rx/$valnam=$&;''/eo)
+	        ||($tmp =~ s/$next_pair_rx/$valnam=$&;''/eo));
+	    $valnam =~ s/(^\s+|\s+$)//gs;
+	}
     } else {
-        # No memoir/hyperref: 4th argument is cap text
+        # special case: nameref without hyperref, 4th argument is cap text
         $valnam = '' unless (
 	    ($tmp =~ s/$next_pair_pr_rx/$valnam=$&;''/eo)
 	    ||($tmp =~ s/$next_pair_rx/$valnam=$&;''/eo));
 	$valnam =~ s/(^\s+|\s+$)//gs;
     }
+
     # Now combine number and text together, separated by one space
     $tmp = '';
     $tmp = ' ' if ($valno ne '' && $valnam ne '');
@@ -17826,7 +17837,7 @@ Usually cross reference text contains only the caption number as a
 hyperlink to the corresponding B<LaTeX> label. However, it could be handy
 to see the name of the object referenced, if the reference text would
 contain both the caption number and the caption name.
-With B<-add_ref_name> the caption name is shown additionally.
+With B<-add_ref_name> the caption name is shown additionally when available.
 With B<-cut_ref_num> the caption number is cut out leaving the optional
 name only. If B<-cut_ref_num> is given and B<-add_ref_name> is not,
 then the cross reference text is suppressed and a cross reference

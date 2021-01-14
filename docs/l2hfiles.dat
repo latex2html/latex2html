@@ -2,7 +2,7 @@
 \item[\gn{.latex2html-init}] initialisation file for \latextohtml{}
 \item[\gn{\$ACCENT\_IMAGES}] holds the \LaTeX\ style to be used when making images of accented characters which are not present in the character encoding being used
 \item[\gn{\$ADDRESS}] contains information to be included as a signature at the bottom of each \texttt{HTML} page
-\item[\gn{\$ADD\_REF\_NAME}] when set, caption name is shown additionally to caption number in cross references
+\item[\gn{\$ADD\_REF\_NAME}] when set, caption name is shown additionally to caption number in cross references if available
 \item[\gn{\$ALTERNATIVE\_ICONS}] contains the location of special icons, other than the standard ones
 \item[\gn{\$ANTI\_ALIAS}] when set, specifies that anti-aliasing be used with generated images of figures and included images
 \item[\gn{\$ANTI\_ALIAS\_TEXT}] when set (the default), specifies that anti-aliasing be used with generated images of maths and typeset text

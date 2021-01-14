@@ -45,9 +45,29 @@ sub do_nomencl_notintoc {
 sub do_env_thenomenclature {
   local($_) = @_;
 
-  $_ = &list_helper($_, 'DL');
+#  # The following 3 function calls would yield a compact list
+#  $_ = &list_helper($_, 'DL');
+#  $_ = &translate_environments($_);
+#  $_ = &translate_commands($_);
+
+  # The following generates a list similar to description environment
+  # Evtl catch nested lists
+  &protect_useritems($_);
+
+  s/\n?$item_description_rx\s*($labels_rx8)?\s*/"\n<\/DD>\n<DT>" .
+    (($9) ? "<A ID=\"$9\">$1<\/A>" : $1) . "<\/DT>\n<DD>"/egm;
+
   $_ = &translate_environments($_);
   $_ = &translate_commands($_);
+
+  # just for safety in case the description is empty ...
+  s/\n?\\item\b\s*([^$letters\\]|)\s*/\n<\/DD>\n<DT><\/DT>\n<DD>$1/gm;
+  s/^\s+//m;
+
+  # Wrap the whole description with the appropriate opening/closing tags
+  $_ = '<DD>'.$_ unless ($_ =~ s/^\s*<\/D(T|D)>\n?//s);
+  $_ =~ s/\n$//s;
+  "<DL>\n$_\n</DD>\n</DL>";
 }
 
 # Generate nomenclature with heading and optional sectioning
