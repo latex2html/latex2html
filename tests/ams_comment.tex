@@ -1,4 +1,4 @@
-\documentclass[10pt]{book}
+\documentclass[10pt]{article}
 \usepackage{amsmath}  % removing this bypasses the problem
 \begin{document}
 \begin{equation} % Using \[ instead is ok
@@ -35,5 +35,45 @@ b &= b
  + c )
 \end{multline}
 
+\begin{subequations}
+  \begin{align}
+    \label{eq:mandelstam_s}
+    s & \equiv (P_1 + P_2)^2 \\
+    \label{eq:mandelstam_t}
+    t & \equiv (P_1 - P_3)^2 \\
+    \label{eq:mandelstam_u}
+    u & \equiv (P_1 - P_4)^2
+  \end{align}
+\end{subequations}
+
+ba%comment
+nana
+
+ba%comment followed by space
+ nana
+
+ba %comment preceded by space
+nana
+
+% the comment was causing the picture to disappear
+\begin{figure}
+  \centering
+  \setlength{\unitlength}{0.5mm}
+  % 
+  % \begin{picture}(130,100)
+  % \end{picture}
+  \begin{picture}(60,100)
+    % \put(0,0){\framebox(60,100){}}
+    \put(5,5){\makebox(0,0)[c]{a)}}
+    \put(20,50){\vector(0,1){50}}
+    \put(20,50){\vector(0,-1){50}}
+    % 
+    \put(45,50){\makebox(0,0)[c]{$\vec{P}=\vec{0}, M$}}
+    \put(35,75){\makebox(0,0)[c]{$\vec{p}_1, m_1$}}
+    \put(35,25){\makebox(0,0)[c]{$\vec{p}_2, m_2$}}
+    \thinlines
+    \put(20,50){\circle*{15}}
+  \end{picture}\hfill%
+\end{figure}
 
 \end{document}

@@ -1431,9 +1431,9 @@ sub pre_process {
     }
 
     # Move all LaTeX comments into a local list
-    s/([ \t]*(^|[^\\]))(%.*(\n[ \t]*|$))/print "%";
-	$comments{++$global{'verbatim_counter'}} = "$3";
-	&write_mydb("verbatim", $global{'verbatim_counter'}, $3);
+    s/(^|\G|[^\\])(%.*(\n[ \t]*|$))/print "%";
+	$comments{++$global{'verbatim_counter'}} = "$2";
+	&write_mydb("verbatim", $global{'verbatim_counter'}, $2);
 	"$1$comment_mark".$global{'verbatim_counter'}."\n"/mge;
     # Remove the htmlonly-environment
     s/\\begin\s*{htmlonly}\s*\n?//gom;
@@ -3658,7 +3658,7 @@ sub process_undefined_environment {
 		# ... unless equation numbers are included ...
 		if ($3) { #  AMS {subequations}
 		    $global{'eqn_number'}=$prev_eqn_number if $prev_eqn_number;
-		    --$global{'eqn_number'};
+		    #--$global{'eqn_number'};
 		}
 		$raw_contents = join('' ,
 		    (($eqno{$name}||$global{'eqn_number'})?

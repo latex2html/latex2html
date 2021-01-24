@@ -112,6 +112,8 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- fix scanning of latex comments
+#		- fix subequation numbering
 #		- package nomencl.sty
 #		- package nameref.sty
 #		- options -cut_ref_num -add_ref_name
