@@ -1798,8 +1798,10 @@ sub parse_math_toks {
 	    $cmd = $&; 
 	    print ".";
 	    print STDERR "$cmd" if ($VERBOSITY > 2);
+	    local($dum1, $dum2) = ($cmd, '');
+	    $dum1 = $cmd unless ($dum1 = &normalize($dum1, $dum2));
 	    local($mtmp, $ctmp, $wtmp) = 
-		("do_math_cmd_$cmd","do_cmd_$cmd", "wrap_cmd_$cmd");
+		("do_math_cmd_$dum1","do_cmd_$dum1", "wrap_cmd_$dum1");
 	    if ($cmd =~/color/) {
 		do {
 		    local($color_env,$inside_math) = ($color_env,1);

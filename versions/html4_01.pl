@@ -41,15 +41,16 @@ sub do_env_flushleft { &declared_env('flushleft', @_) }
 sub do_env_raggedright { &declared_env('flushleft', @_) }
 sub do_env_raggedleft { &declared_env('flushright', @_) }
 
-sub do_cmd_centering { 
-    # MRO *opentags has no effect
-    local($_)= @_; &declared_env('center', $_) }
-sub do_cmd_raggedright {
-    # MRO *opentags has no effect
-    local($_) = @_; &declared_env('flushleft', $_) }
-sub do_cmd_raggedleftt {
-    # MRO *opentags has no effect
-    local($_) = @_; &declared_env('flushright', $_) }
+# SGE: reimplemented via $declarations{$cmd} in &process_command
+#sub do_cmd_centering { 
+#    # MRO *opentags has no effect
+#    local($_)= @_; &declared_env('center', $_) }
+#sub do_cmd_raggedright {
+#    # MRO *opentags has no effect
+#    local($_) = @_; &declared_env('flushleft', $_) }
+#sub do_cmd_raggedleft {
+#    # MRO *opentags has no effect
+#    local($_) = @_; &declared_env('flushright', $_) }
 
 sub do_cmd_underline {
     &styled_text_chunk('U','','text','decoration','underline','',@_)}

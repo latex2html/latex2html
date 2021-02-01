@@ -16,7 +16,7 @@ $eqno_class = ' CLASS="eqno"';
 $declarations{'tiny'} = '<SPAN CLASS="TINY"></SPAN>';
 $declarations{'Tiny'} = '<SPAN CLASS="XTINY"></SPAN>';
 $declarations{'scriptsize'} = '<SPAN CLASS="SCRIPTSIZE"></SPAN>';
-$declarations{'small'} = '<SPAN CLASS="SPAN"></SPAN>';
+$declarations{'small'} = '<SPAN CLASS="SMALL"></SPAN>';
 $declarations{'Small'} = '<SPAN CLASS="FOOTNOTESIZE"></SPAN>';
 $declarations{'SMALL'} = '<SPAN CLASS="SCRIPTSIZE"></SPAN>';
 $declarations{'footnotesize'} = '<SPAN CLASS="FOOTNOTESIZE"></SPAN>';
