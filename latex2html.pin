@@ -1604,7 +1604,7 @@ sub pre_process {
 	# try to find closing delimiter and substitute the complete
 	# statement with $verb_mark or $verbstar_mark or $verblst_mark
 #	s/(<verb[^\d>]*$id>[\Q$del\E])([^$esc_del\n]*)([\Q$del\E]|$comment_mark(\d+)\n?)/
-	s/(<verb[^\d>]*$id>\Q$del\E)([^$esc_del\n]*?)(\Q$del\E|$comment_mark(\d+)\n?)/
+	s/(<verb[^\d>]*$id>\Q$del\E)([^$esc_del]*?)(\Q$del\E|$comment_mark(\d+)\n?)/
 	    $contents=$2;
 	    if ($4) { $verb_rerun = 1;
 		join('', "\\verb$del", $contents, $comments{$4})
@@ -1616,6 +1616,8 @@ sub pre_process {
 		join('',$vb_mark,$id,$verb_mark)
 	    }
 	/e;
+	# evtl revert inserted space after '\\' if '\' was our delimiter
+	s/($vb_mark$id$verb_mark\\) /$1/e if ($del eq "\\");
     }
     $global{'verb_counter'} = $id;
     # revert changes to fake verb statements
@@ -11946,9 +11948,9 @@ sub list_helper {
 #    local($savedRS) = $/; $/='';
 #    $_ =~ /\\item[\b\r]/s;
 #    if ($`) { 
-#	$preitems = $`; $_ = $&.$';
-#	$preitems =~ s/<P( [^>]*)?>//g;
-#	$close_tags .= "\n".$preitems if $preitems;
+#	$pre_items = $`; $_ = $&.$';
+#	$pre_items =~ s/<P( [^>]*)?>//g;
+#	$close_tags .= "\n".$pre_items if $pre_items;
 #    }
 #    $/ = $savedRS; 
 #
@@ -11993,9 +11995,9 @@ sub list_helper {
     $_ =~ /\Q$item_sep\E|<DT>|<LI>|$/s;
     #RRM: ...try putting it before the list-open tag
     if ($`) { 
-	$preitems = $`; $_ = $&.$';
-	$preitems =~ s/<P( [^>]*)?>//gm;
-	    $close_tags .= "\n".$preitems if $preitems;
+	$pre_items = $`; $_ = $&.$';
+	$pre_items =~ s/<P( [^>]*)?>//gm;
+	$close_tags = '' unless $pre_items;
     }
     # remove \n from end of the last item
     $_ =~ s/\n$//s;
@@ -12005,8 +12007,8 @@ sub list_helper {
 
     $/ = $savedRS;
 
-    join('' , $close_tags , "\n<$tag$compact>\n" 
-	 , $_ , "</$ctag>" , $reopens);
+    join('' , "\n<$tag$compact>\n" 
+	 , $pre_items , $_ , $close_tags , "</$ctag>");
 }
 
 

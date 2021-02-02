@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- close bold, etc, at end of environment
 #		- implement memoir document class
 #		- fix scanning of latex comments
 #		- fix subequation numbering
