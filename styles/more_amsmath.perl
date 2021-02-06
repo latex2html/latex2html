@@ -119,7 +119,7 @@ sub end_math_display {
 sub embed_display {
     # cancel <BIG> tags when alignment inside subequations
     return( join('', $ebig, @_[0], $sbig) )
-	 if ($outer_math && $subequation_level);
+	 if ($outer_math && $subequation_level > 1);
     # just return contents when alignment inside equation/multline
     return(@_[0]) if $outer_math;
 
@@ -340,6 +340,10 @@ sub process_env_multline {
     local($outer_math) = $env unless ($outer_math);
 
     if ($failed) {
+	$latex_body .= join('', "\n\\setcounter{equation}{"
+			    , $global{'eqn_number'} , "}\n");
+	$_ .= "%EQNO:".$global{'eqn_number'}."\n";
+	$global{'eqn_number'}++;
 	$_ = &process_undefined_environment(
 		'multline'.(($numbered) ? '':"*"), $id, $saved);
 	$falign = (($EQN_TAGS =~ /L/)? 'LEFT' : 'RIGHT') if $numbered;

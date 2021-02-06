@@ -10386,18 +10386,16 @@ sub embed_image {
 	if ($HTML_VERSION >= 3.2) {
 	    $aalign =  ($EQN_TAGS eq "L") ? "float:RIGHT;" : "float:LEFT;";
 	}
-    } elsif ($name =~ /$inline_env_rx/) {
-	if ($eheight{$name}){
-	    # used with -use_dvipng and with -image_type svg
-	    $aalign = sprintf ( "height: \%.2fex; vertical-align: \%.2fex; ",
-				$eheight{$name} ,
-				-$edepth{$name} );
-	} elsif ($depth{$name}) {
-	    # ALIGN=MIDDLE aligns middle of image to baseline of text
-	    my ($height_pxs) = ($imagesize =~ /HEIGHT=\"(\d+)\"/i);
-	    my $depth = $height_pxs*$depth{$name}/($height{$name}+$depth{$name});
-	    $aalign = "vertical-align:-${depth}px".$border;
-	}
+    } elsif ($eheight{$name}){
+	# used with -use_dvipng and with -image_type svg
+	$aalign = sprintf ( "height: \%.2fex; vertical-align: \%.2fex; ",
+			    $eheight{$name} ,
+			    -$edepth{$name} );
+    } elsif ($depth{$name}) {
+	# ALIGN=MIDDLE aligns middle of image to baseline of text
+	my ($height_pxs) = ($imagesize =~ /HEIGHT=\"(\d+)\"/i);
+	my $depth = $height_pxs*$depth{$name}/($height{$name}+$depth{$name});
+	$aalign = "vertical-align:-${depth}px".$border;	
     } elsif ($name =~ /inpar/m) {
 	$aalign = "vertical-align:TOP;".$border;
     } else {  $aalign = "".$border }

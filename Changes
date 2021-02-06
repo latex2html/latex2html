@@ -112,6 +112,9 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- fix image size for multline, subequations
+#		- remove extra <SPAN> after subequations
+#		- equation numbering for multline
 #		- close bold, etc, at end of environment
 #		- implement memoir document class
 #		- fix scanning of latex comments
