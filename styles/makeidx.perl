@@ -216,8 +216,11 @@ sub named_index_entry {
     $TITLE = $before unless $TITLE;
     # Save the reference
     local($words) = '';
-    if ($SHOW_SECTION_NUMBERS) { $words = &make_idxnum; }
-    elsif ($SHORT_INDEX) { $words = &make_shortidxname; }
+    # To get &make_idxnum effect, set in .latex2html-init or l2hconf.pm
+    # $SHOW_SECTION_NUMBERS = 1 and $WORDS_IN_INDEX = 0, or use -short_index
+    #if ($SHOW_SECTION_NUMBERS) { $words = &make_idxnum; }
+    #elsif ($SHORT_INDEX) { $words = &make_shortidxname; }
+    if ($SHORT_INDEX) { $words = &make_shortidxname; }
     else { $words = &make_idxname; }
     local($super_key) = '';
     local($sort_key, $printable_key, $cur_key);
@@ -367,12 +370,13 @@ sub named_index_entry {
     "<A NAME=\"$br_id\">$anchor_invisible_mark<\/A>";
 }
 
-$WORDS_IN_INDEX = 4 unless ($WORDS_IN_INDEX);
+$WORDS_IN_INDEX = $WORDS_IN_NAVIGATION_PANEL_TITLES if ($WORDS_IN_INDEX eq '');
+$WORDS_IN_INDEX = 4 if ($WORDS_IN_INDEX eq '');
 
 #RRM:
 # alternative strings for short-names or section-names
 #
-sub make_idxname {(&get_first_words($TITLE, $WORDS_IN_INDEX) || 'no title')}
+sub make_idxname {(&get_first_words($TITLE, $WORDS_IN_INDEX+($SHOW_SECTION_NUMBERS?1:0)) || 'no title')}
 sub make_idxnum {(&get_first_words($TITLE, 1) || 'no title')}
 
 sub make_shortidxname {

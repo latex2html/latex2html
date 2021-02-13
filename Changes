@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- $WORDS_IN_INDEX configurable
 #		- fix image size for multline, subequations
 #		- remove extra <SPAN> after subequations
 #		- equation numbering for multline

@@ -79,9 +79,17 @@ $WORDS_IN_PAGE = 300;
 $default_language = 'english';	
 
 # The value of this variable determines how many words to use in each 
-# title that is added to the navigation panel (see below)
+# title that is added to the navigation panel, see below (-1 is no limit).
+# If $SHOW_SECTION_NUMBERS == 1, then one additional word counts
+# for the section number.
 # 
 $WORDS_IN_NAVIGATION_PANEL_TITLES = 4;
+
+# The value of this variable determines how many words to use in each 
+# Index entry (analogous to $WORDS_IN_NAVIGATION_PANEL_TITLES).
+# If not set, it equals to $WORDS_IN_NAVIGATION_PANEL_TITLES by default.
+# 
+#$WORDS_IN_INDEX = 4;
 
 # This number will determine the size of the equations, special characters,
 # and anything which will be converted into an inlined image
