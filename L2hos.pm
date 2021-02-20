@@ -89,6 +89,9 @@ sub load {
 	} elsif ($OS eq 'darwin') {
 		require L2hos::Unix;
 		'L2hos::Unix'
+	} elsif ($OS eq 'cygwin') {
+		require L2hos::Unix;
+		'L2hos::Unix'
 	} elsif ($OS eq 'MSWin32') {
 		require L2hos::Win32;
 		'L2hos::Win32'
