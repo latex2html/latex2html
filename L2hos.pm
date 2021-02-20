@@ -92,7 +92,7 @@ sub load {
 	} elsif ($OS eq 'MSWin32') {
 		require L2hos::Win32;
 		'L2hos::Win32'
-	} elsif ($OS =~ /(win|dos)/i) {
+	} elsif ($OS eq 'dos') {
 		require L2hos::Dos;
 		'L2hos::Dos'
 	} else {
