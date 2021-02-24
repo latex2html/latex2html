@@ -7263,6 +7263,7 @@ sub make_latex {
     "\\def\\lthtmltypeout#1{{\\let\\protect\\string \\immediate\\write\\lthtmlwrite{#1}}}%\n" .
     (($USE_DVIPNG || $IMAGE_TYPE eq 'svg') ? <<'</dvipng>' :
 \usepackage[tightpage,active]{preview}
+\PreviewBorder=1bp
 \newbox\lthtmlPageBox
 \newdimen\lthtmlCropMarkHeight
 \newdimen\lthtmlCropMarkDepth
@@ -7275,10 +7276,10 @@ sub make_latex {
     \lthtmltypeout{^^J:\lthtmllabel:lthtmlCropMarkDepth:=\the\lthtmlCropMarkDepth:1ex:=\the \dimexpr 1ex}%
     \begin{preview}\copy\lthtmlPageBox\end{preview}}%
 \long\def\lthtmlTightFBoxA#1{\def\lthtmllabel{#1}%
-    \adjustnormalsize\setbox\lthtmlPageBox=\vbox\bgroup %
+    \adjustnormalsize\setbox\lthtmlPageBox=\vbox\bgroup\hbox\bgroup %
     \let\ifinner=\iffalse \let\)\liih@math %
     \bgroup\catcode`\_=8 }%
-\long\def\lthtmlTightFBoxZ{\egroup
+\long\def\lthtmlTightFBoxZ{\egroup\egroup
     \@next\next\@currlist{}{\def\next{\voidb@x}}%
     \expandafter\box\next\egroup %
     \lthtmlCropMarkHeight=\ht\lthtmlPageBox \advance \lthtmlCropMarkHeight 6pt
