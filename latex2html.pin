@@ -7381,6 +7381,8 @@ sub make_latex {
     . "\\end{document}";
 }
 
+# This routine sets some lengths in images.tex, but it no longer sets the textwidth.
+# We let latex do that natively, for example if the input uses the geometry package.
 sub adjust_textwidth {
     local($_) = @_;
     local($width,$length) = ('','');
@@ -7419,8 +7421,8 @@ sub adjust_textwidth {
     "\\addtolength{\\textheight}{\\topmargin}\\setlength{\\topmargin}{0pt}\n" .
     "\\addtolength{\\textheight}{\\headheight}\\setlength{\\headheight}{0pt}\n" .
     "\\addtolength{\\textheight}{\\headsep}\\setlength{\\headsep}{0pt}\n" .
-    "\\setlength{\\textwidth}{${width}pt}\n"
-    . (($length > 500) ? "\\setlength{\\textheight}{${length}pt}\n" : '')
+#    "\\setlength{\\textwidth}{${width}pt}\n" .
+    (($length > 500) ? "\\setlength{\\textheight}{${length}pt}\n" : '')
 }
 
 # Given the depth of the current sectioning declaration and the current
