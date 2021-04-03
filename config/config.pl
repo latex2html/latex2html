@@ -1444,15 +1444,15 @@ if(1) {
 }
 
 # --------------------------------------------------------------------------
-# PPMQUANT
+# PNMQUANT
 # --------------------------------------------------------------------------
 
-$newcfg{'PPMQUANT'} = '';
+$newcfg{'PNMQUANT'} = '';
 
 if(1) {
-  my $ppmquant = &find_prog(&get_name('PPMQUANT',1));
-  if($ppmquant) {
-    $newcfg{'PPMQUANT'} = $ppmquant;
+  my $pnmquant = &find_prog(&get_name('PNMQUANT',1));
+  if($pnmquant) {
+    $newcfg{'PNMQUANT'} = $pnmquant;
   }
 }
 

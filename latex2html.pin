@@ -4271,7 +4271,7 @@ sub extract_image_bitmap { # clean
     $color_depth = $color_quant = '';
     if (($USE_PDFTEX || $USE_LUATEX) && $USE_DVIPNG && $IMAGE_TYPE =~ /gif/) {
         $color_depth = "-depth 8 ";
-        $color_quant = "|$PPMQUANT -floyd 256";
+        $color_quant = "|$PNMQUANT -norandom -floyd 256";
     }
 
     print STDOUT "\nextracting $name as $page_num\n" if ($VERBOSITY > 1);
@@ -7381,8 +7381,9 @@ sub make_latex {
     . "\\end{document}";
 }
 
-# This routine sets some lengths in images.tex, but it no longer sets the textwidth.
-# We let latex do that natively, for example if the input uses the geometry package.
+# This routine sets some lengths in images.tex, but it no longer sets
+# the textwidth.  We let latex do that natively, for example if the
+# input uses the geometry package.
 sub adjust_textwidth {
     local($_) = @_;
     local($width,$length) = ('','');

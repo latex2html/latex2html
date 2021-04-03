@@ -90,7 +90,7 @@ $PNMCUT    = check_graphics_util('PNMCUT','pnmcut');
 $PNMPAD    = check_graphics_util('PNMPAD','pnmpad');
 $PNMFLIP   = check_graphics_util('PNMFLIP','pnmflip');
 $PNMSCALE  = check_graphics_util('PNMSCALE','pnmscale');
-$PPMQUANT  = check_graphics_util('PPMQUANT','ppmquant');
+$PNMQUANT  = check_graphics_util('PNMQUANT','pnmquant');
 $PNMROTATE = check_graphics_util('PNMROTATE','pnmrotate');
 
 # Utilities needed for image conversions.
@@ -458,9 +458,9 @@ sub do_includegraphics {
       if(!$rotfirst && ($rqw||$rqh||$rqs)){
 	($w,$h)=scaled_image_size($w,$h, $rqw*$Wf,$rqh*$Hf,$rqs,$aspect);
 	push (@missing_utils,'pnmscale') unless $PNMSCALE;
-	push (@missing_utils,'ppmquant') unless $PPMQUANT;
+	push (@missing_utils,'pnmquant') unless $PNMQUANT;
 	$pipe .= " | $PNMSCALE$quiet -width $w -height $h"; 
-	$pipe .= " | $PPMQUANT$quiet 255";
+	$pipe .= " | $PNMQUANT$quiet 255";
 	$cacheid .= "|S$w,$h"; }
       # 3: Perform any rotation
       if($a){
@@ -488,9 +488,9 @@ sub do_includegraphics {
       if($rotfirst && ($rqw||$rqh||$rqs)){
 	($w,$h)=scaled_image_size($w,$h, $rqw*$Wf,$rqh*$Hf,$rqs,$aspect);
 	push (@missing_utils,'pnmscale') unless $PNMSCALE;
-	push (@missing_utils,'ppmquant') unless $PPMQUANT;
+	push (@missing_utils,'pnmquant') unless $PNMQUANT;
 	$pipe .= " | $PNMSCALE$quiet -width $w -height $h"; 
-	$pipe .= " | $PPMQUANT$quiet 255";
+	$pipe .= " | $PNMQUANT$quiet 255";
 	$cacheid .= "|S$w,$h"; }
       #  ----------------------
       if(@missing_utils) {

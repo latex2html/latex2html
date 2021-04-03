@@ -28,7 +28,7 @@
 #
 # Revision 2016/04/19
 #  --  fix pstoimg -depth 24 -flip cw
-#      avoiding dropping unexecuted command when ppmquant is not run
+#      avoiding dropping unexecuted command when pnmquant is not run
 #      https://bugs.debian.org/612126
 #
 # Revision 1.19  2004/01/02 08:20:33  RRM
@@ -322,8 +322,8 @@ $PNMCROPOPT = $PNMBLACK;
 #if @PNMCROPOPT@
 $PNMCROPOPT = '@PNMCROPOPT@';
 #fi
-#if @PPMQUANT@
-my $PPMQUANT = '@PPMQUANT@';
+#if @PNMQUANT@
+my $PNMQUANT = '@PNMQUANT@';
 #fi
 #-
 #if @PNMFLIP@
@@ -871,13 +871,13 @@ EOF
 # calculate dpi resolution from density and scale
 $DENSITY = int($opt{scale} * $DENSITY + .5) if($opt{scale} != 1);
 
-#if @PPMQUANT@
+#if @PNMQUANT@
 my $reduce_color = '';
 if($opt{depth} == 1) {
-  $reduce_color = "$PPMQUANT 2";
+  $reduce_color = "$PNMQUANT 2";
   }
 elsif ($opt{depth} == 8) {
-  $reduce_color = "$PPMQUANT 256";
+  $reduce_color = "$PNMQUANT 256";
   }
 #fi
 
@@ -887,8 +887,8 @@ if($opt{antialias}) {
   $GSDEVICE = $GSALIASDEVICE;
   if($opt{depth} == 1) { 
     $gs_aalias = '-dTextAlphaBits=4 ';
-#if @PPMQUANT@
-    $reduce_color = "$PPMQUANT -floyd 256";
+#if @PNMQUANT@
+    $reduce_color = "$PNMQUANT -norandom -floyd 256";
 #fi
     }
   else {
@@ -898,8 +898,8 @@ if($opt{antialias}) {
 elsif ($opt{aaliastext}) {
   $GSDEVICE = $GSALIASDEVICE;
     $gs_aalias = '-dTextAlphaBits=4 ';
-#if @PPMQUANT@
-    $reduce_color = "$PPMQUANT -floyd 256";
+#if @PNMQUANT@
+    $reduce_color = "$PNMQUANT -norandom -floyd 256";
 #fi
   }
 #fi
@@ -1528,14 +1528,14 @@ sub crop_scale_etc {
     exit 2;
   }
 
-#if @PPMQUANT@
+#if @PNMQUANT@
 #if @PNMFILE@
   unless($type) {
     ($type,$width,$height) = &get_image_geometry($in);
     return 0 unless($type);
   }
 #fi
-  # run ppmquant only on color/gray images
+  # run pnmquant only on color/gray images
   if($reduce_color && (!$type || $type =~ /(ppm|pgm)/i)) {
 #if @pipes@
     if($cmd) {
@@ -1547,7 +1547,7 @@ sub crop_scale_etc {
     &do_cmd($in,$tmp,"$reduce_color < $in") || return 0;
 #fi
   }
-#fi # PPMQUANT
+#fi # PNMQUANT
 
 #if @pipes@
   if($cmd) {

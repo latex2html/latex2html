@@ -96,7 +96,7 @@ ac_help="$ac_help
 ac_help="$ac_help
   --with-pnmflip=PATH     path/name of the pnmflip executable"
 ac_help="$ac_help
-  --with-ppmquant=PATH    path/name of the ppmquant executable"
+  --with-pnmquant=PATH    path/name of the pnmquant executable"
 ac_help="$ac_help
   --with-pnmfile=PATH     path/name of the pnmfile executable"
 ac_help="$ac_help
@@ -974,12 +974,12 @@ else
   with_pnmflip=${PNMFLIP:-}
 fi
 
-# Check whether --with-ppmquant or --without-ppmquant was given.
-if test "${with_ppmquant+set}" = set; then
-  withval="$with_ppmquant"
+# Check whether --with-pnmquant or --without-pnmquant was given.
+if test "${with_pnmquant+set}" = set; then
+  withval="$with_pnmquant"
   :
 else
-  with_ppmquant=${PPMQUANT:-}
+  with_pnmquant=${PNMQUANT:-}
 fi
 
 # Check whether --with-pnmfile or --without-pnmfile was given.
@@ -1274,7 +1274,7 @@ $PERL $srcdir/config/config.pl \
   MKTEXLSR=$with_mktexlsr \
   HTML_VALIDATOR=$with_validator \
   PNMFLIP=$with_pnmflip \
-  PPMQUANT=$with_ppmquant \
+  PNMQUANT=$with_pnmquant \
   PNMFILE=$with_pnmfile \
   PNMCAT=$with_pnmcat \
   PNMCUT=$with_pnmcut \

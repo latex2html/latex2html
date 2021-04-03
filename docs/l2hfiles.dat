@@ -147,7 +147,7 @@
 \item[\gn{\$PNMCROP}] contains the command to call the \fn{pnmcrop} utility, used by \fn{pstoimg}
 \item[\gn{\$PNMFILE}] contains the command to call the \fn{pnmfile} utility, used by \fn{pstoimg}
 \item[\gn{\$PNMFLIP}] contains the command to call the \fn{pnmflip} utility, used by \fn{pstoimg}
-\item[\gn{\$PPMQUANT}] contains the command to call the \fn{ppmquant} utility, used by \fn{pstoimg}
+\item[\gn{\$PNMQUANT}] contains the command to call the \fn{pnmquant} utility, used by \fn{pstoimg}
 \item[\gn{\$PPMTOGIF}] contains the command to call the \fn{ppmtogif} utility, used by \fn{pstoimg}
 \item[\gn{\$PREFIX}] contains the filename-prefix to prepend to all \texttt{HTML}, image and data files created for the current document
 \item[\gn{\$PREVIOUS}] when navigation panels are created, this holds a hyperlink to the previous \texttt{HTML} page
@@ -361,7 +361,7 @@
 \item[\gn{pnmflip}] Unix graphics utility which rotates and reflects through multiples of $90^\circ$. 
 \item[\gn{pnmtopng}] Unix graphics utility which converts to \fn{PNG} format. 
 \item[\gn{PostScript}] graphics programming language used in printers; interpreted by \appl{Ghostscript}
-\item[\gn{ppmquant}] Unix graphics utility used to limit the number of distinct colours in a single image
+\item[\gn{pnmquant}] Unix graphics utility used to limit the number of distinct colours in a single image
 \item[\gn{ppmtogif}] Unix graphics utility used to convert a bitmapped graphic in \texttt{ppm} format into GIF format
 \item[\gn{problems.tex}] input file for the \latextohtml{} manual; contains a description of known problems with \latextohtml{}, and how best to avoid or deal with them
 \item[\gn{psfiles/}] sub-directory of \fn{docs/} containing \PS\ graphics used in the printed version of the \latextohtml{} manual

@@ -306,8 +306,8 @@ $prefs{'PNMCROP'} = 'pnmcrop';
 # the pnmflip executable needed for flipping and rotating bitmaps
 $prefs{'PNMFLIP'} = 'pnmflip';
 
-# the ppmquant executable needed for limiting the number of colors
-$prefs{'PPMQUANT'} = 'ppmquant';
+# the pnmquant executable needed for limiting the number of colors
+$prefs{'PNMQUANT'} = 'pnmquant';
 
 # the pnmfile executable needed for determining bitmap properties
 $prefs{'PNMFILE'} = 'pnmfile';
