@@ -122,7 +122,7 @@ $GRAPHICS_RULE{'.tiff'} = [$TIFFTOPNM,$PPMTOJPEG] if $TIFFTOPNM && $PPMTOJPEG;
 
 
 # Extensions for html graphics files; we'll look specifically for them.
-$GRAPHICS_EXTENSIONS =[grep($GRAPHICS_RULE{$_},  qw(.png .jpg .jpeg .gif .tiff))];
+$GRAPHICS_EXTENSIONS =[grep($GRAPHICS_RULE{$_},  qw(.svg .png .jpg .jpeg .gif .tiff))];
 
 %GRAPHICS_TRANSPARENCY=('.png'=>1, '.gif'=>1);
 

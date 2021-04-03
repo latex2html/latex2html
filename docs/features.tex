@@ -329,9 +329,9 @@ and \hyperref{the subsequent table}{Table~}{}{mathconv2} for \texttt{HTML} 2.0.
 \begin{tabular}{|c|c|p{6cm}|}
 \hline
 \textbf{`math'} & \textbf{switch} &\textbf{\hfill strategy adopted\hfill~}\\ \hline
- not loaded & --- & textual representation where possible,\newline
+ not loaded & \Cs{math} & textual representation where possible,\newline
   else image of whole expressions\\ \hline
- not loaded & \Cs{no\_math} & always generates an image of the whole\newline
+ not loaded & --- & always generates an image of the whole\newline
  expression/environment\\ \hline
  loaded & --- &
 uses entities and \HTMLtag{MATH} tags; e.g. for \texttt{HTML-Math}
@@ -347,27 +347,11 @@ uses entities and \HTMLtag{MATH} tags; e.g. for \texttt{HTML-Math}
 \end{center}
 \end{table}
 
-
-Using the \Cs{no\_math} switch is best for having a consistent
-style used for all mathematical expressions, whether inline or in displays.
-The images are of especially good quality when ``anti-aliasing'' 
-is being used (see \hyperref[page]{here}{page~}{}{cs_aaliastext}),
-provided the browser is set to have a light background colour.
-(When set against a gray or dark background, these images can become
-rather faint and hard to read.)
-
-The final strategy \hyperref{above}{in Table~}{}{mathconv3}, 
-using \Cs{no\_math} is the preferred method for good quality 
-mathematics with \texttt{HTML} version 3.2~. It combines the browser's 
-built-in fonts with the best quality images, when needed.
-To obtain it use the command-line option switches:
-\begin{quote}
-\texttt{ -no\_math -html\_version 3.2,math }
-\end{quote}
+The default behavior, with no command line options,
+is to generate images for all math expressions, which makes
+the appearance of all mathematical expressions consistent.
 This is what was used when creating\latex{ the \texttt{HTML} version of} 
 this manual. 
-Examples \htmlref{below}{ex-aalias} show how to generate an image
-of a whole environment, even with these options in force.
  
 \bigskip
 \noindent
@@ -421,18 +405,18 @@ The latter example uses an \env{eqnarray} environment
 and the \Lc{nonumber} command to suppress
 the equation number on the upper line.
 
-\medskip\noindent
-%
-\latexhtml{In the on-screen version of these equations}{Notice how}
-simple alphabetic characters that are not part of fractions appear
-in the (italiced) text-font selected using the browser's controls.
-This may appear slightly different from the same symbol being used
-within a fraction, or other mathematical construction requiring an image
-to be generated. This is most apparent with the letter `h' in the
-first equation and the subscripts at the end of the second equation.
+The default image format is Scalable Vector Graphics (SVG),
+which looks crisp at all resolutions.  If bitmap image
+formats are used (PNG or GIF), various options are
+available to control antialiasing and the resolution
+of the images.  These options are discussed in the
+following sections.
 
 \index{image generation!using htmlimage@using \Lc{htmlimage}}
 
+For combinations of options that do not generate images for all
+math expressions, it is possible to control image generation
+at the level of individual expression.
 By inserting an \verb|\htmlimage{}| command into a \env{math},
 \env{equation} or \env{displaymath} environment, a single image
 will be created for the whole environment. For an \env{eqnarray}
@@ -448,7 +432,10 @@ and a fuller discussion of the allowable options is given in
 \index{scale-factors!for math images}%
 \paragraph*{Scale-factors for Mathematics.\label{mathscales}}
 %
-When an image is to be made of a mathematical formula or expression,
+For bitmap image formats (PNG or GIF, as opposed to SVG),
+the scale factor controls the image resolution.
+When a bitmap image 
+is made of a mathematical formula or expression,
 it is generally made at a larger size 
 than is normally required on a printed page.
 This is to compensate for the reduced resolution of a computer screen
@@ -481,10 +468,6 @@ For a comparison, the second group of images use anti-aliasing effects,
 whereas the first image does not; a 600\,dpi printing is probably necessary
 to appreciate the difference in quality. Compare these images with those in
 \hyperref{a later section}{Section~}{}{printqual}.
-
-\smallskip\noindent\index{anti-aliasing!requires@requires \appl{Ghostscript} 4.03}
-\textbf{Note: }To generate anti-aliased images using \appl{Ghostscript} 
-requires version 4.03 or later.
 
 \begin{figure}[hb]
 \begin{makeimage}
@@ -981,7 +964,7 @@ So most images of mathematical formulas can be reused also.%
 \subsubsection{Quality of Printed Images\label{printqual}}
 %\subsection{Quality of Printed Images\label{printqual}}
 %
-\begin{htmlonly}
+%% \begin{htmlonly}
 Since it is often desirable to get a good quality print on paper
 directly from the browser, \hyperref{here are}{Figure~}{ shows}{eq:pics15} 
 the same equations as \hyperref[page]{earlier}{on page~}{}{eq:pics}.
@@ -990,44 +973,43 @@ More than twice the number of pixels are available,
 for a cost of approximately 1.7 times the disk-space\footnote{This figure
 varies with the graphics format used, and the complexity of the actual image.}.
 
-\end{htmlonly}
+%% \end{htmlonly}
 
 \begin{figure}[hb]
-\begin{htmlonly}
-\begin{makeimage}
-\end{makeimage}
+%% \begin{htmlonly}
+%% \begin{makeimage}
+%% \end{makeimage}
+%% \begin{equation}
+%% \htmlimage{no_antialias,extrascale=1.5}
+%% \Phi_{l+1,m,n} = \Bigl(\Phi+h\frac{\partial\Phi}{\partial x} +
+%% \frac{1}{2}h^2\frac{\partial^2\Phi}{\partial x^2} +
+%% \frac{1}{6}h^3\frac{\partial^3\Phi}{\partial x^3} + \,\ldots\,\Bigr)_{l,m,n}
+%% \end{equation}
+%% \begin{eqnarray}
+%% \htmlimage{extrascale=1.5}
+%% \frac{\Phi_{l+1,m,n}-2\Phi_{l,m,n}+\Phi_{l-1,m,n}}{h^{2}} +
+%% \frac{\Phi_{l,m+1,n}-2\Phi_{l,m,n}+\Phi_{l,m-1,n}}{h^{2}} \nonumber \\
+%% + \frac{\Phi_{l,m,n+1}-2\Phi_{l,m,n}+\Phi_{l,m,n-1}}{h^{2}} = -I_{l,m,n}(v)
+%% \end{eqnarray}
+%% \end{htmlonly}
+%% %
+%% \begin{latexonly}
 \begin{equation}
-\htmlimage{no_antialias,extrascale=1.5}
-\Phi_{l+1,m,n} = \Bigl(\Phi+h\frac{\partial\Phi}{\partial x} +
-\frac{1}{2}h^2\frac{\partial^2\Phi}{\partial x^2} +
-\frac{1}{6}h^3\frac{\partial^3\Phi}{\partial x^3} + \,\ldots\,\Bigr)_{l,m,n}
-\end{equation}
-\begin{eqnarray}
-\htmlimage{extrascale=1.5}
-\frac{\Phi_{l+1,m,n}-2\Phi_{l,m,n}+\Phi_{l-1,m,n}}{h^{2}} +
-\frac{\Phi_{l,m+1,n}-2\Phi_{l,m,n}+\Phi_{l,m-1,n}}{h^{2}} \nonumber \\
-+ \frac{\Phi_{l,m,n+1}-2\Phi_{l,m,n}+\Phi_{l,m,n-1}}{h^{2}} = -I_{l,m,n}(v)
-\end{eqnarray}
-\end{htmlonly}
-%
-\begin{latexonly}
-\begin{equation}
- \setbox1=\hbox{\scalebox{.4}{\includegraphics{psfiles/eqn15}}}
- \lower.5\ht1\box1
+ \hbox{\scalebox{.4}{\includegraphics{psfiles/eqn15}}}
 \end{equation}%
 \begin{eqnarray}
  \nonumber
- \setbox1=\hbox{\scalebox{.4}{\includegraphics{psfiles/eqarrA15}}}
- \lower.5\ht1 \box1&&\\
- \setbox1=\hbox{\scalebox{.4}{\includegraphics{psfiles/eqarrB15}}}
- \lower.5\ht1 \box1&&
+ \hbox{\scalebox{.4}{\includegraphics{psfiles/eqarrA15}}}
+ &&\\
+ \hbox{\scalebox{.4}{\includegraphics{psfiles/eqarrB15}}}
+ &&
 \end{eqnarray}
-\end{latexonly}
+%% \end{latexonly}
 \caption{Displayed math environments with \emph{extra-scale} of 1.5}
 \label{eq:pics15}%
 \end{figure}
 
-\begin{latexonly}
+%% \begin{latexonly}
 \noindent
 Since it is often desirable to get a good quality print on paper
 directly from the browser, \hyperref{here are}{Figure~}{ shows}{eq:pics15}
@@ -1036,7 +1018,7 @@ This time the `\texttt{extrascale=1.5}' option has been used. This value of 1.5
 means that more than twice the number of pixels are available,
 for a cost of approximately 1.7 times the disk-space\footnote{This figure
 varies with the graphics format used, and the complexity of the actual image.}.
-\end{latexonly}
+%% \end{latexonly}
 \noindent
 On-screen these images appear slightly blurred or indistinct. 
 However there can be marked improvement in the print quality,
@@ -1055,24 +1037,24 @@ but at 600\,dpi the results are most satisfying, especially when
 scaled to be comparable with normal 10\,pt type\latex{, as here}.
 
 \begin{figure}[ht]
-\begin{htmlonly}
-\begin{makeimage}
-\end{makeimage}
-\begin{equation}
-\htmlimage{no_antialias,extrascale=2}
-\Phi_{l+1,m,n} = \Bigl(\Phi+h\frac{\partial\Phi}{\partial x} +
-\frac{1}{2}h^2\frac{\partial^2\Phi}{\partial x^2} +
-\frac{1}{6}h^3\frac{\partial^3\Phi}{\partial x^3} + \,\ldots\,\Bigr)_{l,m,n}
-\end{equation}
-\begin{eqnarray}
-\htmlimage{extrascale=2}
-\frac{\Phi_{l+1,m,n}-2\Phi_{l,m,n}+\Phi_{l-1,m,n}}{h^{2}} +
-\frac{\Phi_{l,m+1,n}-2\Phi_{l,m,n}+\Phi_{l,m-1,n}}{h^{2}} \nonumber \\
-+ \frac{\Phi_{l,m,n+1}-2\Phi_{l,m,n}+\Phi_{l,m,n-1}}{h^{2}} = -I_{l,m,n}(v)\;.
-\end{eqnarray}
-\end{htmlonly}
-%
-\begin{latexonly}
+%% \begin{htmlonly}
+%% \begin{makeimage}
+%% \end{makeimage}
+%% \begin{equation}
+%% \htmlimage{no_antialias,extrascale=2}
+%% \Phi_{l+1,m,n} = \Bigl(\Phi+h\frac{\partial\Phi}{\partial x} +
+%% \frac{1}{2}h^2\frac{\partial^2\Phi}{\partial x^2} +
+%% \frac{1}{6}h^3\frac{\partial^3\Phi}{\partial x^3} + \,\ldots\,\Bigr)_{l,m,n}
+%% \end{equation}
+%% \begin{eqnarray}
+%% \htmlimage{extrascale=2}
+%% \frac{\Phi_{l+1,m,n}-2\Phi_{l,m,n}+\Phi_{l-1,m,n}}{h^{2}} +
+%% \frac{\Phi_{l,m+1,n}-2\Phi_{l,m,n}+\Phi_{l,m-1,n}}{h^{2}} \nonumber \\
+%% + \frac{\Phi_{l,m,n+1}-2\Phi_{l,m,n}+\Phi_{l,m,n-1}}{h^{2}} = -I_{l,m,n}(v)\;.
+%% \end{eqnarray}
+%% \end{htmlonly}
+%% %
+%% \begin{latexonly}
 \begin{equation}
  \setbox1=\hbox{\scalebox{.3}{\includegraphics{psfiles/eqn2}}}
  \lower.5\ht1 \box1
@@ -1084,7 +1066,7 @@ scaled to be comparable with normal 10\,pt type\latex{, as here}.
  \setbox1=\hbox{\scalebox{.3}{\includegraphics{psfiles/eqarrB2}}}
  \lower.5\ht1 \box1&&
 \end{eqnarray}
-\end{latexonly}
+%% \end{latexonly}
 \caption{Displayed math environments with \emph{extra-scale} of 2.0}
 \label{eq:pics2}
 \end{figure}

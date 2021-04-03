@@ -24,7 +24,7 @@ MAKEINDEX = makeindex
 BIBTEX = bibtex
 
 # L2H = latex2html  -no_math -html_version 3.2,math -scalable_fonts
-L2H = latex2html -nouse_pdftex -image_type png -nouse_dvipng -nomath -html_version 4.0,math
+L2H = latex2html -nouse_pdftex
 
 
 #

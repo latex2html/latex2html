@@ -4112,11 +4112,11 @@ sub copy_icons {
     local($icon,$_);
     print "\nCopying navigation icons ...";
     foreach (keys %used_icons) {
-	# each entry ends in gif or png
+	# each entry ends in svg or gif or png
 	if ($ALTERNATIVE_ICONS) {
 	    L2hos->Copy("$ALTERNATIVE_ICONS$dd$_", ".$dd$_")
 		if (-e "$ALTERNATIVE_ICONS$dd$_" && !-e $_);
-	} elsif (/(gif|png)$/) {
+	} elsif (/(svg|gif|png)$/) {
 	    L2hos->Copy("$LATEX2HTMLDIR${dd}icons$dd$_", ".$dd$_")
 		if (-e "$LATEX2HTMLDIR${dd}icons$dd$_" && !-e $_);
 	}
@@ -4247,6 +4247,8 @@ sub extract_image_svg {
       print SVG;
     }
     close SVG;
+
+    undef $thumbnail;	# don't use thumbnail with svg
 
     print "\nextracted $name as $page_num\n" if ($VERBOSITY > 1);
     &embed_image("${PREFIX}$img", $name, $external, $alt, $thumbnail, $map,

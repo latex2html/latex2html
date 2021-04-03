@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg14855"
+   sodipodi:docname="whiteball.svg"
+   viewBox="0 0 451.36 596.68"
+   sodipodi:version="0.32"
+   version="1.0"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <defs
+     id="defs14857">
+    <linearGradient
+       id="linearGradient15840"
+       y2="535.22"
+       gradientUnits="userSpaceOnUse"
+       x2="605.71"
+       y1="535.22"
+       x1="154.29"
+       inkscape:collect="always">
+      <stop
+         id="stop15842"
+         style="stop-color:#777777;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop15848"
+         style="stop-color:#dadada;stop-opacity:1"
+         offset="0.49911293" />
+      <stop
+         id="stop15850"
+         style="stop-color:#d2d2d2;stop-opacity:1"
+         offset=".75" />
+      <stop
+         id="stop15852"
+         style="stop-color:#d4d4d4;stop-opacity:0.6156863"
+         offset=".9375" />
+      <stop
+         id="stop15838"
+         style="stop-color:#c3c3c3;stop-opacity:0.21960784"
+         offset="1" />
+    </linearGradient>
+    <radialGradient
+       id="radialGradient20755"
+       gradientUnits="userSpaceOnUse"
+       cy="545.93"
+       cx="102.14"
+       r="135"
+       inkscape:collect="always">
+      <stop
+         id="stop20751"
+         style="stop-color:#999999"
+         offset="0" />
+      <stop
+         id="stop20753"
+         style="stop-color:#999999;stop-opacity:0"
+         offset="1" />
+    </radialGradient>
+    <radialGradient
+       id="radialGradient2194"
+       gradientUnits="userSpaceOnUse"
+       cy="545.93"
+       cx="102.14"
+       r="135"
+       inkscape:collect="always">
+      <stop
+         id="stop18793"
+         style="stop-color:#ffffff"
+         offset="0" />
+      <stop
+         id="stop18795"
+         style="stop-color:#ffffff;stop-opacity:0"
+         offset="1" />
+    </radialGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     bordercolor="#666666"
+     inkscape:pageshadow="2"
+     inkscape:window-y="19"
+     pagecolor="#ffffff"
+     inkscape:window-height="1012"
+     inkscape:zoom="0.49497475"
+     inkscape:window-x="64"
+     borderopacity="1.0"
+     inkscape:current-layer="layer1"
+     inkscape:cx="110.97588"
+     inkscape:cy="568.29324"
+     inkscape:window-width="1785"
+     inkscape:pageopacity="0.0"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:window-maximized="0" />
+  <g
+     id="layer1"
+     inkscape:label="Warstwa 1"
+     inkscape:groupmode="layer"
+     transform="translate(-154.32 -309.54)">
+    <path
+       id="path18799"
+       sodipodi:rx="135"
+       sodipodi:ry="135"
+       style="fill:url(#radialGradient20755)"
+       sodipodi:type="arc"
+       d="m 237.14286,545.93359 a 135,135 0 0 1 -135,135 135,135 0 0 1 -135,-135 135,135 0 0 1 135,-135 135,135 0 0 1 135,135 z"
+       inkscape:transform-center-x="-18.535056"
+       inkscape:transform-center-y="30.816466"
+       transform="matrix(1.4557 -.47633 .64580 1.0737 -116.33 210.1)"
+       sodipodi:cy="545.93359"
+       sodipodi:cx="102.14286" />
+    <path
+       id="path14863"
+       sodipodi:rx="225.71428"
+       sodipodi:ry="225.71428"
+       style="fill:url(#linearGradient15840)"
+       sodipodi:type="arc"
+       d="M 605.71428,535.2193 A 225.71428,225.71428 0 0 1 380,760.93358 225.71428,225.71428 0 0 1 154.28572,535.2193 225.71428,225.71428 0 0 1 380,309.50502 225.71428,225.71428 0 0 1 605.71428,535.2193 Z"
+       transform="matrix(-.67295 -.73969 .73969 -.67295 239.83 1176.5)"
+       sodipodi:cy="535.2193"
+       sodipodi:cx="380" />
+    <path
+       id="path17820"
+       sodipodi:rx="135"
+       sodipodi:ry="135"
+       style="opacity:.87615;fill:url(#radialGradient2194)"
+       sodipodi:type="arc"
+       d="m 237.14286,545.93359 a 135,135 0 0 1 -135,135 135,135 0 0 1 -135,-135 135,135 0 0 1 135,-135 135,135 0 0 1 135,135 z"
+       transform="translate(222.86 -74.286)"
+       sodipodi:cy="545.93359"
+       sodipodi:cx="102.14286" />
+  </g>
+  <metadata
+     id="metadata20">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title></dc:title>
+        <dc:date>2007-04-03T01:27:12</dc:date>
+        <dc:description>a simple red ball with shadow and highlight</dc:description>
+        <dc:source>https://openclipart.org/detail/3738/ball-by-chris_sharkot</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>chris_sharkot</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>ball</rdf:li>
+            <rdf:li>orb</rdf:li>
+            <rdf:li>red</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>
