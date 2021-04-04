@@ -236,7 +236,7 @@ sub named_index_entry {
 #
 	if ($printable_key =~ /tex2html_anchor_mark/ ) {
 	    $printable_key =~ s/><tex2html_anchor_mark><\/A><A//g;
-	    local($tmpA,$tmpB) = split("NAME=\"", $printable_key);
+	    local($tmpA,$tmpB) = split("ID=\"", $printable_key);
 	    ($tmpA,$tmpB) = split("\"", $tmpB);
 	    $ref_files{$tmpA}='';
 	    $index_labels{$tmpA} = 1;
@@ -332,7 +332,7 @@ sub named_index_entry {
     if ($pageref) {
 	if ($pageref =~ /tex2html_anchor_mark/ ) {
 	    $pageref =~ s/><tex2html_anchor_mark><\/A><A//g;
-	    local($tmpA,$tmpB) = split("NAME=\"", $pageref);
+	    local($tmpA,$tmpB) = split("ID=\"", $pageref);
 	    ($tmpA,$tmpB) = split("\"", $tmpB);
 	    $ref_files{$tmpA}='';
 	    $index_labels{$tmpA} = 1;
@@ -366,8 +366,8 @@ sub named_index_entry {
     }
 #print "\nREF: $sort_key : $cur_key :$index{$cur_key}";
  
-#    join('',"<A NAME=$br_id>$anchor_invisible_mark<\/A>",$_);
-    "<A NAME=\"$br_id\">$anchor_invisible_mark<\/A>";
+#    join('',"<A ID=$br_id>$anchor_invisible_mark<\/A>",$_);
+    "<A ID=\"$br_id\">$anchor_invisible_mark<\/A>";
 }
 
 $WORDS_IN_INDEX = $WORDS_IN_NAVIGATION_PANEL_TITLES if ($WORDS_IN_INDEX eq '');
