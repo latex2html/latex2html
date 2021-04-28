@@ -373,13 +373,7 @@ foreach $item (sort keys %Install_items) {
 #-----------------------------------------------------------------------------
 
 if($cfg{TEXPATH}) {
-  print "\nNote: trying to install LaTeX2HTML style files in TeX directory tree\n     ($cfg{TEXPATH})\n";
-  unless(mkpath($cfg{TEXPATH})) {
-  #my $testpath = $cfg{TEXPATH}; # to strip (latex2)html
-  #$testpath =~ s/[$dd$dd][^$dd$dd]*$//;
-  #if((-d $cfg{TEXPATH} && !-w _) || (-d $testpath && !-w _)) {
-    print STDERR "\nError: Cannot install LaTeX2HTML style files in $cfg{TEXPATH}\n";
-  } else {
+    print "\nNote: trying to install LaTeX2HTML style files in TeX directory tree\n     ($cfg{TEXPATH})\n";
     my $dir = 'texinputs';
     my $dest = $cfg{TEXPATH};
     unless(opendir(DIR,$dir)) {
@@ -401,7 +395,6 @@ if($cfg{TEXPATH}) {
         system($cfg{MKTEXLSR});
       }
     }
-  }
 }
 print "Done. Have a lot of fun with LaTeX2HTML!\n";
 exit 0;
