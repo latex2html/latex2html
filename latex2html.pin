@@ -378,6 +378,7 @@ if ($FONT_SIZE && $FONT_SIZE !~ /^\d+pt$/) {
 if (defined $TITLE && !length($TITLE)) {
     die "Error: Empty title (-title).\n";
 }
+$LONG_LINKPOINT = $TITLE if (defined $TITLE && $LONG_TITLES && $LINKPOINT);
 if ($opt{rootdir}) {
     $ROOTED = 1;
     $FIXEDDIR = $opt{rootdir};
@@ -897,6 +898,8 @@ sub driver {
 	    local($EXTN) = $EXTN;
 	    $EXTN =~ s/_\w+(\.html?)/$1/ if ($frame_main_name);
 	    local($from,$to) = (eval($LINKPOINT),eval($LINKNAME));
+	    $from = &make_long_title($LONG_LINKPOINT) . $EXTN
+		if ($LONG_TITLES && $LONG_LINKPOINT);
 	    if (length($from) && length($to) && ($from ne $to)) {
 		#frames may have altered $EXTN
 		$from =~ s/$frame_main_name(\.html?)/$1/ if ($frame_main_name);
