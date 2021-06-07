@@ -1,0 +1,66 @@
+\documentclass[10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% Testing longtitles option
+%
+% pdflatex longtitles (may be do it several times to be sure)
+%
+% latex2html -html_version 4.0 -local_icons longtitles.tex
+% Everything should be OK. There are several sections with duplicated names.
+% The duplications are intentional, to demonstrate the bug.
+% Notice section 1, subsections 1.1 and 1.2,
+% section 2, subsection 2.1, and section 3, subsection 3.1.
+%
+% rm -rf longtitles
+% latex2html -html_version 4.0 -local_icons -long_titles 5 longtitles.tex
+% Now you will not see sections 1 and 2 at all, and section 3 will be mess.
+% Moreover, repetitive clicking 'Next' in the browser will never reach the end.
+% This is because of mutual clobbering of duplicated HTML filenames.
+%
+% After applying the patch against titles duplication
+% the -long_titles option should work correctly:
+% the sequential numbers will be added to the duplicated filenames
+% starting from #2.
+
+\begin{document}
+
+\tableofcontents
+
+\section{Some basic stuff with very long first section name}
+
+This is some simple text, from section \thesection{} Some basic stuff
+with very long first section name.
+
+\subsection{Fonts}
+
+This subsections has some fonts, from section \thesection{},
+subsection \thesubsection{} Fonts.
+
+\subsection{Lists}
+
+This subsections has some lists, from section \thesection{},
+subsection \thesubsection{} Lists.
+
+\section{Some basic stuff with very long second section name}
+
+This is some simple text, from section \thesection{} Some basic stuff
+with very long second section name.
+
+\subsection{Fonts}
+
+This subsections has some fonts, from section \thesection{},
+subsection \thesubsection{} Fonts.
+
+\section{Some basic stuff with very long third section name}
+
+This is some simple text, from section \thesection{} Some basic stuff
+with very long third section name.
+
+\subsection{Lists}
+
+This subsections has some lists, from section \thesection{},
+subsection \thesubsection{} Lists.
+
+\end{document}
