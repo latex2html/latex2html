@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- latex2html -long_titles   fix duplicate file names
 #		- latex2html -long_titles 5 -title "Title"
 #		  correct link from index.html
 #		- pnmquant -norandom    for reproducible builds
@@ -124,6 +125,7 @@
 #		- implement memoir document class
 #		- fix scanning of latex comments
 #		- fix subequation numbering
+#		- babel should not set character encoding of input file
 #		- package nomencl.sty
 #		- package nameref.sty
 #		- options -cut_ref_num -add_ref_name

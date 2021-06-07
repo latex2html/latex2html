@@ -9857,6 +9857,7 @@ sub fulltexpath {
 sub make_name {
     local($sec_name, $packed_curr_sec_id) = @_;
     local($title,$making_name,$saved) = ('',1,'');
+    local($filename) = '';
     if ($LONG_TITLES) {
 	$saved = $_;
 	&process_command($sections_rx, $_) if /^$sections_rx/;
@@ -9874,7 +9875,16 @@ sub make_name {
 	#ensure no more than 32 characters, including .html extension
 	$title =~ s/^(.{1,27}).*$/$1/;
     	++$OUT_NODE;
-	join("", ${PREFIX}, $title, $EXTN);
+	$filename = join("", ${PREFIX}, $title, $EXTN);
+	# Avoid duplication of filenames
+	unless ($nodenames{$filename}) {
+	    $nodenames{$filename} = 1;
+	} else {
+	    # Duplication detected: add version number to generated filename
+	    $filename =
+		join("", ${PREFIX}, $title, ++$nodenames{$filename}, $EXTN);
+	}
+	$filename;
     } else {
     # Remove 0's from the end of $packed_curr_sec_id
 	$packed_curr_sec_id =~ s/(_0)*$//;
