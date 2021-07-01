@@ -112,6 +112,8 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#--------- v2021.2
+#
 #		- latex2html -long_titles   fix duplicate file names
 #		- latex2html -long_titles 5 -title "Title"
 #		  correct link from index.html
