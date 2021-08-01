@@ -743,10 +743,13 @@ sub driver {
 	}
 
 ## AYS: Allow extension other than .tex and make it optional
-	($EXT = $FILE) =~ s/.*\.([^\.]*)$/$1/;
-	if ( $EXT eq $FILE ) {
-	    $EXT = "tex";
+	if ($FILE =~ /.*(\.[^\.]*)$/) {
+	    $EXT = $1;
+	} elsif (-f "$FILE.tex") {
+	    $EXT = ".tex";
 	    $FILE =~ s/$/.tex/;
+	} else {
+	    $EXT = '';
 	}
 
 	#RRM: allow user-customisation, dependent on file-name
@@ -767,7 +770,7 @@ sub driver {
 	$texfilepath = '.' unless($texfilepath);
 
 	die "Cannot read $texfilepath$dd$FILE \n"
-	    unless (-f "$texfilepath$dd$FILE");
+	    unless (-r "$texfilepath$dd$FILE");
 
 
 # Tell texexpand which files we *don't* want to look at.
@@ -791,7 +794,7 @@ sub driver {
 	}
 	$PREFIX  = "$FILE-" if $AUTO_PREFIX;
 
-	print "\nOPENING $texfilepath$dd$FILE.$EXT \n"; ## AYS
+	print "\nOPENING $texfilepath$dd$FILE$EXT \n"; ## AYS
 
 	next unless (&new_dir($DESTDIR,''));
         # establish absolute path to $DESTDIR
@@ -842,7 +845,7 @@ sub driver {
 		 . ($TEXINPUTS ? "-texinputs \"$TEXINPUTS\" " : '' )
 		 . (($VERBOSITY >2) ? "-verbose " : '' )
 		 . "-out \"$DESTDIR$dd$TMP_$dd$FILE\" "
-		 . "\"$texfilepath$dd$FILE.$EXT\"")
+		 . "\"$texfilepath$dd$FILE$EXT\"")
 	    && die " texexpand  failed: $!\n";
 	print STDOUT "\n ***  `texexpand' done ***\n" if ($VERBOSITY > 1);
 
@@ -9489,8 +9492,6 @@ sub extract_pure_text {
 sub banner {
     print <<"EOF";
 This is LaTeX2HTML Version $TEX2HTMLVERSION
-by Nikos Drakos, Computer Based Learning Unit, University of Leeds.
-
 EOF
 }
 
@@ -16274,8 +16275,6 @@ sub initialise {
 #    $HTML_VERSION = sprintf("%3.1f",$HTML_VERSION);
 
     &banner();
-    print "Revised and extended by:"
-	. "\n Marcus Hennecke, Ross Moore, Herb Swan and others\n";
 
     # Collect HTML options and figure out HTML version
     $HTML_OPTIONS = '' unless ($HTML_OPTIONS);
@@ -17847,11 +17846,13 @@ The title (displayed in the browser's title bar) the document shall get.
 
 =item B<->(B<no>)B<rooted>
 
-MISSING_DESCRIPTION
+Put the result in a directory under the directory specified with B<-dir>.
 
 =item B<-rootdir> I<output_directory>
 
-MISSING_DESCRIPTION
+Put the result in this directory, in a subdirectory with the same name
+as the LaTeX file, provided the directory exists, or B<-mkdir> is
+specified.  Same as B<-rooted -dir>.
 
 =item B<-dir> I<output_directory>
 

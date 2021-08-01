@@ -112,6 +112,9 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- allow input filename with no extension
+#		  echo hello world | latex2html -dir out -mkdir /dev/stdin
+#
 #--------- v2021.2
 #
 #		- latex2html -long_titles   fix duplicate file names
