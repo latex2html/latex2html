@@ -199,13 +199,14 @@ $__ONCLICK_rx = $__ONDBLCLICK_rx = $__ONMOUSEUP_rx = $__ONMOUSEDOWN_rx = $__ONMO
 $A_attribs = ",SHAPE,DIR,";
 $A__SHAPE = $shape_type;
 $A__DIR = $dir_type;
-$A_attribs_rx_list = join('',",HREF,NAME,REL,REV,CHARSET,TARGET,ACCESSKEY,COORDS,TABINDEX,ONFOCUS,ONBLUR",$style_attribs);
+$A_attribs_rx_list = join('',",HREF,NAME,REL,DOWNLOAD,TARGET,ACCESSKEY,COORDS,TABINDEX,ONFOCUS,ONBLUR",$style_attribs);
 $A__HREF_rx = $URL_type;
 $A__NAME_rx = $A__REL_rx = $A__REV_rx = $string_type;
 $A__CHARSET_rx = $A__TARGET_rx = $A__ACCESSKEY_rx = $CDATA_type;
 $A__COORDS_rx = $coord_type;
 $A__TABINDEX_rx = $num_type;
 $A__ONFOCUS_rx = $A__ONBLUR_rx = $script_type;
+$A__DOWNLOAD_rx = $URL_type; # does not support DOWNLOAD attr with no value
 
 $ACRONYM_attribs = ",DIR,";
 $ACRONYM__DIR = $dir_type;

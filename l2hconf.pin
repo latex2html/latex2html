@@ -1108,18 +1108,16 @@ sub bot_navigation_panel {
 ### Meta Information #####################################################
 # 
 # This information will be inserted in the HEAD of the generated
-# HTML file. It can be used by automatic indexing scripts (eg
-# site-index.pl at http://www.ai.mit.edu/tools/site-index.html) 
-# You can change the description, keywords, etc. values.
+# HTML file.
+# You can set the description, keywords, etc. values.
 #
 sub meta_information {
     local($_) = @_;
     # Cannot have nested HTML tags...
     do { s/<[^>]*>//g;
-	"<META NAME=\"description\" CONTENT=\"$_\">\n" .
-	"<META NAME=\"keywords\" CONTENT=\"$FILE\">\n" .
-	"<META NAME=\"resource-type\" CONTENT=\"document\">\n" .
-	"<META NAME=\"distribution\" CONTENT=\"global\">\n"
+	# "<META NAME=\"description\" CONTENT=\"$_\">\n" .
+	# "<META NAME=\"keywords\" CONTENT=\"$FILE\">\n" .
+	""
     } if $_;
 }
 

@@ -7271,7 +7271,7 @@ sub make_latex {
     "\\def\\lthtmltypeout#1{{\\let\\protect\\string \\immediate\\write\\lthtmlwrite{#1}}}%\n" .
     (($USE_DVIPNG || $IMAGE_TYPE eq 'svg') ? <<'</dvipng>' :
 \usepackage[tightpage,active]{preview}
-\PreviewBorder=1bp
+\PreviewBorder=0.5bp
 \newbox\lthtmlPageBox
 \newdimen\lthtmlCropMarkHeight
 \newdimen\lthtmlCropMarkDepth
