@@ -1300,9 +1300,9 @@ sub crop_scale_etc {
     my $edge = $1;
     my $croparg = '';
     if($edge =~ /b/i) {
-      $croparg = "-bot -sides $PNMCROPOPT ";
+      $croparg = "-bot -sides ";
     } elsif($edge =~ /[tlr]/i) {
-      $croparg = "-$edge -sides $PNMCROPOPT ";
+      $croparg = "-$edge -sides ";
     } elsif($edge =~ /s/i) {
       #RRM: shave at most 1-2 rows of white from the bottom
 #if @pipes@
