@@ -23,7 +23,7 @@ $y=1-\dfrac{\alpha}{1-\dfrac{2}{3-\dfrac{4}{5-x}}}$.
 
 .$.\sum\limits^n1.$.$.\prod\limits_n2.$.$.\dfrac{\alpha\otimes\mu}{\gamma}.$.$.1.$.$.\dfrac {\rightharpoonup}{A\otimes B}.$.
 
-The simple convertion algorithm can fail due to the following reasons:
+The simple conversion algorithm can fail due to the following reasons:
 \begin {itemize} 
 \item HTML lacks opportunity to reproduce \LaTeX\ layout directly;
 \item Some kind of HTML markup has different visual representation in different browser versions;  
@@ -35,5 +35,28 @@ Test of Figure environment:
 \begin{figure}
 \[ a = \int \exp{x} \,\mathrm{d}x \]
 \end{figure}
+
+Test using eqnarray:
+\begin{eqnarray}
+a_1 &=& -2 r \cos( 2 \pi f_c T_s ) \\
+a_2 &=& r^2,
+\end{eqnarray}
+
+Test using eqnarray*:
+\begin{eqnarray*}
+b_0 &=& (1 - r^2) / 2 \\
+b_1 &=& 0 \\
+b_2 &=& -b_0,
+\end{eqnarray*}
+First as an equation:
+\begin{equation}
+\tilde{y}(x,t) = C^{+} e^{j (\omega t - k x)} + C^{-} e^{j (\omega t + k x)},
+\label{eq:yxt}
+\end{equation}
+Then using displaymath:
+\begin{displaymath}
+  \tilde{y}(x,t) = C^{+} e^{j (\omega t - k x)} + C^{-} e^{j (\omega t + k x)},
+\end{displaymath}
+followed by more text.
 
 \end {document}

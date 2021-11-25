@@ -7276,8 +7276,8 @@ sub make_latex {
 \newdimen\lthtmlCropMarkHeight
 \newdimen\lthtmlCropMarkDepth
 \long\def\lthtmlTightVBoxA#1{\def\lthtmllabel{#1}
-    \setbox\lthtmlPageBox\vbox\bgroup\catcode`\_=8 }%
-\long\def\lthtmlTightVBoxZ{\egroup
+    \setbox\lthtmlPageBox\vbox\bgroup\hbox\bgroup\catcode`\_=8 }%
+\long\def\lthtmlTightVBoxZ{\egroup\egroup
     \lthtmlCropMarkHeight=\ht\lthtmlPageBox \advance \lthtmlCropMarkHeight 6pt
     \lthtmlCropMarkDepth=\dp\lthtmlPageBox
     \lthtmltypeout{^^J:\lthtmllabel:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%

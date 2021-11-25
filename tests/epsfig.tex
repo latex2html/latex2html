@@ -6,7 +6,7 @@
 
 \begin{document}
 
-% 2021: this figure is cropped by preview, because it is wider than \textwidth
+As of 2021, this figure is cropped by preview, because it is wider than \verb|\textwidth|
 \begin{figure}[hbt]
   \begin{center}
     \begin{picture}(7,1.0)
@@ -15,6 +15,17 @@
       \put(6.3,0.42){$y[n]$}
     \end{picture}
   \end{center}
+  \caption{Test.}
+\end{figure}
+No cropping with makeimage:
+\begin{figure}[hbt]
+  \begin{makeimage}
+    \begin{picture}(7,1.0)
+      \put(0.28,0){\epsfig{file = allpasses.eps, width=6in}}
+      \put(0,0.42){$x[n]$}
+      \put(6.3,0.42){$y[n]$}
+    \end{picture}
+  \end{makeimage}
   \caption{Test.}
 \end{figure}
 
