@@ -13442,10 +13442,12 @@ sub process_commands_in_tex {
 	    if ($arg =~ /\{\}/) {
 # RRM: the $` is surely wrong, allowing no error-checking.
 # Use <<...>> for specific patterns
-#		$body .= '$args .= "$`$&" if s/$next_pair_rx//o;'."\n"; 
-		$body .= '$args .= join("","{", &missing_braces, "}") unless ('."\n";
-		$body .= '  (s/$next_pair_pr_rx/$args.=$`.$&;""/es)'."\n";
-		$body .= '  ||(s/$next_pair_rx/$args.=$`.$&;""/es));'."\n";
+		# 2022-01-01 removing error checking
+		# to allow "\framebox(140,100){}"
+		$body .= '$args .= "$`$&" if s/$next_pair_rx//o;'."\n";
+#		$body .= '$args .= join("","{", &missing_braces, "}") unless ('."\n";
+#		$body .= '  (s/$next_pair_pr_rx/$args.=$`.$&;""/es)'."\n";
+#		$body .= '  ||(s/$next_pair_rx/$args.=$`.$&;""/es));'."\n";
 		print "\nAFTER:$'" if (($thisone)&&($'));
 		$body .= $' if ($');
 	    } elsif ($arg =~ /\[\]/) {
