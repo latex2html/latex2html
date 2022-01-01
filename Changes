@@ -112,6 +112,12 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#--------- v2022
+#
+#		- fix cropped figures
+#		- revert PreviewBorder to 0.5bp
+#		- support download attribute for <A> tag
+#		- remove meta tags for distribution, etc
 #		- allow input filename with no extension
 #		  echo hello world | latex2html -dir out -mkdir /dev/stdin
 #
