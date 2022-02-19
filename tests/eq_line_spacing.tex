@@ -1,6 +1,9 @@
 \documentclass[12pt]{amsart}
 \usepackage{amssymb}
 \usepackage{latexsym}
+\usepackage{array}
+\usepackage{caption}
+
 \title{The trap for \LaTeX\ convertors}
 \author{Sergej V. Znamenskij}
 \begin {document}
@@ -58,5 +61,72 @@ Then using displaymath:
   \tilde{y}(x,t) = C^{+} e^{j (\omega t - k x)} + C^{-} e^{j (\omega t + k x)},
 \end{displaymath}
 followed by more text.
+
+% Then compare the PDF and HTML results with the attention on:
+%
+% 1) spaces between footnote marks and the text following them
+%
+% 2) clickability of the reference from Section 1 to Table in Section 2
+%
+% 3) some illegal HTML tags generated inside Table (near DIV class="CENTER").
+
+\section{Footnote quirks}
+
+Usually there is a space between the footnote mark and the subsequent text.
+But if the text just after a footnote mark starts from the next line,
+the space can be lost.
+
+Here we should have a space after footnote
+mark.\footnote{This is note1} This text follows footnote 1.
+
+Here we intentionally should have no space between the footnote
+mark and the dot\footnote{This is note2}. This text follows footnote 2.
+
+Here we should have a space after footnote
+mark.\footnote{This is note3}
+But the stock latex2html-2022 removes it.
+
+{Here we should not have a space after the
+switch to large text with a newline.\large
+Large text.}
+
+{Here we should not have a space after the
+switch to large text with a space.\large Large text.}
+
+{Here we should have a new paragraph after the
+switch to large text with two newlines.\large
+
+Large text.}
+
+{Here we should not have a space after the
+switch to large text with a newlines and a space.\large
+ Large text.}
+
+Now see Table \ref{tablecap} in the next section. Try to press this hyperlink.
+This can fail because stock latex2html-2022 sometimes loses labels
+defined inside floating table environments.
+
+\newpage
+
+\section{Table quirks}
+
+Here the stock latex2html-2022 can put an illegal HTML tag
+into the generated table near DIV class=CENTER.
+
+\begin{table}
+\begin{centering}
+\begin{tabular}{|>{\centering}m{6em}|c|>{\centering}m{4em}|c|}
+  \hline 
+  heading 1 & heading 2 & heading 3 & heading 4\\
+  \hline 
+  cell 1 & cell 2 & cell 3 & cell 4\\
+  \hline 
+\end{tabular}
+\par\end{centering}
+\caption{\label{tablecap}This was our test table}
+\end{table}
+
+
+
 
 \end {document}

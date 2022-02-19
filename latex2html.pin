@@ -2876,7 +2876,6 @@ sub translate_environments {
 	    print STDOUT "\nOUT-A {$env $br_id}\n$contents\n" if ($VERBOSITY > 4);
 	    #JCL(jcl-env) - insert the $O$br_id$C stuff to handle environment grouping
 	    if (!($contents eq '')) {
-		$after =~ s/^\n//o if ($defenv);
 		$this_env = join("", $before, $closures
 			  , $contents
 			  , ($defenv ? '': &balance_tags())
@@ -4988,7 +4987,8 @@ sub declared_env {
     ($pre,$post) = ($`,$&);
     if ($USING_STYLES) {
 	$env_style{$decl} = " " unless ($env_style{$decl});
-	$pre =~ s/>$/$env_id>/ if ($env_id);
+	# don't append unresolved $env_id's
+	$pre =~ s/>$/$env_id>/ if ($env_id =~ /^\s+(CLASS|ID)/);
     }
     local($closing_tag) = 1 if ($pre =~ /^<>$/);
     $pre = $post = '' if $closing_tag;
@@ -12171,6 +12171,7 @@ sub do_env_figure {
 }
 
 sub do_env_figurestar { &do_env_figure(@_) }
+sub do_env_sidewaysfigure { &do_env_figure(@_) }
 
 sub do_env_table {
     local($_) = @_;
@@ -12178,6 +12179,7 @@ sub do_env_table {
     local ( $border, $attribs );
     &get_next_optional_argument;
 
+    ($_,$anchors) = &extract_labels($_); # extract labels
     # Try to establish the alignment 
     if (/^(\[[^\]]*])?\s*\\begin\s*<<\d*>>(\w*)<<\d*>>|\\(\w*)line/) {
 	$halign = $2.$3;
@@ -12198,7 +12200,6 @@ sub do_env_table {
 	    ($HTML_VERSION > 2.0 && (
 	        /\\begin\s*($O\d+$C)\s*((super)?tabular|longtable)\s*\1/))) {
 	$_ = &translate_environments($_);
-	($_,$anchors) = &extract_labels($_); # extract labels
 	do { local($contents) = $_;
 	    &extract_captions($cap_env); $_ = $contents;
 	} if (/\\caption/);
@@ -12208,7 +12209,6 @@ sub do_env_table {
 	while ($_ =~ s/(^\s*<BR>\s*|\s*<BR>\s*$)//g){};
     } else {
 	# Make an image of the whole environment.
-	($_,$anchors) = &extract_labels($_); # extract labels
 	do { local($contents) = $_;
 	    &extract_captions($cap_env); $_ = $contents;
 	} if (/\\caption/);
@@ -12268,6 +12268,7 @@ sub do_env_table {
 }
 
 sub do_env_tablestar { &do_env_table(@_) }
+sub do_env_sidewaystable { &do_env_table(@_) }
 
 # RRM:  A makeimage environment generates a picture of its entire contents, 
 #  UNLESS it is empty.
@@ -17517,14 +17518,12 @@ sub make_letter_sensitive_rx {
     &make_counters_rx;
 }
 
-#JCL(jcl-del) - this could eat one optional newline, too.
-# But this might result in large lines... anyway, it *should* be
-# handled. A possible solution would be to convert adjacent newlines
-# into \par's in preprocessing.
+# These characters end a command name, and, when they end a command name,
+# they are are not included as whitespace in the output.
 sub make_cmd_spc_rx {
-    $cmd_spc = " \\t";
-    $cmd_spc_rx = "[ \\t]*"; # zero or more
-    $cmd_spcs_rx = "[ \\t]+"; # one or more
+    $cmd_spc = " \\t\n";
+    $cmd_spc_rx = "[ \\t\n]*"; # zero or more
+    $cmd_spcs_rx = "[ \\t\n]+"; # one or more
 }
 
 sub make_single_cmd_rx {
