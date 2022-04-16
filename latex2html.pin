@@ -4165,7 +4165,8 @@ sub process_log_file {
 	    # $pt_per_ex contains the length of 1 ex measured in points,
 	    #  and is used to scale the image to the curent html font size
 	}
-    $LaTeXERROR = 1 if (/^No pages of output./);
+	$LaTeXERROR = 1 if (/^No pages of output./ ||
+			    /no output PDF file produced/);
     }
 
     if ($LaTeXERROR) {

@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- check for failure of pdflatex run
 #		- newline after footnote should give space
 #		- fix ref to label inside float
 #		- add sidewaysfigure, sidewaystable
