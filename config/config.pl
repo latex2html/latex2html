@@ -898,6 +898,16 @@ if($kpsewhich) {
   }
 }
 
+if ($kpsewhich) {
+    &checking('for preview.sty');
+    my ($stat,$out,$err) = &get_out_err("$kpsewhich previewX.sty");
+    if($stat == 0) { # ok
+	&result("ok");
+    } else {
+	&logit("NONE\nWarning: preview.sty not found.\n         svg images will not work.\n         dvipng will not work\n");
+    }
+}
+
 &checking('for TeX include path');
 my $texpath = $opt{TEXPATH} || $prefs{TEXPATH} || '';
 if($texpath eq 'no') {
