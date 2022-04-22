@@ -1202,6 +1202,7 @@ sub make_frame_file {
 	);
     &text_cleanup;
     open(FILE,">$filename") || print "Cannot open $filename $!\n";
+	binmode FILE;
     print FILE $_;
     close(FILE);
 }

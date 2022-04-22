@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 
 ################################################################################
 # Copyright 1998-1999 by Jens Lippmann (lippmann@rbg.informatik.tu-darmstadt.de)
@@ -27,8 +27,10 @@ sub main {
 	die "Cannot rename to $source.bak, $!\n";
     open(OUT,">$source") ||
 	die "Cannot open $source, $!\n";
+	binmode OUT;
 
     open(IN,"<$source.bak");
+	binmode IN;
     while (<IN>) {
 	$string{'STRING'} .= $_;
     }

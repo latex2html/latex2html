@@ -336,10 +336,11 @@ sub itrans_html {
 		, "\#${indic}ifm=".$itrans_info{$indic.'ifm'}
 		, "\#$indic", $itext , "\#end$indic\n" );
     open(ITRANS, ">itrans.itx");
+    binmode ITRANS;;
     print ITRANS "$_";
     close(ITRANS);
     &syswait("$ITRANS <itrans.itx >itrans.htm");
-    open(ITRANS, "<itrans.htm"); $itext = '';
+    open(ITRANS, "<itrans.htm"); binmode ITRANS; $itext = '';
     while (<ITRANS>) {
 	next if (/^(\%|$)/);
 	$itext .= $_ 

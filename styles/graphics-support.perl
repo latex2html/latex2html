@@ -534,6 +534,7 @@ sub ps_boundingbox{
   my($file)=@_;
   my(@bb,$f);
   if(($f=find_file($file,$GRAPHICS_PATH,['.eps','.ps','.bb'])) && open(PS,$f)){
+	binmode PS;
     while(<PS>){
       if(/^%%BoundingBox:\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s*$/){
 	@bb=($1,$2,$3,$4); last; }}

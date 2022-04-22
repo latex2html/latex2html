@@ -258,7 +258,7 @@ sub slurp_file  {
 
     open(INPUT,"<$filename") ||
 	die "$PRGFILE: error: Could not open $filename\n";
-
+    binmode INPUT;
     while (<INPUT>) {
 	$string{'STRING'} .= $_;
     }

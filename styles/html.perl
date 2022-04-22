@@ -305,6 +305,7 @@ sub do_cmd_externallabels{
 	if ($pretag) {
 	# code due to Alan Williams <alanw@cs.man.ac.uk>
 	    open(LABELS, "<$labelfile");
+		binmode LABELS;
     print "\nLoading external labels from $labelfile, with prefix $pretag"
 	if ($VERBOSITY > 1);
 	    local($translated_stream, $instream);
@@ -412,6 +413,7 @@ sub do_cmd_htmladdTOClink {
 	if ($pretag) {
 	# code due to Alan Williams <alanw@cs.man.ac.uk>
 	    open(LABELS, "<$labelfile");
+		binmode LABELS;
     print "\nLoading external labels from $labelfile, with prefix $pretag"
 	if ($VERBOSITY > 1);
 	    local($translated_stream, $instream);

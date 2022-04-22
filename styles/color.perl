@@ -153,6 +153,7 @@ sub read_rgb_colors {
 	if (-f $file) {
             if (open(COLORFILE,"<$file")) {
 		print STDOUT "\n(reading colors from $file" if $DEBUG;
+		binmode COLORFILE;
 		while (<COLORFILE>) {
 	s/^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\w+(\s\w+)*)\s*/
 	    ($r,$g,$b,$name)=($1,$2,$3,$4);
@@ -183,6 +184,7 @@ sub read_cmyk_colors {
 	if (-f $file) {
 	    if (open(COLORFILE,"<$file")) {
 		print STDOUT "\n(reading colors from $file";
+		binmode COLORFILE;
 		@colors = (<COLORFILE>);
 		foreach (@colors) {
 		    next if (/^\s*$/);
