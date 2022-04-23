@@ -7599,7 +7599,9 @@ H5		{  }
 /* mathematics styles */
 DIV.displaymath { text-align:center; margin-top:1em; margin-bottom:1em; }
 	/* math displays: margins for \\abovedisplayskip \\belowdisplayskip */
-TD.eqno			{ width:0; }	/* equation-number cells */
+TD.eqno		{ width:0; }	/* equation-number cells */
+TD.lcell	{ text-align:left;  width:50%; }
+TD.rcell	{ text-align:right; width:50%; }
 TABLE.PAD TD	{ padding:3px; }
 TABLE.BORDER TD	{ border:1px solid black; }
 TABLE.equation	{ width:100%; }	/* place eq nos at right/left edge */

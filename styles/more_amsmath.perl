@@ -148,6 +148,8 @@ $mcalign = " style=\"text-align:center;\">";
 $mlalign = " style=\"text-align:left;\">";
 $mralign = " style=\"text-align:right;\">";
 $mvalign = " ";	#  class equation specifies style=\"vertical-align:baseline;\"
+$slcell = $smncell."class=\"lcell\">";
+$srcell = $smncell."class=\"rcell\">";
 $smlcell = $smncell.$mlalign;
 $smccell = $smncell.$mcalign;
 $smrcell = $smncell.$mralign;
@@ -671,9 +673,9 @@ sub process_env_align{
 	$env_id = '';
 
 	local($valign, $scell, $eqno) = ($mvalign,'','');
-	local($srow, $ecell, $slcell, $srcell) = (
+	local($srow, $ecell) = (
 	    $smrow.$valign.$emtag , $emcell
-	    , $smncell.$mlalign, $smncell.$mralign );
+	    );
 
 	local($return) = &start_math_display ( $sarray );
 

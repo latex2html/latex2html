@@ -1467,8 +1467,6 @@ sub do_env_eqnarray {
     local($sbig,$ebig,$falign) = ('','','CENTER');
     ($sbig,$ebig) = ('<BIG>','</BIG>')
 	if (($DISP_SCALE_FACTOR)&&($DISP_SCALE_FACTOR >= 1.2 ));
-    local($valign) = join('', ' VALIGN="', 
-	($NETSCAPE_HTML)? "BASELINE" : "MIDDLE", '"');
     $failed = 1; # simplifies the next call
     ($labels, $comment, $_) = &process_math_env($math_mode,$_);
     $failed = 0 unless ($no_eqn_numbers);
@@ -1494,21 +1492,19 @@ sub do_env_eqnarray {
 	local($sarray, $srow, $slcell, $elcell, $srcell, $ercell, $erow, $earray);
 	($sarray, $elcell, $srcell, $erow, $earray, $sempty) = ( 
 	    "\n<TABLE$env_id$lang CLASS=\"equation\""
-	    , "</TD>\n<TD ALIGN=\"CENTER\" NOWRAP>"
-	    , "</TD>\n<TD ALIGN=\"LEFT\" NOWRAP>"
+	    , "</TD>\n<TD style=\"text-align:center\">"
+	    , "</TD>\n<TD style=\"text-align:left;width:50%\">"
 	    , "</TD></TR>", "\n</TABLE>", "</TD>\n<TD>" );
 	$env_id = '';
-	$sarray .= (($no_eqn_numbers) ? ">" :  " WIDTH=\"100%\">" );
-	local($seqno) = join('',"\n<TD$eqno_class WIDTH=10 ALIGN=\""
-		, (($EQN_TAGS =~ /L/)? 'LEFT': 'RIGHT')
-		, "\">\n");
+	$sarray .= (($no_eqn_numbers) ? ">" :  " >" );
+	local($seqno) = join('',"\n<TD$eqno_class>\n");
 	if ($EQN_TAGS =~ /L/) { # number on left
 	    ($srow, $slcell, $ercell) = (
-		"\n<TR$valign>" . $seqno
-		, "</TD>\n<TD NOWRAP ALIGN=", '');
+		"\n<TR>" . $seqno
+		, "</TD>\n<TD style=\"width:50%;text-align:", '');
 	} else { # equation number on right
-	    ($srow, $slcell, $ercell) = ("\n<TR$valign>"
-		, "<TD NOWRAP ALIGN="
+	    ($srow, $slcell, $ercell) = ("\n<TR>"
+		, "<TD style=\"width:50%;text-align:"
 		, '</TD>'. $seqno );
 	}
 
@@ -1580,19 +1576,19 @@ sub do_env_eqnarray {
 	    if (($NO_SIMPLE_MATH)||($doimage)||($failed)) {
 		$thismath = (($thismath ne '')? &process_math_in_latex(
 		    "indisplay" , '', '', $doimage.$thismath ):'');
-		$return .= join('',"\"RIGHT\">",$thismath) if ($thismath ne '');
+		$return .= join('',"RIGHT\">",$thismath) if ($thismath ne '');
 	    } elsif ($thismath ne '') { 
 		$savemath = $thismath;
 		$thismath = &simple_math_env($thismath);
 		if ($failed) {
 		    $thismath = &process_math_in_latex(
 			"indisplay",'','',$savemath);
-		    $return .= join('',"\"RIGHT\">",$thismath)
+		    $return .= join('',"RIGHT\">",$thismath)
 		} elsif ($thismath ne '') {
-		    $return .= join('',"\"RIGHT\">$sbig",$thismath,"$ebig")
+		    $return .= join('',"RIGHT\">$sbig",$thismath,"$ebig")
 		}
 	    }
-	    $return .= "\"RIGHT\">\&nbsp;" if ($thismath eq '');
+	    $return .= "RIGHT\">\&nbsp;" if ($thismath eq '');
 
 	    # center column, set using \textstyle
 	    $thismath = shift(@cols); $failed = 0;

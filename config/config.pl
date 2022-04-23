@@ -900,7 +900,7 @@ if($kpsewhich) {
 
 if ($kpsewhich) {
     &checking('for preview.sty');
-    my ($stat,$out,$err) = &get_out_err("$kpsewhich previewX.sty");
+    my ($stat,$out,$err) = &get_out_err("$kpsewhich preview.sty");
     if($stat == 0) { # ok
 	&result("ok");
     } else {
