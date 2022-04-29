@@ -1493,20 +1493,18 @@ sub do_env_eqnarray {
 	($sarray, $elcell, $srcell, $erow, $earray, $sempty) = ( 
 	    "\n<TABLE$env_id$lang CLASS=\"equation\""
 	    , "</TD>\n<TD style=\"text-align:center\">"
-	    , "</TD>\n<TD style=\"text-align:left;width:50%\">"
+	    , "</TD>\n<TD style=\"text-align:left;\">"
 	    , "</TD></TR>", "\n</TABLE>", "</TD>\n<TD>" );
 	$env_id = '';
 	$sarray .= (($no_eqn_numbers) ? ">" :  " >" );
-	local($seqno) = join('',"\n<TD$eqno_class>\n");
-	if ($EQN_TAGS =~ /L/) { # number on left
-	    ($srow, $slcell, $ercell) = (
-		"\n<TR>" . $seqno
-		, "</TD>\n<TD style=\"width:50%;text-align:", '');
-	} else { # equation number on right
-	    ($srow, $slcell, $ercell) = ("\n<TR>"
-		, "<TD style=\"width:50%;text-align:"
-		, '</TD>'. $seqno );
-	}
+
+	# leftmost and rightmost columns expand to fill available space,
+	# so that the main group of columns is centered.
+	# one of the two contains the equation numbers.
+	($srow, $slcell, $ercell) = (
+	    "\n<TR><TD class=\"lfill\">"
+	    , "</TD><TD style=\"text-align:"
+	    , "</TD><TD class=\"rfill\">");
 
 	$_ = &protect_array_envs($_);
 

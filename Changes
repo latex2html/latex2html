@@ -112,7 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
-#		- spacing of eqnarry and align
+#		- spacing of eqnarray and align
 #		- check for preview.sty in config.pl
 #		- check for failure of pdflatex run
 #		- newline after footnote should give space

@@ -148,8 +148,8 @@ $mcalign = " style=\"text-align:center;\">";
 $mlalign = " style=\"text-align:left;\">";
 $mralign = " style=\"text-align:right;\">";
 $mvalign = " ";	#  class equation specifies style=\"vertical-align:baseline;\"
-$slcell = $smncell."class=\"lcell\">";
-$srcell = $smncell."class=\"rcell\">";
+$slcell = $smncell."class=\"LEFT\">";
+$srcell = $smncell."class=\"RIGHT\">";
 $smlcell = $smncell.$mlalign;
 $smccell = $smncell.$mcalign;
 $smrcell = $smncell.$mralign;
@@ -159,6 +159,8 @@ $mdlim = $html_specials{'&'};
 
 $lseqno = "$eqno_class style=\"text-align:left;\">\n";
 $rseqno = "$eqno_class style=\"text-align:right\">\n";
+$lsfill = " class=\"lfill\">";
+$rsfill = " class=\"rfill\">";
 
 
 # do these indirectly, so that they only over-ride the existing
@@ -683,15 +685,11 @@ sub process_env_align{
 	$_ = &revert_array_envs($_);
 	$_ = &protect_array_envs($_);
 
-	if ($EQN_TAGS =~ /L/) {
-	    # equation number on left
-	    ($srow, $scell, $ecell) = ( $smrow.$valign.$emtag.$smcell 
-		, $smncell , $emcell);
-	} else {
-	    # equation number on right
-	    ($srow, $scell, $ecell) = (
-		$smrow.$valign.$emtag , $smncell, $emcell );
-	}
+	# leftmost and rightmost columns expand to fill available space,
+	# so that the main group of columns is centered.
+	# one of the two contains the equation numbers.
+	($srow, $scell, $ecell) = ( $smrow.$valign.$emtag.$smcell
+				    , $smncell , $emcell);
 
 	local($xcols) = '0';
 
@@ -715,8 +713,8 @@ sub process_env_align{
 
 	    if ($EQN_TAGS =~ /L/) {
 #		$return .= $srow.$mcalign.$eqno.$ecell
-		$return .= $srow.$lseqno.$eqno.$ecell
-	    } else { $return .= $srow }
+		$return .= $srow.$lsfill.$eqno.$ecell
+	    } else { $return .= $srow.$lsfill.$ecell }
 
 	    local($scell) = $srcell; # so 1st cell is right-aligned...
 
@@ -750,9 +748,10 @@ sub process_env_align{
 		} else { $return .= join('', $mspace , $ecell); }
 
 #		$return .= $smncell.$mcalign.$eqno.$ecell
-		$return .= $smncell.$rseqno.$eqno.$ecell
+		$return .= $smncell.$rfill;
+		$return .= $eqno
 		    unless ($EQN_TAGS =~ /L/); # eqn-num on right
-		$return .= $erow;
+		$return .= $ecell.$erow;
 		next;
 	    }
 
@@ -780,9 +779,10 @@ sub process_env_align{
 	    }
 
 #	    $return .= $smncell.$mcalign.$eqno.$ecell
-	    $return .= $smncell.$rseqno.$eqno.$ecell
+	    $return .= $smncell.$rsfill;
+	    $return .= $eqno
 		unless ($EQN_TAGS =~ /L/); # eqn-num on right
-	    $return .= $erow;
+	    $return .= $ecell.$erow;
 	}
 	$_ = &end_math_display($return , $earray );
     } else {
