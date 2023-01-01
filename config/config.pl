@@ -156,7 +156,7 @@
 #  --  this version should be "thread-safe" now
 #  	--- there are no more *-globs . References are used throughout.
 #  --  UTF8 implemented completely, as an output encoding
-#  --  use of full entitity names is implemented as an output encoding
+#  --  use of full entity names is implemented as an output encoding
 #  --  mechanism available to choose whether to allow 8-bit chars in the
 #  	output, or UTF8 or entity names or images
 #  --  implemented post-processing search for ,, << >> ligatures
@@ -247,7 +247,7 @@
 # Revision 1.6  1999/06/03 12:15:49  MRO
 #
 #
-# - cleaned up the TMP / TMPDIR / TMP_ mechansim. Should work much the
+# - cleaned up the TMP / TMPDIR / TMP_ mechanism. Should work much the
 #   same now, but the code should be easier to understand.
 #
 # - cleaned up L2hos, added an INSTALLation FAQ, beautified the test
@@ -441,8 +441,8 @@ use L2hos;
 use vars qw(%prefs %cfg %newcfg);
 
 # This is the central place to modify the release name and date!!!
-my $RELEASE = '2022.2';
-my $VERSION = 'Released July 1, 2022';
+my $RELEASE = '2023';
+my $VERSION = 'Released January 1, 2023';
 
 # --------------------------------------------------------------------------
 # Open log
