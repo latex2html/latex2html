@@ -97,6 +97,13 @@ sub do_cmd_iflanguage {
 
 # implement usable options from LaTeX
 
+# process option [main=dutch]
+# save main language in a variable that is used after all options are loaded
+sub do_babel_main {
+    local($value) = @_;
+    $babel_main_lang = $value;
+}
+
 sub do_babel_afrikaan { &load_babel_file("afrikaan") }
 sub do_babel_afrikaans { &load_babel_file("afrikaan") }
 sub do_babel_american { &load_babel_file("american") }
@@ -167,6 +174,14 @@ sub do_babel_welsh { &load_babel_file("welsh") }
 # cancel redundant options from LaTeX
 
 # none so far
+
+# this routine is called after options are loaded
+# it sets the language specified by the "main" option as the current language
+sub babel_setup {
+    if (defined $babel_main_lang) {
+	&load_babel_file($babel_main_lang);
+    }
+}
 
 &process_commands_wrap_deferred (<<_DEFERRED_CMDS_);
 #selectlanguage # {}

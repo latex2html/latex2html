@@ -66,7 +66,7 @@ use vars qw($LATEX2HTMLDIR $LATEX2HTMLPLATDIR $SCRIPT
 #- to C's #define statement, so please be careful when removing comments!
 #-
 #- The (texlive) wrapper sets these values
-#- or it is stored in the enviroment
+#- or it is stored in the environment
 #-
 #unless @wrapper@ || @texlive@
 BEGIN {
@@ -7705,7 +7705,7 @@ sub encode_title {
     $_;
 }
 
-# Encodes the contents of enviroments that are passed to latex. The code
+# Encodes the contents of environments that are passed to latex. The code
 # is then used as key to a hash table pointing to the URL of the resulting
 # picture.  Returns "" if contents are too long.  Long keys do not work with
 # some DBM modules, and are unlikely to reappear verbatim in the latex files.
@@ -11504,7 +11504,7 @@ sub do_package_options {
     foreach $option (split (',',$options)) {
         $option =~ s/^[\s\t\n]*//o;
         $option =~ s/[\s\t\n]*$//o;
-	$option =~ s/\W/_/g; # replace non-alphanumerics
+	$option =~ s/[^\w=]/_/g; # replace non-alphanumerics
 	next unless ($option);
         if (!($styles_loaded{$package."_$option"})) {
             &do_require_packageoption($package."_$option");
@@ -11512,6 +11512,12 @@ sub do_package_options {
 		&no_implementation("option","\`$option\' for \`$package\' package\n");
 	    }
 	}
+    }
+    # A routine called <package>_setup can be defined to do
+    # any processing that is necessary after all options have been loaded
+    my $package_setup = $package."_setup";
+    if (defined &$package_setup) {
+	&$package_setup;
     }
     $rest;
 }
@@ -11523,7 +11529,7 @@ sub do_class_options {
     foreach $option (split (',',$options)) {
         $option =~ s/^[\s\t\n]*//o;
         $option =~ s/[\s\t\n]*$//o;
-	$option =~ s/\W/_/g; # replace non-alphanumerics
+	$option =~ s/[^\w=]/_/g; # replace non-alphanumerics
 	next unless ($option);
         &do_require_package($option);
         if (!($styles_loaded{$class."_$option"})) {
@@ -11596,16 +11602,21 @@ sub do_require_extension {
     }
 }
 
+# argument $optionfull is <package>_<option>  e.g. babel_dutch
+#          or  <package>_<optionkey>=<value>  e.g. babel_main=dutch
 sub do_require_packageoption {
-    local($option)= @_;
-    local($do_option);
+    local($optionfull)= @_;
+    local($do_option, $value);
+    local($option,$value) = split(/=/, $optionfull);
     # first look for a file named ${option}.perl
-    &do_require_package($option) unless ($styles_loaded{$option});
+    &do_require_package($option) unless ($styles_loaded{$optionfull});
     # next look for a subroutine named  do_$option
     $do_option = "do_$option";
-    if (!($styles_loaded{$option}) && defined(&$do_option)) {
-	&$do_option();
-	$styles_loaded{$option} = 1;
+    if (!($styles_loaded{$optionfull}) && defined(&$do_option)) {
+	# value is sent as an argument to the routine
+	# <package>_<option> defined in <package>.perl
+	&$do_option($value);
+	$styles_loaded{$optionfull} = 1;
     }
 }
 
