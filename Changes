@@ -112,6 +112,9 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- support babel main language option
+#		- support hyphenat package
+#
 #--------- v2023
 #
 #		- update for latest pdftocairo

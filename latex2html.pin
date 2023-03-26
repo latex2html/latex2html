@@ -10880,10 +10880,9 @@ sub iso_map {
 	$character_map =~ tr/-/_/;
 	eval "\$enc = \$${character_map}_character_map\{\"$char$kind\"\}";
 	print "\n no support for $CHARSET: $@ " if ($@);
-	$enc =~ /^\&\#(\d{3});$/;
 	# numeric character references in html refer to unicode
 	# we need to convert this char to an 8-bit character
-	if ($1 && ($1<=255)) { $enc = chr($1) }
+	if ($enc =~ /^\&\#(\d{3});$/ && ($1<=255)) { $enc = chr($1) }
     }
     if ($USE_ENTITY_NAMES && $enc) { return(";SPM$char$kind;") }
     if ($enc) {
