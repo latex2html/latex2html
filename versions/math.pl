@@ -1476,16 +1476,16 @@ sub translate_math_commands {
 		    );
 		return( $pre_pre_text . $pre_text );
 	    }
-	    # ...else put it back inside a {displaymath} for an image
+	    # ...else put it back inside a {indisplay} for an image
 	    if ($cnt) { $orig .= $_; $_ = ''; }
-	    local($math_env) = 'displaymath';
+	    local($math_env) = 'indisplay';
 	    if ($outer_math =~ /^subequations/) {
 		$math_env = $outer_math;
      # this branch is experimental, for AMS-aligned environments
-	    } elsif ($outer_math &&($outer_math !~ /^equation|eqnarray|split/)) {
-		$math_env = $outer_math;
-		$math_env .= '*' unless ($outer_math =~ /star$|\*/);
-	    }
+	    } #elsif ($outer_math &&($outer_math !~ /^equation|eqnarray|split/)) {
+	#	$math_env = $outer_math;
+	#	$math_env .= '*' unless ($outer_math =~ /star$|\*/);
+	#    }
 	    $pre_text = join('', '\begin{',$math_env,'}'
 			, $orig ,'\end{',$math_env,'}' );
 	    local($after_undef) = $_;
