@@ -14955,6 +14955,8 @@ sub do_cmd__at_input {
     $after;
 }
 
+# \protected@file@percent - Used in .aux files and in table-of-contents lines.
+sub do_cmd_protected_at_file_at_percent {$_[0]; }
 
 ########################### Counter Commands #################################
 # Removes the definition from the input string, adds to the preamble

@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- support \usepackage[xindy]{imakeidx} for sorting accents
 #		- support babel main language option
 #		- support hyphenat package
 #

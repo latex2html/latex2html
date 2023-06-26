@@ -1,0 +1,33 @@
+\documentclass{article}
+\usepackage[xindy]{imakeidx}
+\usepackage{hyperref}
+\makeindex
+\begin{document}
+
+\begin{table}
+a table
+  \caption{hello}\label{t1}
+\end{table}
+
+See Table \ref{t1}.
+\index{y formula}
+\begin{equation} 
+y(n) = \langle x\rangle. % \qquad\hbox{($x$ real)}
+\label{eq1}
+\end{equation}
+\index{\'ecole}
+\begin{equation} 
+y_2(n) = \langle x_2\rangle. % \qquad\hbox{($x$ real)}
+\label{eq2}
+\end{equation} 
+See eq.~\ref{eq1} and eq.~\ref{eq2}.
+\index{accent}
+\index{aça}
+\index{aea}
+\index{aaa}
+\index{\c{c}\`a}
+\index{\c{C}a}
+
+
+\printindex
+\end{document}

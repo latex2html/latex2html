@@ -58,7 +58,7 @@ sub add_real_idx {
 	    $index{$key} = $index{$old_key} . $old_html."</A>\n | ";
 	};
     }
-    @keys = sort makeidx_keysort @keys;
+    @keys = sort $makeidx_keysort @keys;
     @keys = grep(!/\001/, @keys);
     foreach $key (@keys) {
 	$index .= &add_idx_key($key);
@@ -83,7 +83,10 @@ sub makeidx_keysort {
     $y =~ s/^([a-z])/~~~\1/;
     $x cmp $y;
 }
- 
+
+# sort routine can be overridden by setting this variable
+$makeidx_keysort = \&makeidx_keysort;
+
 sub add_idx_key {
     local($key) = @_;
     local($index, $next);
