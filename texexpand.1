@@ -259,9 +259,8 @@ together with their options if the file itself hasn't been merged.
 ends in `//\*(R', the whole subdirectory tree is searched.
 .PP
 15. \einput / \einclude merge the given file (if found under the given
-name or with .tex extension) if its basename is in \f(CW@do_include\fR or if it
-isn't in \f(CW@dont_include\fR or if the given filename doesn't end in 
-\&.sty/.clo/.cls when \-auto_exclude is set.
+name or with .tex extension) regardless of the values of \f(CW@do_include\fR,
+\f(CW@dont_include\fR and \-auto_exclude.
 .Sh "Notes"
 Recognizes \edocumentclass, \edocumentstyle, \eusepackage, \eRequirePackage,
 \ebegin{verbatim}...\eend{verbatim}, \f(CW%begin\fR{latexonly}...%end{latexonly},

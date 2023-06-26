@@ -1062,36 +1062,23 @@ sub process_input_include_file {
 	$styles =~ s|.*\Q$dd\E||; # strip path
 	$styles =~ s/\.[^.]*$//; # strip extension
 
-	# Sorry for the next if-statement... (hmm,ok)
-	if ($styles !~ /^($do_include_rx)$/o &&
-	    $filename !~ /\.($do_include_ext_rx)$/o &&
-	    ($styles =~ /^($dont_include_rx)$/o || 
-	     ($opt{auto_exclude} && $filename =~ /\.($dont_include_ext_rx)$/o))) {
-	    print STDERR "$prompt %--- ignoring $filename" if($debug);
-	    print STYLES "$styles\n" if($opt{save_styles});
-	}
-	else {
-	    local($fname) = &find_file($filename);
+	local($fname) = &find_file($filename);
 
-	    # notify anyway that a file is found, to allow a Perl
-	    # module loaded for this specific file
+	# notify anyway that a file is found, to allow a Perl
+	# module loaded for this specific file
 #	    print STYLES "$styles\n" if($opt{save_styles});
 
-	    if($fname) {
-		print OUT "$before";
+	if ($fname) {
+	   print OUT "$before";
 
-		# recursive call
-		&process_file($fname,$cmd);
+	   # recursive call
+	   &process_file($fname,$cmd);
 
-		print OUT $after if($after =~ /\S+/);
-		print STDERR "$prompt %--- successfully included $filename"
-		    if($debug > 1);
+	   print OUT $after if($after =~ /\S+/);
+	   print STDERR "$prompt %--- successfully included $filename"
+	       if($debug > 1);
 
-		return(1); #merge
-	    }
-	    else {
-		print STDERR "$prompt include $filename failed. Reinserting $before command\n";
-	    }
+	   return(1); #merge
 	}
     }
     return(0);		#no merge
