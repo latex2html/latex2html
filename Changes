@@ -112,6 +112,9 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#--------- v2023.2
+#
+#		- DONT_INCLUDE now affects \usepackage but not \input
 #		- support \usepackage[xindy]{imakeidx} for sorting accents
 #		- support babel main language option
 #		- support hyphenat package
