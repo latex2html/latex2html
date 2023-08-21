@@ -50,7 +50,7 @@ included in the document as one or more inlined images.
 
 \item [Cross-references\index{cross-references}]
 References in environments that are passed to LaTeX  for processing
-(e.g. a \texttt{cite}, or a \texttt{ref} command), are not processed
+(e.g.\ a \texttt{cite}, or a \texttt{ref} command), are not processed
 correctly.
 \texttt{label} commands are handled correctly.
 
@@ -58,7 +58,7 @@ correctly.
 Commands which affect global parameters during the translation,
 and are sensitive to the order in which they are processed may
 not be handled correctly. In particular, counter manipulation
-(e.g. \texttt{newcounter, setcounter, stepcounter}, etc) 
+(e.g.\ \texttt{newcounter, setcounter, stepcounter}, etc) 
 commands may cause problems.
 
 \item [Index\index{index}]
@@ -278,7 +278,7 @@ Note that this option will disable to image reuse mechanism.
 \item [Cannot convert postscript images which are included
 in the LaTeX file] \hfill \\
 It is likely that the macros you are using for including postscript
-files (e.g. \texttt{epsffile}) are not understood by \latextohtml.
+files (e.g.\ \texttt{epsffile}) are not understood by \latextohtml.
 To avoid this problem enclose them in an environment which will
 be passed to LaTeX anyway e.g.
 \begin{verbatim}
@@ -346,7 +346,7 @@ This is a Perl quirk...
 \item [Problems when producing the DVI version \label{htmlsty}]
 If you are using any of the new LaTeX commands which are defined in 
 the \fn{html.sty} file make sure that 
-\fn{html.sty} file is included e.g. as one of the optional arguments to the 
+\fn{html.sty} file is included e.g.\ as one of the optional arguments to the 
 \texttt{documentstyle} command.
 
 Of course you also have to make sure that LaTeX knows where the html.sty
@@ -1215,7 +1215,7 @@ A new LaTeX environment \texttt{rawhtml} allows
 arbitrary
 HTML tags to be included in a LaTeX document. This is useful for
 taking
-advantage of HTML+ features as they become available (e.g. interactive
+advantage of HTML+ features as they become available (e.g.\ interactive
 forms).
 The HTML commands are ignored when producing the DVI version of the
 document.
@@ -1282,7 +1282,7 @@ This allows images generated during previous invocations of
 the translator to be ``reused'' without going through the initial 
 interactive session. The same behavior is obtained by setting
 the variable \texttt{REUSE} to 1 (the default) in the configuration file.
-Note that images which may depend on contextual information (e.g. numerical
+Note that images which may depend on contextual information (e.g.\ numerical
 labels) cannot be reused and are always re-generated. 
 \end{htmllist}
 \item[\textbf{Bug Fixes and Minor Changes}] \hfill
@@ -1314,7 +1314,7 @@ These changes are mostly due to patches contributed by Robert S. Thau
 \item Nested environments with the same name are now dealt with
 properly.
 \item Commands that are passed to LaTeX for processing which have 
-environments in their arguments (e.g. a \texttt{parbox} command which 
+environments in their arguments (e.g.\ a \texttt{parbox} command which 
 an \texttt{itemize} environment as an argument) are now
 processed correctly. A general mechanism for users to 
 specify the syntax of commands that should be passed to LaTeX 
@@ -1448,7 +1448,7 @@ just one file.
 \item The \fn{pstoxbm} script now uses environment variables
 set in the initialization file.
 \item Fixed bug in translating sequences of special HTML characters
-(e.g. \&, $<$, etc.)
+(e.g.\ \&, $<$, etc.)
 \item Fixed bug in the handling of the \verb|$$|-form of the dislay
 math environment.
 \item Fixed bug in the handling of the *-forms of environments.
@@ -1460,7 +1460,7 @@ math environment.
 \subsection{Changes upto v0.1.1}
 \begin{itemize}
 \item Fixed bug about empty lines being inserted in environments that
-cannot tolerate them (e.g. \texttt{math}).
+cannot tolerate them (e.g.\ \texttt{math}).
 \item Changed the format of inlined images coming back from LaTeX
 from GIF to XBM. This looks better on grayscale and color monitors.
 \item Fixed problem with commands being passed on to LaTeX  after

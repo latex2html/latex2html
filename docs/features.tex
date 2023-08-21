@@ -63,7 +63,7 @@ This provides only the functionality of the \texttt{HTML} 2.0 standard.
 There is little provision for aligning headings, paragraphs or images
 nor for super/sub-scripts to be generated. Images are created for tables 
 and other environments that use \HTMLtag{TABLE} tags with \HTMLiii;
-e.g. \env{eqnarray} and \env{equation} with equation numbering.
+e.g.\ \env{eqnarray} and \env{equation} with equation numbering.
 
 \index{HTML@\texttt{HTML}!Version 2.1, now `i18n' extension}%
 \index{Unicode|see{\htmlref{character set}{IIIcharset}}}%
@@ -79,7 +79,7 @@ Most importantly, the default character set is no longer ISO--8859--1
 but {ISO--10646} (Unicode).
 This is a 16-bit character set and can thus display a much larger set of characters.
 There are also provisions for bidirectional languages 
-(e.g. in Arabic the text is written from right to left, 
+(e.g.\ in Arabic the text is written from right to left, 
 but numerals from left to right), and provisions in \texttt{HTML} 
 to determine the character set and the language used.
 
@@ -260,7 +260,7 @@ The technique of using images, can be used with \emph{any} font
 whose glyphs can be typeset using \TeX{} or \LaTeX. 
 Using \TeX's \Lcs{font} command, a macro is defined to declare
 the special font required; 
-e.g. for Cyrillic characters, using the Univ. of Washington font:
+e.g.\ for Cyrillic characters, using the Univ. of Washington font:
 %begin{latexonly}
 \begin{small}
 %end{latexonly}
@@ -303,7 +303,7 @@ combination of textual representation and images of
 sub-expressions;
 \item
 \texttt{SGML}-like representation built using abstract ``entities'';\\
-e.g. for the \texttt{HTML-Math} model, or for \texttt{MathML}.
+e.g.\ for the \texttt{HTML-Math} model, or for \texttt{MathML}.
 %
 \end{itemize}
 Which is the most appropriate normally depends on the context,
@@ -334,7 +334,7 @@ and \hyperref{the subsequent table}{Table~}{}{mathconv2} for \texttt{HTML} 2.0.
  not loaded & --- & always generates an image of the whole\newline
  expression/environment\\ \hline
  loaded & --- &
-uses entities and \HTMLtag{MATH} tags; e.g. for \texttt{HTML-Math}
+uses entities and \HTMLtag{MATH} tags; e.g.\ for \texttt{HTML-Math}
  (or \texttt{MathML} in future)\\ \hline
  loaded & \Cs{no\_math} & textual representation where possible,
  with~images~of sub-expressions \\ \hline
@@ -548,7 +548,7 @@ the presence of such delimiters now results in an image being
 generated of the \emph{entire contents} of the \Lc{mbox}.
 It is not necessary for there to be any actual mathematics inside
 the \Lc{mbox}'s contents;\html{\\}
-e.g. \verb|\mbox{...some text...${}$}|
+e.g.\ \verb|\mbox{...some text...${}$}|
 will cause an image to be created of the given text.
 
 
@@ -621,7 +621,7 @@ any other \LaTeX{} command which causes an image to be generated; while \dots
 \item
 ``figures'' \index{images!figures}\html{\\}%
 applies to image-generating \LaTeX{} environments 
-(e.g. \env{makeimage}, \env{figure}, \env{table} (with \texttt{HTML} 2.0), 
+(e.g.\ \env{makeimage}, \env{figure}, \env{table} (with \texttt{HTML} 2.0), 
  and displayed math environments when required to generate images, etc.).
 \end{itemize}
 
@@ -841,7 +841,7 @@ on which it will operate.
 Environments for alignment and changing the font size do not
 generate images of their contents. Any \Lc{htmlimage}
 command may affect the surrounding environment instead;
-e.g. within a \env{table} or \env{figure} environment,
+e.g.\ within a \env{table} or \env{figure} environment,
 but does not apply to a \env{minipage}.
 
 When the \Lc{htmlimage} command occurs in an inappropriate
@@ -854,7 +854,7 @@ also the environment name and identifying number, if there is one.
 \begin{small}
 \begin{verbatim}
 The command "\htmlimage" is only effective inside an environment 
-which may generate an image (e.g. "{figure}", "{equation}")
+which may generate an image (e.g.\ "{figure}", "{equation}")
  center92: \htmlimage{ ... }
 \end{verbatim}
 \end{small}
@@ -1222,7 +1222,7 @@ With some figures, especially when containing graphics imported using
 \Lc{includegraphics} or other special macros, the background color
 may come out as a shade of grey, rather than white or transparent.
 This is due to a setting designed to enhance anti-aliasing of text
-within images; e.g. for mathematics.
+within images; e.g.\ for mathematics.
 To alleviate this possible problem, the \Cs{white} command-line option
 can be used, to ensure a white background for images of \env{figure}
 environments. 
@@ -1323,7 +1323,7 @@ an explicit \Lc{input} or \Lc{include} command;
 \end{itemize}
 the translator looks for a corresponding \texttt{.perl} file
 having the same file-name prefix;
-e.g. the file \fn{\$LATEX2HTMLDIR/styles/german.perl}.
+e.g.\ the file \fn{\$LATEX2HTMLDIR/styles/german.perl}.
 If such a \texttt{.perl} file is found, 
 then its code will be incorporated with the main script,
 to be used as required. 
@@ -1670,7 +1670,7 @@ with the following exception\dots} is handled correctly, by applying
 \index{index!style@\texttt{\char124}\Meta{style}}%
 \item [\texttt{|}\Meta{style} : ]
 where \Meta{style} is the name of \LaTeX{} style-changing command, 
-without the initial `\Lc{}'; e.g. `\texttt{emph}', `\texttt{textbf}',
+without the initial `\Lc{}'; e.g.\ `\texttt{emph}', `\texttt{textbf}',
 `\texttt{textit}', etc. The corresponding \LaTeX{} command is applied
 to the text of the generated hyperlink.
 
@@ -1678,7 +1678,7 @@ to the text of the generated hyperlink.
 \index{index!alphabetization}%
 \item [blank lines and alphabetization: ]
 Having precisely a single space-character after the \verb+|+ 
-(e.g. \verb+\index{A| }+) 
+(e.g.\ \verb+\index{A| }+) 
 places a blank line before the index entry and omits the hyperlink.
 This is used mainly for visual formatting; it allows a break before the entries
 starting with each letter, say. Using a printable-key, as in \verb+\index{Q@Q, R| }+,
@@ -1885,7 +1885,7 @@ within an \env{htmlonly} environment:
 Notice how the feature of \env{makeidx}, allowing the printable portion to
 be separate from the sorting-key, is used to allow text-styles to be included within
 both index-entries and glossary-entries. Indeed the purpose of \Lc{Glossary} is
-to allow deviations from a fixed style, e.g. 
+to allow deviations from a fixed style, e.g.\ 
 %
 %begin{latexonly}
 \begin{small}

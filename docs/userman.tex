@@ -456,7 +456,7 @@ For all documents the sectioning levels referred to above are:\nobreak
 \end{tabular}
 \end{center}
 These levels apply even when the document contains no sectioning for
-the shallower levels; e.g. no \Lc{part} or \Lc{chapter} commands is most common,
+the shallower levels; e.g.\ no \Lc{part} or \Lc{chapter} commands is most common,
 especially when using \LaTeX's \env{article} document-class.
 
 
@@ -508,7 +508,7 @@ the translator will make no attempt to interpret any raw \TeX{} commands.
 This feature is intended to enable sophisticated authors the ability to insert 
 arbitrary \TeX{} commands in environments that are destined 
 to be processed by \LaTeX{} anyway; 
-e.g. \env{figure}s, \strikeout{\env{theorem}s}, \env{picture}s, etc.
+e.g.\ \env{figure}s, \strikeout{\env{theorem}s}, \env{picture}s, etc.
 However this should rarely be needed, as now there is better support for these
 types of environment. There are now other methods to specify which chunks of code 
 are to be passed to \LaTeX{} for explicit image-generation; 
@@ -627,7 +627,7 @@ are not consumed unnecessarily, perhaps resulting in a fatal \Perl{} error.
 \item [ -iso\_language \Meta{type}\label{cs_iso_language}]
 This enables you to specify a different language type than
 \texttt{'EN'} to be used in the DTD entries of the \texttt{HTML}
-document, e.g. \texttt{'EN.US'}.
+document, e.g.\ \texttt{'EN.US'}.
 
 \item [ -short\_index\label{cs_shortindex}]
 \sameas{\fn{\$SHORT\_INDEX}\texttt{ = 1;}}\\
@@ -1232,10 +1232,10 @@ There could be several reasons to change the value here:
 \begin{itemize}
 \item
 add a switch \texttt{-P}\Meta{printer} to load a specific configuration-file;\\
-e.g. to use a specific set of \PS\ fonts, for improved image-generation.
+e.g.\ to use a specific set of \PS\ fonts, for improved image-generation.
 \item
 to prepend a path to a different version of \fn{dvips} than normally
-available as the system default (e.g. the printing requirements are different).
+available as the system default (e.g.\ the printing requirements are different).
 \item
 to append debugging switches, in case of poor quality images;\\
 one can see which paths are being searched for fonts and other resources.
@@ -1276,7 +1276,7 @@ its value is checked to locate the \fn{latex} program or script.
 If \LaTeX{} is having trouble finding style-files and/or packages, then
 the default command can be prepended with other commands 
 to set environment variables intended to resolve these difficulties;\\
-e.g. 
+e.g.\ 
 \verb|$LATEX = 'setenv TEXINPUTS |\Meta{path to search}\verb| ; latex' |.
 
 There are several variables to help control exactly which files are
@@ -1416,7 +1416,7 @@ at the beginning of the \texttt{HTML} pages produced.
 
 \item [\fn{\$BODYTEXT}\texttt{ = '';}]
 The value of this variable is used within the \HTMLtag{BODY ... } tag;
-e.g. to set text and/or background colors.\html{\\}
+e.g.\ to set text and/or background colors.\html{\\}
 It's value is overridden by the \verb|\bodytext| command, 
 and can be added-to or parts changed using the \Lc{htmlbody} command
 or \Lc{color} and \Lc{pagecolor} from the \env{color} package.
@@ -1613,7 +1613,7 @@ how the translator works and of course \Perl{} is required.}:
 \end{quote}
 \verb|{}|'s mark compulsory arguments and \verb|[]|'s optional ones,
 while \texttt{<<\emph{pattern}>>} denotes matching everything up to the
-indicated string-pattern, given literally (e.g. \verb|\\endarray|);
+indicated string-pattern, given literally (e.g.\ \verb|\\endarray|);
 spaces are ignored. Special characters
 such as \verb|$|\,, \verb|&|\,, \verb|\| itself and perhaps some others,
 need to be ``escaped'' with a preceding \verb|\|\,.
@@ -1623,7 +1623,7 @@ need to be ``escaped'' with a preceding \verb|\|\,.
 
 Some commands may have arguments which should be left as text even
 though the command should be ignored 
-(e.g. \Lc{hbox}, \Lc{center}, etc.). 
+(e.g.\ \Lc{hbox}, \Lc{center}, etc.). 
 In these cases arguments should be left unspecified.
 Here is an example of how this mechanism may be used:
 %begin{latexonly}

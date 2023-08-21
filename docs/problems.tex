@@ -51,7 +51,7 @@ so this should not cause any real problems.\html{\\}
 Changes to commands using \Lc{def} or \Lc{renewcommand}
 should usually be made only locally, within special environments,
 to set a needed parameter; 
-e.g. a basic length in a \env{picture} environment.
+e.g.\ a basic length in a \env{picture} environment.
 But when such environments force an image to be generated,
 then \LaTeX{} will make the correct redefinition.
 
@@ -62,7 +62,7 @@ section is processed independently.
 \newline
 \textit{This is inherent to the way \latextohtml{} does its processing. 
 It will not be different unless later versions change this strategy;
-(e.g. if \latextohtmlNG\ ever becomes fully integrated.)}
+(e.g.\ if \latextohtmlNG\ ever becomes fully integrated.)}
 
 \item [Math-mode font-size changes: ]  Math-mode font changes
 made outside the math-mode are not honoured.  Thus the two equations
@@ -158,7 +158,7 @@ which has caused this.
 The \fn{\$VERBOSITY} \hyperref[page]{variable}{variable (see page~}{)}{cs_verbositylevel}%
 can be set to generate tracing messages, which may help to locate which command 
 or environment is being processed repeatedly.
-Try setting a value of `\texttt{3}'; e.g. using the commandline switch \Cs{verbosity 3}.
+Try setting a value of `\texttt{3}'; e.g.\ using the commandline switch \Cs{verbosity 3}.
 This will print command and environment names, as thaey are processed.
 It should soon become apparent where any such looping occurs.
 
@@ -273,7 +273,7 @@ crash \appl{DBM} or \appl{NDBM}. (In fact this error should no longer
 occur in \textsc{v97.1}\,, so please advise the \latextohtml{} developers if
 you get error messages of this kind.)\html{\\}
 The message should contain the name of environment which caused the problem,
-along with an identifying number; e.g. \texttt{eqnarray268}.
+along with an identifying number; e.g.\ \texttt{eqnarray268}.
 To find which exact piece of code this represents, run \latextohtml{}
 again, using the \Cs{debug} switch. Then look at the files
 in the \texttt{TMP} subdirectory of the working directory
@@ -291,7 +291,7 @@ but uses just the environment name and number as the database key.
 
 \item [The \Lc{verb"ABC"} command doesn't work: ]
 This is an unfortunate bug which can be avoided by using 
-any character other than quotes; e.g. \Lc{verb+ABC+}.
+any character other than quotes; e.g.\ \Lc{verb+ABC+}.
 
 \item [Cannot get the ``tilde'' (\~{}) to show: \hfill]
 The trick here is to use \verb|\~{}|.\html{\\}
@@ -334,7 +334,7 @@ either the \env{verbatim} or the \env{verbatimfiles} package.
 If~you have optional arguments for the \Lc{item} command in 
 a \env{description} environment containing nested ``\texttt{]}'' characters then 
 these may not show up correctly. To avoid the problem enclose them
-in \verb|{}|s;\\ e.g. \ \verb+\item[{[nested [angle [brackets] are ok]]}]+
+in \verb|{}|s;\\ e.g.\ \ \verb+\item[{[nested [angle [brackets] are ok]]}]+
 
 
 \item [\latextohtml{} behaves differently even when you run it on the
@@ -347,7 +347,7 @@ Note that this option will disable the image-reuse mechanism.
 \item [Cannot convert \PS\ images which are included
 in the \LaTeX{} file: ]~\\
 It~is likely that the macros you are using for including \PS\ 
-files (e.g. \Lc{epsffile}) are not understood by \latextohtml.
+files (e.g.\ \Lc{epsffile}) are not understood by \latextohtml.
 To avoid this problem enclose them in an environment which will
 be passed to \LaTeX{} anyway; e.g.
 \begin{quote}
@@ -382,7 +382,7 @@ There are several known ways that this may occur.
 Perhaps one of the inlined images is more than a page (paper page) long. 
 This is sometimes the case with very large tables
 or large \PS\ images. In this case you can try specifying 
-a larger paper size (e.g. `\texttt{a4}', `\texttt{a3}' or even `\texttt{a0}') 
+a larger paper size (e.g.\ `\texttt{a4}', `\texttt{a3}' or even `\texttt{a0}') 
 instead of the default (`\texttt{a5}') 
 using the \latextohtml{} variable \fn{\$PAPERSIZE} 
 in the file \fn{latex2html.config}.
@@ -446,7 +446,7 @@ This is a \Perl{} quirk.
 \item [Problems when producing the \texttt{.dvi} version: \label{htmlsty}]
 If you are using any of the new \LaTeX{} commands which are defined in 
 the \fn{html.sty} file make sure that \fn{html.sty} is included;
-e.g. as one of the optional arguments to the \Lc{documentclass} command.
+e.g.\ as one of the optional arguments to the \Lc{documentclass} command.
 
 Of course you also have to make sure that \LaTeX{} knows where the \fn{html.sty}
 file is, either by putting it in the same place as the other style-files on
@@ -559,7 +559,7 @@ again with the option \Cs{images\_only}.
 Some problems in displaying the correct inlined images,
 may be due to the image caching mechanisms of your browser.
 With some browsers a simple ``\textbf{Reload Current Document}'' will be enough
-to refresh the images but with others (e.g. \appl{Mosaic}) you may need
+to refresh the images but with others (e.g.\ \appl{Mosaic}) you may need
 to request for the cache to be refreshed. With \appl{Mosaic} try 
 selecting ``\textbf{Flush Image Cache}'' from ``\textbf{Options}'' in the menu-bar 
 and then reload the \texttt{HTML} file.
