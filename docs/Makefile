@@ -141,7 +141,7 @@ manual.pdf:      manual.ps
 manual.ps:      manual.dvi
 	$(DVIPS) manual.dvi -o $@
 
-manual.aux manual.cb: \
+manual.aux: \
 	    manual.tex credits.tex licence.tex overview.tex \
 	    support.tex userman.tex hypextra.tex features.tex \
 	    problems.tex l2hfiles.dat  manhtml.tex l2hman.sty
@@ -154,7 +154,7 @@ manual.glo manual.idx: \
 	    problems.tex l2hfiles.dat  manhtml.tex l2hman.sty
 	$(LATEX) manual.tex
 
-manual.dvi:     manual.aux manual.ind manual.gls manual.cb
+manual.dvi:     manual.aux manual.ind manual.gls
 	$(LATEX) manual.tex
 
 manual.ind:     manual.idx
@@ -202,8 +202,8 @@ htmlclean:
 	rm -f manual/.??* manual/*TMP*
 
 clean:
-	rm -f manual.dvi manual.ps manual.glo manual.log manual.aux \
-	    manual.ilg manual.lof manual.lot manual.cb manual.idx manual.ind \
+	rm -f manual.pdf manual.dvi manual.ps manual.glo manual.log manual.aux \
+	    manual.ilg manual.lof manual.lot manual.idx manual.ind \
 	    manual.toc manual.gls
 	rm -f *.ptr
 
