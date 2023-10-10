@@ -8,7 +8,7 @@ package welsh;
 
 print " [welsh]";
 
-sub main'welsh_translation { @_[0] }
+sub main::welsh_translation { @_[0] }
 
 
 

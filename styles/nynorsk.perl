@@ -8,7 +8,7 @@ package nynorsk;
 
 print " [nynorsk]";
 
-sub main'nynorsk_translation { @_[0] }
+sub main::nynorsk_translation { @_[0] }
 
 
 

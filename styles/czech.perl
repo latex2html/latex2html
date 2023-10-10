@@ -8,7 +8,7 @@ package czech;
 
 print " [czech]";
 
-sub main'czech_translation { @_[0] }
+sub main::czech_translation { @_[0] }
 
 
 

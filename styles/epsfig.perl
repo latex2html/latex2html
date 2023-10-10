@@ -1,7 +1,7 @@
 # epsfig.perl by Michel Goossens <goossens@cern.ch>  01-14-96
 #
 # Extension to LaTeX2HTML V 96.1 to support epsfig.sty
-# which is part of standard LaTeX2e graphics bunble.
+# which is part of standard LaTeX2e graphics bundle.
 #
 # ...and epsf.sty  and  psfig.sty  
 #	by Ross Moore <ross@mpce.mq.edu.au>  22-05-98

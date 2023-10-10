@@ -10,7 +10,7 @@ package russian;
 
 print " [russian]";
 
-sub main'russian_translation {
+sub main::russian_translation {
     local($_) = @_;
     s/;SPMquot;\-\-\-/&#8212;/go;
     s/\-\-\-/&#8212;/go;
@@ -31,7 +31,7 @@ sub main'russian_translation {
 
 sub make_next_char_rx {
     local($chars) = @_;
-    local($OP,$CP) = &main'brackets;
+    local($OP,$CP) = &main::brackets;
     ";SPMquot;\\s*(($chars)|$OP\\d+$CP\\s*($chars)\\s*$OP\\d+$CP)";
 }
    

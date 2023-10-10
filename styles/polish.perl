@@ -8,7 +8,7 @@ package polish;
 
 print " [polish]";
 
-sub main'polish_translation {
+sub main::polish_translation {
     local($_) = @_;
 #s/;SPMquot;\s*('|`|;SPMlt;|;SPMgt;|\\|-|;SPMquot;|=|\|)/&get_polish_specials($1)/geo;
 s/;SPMquot;\s*('|`|;SPMlt;|;SPMgt;|\\|-|;SPMquot;|=|\||[aelrcnoszAELRCNOSZ])/&get_polish_specials($1)/geo;
@@ -17,11 +17,11 @@ s/;SPMquot;\s*('|`|;SPMlt;|;SPMgt;|\\|-|;SPMquot;|=|\||[aelrcnoszAELRCNOSZ])/&ge
 
 sub get_polish_specials {
     local($char) = @_;
-    if($char=~/[ae]/i) {&main'iso_map($char,'ogon')}
-    elsif($char=~/[lL]/) {&main'iso_map($char,'strok')}
-    elsif($char=~/r/) {&main'iso_map('z','dot')}
-    elsif($char=~/R/) {&main'iso_map('Z','dot')}
-    elsif($char=~/[cnosz]/i) {&main'iso_map($char,'acute')}
+    if($char=~/[ae]/i) {&main::iso_map($char,'ogon')}
+    elsif($char=~/[lL]/) {&main::iso_map($char,'strok')}
+    elsif($char=~/r/) {&main::iso_map('z','dot')}
+    elsif($char=~/R/) {&main::iso_map('Z','dot')}
+    elsif($char=~/[cnosz]/i) {&main::iso_map($char,'acute')}
     else{$polish_specials{$char}}
 }
 

@@ -8,7 +8,7 @@ package irish;
 
 print " [irish]";
 
-sub main'irish_translation { @_[0] }
+sub main::irish_translation { @_[0] }
 
 
 

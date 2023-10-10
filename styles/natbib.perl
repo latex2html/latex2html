@@ -119,7 +119,7 @@ package main;
 $CITE_OPEN_DELIM = '(' unless $CITE_OPEN_DELIM;
 $CITE_CLOSE_DELIM = ')' unless $CITE_CLOSE_DELIM;
 
-# CUSTOMIZATION: Delimiters for seperation of multiple citations
+# CUSTOMIZATION: Delimiters for separation of multiple citations
 $CITE_ENUM = '; ' unless $CITE_ENUM;
 
 # CUSTOMIZATION: whether multiple citations should be sorted. (BRM)
@@ -237,7 +237,7 @@ sub do_natbib_sort {
 sub do_cmd_cite {
     local($_) = @_;
     local($cite_key, @cite_keys);
-# Look for options of the command in a seperate subroutine
+# Look for options of the command in a separate subroutine
     local($has_optional,$optional1,$optional2)=&cite_check_options;
 # Select the correct marker 
     local ($c_mark) = ($has_optional ? $cite_par_mark : $cite_mark);

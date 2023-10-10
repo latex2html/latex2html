@@ -8,7 +8,7 @@ package esperant;
 
 print " [esperant]";
 
-sub main'esperant_translation {
+sub main::esperant_translation {
     local($_) = @_;
 s/;SPMquot;\s*('|`|;SPMlt;|;SPMgt;|\\|-|;SPMquot;|=|\|)/&get_esperant_specials($1)/geo;
     $_;

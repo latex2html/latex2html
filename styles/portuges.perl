@@ -8,7 +8,7 @@ package portuges;
 
 print " [portuges]";
 
-sub main'portuges_translation {
+sub main::portuges_translation {
     local($_) = @_;
 s/;SPMquot;\s*('|`|;SPMlt;|;SPMgt;|\\|-|;SPMquot;|=|\|)/&get_portuges_specials($1)/geo;
     $_;

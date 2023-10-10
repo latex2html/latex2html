@@ -8,7 +8,7 @@ package norsk;
 
 print " [norsk]";
 
-sub main'norsk_translation { @_[0] }
+sub main::norsk_translation { @_[0] }
 
 
 

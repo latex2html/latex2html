@@ -8,7 +8,7 @@ package romanian;
 
 print " [romanian]";
 
-sub main'romanian_translation { @_[0] }
+sub main::romanian_translation { @_[0] }
 
 
 

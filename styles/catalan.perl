@@ -8,7 +8,7 @@ package catalan;
 
 print " [catalan]";
 
-sub main'catalan_translation {
+sub main::catalan_translation {
     local($_) = @_;
 s/;SPMquot;\s*('|`|;SPMlt;|;SPMgt;|\\|-|;SPMquot;|=|\|)/&get_catalan_specials($1)/geo;
     $_;

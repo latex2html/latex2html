@@ -8,7 +8,7 @@ package TEMPLATE;
 
 print " [TEMPLATE]";
 
-sub main'TEMPLATE_translation {
+sub main::TEMPLATE_translation {
     local($_) = @_;
 s/;SPMquot;\s*('|`|;SPMlt;|;SPMgt;|\\|-|;SPMquot;|=|\|)/&get_TEMPLATE_specials($1)/geo;
     $_;

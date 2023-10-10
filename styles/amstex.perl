@@ -12,7 +12,7 @@
 #      thanks to Bruce Miller for reporting this
 #
 # Revision 1.23  1999/06/11 09:57:23  RRM
-#  --  removed unnecessary tagging for ommitted information on title-page
+#  --  removed unnecessary tagging for omitted information on title-page
 #
 # Revision 1.22  1999/06/03 05:40:36  RRM
 #  --  fixed error in previous commit

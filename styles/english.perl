@@ -8,7 +8,7 @@ package english;
 
 print " [english]";
 
-sub main'english_translation { @_[0] }
+sub main::english_translation { @_[0] }
 
 
 package main;

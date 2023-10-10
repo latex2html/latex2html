@@ -8,7 +8,7 @@ package lsorbian;
 
 print " [lsorbian]";
 
-sub main'lsorbian_translation { @_[0] }
+sub main::lsorbian_translation { @_[0] }
 
 
 

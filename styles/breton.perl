@@ -8,7 +8,7 @@ package breton;
 
 print " [breton]";
 
-sub main'breton_translation { @_[0] }
+sub main::breton_translation { @_[0] }
 
 
 

@@ -6,15 +6,15 @@
 
 package polski;
 
-sub main'polski_translation { @_[0] }
+sub main::polski_translation { @_[0] }
 
 sub get_polski_specials {
     local($char) = @_;
-    if($char=~/[ae]/i) {&main'iso_map($char,'ogon')}
-    elsif($char=~/[lL]/) {&main'iso_map($char,'strok')}
-    elsif($char=~/x/) {&main'iso_map('z','dot')}
-    elsif($char=~/X/) {&main'iso_map('Z','dot')}
-    elsif($char=~/[cnosz]/i) {&main'iso_map($char,'acute')}
+    if($char=~/[ae]/i) {&main::iso_map($char,'ogon')}
+    elsif($char=~/[lL]/) {&main::iso_map($char,'strok')}
+    elsif($char=~/x/) {&main::iso_map('z','dot')}
+    elsif($char=~/X/) {&main::iso_map('Z','dot')}
+    elsif($char=~/[cnosz]/i) {&main::iso_map($char,'acute')}
     else{$polski_specials{$char}}
 }
 

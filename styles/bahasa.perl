@@ -8,7 +8,7 @@ package bahasa;
 
 print " [bahasa]";
 
-sub main'bahasa_translation { @_[0] }
+sub main::bahasa_translation { @_[0] }
 
 
 package main;

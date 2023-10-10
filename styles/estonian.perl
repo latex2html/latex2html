@@ -8,7 +8,7 @@ package estonian;
 
 print " [estonian]";
 
-sub main'estonian_translation {
+sub main::estonian_translation {
     local($_) = @_;
 s/;SPMquot;\s*('|`|;SPMlt;|;SPMgt;|\\|-|;SPMquot;|=|\|)/&get_estonian_specials($1)/geo;
     $_;

@@ -8,7 +8,7 @@ package finnish;
 
 print " [finnish]";
 
-sub main'finnish_translation {
+sub main::finnish_translation {
     local($_) = @_;
 s/;SPMquot;\s*('|`|;SPMlt;|;SPMgt;|\\|-|;SPMquot;|=|\|)/&get_finnish_specials($1)/geo;
     $_;

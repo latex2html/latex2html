@@ -8,7 +8,7 @@ package brazil;
 
 print " [brazil]";
 
-sub main'brazil_translation {
+sub main::brazil_translation {
     local($_) = @_;
 s/;SPMquot;\s*('|`|;SPMlt;|;SPMgt;|\\|-|;SPMquot;|=|\|)/&get_brazil_specials($1)/geo;
     $_;

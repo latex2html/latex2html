@@ -8,7 +8,7 @@ package galician;
 
 print " [galician]";
 
-sub main'galician_translation {
+sub main::galician_translation {
     local($_) = @_;
 s/;SPMquot;\s*('|`|;SPMlt;|;SPMgt;|\\|-|;SPMquot;|=|\|)/&get_galician_specials($1)/geo;
     $_;

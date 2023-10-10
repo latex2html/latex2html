@@ -19,7 +19,7 @@
 
 package turkish;
 
-sub main'turkish_translation {
+sub main::turkish_translation {
     @_[0];
 }
 

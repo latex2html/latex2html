@@ -8,7 +8,7 @@ package slovak;
 
 print " [slovak]";
 
-sub main'slovak_translation { @_[0] }
+sub main::slovak_translation { @_[0] }
 
 
 

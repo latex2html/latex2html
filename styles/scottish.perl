@@ -8,7 +8,7 @@ package scottish;
 
 print " [scottish]";
 
-sub main'scottish_translation { @_[0] }
+sub main::scottish_translation { @_[0] }
 
 
 

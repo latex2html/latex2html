@@ -8,13 +8,13 @@ package dutch;
 
 print " [dutch]";
 
-sub main'dutch_translation {
+sub main::dutch_translation {
     local($_) = @_;
     s/;SPMquot;\s*('|`|;SPMlt;|;SPMgt;|\\|-|;SPMquot;|=|\|)/&get_dutch_specials($1)/geo;
     local($next_char_rx) = &make_next_char_rx("[aAeEiIoOuUyY]");
-    s/$next_char_rx/&main'iso_map(($2||$3),"uml")/geo;
+    s/$next_char_rx/&main::iso_map(($2||$3),"uml")/geo;
     $next_char_rx = &make_next_char_rx("[sz]");
-    s/$next_char_rx/&main'iso_map("sz","lig")/geo;
+    s/$next_char_rx/&main::iso_map("sz","lig")/geo;
     $next_char_rx = &make_next_char_rx("[SZ]"); s/$next_char_rx/S$2/go;
     s/;SPMquot;\s*([cflmnprt])/\1/go;
     s/;SPMquot;/&#34;/go;
@@ -23,7 +23,7 @@ sub main'dutch_translation {
 
 sub make_next_char_rx {
     local($chars) = @_;
-    local($OP,$CP) = &main'brackets;
+    local($OP,$CP) = &main::brackets;
     ";SPMquot;\\s*(($chars)|$OP\\d+$CP\\s*($chars)\\s*$OP\\d+$CP)";
 }
 

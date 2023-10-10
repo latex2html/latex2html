@@ -9,7 +9,7 @@ print "Spanish style interface for LaTeX2HTML\n";
 # Put Spanish equivalents here for headings/dates/ etc when
 # latex2html start supporting them ...
 
-sub main'spanish_translation { @_[0] }
+sub main::spanish_translation { @_[0] }
 
 
 

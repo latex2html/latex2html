@@ -8,7 +8,7 @@ package croatian;
 
 print " [croatian]";
 
-sub main'croatian_translation { @_[0] }
+sub main::croatian_translation { @_[0] }
 
 
 

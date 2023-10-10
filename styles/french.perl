@@ -53,7 +53,7 @@ package french;
 # Put french equivalents here for headings/dates/ etc when
 # latex2html start supporting them ...
 
-sub main'french_translation { @_[0] }
+sub main::french_translation { @_[0] }
 
 
 

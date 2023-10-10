@@ -53,7 +53,7 @@ sub do_cmd_char {
     local($_) = @_;
 # some special characters are already turned into l2h internal
 # representation.
-# Get its represention from the table and use it like as regexp form.
+# Get its representation from the table and use it like as regexp form.
     local($spmquot) = &escape_rx_chars($html_specials{'"'});
 # Get all internal special char representations as implied during
 # preprocessing.

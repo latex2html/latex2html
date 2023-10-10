@@ -18,14 +18,14 @@ print " [austrian]";
 # latex2html start supporting them ...
 
 
-sub main'austrian_translation {
+sub main::austrian_translation {
     local($_) = @_;
     s/;SPMquot;\s*(;SPMlt;|;SPMgt;|'|`|\\|-|=|;SPMquot;|\||~)/&get_austrian_specials($1)/geo;
     local($next_char_rx) = &make_next_char_rx("[aAeEiIoOuU]");
-    s/$next_char_rx/&main'iso_map(($2||$3),"uml")/geo;
+    s/$next_char_rx/&main::iso_map(($2||$3),"uml")/geo;
 #    $next_char_rx = &make_next_char_rx("[sSzZ]");
     $next_char_rx = &make_next_char_rx("[sz]");
-    s/$next_char_rx/&main'iso_map("sz","lig")/geo;
+    s/$next_char_rx/&main::iso_map("sz","lig")/geo;
     $next_char_rx = &make_next_char_rx("[SZ]"); s/$next_char_rx/S$2/go;
     s/;SPMquot;\s*([cflmnprt])/\1/go;
 #    s/;SPMquot;\s*([cflmnpt])/\1/go;
@@ -35,13 +35,13 @@ sub main'austrian_translation {
     $_;
 }
 
-sub main'do_cmd_3 {
-    join('',&main'iso_map("sz", "lig"),@_[0]);
+sub main::do_cmd_3 {
+    join('',&main::iso_map("sz", "lig"),@_[0]);
 }
 
 sub make_next_char_rx {
     local($chars) = @_;
-    local($OP,$CP) = &main'brackets;
+    local($OP,$CP) = &main::brackets;
     ";SPMquot;\\s*(($chars)|$OP\\d+$CP\\s*($chars)\\s*$OP\\d+$CP)";
 }
    

@@ -8,7 +8,7 @@ package italian;
 
 print " [italian]";
 
-sub main'italian_translation { @_[0] }
+sub main::italian_translation { @_[0] }
 
 
 

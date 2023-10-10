@@ -8,7 +8,7 @@ package magyar;
 
 print " [magyar]";
 
-sub main'magyar_translation { @_[0] }
+sub main::magyar_translation { @_[0] }
 
 
 

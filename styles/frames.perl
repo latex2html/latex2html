@@ -43,7 +43,7 @@
 # changed &remove_markers in &replace_markers
 #
 # (v1.1) 20 June 1996 - rrm
-# for compatibilty with segmented documents
+# for compatibility with segmented documents
 #
 # (v1.2) 4 July 1996 - rrm
 # supporting easy color-changes and using backgrounds.
@@ -359,7 +359,7 @@ sub apply_frame_options {
 	    } else {
 		$options{$`}="\"$'\"";
 	    }
-	} else {print STDERR "\nno value specifed for $frame option: $option\n";}
+	} else {print STDERR "\nno value specified for $frame option: $option\n";}
     };
     # recover the new values from the @options hash
     @keys = keys %options;  # @keys = sort keysort @keys;
