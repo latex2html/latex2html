@@ -112,6 +112,11 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#--------- v2024
+#
+#		- "make clean" removes manual.pdf
+#		  https://bugs.debian.org/1046413
+#
 #--------- v2023.2
 #
 #		- DONT_INCLUDE now affects \usepackage but not \input
