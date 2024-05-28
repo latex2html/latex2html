@@ -76,9 +76,19 @@ page are constructed from the first <num> words of the
 section heading for that page, separated by the `_' character.
 Commas and common short words (a an to by of and for the) are omitted
 from both title and word-count.
-Warning: Use this switch with great caution. Currently there are no
-checks for uniqueness of names or overall length. Very long names can
-easily result from using this feature.
+When duplication of constructed filenames is detected (see also the
+.B -unicase_titles
+option), an incremented number starting from 2
+is appended to each duplicated filename.
+.TP
+.B -unicase_titles
+Same as setting:
+.I $UNICASE_TITLES = 1;
+If set, and the
+.B -long_titles
+option is used, duplication of generated filenames
+is checked in case insensitive manner.
+Useful under case insensitive filesystems such as NTFS or FAT.
 .TP
 .B -custom_titles
 Same as setting:

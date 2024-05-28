@@ -190,6 +190,7 @@
 \item[\gn{\$TOP\_NAVIGATION}] when set, a navigation panel is placed at the top of every \texttt{HTML} page, unless overridden by \fn{\$NO\_NAVIGATION} being set also
 \item[\gn{\$TRANSPARENT\_FIGURES}] when set, this specifies that the background of generated images should be made transparent
 \item[\gn{\$TRANSPARENT\_IMAGES}] when set, this \emph{prevents} the background of images from being made transparent (no longer used)
+\item[\gn{\$UNICASE\_TITLES}] when set, duplication of generated filenames for \texttt{HTML} pages is checked in case insensitive manner
 \item[\gn{\$UNSEGMENT}] when set, \latextohtml{} translates a segmented document as a whole rather than a single segment; use this for testing your segmented document
 \item[\gn{\$UP}] when navigation panels are created, this holds a hyperlink to the parent \texttt{HTML} page
 \item[\gn{\$UP\_TITLE}] when navigation panels are created, this holds a title of the parent \texttt{HTML} page

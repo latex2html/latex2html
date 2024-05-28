@@ -274,6 +274,7 @@ unless(GetOptions(\%opt, # all non-linked options go into %opt
         'prefix=s',             \$PREFIX,
         'auto_prefix!',         \$AUTO_PREFIX,
         'long_titles=i',        \$LONG_TITLES,
+        'unicase_titles!',      \$UNICASE_TITLES,
         'custom_titles!',       \$CUSTOM_TITLES,
         'title|t=s',            \$TITLE,
         'rooted!',              \$ROOTED,
@@ -694,6 +695,26 @@ sub driver {
 
     print "\n *** initialise *** " if ($VERBOSITY > 1);
     &initialise;		# Initialise some global variables
+
+    # Early reservation of filename for auto-linked index.html to avoid
+    # eventual duplication if some later generated page would get name 'Index'.
+    # This code to generate "$to" adopted from the do-block with the clause
+    # "L2hos->Link($from,$to);" about 200 lines later.
+    do {
+        local($EXTN) = $EXTN;
+	$EXTN =~ s/_\w+(\.html?)/$1/ if ($frame_main_name);
+	local($from,$to) = (eval($LINKPOINT),eval($LINKNAME));
+	$from = &make_long_title($LONG_LINKPOINT) . $EXTN
+	    if ($LONG_TITLES && $LONG_LINKPOINT);
+	if (length($from) && length($to) && ($from ne $to)) {
+	    $to =~ s/$frame_main_name(\.html?)/$1/ if ($frame_main_name);
+	    if ($UNICASE_TITLES) {
+	        $nodenames{"\L$to"} = 1;
+	    } else {
+	        $nodenames{$to} = 1;
+	    }
+	}
+    } unless ($NO_AUTO_LINK || !($LINKPOINT) || !($LINKNAME));
 
     print "\n *** check modes *** " if ($VERBOSITY > 1);
     &ascii_mode if $ASCII_MODE;	# Must come after initialization
@@ -9876,7 +9897,7 @@ sub fulltexpath {
 sub make_name {
     local($sec_name, $packed_curr_sec_id) = @_;
     local($title,$making_name,$saved) = ('',1,'');
-    local($filename) = '';
+    local($filename,$dupname) = ('','');
     if ($LONG_TITLES) {
 	$saved = $_;
 	&process_command($sections_rx, $_) if /^$sections_rx/;
@@ -9896,12 +9917,14 @@ sub make_name {
     	++$OUT_NODE;
 	$filename = join("", ${PREFIX}, $title, $EXTN);
 	# Avoid duplication of filenames
-	unless ($nodenames{$filename}) {
-	    $nodenames{$filename} = 1;
+	$dupname = $filename;
+	$dupname = "\L$filename" if $UNICASE_TITLES;
+	unless ($nodenames{$dupname}) {
+	    $nodenames{$dupname} = 1;
 	} else {
 	    # Duplication detected: add version number to generated filename
 	    $filename =
-		join("", ${PREFIX}, $title, ++$nodenames{$filename}, $EXTN);
+		join("", ${PREFIX}, $title, ++$nodenames{$dupname}, $EXTN);
 	}
 	$filename;
     } else {
@@ -17650,6 +17673,7 @@ S<[ B<->(B<no>)B<numbered_footnotes> ]>
 S<[ B<-prefix> I<output_filename_prefix> ]>
 S<[ B<->(B<no>)B<auto_prefix> ]>
 S<[ B<-long_titles> I<num> ]>
+S<[ B<->(B<no>)B<unicase_titles> ]>
 S<[ B<->(B<no>)B<custom_titles> ]>
 S<[ B<-title>|B<-t> I<top_page_title> ]>
 S<[ B<->(B<no>)B<rooted> ]>
@@ -17869,7 +17893,15 @@ where "basename" is the base name of the file being translated.
 
 The filenames for each HTML page are constructed from the first I<num>
 words of the section heading for that page, separated by the `_'
-character.
+character. When duplication of constructed filenames is detected
+(see also the B<-unicase_titles> option), an incremented number
+(starting from 2) is appended to each duplicated filename.
+
+=item B<->(B<no>)B<unicase_titles>
+
+If set, and the B<-long_titles> option is used, duplication of
+generated filenames is checked in case insensitive manner.
+Useful under case insensitive filesystems such as NTFS or FAT.
 
 =item B<->(B<no>)B<custom_titles>
 

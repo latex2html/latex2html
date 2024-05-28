@@ -997,6 +997,15 @@ $TITLES_LANGUAGE = "english";
 #	or when you specify the language through the babel package.
 
 
+# When the -long_titles option is used, duplication of generated filenames
+# which differ only in letter case is checked as follows:
+# $UNICASE_TITLES = 0: such filenames are treated as unique
+#		       (for case sensitive filesystems typical under Unix)
+# $UNICASE_TITLES = 1: such filenames are treated as duplicated
+#		       (for case insensitive filesystems such as NTFS or FAT)
+$UNICASE_TITLES = 0;
+
+
 ### Verbosity #################################################################
 #
 # -verbosity
