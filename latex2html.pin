@@ -3226,7 +3226,7 @@ sub read_style_info {
     
     if ($style_names) { $envS = "$style_names" }
     elsif (($envS =~ /^pre$/)&&
-	(/^\\begin.*preform($O|$OP)\d+($C|$CP)$verbatim_mark(\w*[vV]erbatim|lstlisting)(\*?)/))
+	(/^\\begin.*preform($O|$OP)\d+($C|$CP)$verbatim_mark(\w*[vV]erbatim|lstlisting|minted)(\*?)/))
 	    { $envS = $3.($4 ? 'star' : '') };
     $env_style{$envS} = " " unless (($style_names)||($env_style{$envS}));
     $env_id = " ID=\"$env_id\"".(($envS) ? " CLASS=\"$envS\"" : '');
@@ -7643,7 +7643,7 @@ EOF
             print STYLESHEET "SPAN.$env\t\t{ $style }\n";
         } elsif ($env =~ /\./) {
             print STYLESHEET "$env\t\t{ $style }\n";
-        } elsif ($env =~ /^(preform|lstlisting|\w*[Vv]erbatim(star)?)$/) {
+        } elsif ($env =~ /^(preform|lstlisting|minted|\w*[Vv]erbatim(star)?)$/) {
             print STYLESHEET "PRE.$env\t\t{ $style }\n";
         } elsif ($env =~ /figure|table|tabular|equation|$array_env_rx/) {
             print STYLESHEET "TABLE.$env\t\t{ $style }\n";
@@ -9071,6 +9071,8 @@ sub replace_verbatim_marks {
 #	"\n".$tmp.(($tmp =~/\n\s*$/s)? '':"\n")!eg;
     s/(<PRE[^>]*>)?$verbatim_mark(lstlisting|lstset|lststyle|lstfile)(\d+)#(<\/PRE>)?\n?/
         &process_lstlisting($1, $4, $2, $verbatim{$3})/eg;
+    s/(<PRE[^>]*>)?$verbatim_mark(minted)(\d+)#(<\/PRE>)?\n?/
+        &process_minted($1, $4, $2, $verbatim{$3})/eg;
 #    s/$verbatim_mark(rawhtml)(\d+)#/$verbatim{$2}/eg; # Raw HTML
     s/$verbatim_mark(imagesonly)(\d+)#//eg; # imagesonly is *not* replaced
     # Raw HTML, but replacements may have protected characters
@@ -9102,6 +9104,7 @@ sub remove_verbatim_marks {
     s/$verbatim_mark(\w*[Vv]erbatim\w*\*?)(\d+)#//go;
     s/$verbatim_mark(rawhtml|imagesonly)(\d+)#//go;
     s/$verbatim_mark(lstlisting)(\d+)#//go;
+    s/$verbatim_mark(minted)(\d+)#//go;
     s/$verbatim_mark$keepcomments_rx(\d+)#//go;
     s/$unfinished_mark$keepcomments_rx(\d+)#//go;
 }
@@ -9135,6 +9138,7 @@ sub revert_verbatim_marks {
 #    s/$verbatim_mark(verbatim)(\d+)#/\\begin{verbatim}$verbatim{$2}\\end{verbatim}\n/go;
     s/$verbatim_mark(\w*[Vv]erbatim)(\d+)#/\\begin{$1}\n$verbatim{$2}\\end{$1}\n/go;
     s/$verbatim_mark(lstlisting)(\d+)#/\\begin{lstlisting}\n$verbatim{$2}\\end{lstlisting}\n/go;
+    s/$verbatim_mark(minted)(\d+)#/\\begin{minted}\n$verbatim{$2}\\end{lstlisting}\n/go;
     s/$verbatim_mark(rawhtml)(\d+)#/\\begin{rawhtml}\n$verbatim{$2}\\end{rawhtml}\n/go;
     s/$verbatim_mark(imagesonly|tex2html_code)(\d+)#\n?/$verbatim{$2}/go;
     s/$verbatim_mark$image_env_rx(\d+)#/\\begin{$1}\n$verbatim{$2}\\end{$1}\n/go;
@@ -17392,7 +17396,7 @@ sub make_isolatin1_rx {
 
     # Matches environments that should not be touched during the translation
 #   $verbatim_env_rx = "\\s*{(verbatim|rawhtml|LVerbatim)[*]?}";
-    $verbatim_env_rx = "\\s*(\\w*[Vv]erbatim|lstlisting|rawhtml|imagesonly|tex2html_code)[*]?";
+    $verbatim_env_rx = "\\s*(\\w*[Vv]erbatim|lstlisting|minted|rawhtml|imagesonly|tex2html_code)[*]?";
     $image_env_rx = "\\s*(picture|xy|diagram)[*]?";
     $keepcomments_rx = "\\s*(picture|makeimage|xy|diagram)[*]?";
 
