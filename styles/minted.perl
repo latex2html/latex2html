@@ -11,7 +11,8 @@
 package main;
 
 $USE_HILITE = 1;
-$SRCHILITE = '/usr/bin/pygmentize';
+# relies on user's PATH to find executable
+$SRCHILITE = 'pygmentize';
 
 # This package very probably may be used in listings
 &do_require_package("color");
@@ -19,12 +20,18 @@ $SRCHILITE = '/usr/bin/pygmentize';
 # This is the main driver subroutine for the minted environment
 sub process_minted {
   local($lst_pre, $lst_post, $lst_cmd, $_) = @_;
-
+  my(%curopts);
   my($lst_pre) = '';
   my($lst_post) = '';
   
+  # read optional args in aquare brackets
+  local($options,$dum) = &get_verb_optional_argument;
+  my(%curopts) = &minted_parse_options($options);
 
-  local($option,$dum) = &get_verb_optional_argument;
+  # default is line numbers on left
+  if ($curopts{'linenos'} eq 'true' && !defined $curopts{'numbers'}) {
+      $curopts{'numbers'} = 'left';
+  }
 
   # first arg of minted is the programming language
   # \begin{minted}{c}
@@ -70,23 +77,11 @@ sub process_minted {
     $framerule = " BORDER=\"$framerule\"";
   }
 
-  # Coloring options group (backgroundcolor, rulecolor)
-  my($bgcolor);
-  $_ = $curopts{'backgroundcolor'};
-  if (/^\s*\\/) {
-    # Translate as a command and extract color value from the HTML tag
-    &lst_translate_option;
-    s/$O\d+$C//go;		# Get rid of bracket id's
-    s/$OP\d+$CP//go;		# Get rid of processed bracket id's
-    # Extract color value or clear the malformed contents
-    $_ = ''
-      unless (s/^\s*<FONT\s+COLOR\s*=\s*"\s*// && s/\s*"\s*>\s*<\/FONT>\s*$//);
-  } else {
-    # Must be a \color command
-    $_ = '';
+  # Coloring options group (bgcolor, rulecolor)
+  my($bgcolor) = '';
+  if (defined $curopts{'bgcolor'}) {
+      $bgcolor = " BGCOLOR=\"$named_color{$curopts{'bgcolor'}}\"";
   }
-  $bgcolor = $_;
-  $bgcolor = " BGCOLOR=\"$bgcolor\"" unless ($bgcolor eq '');
   my($rulecolor);
   $_ = $curopts{'rulecolor'};
   if (/^\s*\\/) {
@@ -105,7 +100,7 @@ sub process_minted {
   $rulecolor = " BORDERCOLOR=\"$rulecolor\"" unless ($rulecolor eq '');
 
   # Evtl use GNU pygmentize to produce colorized output
-  my($lst_lang,$lst_lnum) = ('','');
+  my($lst_lang,$pyg_opts) = ('','');
   if ($USE_HILITE) {
     unless ($SRCHILITE ne '' && -x $SRCHILITE) {
       print "\n\npygmentize executable not available :$SRCHILITE:\n";
@@ -146,7 +141,12 @@ sub process_minted {
       $_ = $lstset_langs{$_} if exists ($lstset_langs{$_});
     }
     $lst_lang = $_;
-    $lst_lnum = "--line-number=' '" if $curopts{'numbers'} eq 'left';
+    $pyg_opts .= ",linenos" if $curopts{'numbers'} eq 'left';
+  }
+
+  # handle style option
+  if ($curopts{'style'}) {
+      $pyg_opts .= ",style=$curopts{'style'}";
   }
 
   $lst_pre  = $bstyle_open.$lst_pre."\n";
@@ -159,9 +159,14 @@ sub process_minted {
     $_ = &revert_to_raw_tex ($_);
     print HILITE $_;
     close (HILITE);
-    my $cmd = "$SRCHILITE -f html -O noclasses -l $lst_lang .$dd${PREFIX}hilite.in";
+    my $cmd = "$SRCHILITE -f html -O noclasses$pyg_opts -l $lst_lang .$dd${PREFIX}hilite.in";
     print "\n\nRunning $cmd\n\n";
     $_ = `$cmd`;
+    if (defined $curopts{'bgcolor'}) {
+	# overrider backgroud from pygmentize
+	s/style="background: #......"//;
+    }
+
 #    unlink (".$dd${PREFIX}hilite.in");
     s/\n$//;				# remove trailing vertical space
   } else {
@@ -245,6 +250,57 @@ sub get_verb_optional_argument {
   }
   # Imitate return of &get_next_optional_argument
   ($next, $pat);
+}
+
+# Option parser
+# handles [key1=val1,key2=val2]
+sub minted_parse_options {
+  local($_) = @_;
+
+  # First get rid of comment marks
+  s/(\\\w+)$comment_mark\d*\s*?\n[ \t]*/$1 \n/go;
+  s/($comment_mark\d*\s*)+\n[ \t]*/\n/go;
+
+  # Find any kinds of brackets to keep them intact
+  # for the case if they might have commas inside
+  my(@fields, @chunks);
+  my($before, $match, $after);
+  while (/$any_next_pair_pr_rx|$any_next_pair_rx4|$opt_arg_rx|$verb_braces_rx/)
+  {
+    ($before, $match, $after) = ($`, $&, $');
+    @chunks = split(/,/, $before);
+    $fields[$#fields] .= shift(@chunks) if @fields;
+    push(@fields, @chunks);
+    $fields[$#fields] .= $match;
+    $_ = $after;
+  }
+  @chunks = split(/,/);
+  $fields[$#fields] .= shift(@chunks) if @fields;
+  push(@fields, @chunks);
+
+  # All options are separated, now split them to option name and value
+  my(%opts);
+  my($par, $val);
+  foreach $field (@fields) {
+      if ($field =~ /=/) {
+	  ($par, $val) = /^\s*(\w+?)\s*=\s*(.*)\s*$/s;
+	  $opts{$par} = $val;
+      } else {
+	  # boolean option
+	  $opts{$field} = 'true';
+      }
+  }
+  %opts;
+}
+# Replace braces with marks and try to interpret this as a bracketed command
+
+sub minted_translate_option {
+  # Modifies $_
+  &mark_string($_);
+  my($br_id) = ++$global{'max_id'};
+  $_ = $O.$br_id.$C.$_.$O.$br_id.$C;
+  $_ = &translate_environments($_);
+  $_ = &translate_commands($_);
 }
 
 1;			# Must be last line

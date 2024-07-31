@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{xcolor}
+\usepackage{minted}
+\begin{document}
+
+\begin{minted}{c}
+int main() {
+  printf("hello, world");
+  return 0;
+}
+\end{minted}
+
+The following should have line numbers.
+
+\begin{minted}[linenos]{c}
+int main() {
+  printf("hello, world");
+  return 0;
+}
+\end{minted}
+
+The following should have a green background.
+
+\begin{minted}[bgcolor=green]{c}
+int main() {
+  printf("hello, world");
+  return 0;
+}
+\end{minted}
+
+The following should have xcode style.
+
+\begin{minted}[style=xcode]{c}
+int main() {
+  printf("hello, world");
+  return 0;
+}
+\end{minted}
+\end{document}
