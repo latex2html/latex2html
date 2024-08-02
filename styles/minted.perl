@@ -99,10 +99,17 @@ sub process_minted {
   $rulecolor = $_;
   $rulecolor = " BORDERCOLOR=\"$rulecolor\"" unless ($rulecolor eq '');
 
+  # Line numbering (numbers,stepnumber,numberfirstline,numbersep,firstnumber)
+  my($i, $counter, $cline, $nlines);
+  $cline = '';
+  $i = $counter = $nlines = 0;
+  my($step) = sprintf("%.0f", ($curopts{'stepnumber'} || 1 ));
+  my($incr) = $step<=>0;
+
   # Evtl use GNU pygmentize to produce colorized output
   my($lst_lang,$pyg_opts) = ('','');
   if ($USE_HILITE) {
-    unless ($SRCHILITE ne '' && -x $SRCHILITE) {
+    unless ($SRCHILITE ne '' && system("$SRCHILITE -V") == 0) {
       print "\n\npygmentize executable not available :$SRCHILITE:\n";
       print "Generating listings via builtin engine\n\n";
       &write_warnings("\npygmentize executable not available");
