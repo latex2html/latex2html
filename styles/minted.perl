@@ -33,6 +33,8 @@
 
 package main;
 
+my $MINTED_HILITE = 1;
+
 # This package very probably may be used in minted
 &do_require_package("color");
 
@@ -275,7 +277,7 @@ sub process_minted {
 
   # Evtl use Pygments or GNU source-highlight to produce colorized output
   my($lst_lnum,$mint_style) = ('','');
-  if ($USE_HILITE) {
+  if ($MINTED_HILITE) {
     unless ($SRCHILITE ne '' && -x $SRCHILITE) {
       if ($SRCHILITE ne '') {
 	print "\n\n$SRCHILITE cannot be executed\n";
@@ -286,19 +288,19 @@ sub process_minted {
       }
       print "Generating listings via builtin engine\n\n";
       &write_warnings("Generating listings via builtin engine");
-      $USE_HILITE = 0;
+      $MINTED_HILITE = 0;
     }
   }
-  if ($USE_HILITE) {
+  if ($MINTED_HILITE) {
     unless (open (HILITE, ">.$dd${PREFIX}hilite.in")) {
       print "\n\nCannot create pygmentize or source-highlight input file: $!\n";
       print "Generating listings via builtin engine\n\n";
       &write_warnings("\nCannot create pygmentize or source-highlight input file: $!");
       &write_warnings("Generating listings via builtin engine");
-      $USE_HILITE = 0;
+      $MINTED_HILITE = 0;
     }
   }
-  if ($USE_HILITE) {
+  if ($MINTED_HILITE) {
     $lst_pre  =~ s/<PRE[^>]*>//;# highlighting engine inserts <PRE> by itself
     $lst_post =~ s/<\/PRE>//;
     # evtl language rewriting (for source-highlight only)
@@ -319,7 +321,7 @@ sub process_minted {
 
   $_ = $contents;
 
-  if ($USE_HILITE) {
+  if ($MINTED_HILITE) {
     # Pygments and source-highlight can generate line numbers by themselves
     s/^\n//;				# remove leading vertical space
     $_ = &revert_to_raw_tex ($_);
@@ -464,7 +466,7 @@ sub process_mint {
 
   # Evtl use Pygments or GNU source-highlight to produce colorized output
   my($lst_lnum,$mint_style) = ('','');
-  if ($USE_HILITE) {
+  if ($MINTED_HILITE) {
     unless ($SRCHILITE ne '' && -x $SRCHILITE) {
       if ($SRCHILITE ne '') {
 	print "\n\n$SRCHILITE cannot be executed\n";
@@ -475,19 +477,19 @@ sub process_mint {
       }
       print "Generating listings via builtin engine\n\n";
       &write_warnings("Generating listings via builtin engine");
-      $USE_HILITE = 0;
+      $MINTED_HILITE = 0;
     }
   }
-  if ($USE_HILITE) {
+  if ($MINTED_HILITE) {
     unless (open (HILITE, ">.$dd${PREFIX}hilite.in")) {
       print "\n\nCannot create pygmentize or source-highlight input file: $!\n";
       print "Generating listings via builtin engine\n\n";
       &write_warnings("\nCannot create pygmentize or source-highlight input file: $!");
       &write_warnings("Generating listings via builtin engine");
-      $USE_HILITE = 0;
+      $MINTED_HILITE = 0;
     }
   }
-  if ($USE_HILITE) {
+  if ($MINTED_HILITE) {
     $lst_pre  =~ s/<PRE[^>]*>//;# highlighting engine inserts <PRE> by itself
     $lst_post =~ s/<\/PRE>//;
     # evtl language rewriting (for source-highlight only)
@@ -508,7 +510,7 @@ sub process_mint {
 
   $_ = $contents;
 
-  if ($USE_HILITE) {
+  if ($MINTED_HILITE) {
     # Pygments and source-highlight can generate line numbers by themselves
     s/^\n//;				# remove leading vertical space
     $_ = &revert_to_raw_tex ($_);
@@ -597,7 +599,7 @@ sub process_mintinline {
 
   # Evtl use Pygments or GNU source-highlight to produce colorized output
   my($mint_style) = '';
-  if ($USE_HILITE) {
+  if ($MINTED_HILITE) {
     unless ($SRCHILITE ne '' && -x $SRCHILITE) {
       if ($SRCHILITE ne '') {
 	print "\n\n$SRCHILITE cannot be executed\n";
@@ -608,19 +610,19 @@ sub process_mintinline {
       }
       print "Generating listings via builtin engine\n\n";
       &write_warnings("Generating listings via builtin engine");
-      $USE_HILITE = 0;
+      $MINTED_HILITE = 0;
     }
   }
-  if ($USE_HILITE) {
+  if ($MINTED_HILITE) {
     unless (open (HILITE, ">.$dd${PREFIX}hilite.in")) {
       print "\n\nCannot create pygmentize or source-highlight input file: $!\n";
       print "Generating listings via builtin engine\n\n";
       &write_warnings("\nCannot create pygmentize or source-highlight input file: $!");
       &write_warnings("Generating listings via builtin engine");
-      $USE_HILITE = 0;
+      $MINTED_HILITE = 0;
     }
   }
-  if ($USE_HILITE) {
+  if ($MINTED_HILITE) {
     # evtl language rewriting (for source-highlight only)
     $lexer = 'text' if $lexer eq '';
     unless ($SRCHILITE =~ /pygmentize/) {
