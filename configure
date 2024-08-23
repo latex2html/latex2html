@@ -106,9 +106,9 @@ ac_help="$ac_help
 ac_help="$ac_help
   --with-pnmpad=PATH      path/name of the pnmpad executable"
 ac_help="$ac_help
-  --with-pnmrotate=PATH      path/name of the pnmrotate executable"
+  --with-pnmrotate=PATH   path/name of the pnmrotate executable"
 ac_help="$ac_help
-  --with-pnmscale=PATH      path/name of the pnmscale executable"
+  --with-pnmscale=PATH    path/name of the pnmscale executable"
 ac_help="$ac_help
   --with-pbmmake=PATH     path/name of the pbmmake executable"
 ac_help="$ac_help
@@ -116,7 +116,7 @@ ac_help="$ac_help
 ac_help="$ac_help
   --with-pnmtopng=PATH    path/name of the pnmtopng executable"
 ac_help="$ac_help
-  --with-tifftopnm=PATH    path/name of the tifftopnm executable"
+  --with-tifftopnm=PATH   path/name of the tifftopnm executable"
 ac_help="$ac_help
   --with-anytopnm=PATH    path/name of the anytopnm executable"
 ac_help="$ac_help
@@ -130,11 +130,13 @@ ac_help="$ac_help
 ac_help="$ac_help
   --with-xwdtopnm=PATH    path/name of the xwdtopnm executable"
 ac_help="$ac_help
-  --with-ppmtojpeg=PATH    path/name of the ppmtojpeg executable"
+  --with-ppmtojpeg=PATH   path/name of the ppmtojpeg executable"
 ac_help="$ac_help
   --with-giftool=PATH     path/name of the giftool executable"
 ac_help="$ac_help
   --with-giftrans=PATH    path/name of the giftrans executable"
+ac_help="$ac_help
+  --with-srchilite=PATH   path/name of pygmentize or source-highlight"
 
 # Initialize some variables set by options.
 # The variables have the same names as the options, with
@@ -1134,6 +1136,14 @@ else
   with_giftrans=${GIFTRANS:-}
 fi
 
+# Check whether --with-srchilite or --without-srchilite was given.
+if test "${with_srchilite+set}" = set; then
+  withval="$with_srchilite"
+  :
+else
+  with_srchilite=${SRCHILITE:-}
+fi
+
 
 
 if test -n "$PERL"; then
@@ -1296,7 +1306,8 @@ $PERL $srcdir/config/config.pl \
   XWDTOPNM=$with_xwdtopnm \
   PPMTOJPEG=$with_ppmtojpeg \
   GIFTOOL=$with_giftool \
-  GIFTRANS=$with_giftrans
+  GIFTRANS=$with_giftrans \
+  SRCHILITE=$with_srchilite
 
 if test "$?" != "0"; then
   exit 1

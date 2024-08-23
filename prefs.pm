@@ -383,6 +383,9 @@ $prefs{'GIFTOOL'} = 'giftool';
 # the giftrans executable needed for making GIFs transparent
 $prefs{'GIFTRANS'} = 'giftrans';
 
+# either pygmentize or source-highlight executable needed for colorized listings
+$prefs{'SRCHILITE'} = 'pygmentize,source-highlight,pygmentize3,pygmentize2';
+
 # to speed things up, pstoimg issues piped commands. This may fail on
 # some systems. On unsafe systems, this is automatically set to 0.
 # Say 1 for pipe usage and 0 for no pipes.

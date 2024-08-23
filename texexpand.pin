@@ -14,8 +14,9 @@
 
 # Recognizes \documentclass, \documentstyle, \usepackage, \RequirePackage,
 # \begin{verbatim}...\end{verbatim}, \begin{lstlisting}...\end{lstlisting},
+# \begin{minted}...\end{minted},
 # %begin{latexonly}...%end{latexonly}, \begin{latexonly}...\end{latexonly},
-# \input, \include, \verb, \lstinline, \latex
+# \input, \include, \verb, \lstinline, \mintinline, \mint, \latex
 # \endinput, \end{document}
 # \includecomment, \excludecomment
 # \begin{"to exclude"}, \end{"to exclude"}
@@ -42,8 +43,9 @@
 #  d) %begin{any}
 #  e) \begin{verbatim}
 #  f) \begin{lstlisting}
-#  g) \begin{latexonly}
-#  h) %begin{latexonly}
+#  g) \begin{minted}
+#  h) \begin{latexonly}
+#  i) %begin{latexonly}
 # 
 # a)-d) cause texexpand to drop its contents, it will not show up in the
 # output file. You can use this to 'comment out' a bunch of files, say.
@@ -68,17 +70,17 @@
 # 3. [%\]begin{"to exclude"} and [%\]end{"to exclude"} have to be on a
 #    separate line.
 #    Anything between these tags (including the tags) is discarded.
-# 4. \begin{verbatim/verbatim*/lstlisting} and
-#    \end{verbatim/verbatim*/lstlisting} have to be on a separate line.
+# 4. \begin{verbatim/verbatim*/lstlisting/minted} and
+#    \end{verbatim/verbatim*/lstlisting/minted} have to be on a separate line.
 #    Anything between these tags (including the tags) is not expanded.
 # 5. The scope of any such tags may extend over several files.
 #    The opening tag for latexonly may occur on a different include level
 #    than the closing tag.
-#    The opening tag for verbatim/lstlisting/"to exclude" must occur
+#    The opening tag for verbatim/lstlisting/minted/"to exclude" must occur
 #    within the same file than the closing tag.
 # 6. Warnings are printed when the document has been parsed and open
 #    tags remain.
-# 7. When in a "to exclude"/verbatim/lstlisting environment, texexpand
+# 7. When in a "to exclude"/verbatim/lstlisting/minted environment, texexpand
 #    won't recognize ANY command except the corresponding closing tag.
 #    There cannot be any nested constructions.
 #    This behaviour is identical to that of LaTeX.
@@ -90,7 +92,8 @@
 # 11. Everything behind a `%' that isn't preceded by a `\' is regarded as
 #     a comment, i.e. it is printed but not interpreted.
 # 12. If any command listed in 10. is preceded by an occurrence of
-#     `\verb', `\lstinline' or `\latex' then it is NOT interpreted.
+#     `\verb', `\lstinline', `\mintinline', `\mint', `\latex'
+#     then it is NOT interpreted.
 #     This crashes on lines like this:
 #        blah blah \verb+foo foo+ \input{bar} % bar won't be loaded!
 # 13. Packages provided via \usepackage are handled the same way as
@@ -495,8 +498,8 @@ sub initialise {
 # Create generic regexp's:
 # If this matches before a command, the command is ignored.
     $ignore_cmd_rx =
-#	'(\\latex\W|\\verb|\\lstinline|\\expandafter|\\ifx|\\else\W|[\|\[\@]$)';
-  "(\\\\latex\\W|\\\\verb|\\\\lstinline|\\\\expandafter|\\\\ifx|\\\\else\\W|[\\|\\[\\@]\$)";
+#	'(\\latex\W|\\verb|\\lstinline|\\mintinline|\\mint|\\expandafter|\\ifx|\\else\W|[\|\[\@]$)';
+  "(\\\\latex\\W|\\\\verb|\\\\lstinline|\\\\mintinline|\\\\mint|\\\\expandafter|\\\\ifx|\\\\else\\W|[\\|\\[\\@]\$)";
 # This matches a square bracket pair (typically an option list).
     $options_rx = '(\[[^\]]*\]|)';
 # This matches a single argument.
@@ -537,7 +540,7 @@ sub initialise {
 
 
 sub main {
-# Note that verbatim/lstlisting/latexonly may split over different files!
+# Note that verbatim/lstlisting/minted/latexonly may split over different files!
 # $verbatim is 1 if inside a verbatim environment,
 # $latexonly is > 0 if inside latexonly environments
 # $includelevel indicates the depth of include/input
@@ -602,17 +605,17 @@ sub main {
 #     also would retain its body from LaTeX.
 #     => $active false, $mute true
 #  3) interprete minimal and pass the lines to the out file
-#     This is inside a verbatim, lstlisting or latexonly environment.
+#     This is inside a verbatim, lstlisting, minted or latexonly environment.
 #     The line of course must be at least interpreted to
 #     determine the closing tag.
 #     => $active false, $mute false
 #
 # Any environment may extend over several include files.
-# Any environment except verbatim, lstlisting and latexonly may have its
+# Any environment except verbatim, lstlisting, minted and latexonly may have its
 # opening or closing tag on different input levels.
-# The comment and verbatim/lstlisting environments cannot be nested, as
+# The comment and verbatim/lstlisting/minted environments cannot be nested, as
 # is with LaTeX.
-# We must at least parse verbatim/lstlisting/comment environments in
+# We must at least parse verbatim/lstlisting/minted/comment environments in
 # latexonly environments, to catch fake latexonly tags.
 #
 # The work scheme:
@@ -775,7 +778,7 @@ sub process_file {
 	    $mute=1 unless $latexonly;
 	}
 #	elsif (!$fakeenv && !$verbatim && /\\begin\s*\{\s*verbatim(\*)?\s*\}/) {
-	elsif (!$fakeenv && !$verbatim && /\\begin\s*\{\s*((\w*[Vv]erbatim\w*|lstlisting)\*?)\s*\}/) {
+	elsif (!$fakeenv && !$verbatim && /\\begin\s*\{\s*((\w*[Vv]erbatim\w*|lstlisting|minted)\*?)\s*\}/) {
 	    ($before,$verbatimname) = ($`,$1);
 	    ($active,$verbatim) = (0,1)
 		unless ($before =~ /$ignore_cmd_rx/o);
@@ -847,7 +850,7 @@ sub process_file {
 	    }
 	}
 #	elsif ( /\\end\s*\{\s*verbatim(\*)?\s*\}/) {
-	elsif ( /\\end\s*\{\s*((\w*[Vv]erbatim\w*|lstlisting)\*?)\s*\}/) {
+	elsif ( /\\end\s*\{\s*((\w*[Vv]erbatim\w*|lstlisting|minted)\*?)\s*\}/) {
 	    if ($1 eq $verbatimname) {
 		$verbatim=0;
 		$active = ($latexonly ? 0 : 1);

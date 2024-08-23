@@ -30,6 +30,7 @@ $PDFTOCAIRO = '@PDFTOCAIRO@';	# pdf to svg converter
 $PS2PDF = '@PS2PDF@';	# ps to pdf converter
 $PDFCROP = '@PDFCROP@';	# pdfcrop
 $GS = '@GS@';	# GhostScript
+$SRCHILITE = '@SRCHILITE@';	# pygmentize or source-highlight
 
 #if @PDFLATEX@
 $USE_PDFTEX = 1;	# use pdflatex unless -nouse_pdftex on command line

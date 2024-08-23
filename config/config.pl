@@ -1887,6 +1887,34 @@ if($newcfg{'have_pstoimg'} && $opt{'GIF'} && !$newcfg{'gif_trans'}) {
 }
 
 # --------------------------------------------------------------------------
+# SRCHILITE
+# --------------------------------------------------------------------------
+# used in listings.perl and minted.perl for colorized listings
+
+$newcfg{'SRCHILITE'} = '';
+
+if(1) {
+  my $srchilite = &find_prog(&get_name('SRCHILITE',1));
+  if($srchilite) {
+    $newcfg{'SRCHILITE'} = $srchilite;
+  }
+}
+
+# --------------------------------------------------------------------------
+# SRCHILITE
+# --------------------------------------------------------------------------
+# used in listings.perl and minted.perl for colorized listings
+
+$newcfg{'SRCHILITE'} = '';
+
+if(1) {
+  my $srchilite = &find_prog(&get_name('SRCHILITE',1));
+  if($srchilite) {
+    $newcfg{'SRCHILITE'} = $srchilite;
+  }
+}
+
+# --------------------------------------------------------------------------
 # Pipes
 # --------------------------------------------------------------------------
 

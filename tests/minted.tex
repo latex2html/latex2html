@@ -1,0 +1,32 @@
+% Translation command example to produce listing with syntax highlighting:
+% latex2html -html_version 4.0 -use_pdftex -local_icons -use_hilite minted.tex
+\documentclass{article}
+\usepackage{minted}
+\begin{document}
+\begin{minted}[numbers=left,style=colorful,frame=single,rulecolor=red]{c}
+/************************************************************
+ * Convert 24-bit ASPECT integer into 32-bit native integer *
+ ************************************************************/
+int conv_integer (void *pntr)
+{
+  unsigned      par;
+  INTEGER       *par3000 = (INTEGER *)pntr;
+
+  par = par3000->l | (par3000->m<<8) | (par3000->h<<16);
+  if (par3000->h & 0x80) par |= 0xff000000;             /* negative ? */
+  return (int)par;
+}
+\end{minted}
+Now inline test \mintinline[style=colorful]{c}$if (par3000->h & 0x80) par |= 0xff000000;$ here.
+\setminted{style=colorful,frame=single,rulecolor=red}
+\setminted[perl]{rulecolor=green}
+\usemintedstyle{default}
+\usemintedstyle[perl]{bw}
+\begin{minted}{c}
+printf ("Hello world !\n");
+\end{minted}
+\begin{minted}{perl}
+print "Hello world !\n";
+\end{minted}
+Now test \mint[numbers=left,frame=single,rulecolor=red]{c}$if (par3000->h & 0x80) par |= 0xff000000;$ here.
+\end{document}

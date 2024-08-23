@@ -24,6 +24,8 @@
 # of the LaTeX2HTML main program:
 #
 # %lstset_current
+# %lstset_langs
+# %lstset_pylangs
 # %lstset_style
 # $lst_name
 # $lst_last_counter
@@ -47,7 +49,7 @@ sub do_cmd_lstinputlisting {
   $outer = $_;
 
   local($closures,$reopens) = &preserve_open_tags;
-  my ($verb_pre, $verb_post) = ('<PRE>','</PRE>');
+  my ($verb_pre,$verb_post) = ('<PRE>','</PRE>');
   if ($USING_STYLES) {
     $env_id .= ' CLASS="verbatim"' unless ($env_id =~ /(^|\s)CLASS\s*\=/i);
     $verb_pre =~ s/>/ $env_id>/;
@@ -56,7 +58,7 @@ sub do_cmd_lstinputlisting {
   # %verbatim not coupled to a dbm => will not work in subprocesses, but don't mind
   $verbatim{++$global{'verbatim_counter'}} = $option.$file;
 
-  # Do nothing here, just wrap into a verbatim-like lstlisting environment.
+  # Do nothing here, just wrap into a verbatim-like lstfile environment.
   # File reading and decorating postponed to &process_lstlisting.
   join('', $closures, $verb_pre
        , $verbatim_mark, 'lstfile', $global{'verbatim_counter'}
@@ -323,42 +325,131 @@ sub process_lstlisting {
   $rulecolor = $_;
   $rulecolor = " BORDERCOLOR=\"$rulecolor\"" unless ($rulecolor eq '');
 
+  # Evtl use Pygments or GNU source-highlight to produce colorized output
+  my($lst_lang,$lst_lnum) = ('','');
+  if ($USE_HILITE) {
+    unless ($SRCHILITE ne '' && -x $SRCHILITE) {
+      if ($SRCHILITE ne '') {
+	print "\n\n$SRCHILITE cannot be executed\n";
+	&write_warnings("\n$SRCHILITE cannot be executed");
+      } else {
+	print "\n\npygmentize or source-highlight executable not available\n";
+	&write_warnings("\npygmentize or source-highlight executable not available");
+      }
+      print "Generating listings via builtin engine\n\n";
+      &write_warnings("Generating listings via builtin engine");
+      $USE_HILITE = 0;
+    }
+  }
+  if ($USE_HILITE) {
+    unless (open (HILITE, ">.$dd${PREFIX}hilite.in")) {
+      print "\n\nCannot create pygmentize or source-highlight input file: $!\n";
+      print "Generating listings via builtin engine\n\n";
+      &write_warnings("\nCannot create pygmentize or source-highlight input file: $!");
+      &write_warnings("Generating listings via builtin engine");
+      $USE_HILITE = 0;
+    }
+  }
+  if ($USE_HILITE) {
+    $lst_pre  =~ s/<PRE[^>]*>//;# highlighting engine inserts <PRE> by itself
+    $lst_post =~ s/<\/PRE>//;
+    $_ = $curopts{'language'};
+    s/$O\d+$C//go;		# Get rid of bracket id's
+    s/$OP\d+$CP//go;		# Get rid of processed bracket id's
+    ($option,$dum) = &get_verb_optional_argument;
+    s/\s+//;			# Remove white space and make lowercase
+    $_ = "\L$_";
+    $option =~ s/\s+//;
+    $option = "\L$option";
+    # evtl language rewriting
+    if ($_ eq 'c') {
+      if ($option eq 'sharp') {
+	$_ = 'csharp';
+      } elsif ($option eq 'objective') {
+	$_ = 'objc';
+      }
+    } elsif ($_ eq 'java') {
+      if ($option eq 'aspectj') {
+	$_ = 'aspectj';
+      }
+    } elsif ($_ eq '') {
+      if ($SRCHILITE =~ /pygmentize/) {
+	$_ = 'text';
+      } else {
+	$_ = 'txt';
+      }
+    } else {
+      if ($SRCHILITE =~ /pygmentize/) {
+	$_ = $lstset_pylangs{$_} if exists ($lstset_pylangs{$_});
+      } else {
+	$_ = $lstset_langs{$_} if exists ($lstset_langs{$_});
+      }
+    }
+    $lst_lang = $_;
+    if ($curopts{'numbers'} eq 'left')
+    {
+      if ($SRCHILITE =~ /pygmentize/) {
+	$lst_lnum = ",linenos=table";
+      } else {
+	$lst_lnum = "--line-number=' '";
+      }
+    }
+  }
+
   $lst_pre  = $bstyle_open.$lst_pre."\n";
   $lst_post = "\n".$lst_post.$bstyle_close;
   $_ = $contents;
 
-  # Evtl generate line numbers
-  if ($curopts{'numbers'} eq 'left') {
-    # Insert numbers from the left side.
-    $counter = $fcount-$incr;
-    s/^/$i++; $counter+=$incr;
-    (($counter % $step) && ($curopts{'numberfirstline'} ne 'true' || $i > 1)) ?
+  if ($USE_HILITE) {
+    # Pygments and source-highlight can generate line numbers by themselves
+    s/^\n//;				# remove leading vertical space
+    $_ = &revert_to_raw_tex ($_);
+    print HILITE $_;
+    close (HILITE);
+    if ($SRCHILITE =~ /pygmentize/) {
+      print "\n\nRunning $SRCHILITE $HILITE_OPTS -l $lst_lang -f html -O noclasses,nobackground$lst_lnum .$dd${PREFIX}hilite.in\n\n";
+      $_ = `$SRCHILITE $HILITE_OPTS -l $lst_lang -f html -O noclasses,nobackground$lst_lnum .$dd${PREFIX}hilite.in`;
+      s/<pre\s+style="line-height:\s*\d+%;">/<pre>/;	# clear extra style
+    } else {
+      print "\n\nRunning $SRCHILITE $HILITE_OPTS --failsafe $lst_lnum -s $lst_lang -i .$dd${PREFIX}hilite.in\n\n";
+      $_ = `$SRCHILITE $HILITE_OPTS --failsafe $lst_lnum -s $lst_lang -i .$dd${PREFIX}hilite.in`;
+    }
+    unlink (".$dd${PREFIX}hilite.in");
+    s/\n$//;				# remove trailing vertical space
+  } else {
+    # Evtl generate line numbers by builtin engine
+    if ($curopts{'numbers'} eq 'left') {
+      # Insert numbers from the left side.
+      $counter = $fcount-$incr;
+      s/^/$i++; $counter+=$incr;
+      (($counter % $step) &&
+      ($curopts{'numberfirstline'} ne 'true' || $i > 1)) ?
       ('     ' . ' ' x $nspaces) :
       (sprintf("%5d",$counter) . ' ' x $nspaces)/mge;
-    $lst_last_counter = $counter+$incr;
-    $lst_auto_counter{$lst_name} = $lst_last_counter
-      if ($curopts{'firstnumber'} eq 'auto' && $lst_name ne '');
-  }
-  elsif ($curopts{'numbers'} eq 'right' && $HTML_VERSION > 2.1) {
-    # Inserting right padded numbers for every line is tricky.
-    # Do it as a table with two huge columns with verbatim contents.
-    # But only if HTML version is high enough...
-    s/$/$nlines++;''/mge;
-    for ($counter=$fcount; $i<$nlines; $i++) {
-      $cline .= (($counter % $step) &&
-		 ($curopts{'numberfirstline'} ne 'true' || $i > 0)) ?
-	(' ' x $nspaces . "     \n") :
-	(' ' x $nspaces . sprintf("%d\n",$counter));
-      $counter += $incr;
+      $lst_last_counter = $counter+$incr;
+      $lst_auto_counter{$lst_name} = $lst_last_counter
+	if $curopts{'firstnumber'} eq 'auto' && $lst_name ne '';
+    } elsif ($curopts{'numbers'} eq 'right' && $HTML_VERSION > 2.1) {
+      # Inserting right padded numbers for every line is tricky.
+      # Do it as a table with two huge columns with verbatim contents.
+      # But only if HTML version is high enough...
+      s/$/$nlines++;''/mge;
+      for ($counter=$fcount; $i<$nlines; $i++) {
+	$cline .= (($counter % $step) &&
+		   ($curopts{'numberfirstline'} ne 'true' || $i > 0)) ?
+	  (' ' x $nspaces . "     \n") :
+	  (' ' x $nspaces . sprintf("%d\n",$counter));
+	$counter += $incr;
+      }
+      $lst_last_counter = $counter;
+      $lst_auto_counter{$lst_name} = $lst_last_counter
+	if $curopts{'firstnumber'} eq 'auto' && $lst_name ne '';
+      $cline =~ s/\n$//;
+      $_ = "<TABLE><TR><TD>"
+	.$lst_pre.$_.$lst_post."</TD><TD ALIGN=\"RIGHT\">"
+	.$lst_pre.$cline.$lst_post."</TD></TR></TABLE>";
+      $lst_pre = $lst_post = '';
     }
-    $lst_last_counter = $counter;
-    $lst_auto_counter{$lst_name} = $lst_last_counter
-      if ($curopts{'firstnumber'} eq 'auto' && $lst_name ne '');
-    $cline =~ s/\n$//;
-    $_ = "<TABLE><TR><TD>"
-      .$lst_pre.$_.$lst_post."</TD><TD ALIGN=\"RIGHT\">"
-      .$lst_pre.$cline.$lst_post."</TD></TR></TABLE>";
-    $lst_pre = $lst_post = '';
   }
 
   # Frames, captions and coloring are generated also as a synthetic table
@@ -408,6 +499,83 @@ sub process_lstinline {
   s/$OP\d+$CP//go;		# Get rid of processed bracket id's
   $bstyle_open = $bstyle_close = ''
     unless (s/^\s*((<\w+[^>]*>\s*)+)[^<]*((<\/\w+>\s*)+)$/$bstyle_open=$1;$bstyle_close=$3;''/eo);
+
+  # Evtl use Pygments or GNU source-highlight to produce colorized output
+  my($lst_lang) = '';
+  if ($USE_HILITE) {
+    unless ($SRCHILITE ne '' && -x $SRCHILITE) {
+      if ($SRCHILITE ne '') {
+	print "\n\n$SRCHILITE cannot be executed\n";
+	&write_warnings("\n$SRCHILITE cannot be executed");
+      } else {
+	print "\n\npygmentize or source-highlight executable not available\n";
+	&write_warnings("\npygmentize or source-highlight executable not available");
+      }
+      print "Generating listings via builtin engine\n\n";
+      &write_warnings("Generating listings via builtin engine");
+      $USE_HILITE = 0;
+    }
+  }
+  if ($USE_HILITE) {
+    unless (open (HILITE, ">.$dd${PREFIX}hilite.in")) {
+      print "\n\nCannot create pygmentize or source-highlight input file: $!\n";
+      print "Generating listings via builtin engine\n\n";
+      &write_warnings("\nCannot create pygmentize or source-highlight input file: $!");
+      &write_warnings("Generating listings via builtin engine");
+      $USE_HILITE = 0;
+    }
+  }
+  if ($USE_HILITE) {
+    $_ = $curopts{'language'};
+    s/$O\d+$C//go;		# Get rid of bracket id's
+    s/$OP\d+$CP//go;		# Get rid of processed bracket id's
+    ($option,$dum) = &get_verb_optional_argument;
+    s/\s+//;			# Remove white space and make lowercase
+    $_ = "\L$_";
+    $option =~ s/\s+//;
+    $option = "\L$option";
+    # evtl language rewriting
+    if ($_ eq 'c') {
+      if ($option eq 'sharp') {
+	$_ = 'csharp';
+      } elsif ($option eq 'objective') {
+	$_ = 'objc';
+      }
+    } elsif ($_ eq 'java') {
+      if ($option eq 'aspectj') {
+	$_ = 'aspectj';
+      }
+    } elsif ($_ eq '') {
+      if ($SRCHILITE =~ /pygmentize/) {
+	$_ = 'text';
+      } else {
+	$_ = 'txt';
+      }
+    } else {
+      if ($SRCHILITE =~ /pygmentize/) {
+	$_ = $lstset_pylangs{$_} if exists ($lstset_pylangs{$_});
+      } else {
+	$_ = $lstset_langs{$_} if exists ($lstset_langs{$_});
+      }
+    }
+    $lst_lang = $_;
+    $contents =~ s/^\n//;		# remove leading vertical space
+    $contents = &revert_to_raw_tex ($contents);
+    print HILITE $contents;
+    close (HILITE);
+    if ($SRCHILITE =~ /pygmentize/) {
+      print "\n\nRunning $SRCHILITE $HILITE_OPTS -l $lst_lang -f html -O noclasses,nobackground .$dd${PREFIX}hilite.in\n\n";
+      $contents = `$SRCHILITE $HILITE_OPTS -l $lst_lang -f html -O noclasses,nobackground .$dd${PREFIX}hilite.in`;
+      $contents =~ s/<pre\s+style="line-height:\s*\d+%;">/<pre>/;
+    } else {
+      print "\n\nRunning $SRCHILITE $HILITE_OPTS --failsafe -s $lst_lang -i .$dd${PREFIX}hilite.in\n\n";
+      $contents = `$SRCHILITE $HILITE_OPTS --failsafe -s $lst_lang -i .$dd${PREFIX}hilite.in`;
+    }
+    unlink (".$dd${PREFIX}hilite.in");
+    $contents =~ s/^.*?<pre>//s;	# remove obstructive starting stuff
+    $contents =~ s/<\/pre>.*?$//s;	# remove obstructive trailing stuff
+    $contents =~ s/\n$//;		# remove trailing vertical space
+  }
 
   # Make the actual lstinline output
   $bstyle_open.'<code>'.$contents.'</code>'.$bstyle_close;

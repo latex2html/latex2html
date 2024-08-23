@@ -112,6 +112,13 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#
+#		
+#
+#		- new option -use_hilite
+#		- support minted package
+#		- new option -unicase_titles
+#
 #--------- v2024
 #
 #		- "make clean" removes manual.pdf

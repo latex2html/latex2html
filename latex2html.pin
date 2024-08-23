@@ -286,6 +286,8 @@ unless(GetOptions(\%opt, # all non-linked options go into %opt
         'use_pdftex!',          \$USE_PDFTEX,
         'use_luatex!',          \$USE_LUATEX,
         'use_luadvi!',          \$USE_LUADVI,
+        'use_hilite!',          \$USE_HILITE,
+        'hilite_opts=s',        \$HILITE_OPTS,
         'address=s',            \$ADDRESS,
         'noaddress',
         'subdir!',
@@ -973,6 +975,8 @@ sub open_dbm_database {
 #    dbmopen(%verbatim, "$TMP_${dd}verbatim",0755);
     dbmopen(%verb_delim, "$TMP_${dd}verb_delim",0755);
     dbmopen(%verb_lstopt, "$TMP_${dd}verb_lstopt",0755);
+    dbmopen(%verb_mintopt, "$TMP_${dd}verb_mintopt",0755);
+    dbmopen(%verb_mintlang, "$TMP_${dd}verb_mintlang",0755);
     dbmopen(%expanded,"$TMP_${dd}expanded",0755);
 # Holds max_id, verb_counter, verbatim_counter, eqn_number
     dbmopen(%global, "$TMP_${dd}global",0755);
@@ -1014,6 +1018,8 @@ sub close_dbm_database {
 #    dbmclose(%verbatim); undef %verbatim;
     dbmclose(%verb_delim); undef %verb_delim;
     dbmclose(%verb_lstopt); undef %verb_lstopt;
+    dbmclose(%verb_mintopt); undef %verb_mintopt;
+    dbmclose(%verb_mintlang); undef %verb_mintlang;
     dbmclose(%expanded); undef %expanded;
     dbmclose(%global); undef %global;
     dbmclose(%env_style); undef %env_style;
@@ -1615,13 +1621,29 @@ sub pre_process {
 	    s/\\verb()(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$2"/e ||
 	    s/\\verb(\t\t*)([^*\s])/"<verb$1".++$id.">$2"/e ||
 	    s/\\(lstinline)\s*(\[[^]]*\])?\s*(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$3"/e ||
-	    s/\\(lstinline)\s*(\[[^]]*\])?\s*([^*\s])/"<verb$1".++$id.">$3"/e) {
+	    s/\\(lstinline)\s*(\[[^]]*\])?\s*([^*\s])/"<verb$1".++$id.">$3"/e ||
+	    s/\\(mintinline)\s*(\[[^]]*\])?\s*(\{[^}]*\})\s*(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$4"/e ||
+	    s/\\(mintinline)\s*(\[[^]]*\])?\s*(\{[^}]*\})\s*([^*\s])/"<verb$1".++$id.">$4"/e ||
+	    s/\\(mint)\s*(\[[^]]*\])?\s*(\{[^}]*\})\s*(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$4"/e ||
+	    s/\\(mint)\s*(\[[^]]*\])?\s*(\{[^}]*\})\s*([^*\s])/"<verb$1".++$id.">$4"/e) {
 
 	if ($1 eq 'lstinline') {
 	    #SGE: retain knowledge and options of \lstinline
 	    $del = $3;
 	    $vb_mark = $verblst_mark;
 	    $verb_lstopt{$id} = $2;
+	} elsif ($1 eq 'mintinline') {
+	    #SGE: retain knowledge, options and language of \mintinline
+	    $del = $4;
+	    $vb_mark = $verbmint_mark;
+	    $verb_mintopt{$id} = $2;
+	    $verb_mintlang{$id} = $3;
+	} elsif ($1 eq 'mint') {
+	    #SGE: retain knowledge, options and language of \mint
+	    $del = $4;
+	    $vb_mark = $verbminted_mark;
+	    $verb_mintopt{$id} = $2;
+	    $verb_mintlang{$id} = $3;
 	} else {
 	    $del = $2;
 	    #RRM: retain knowledge of whether \verb* or \verb
@@ -1630,8 +1652,9 @@ sub pre_process {
 	$esc_del = &escape_rx_chars($del);
 	$esc_del = '' if (length($del) > 2);
 
-	# try to find closing delimiter and substitute the complete
-	# statement with $verb_mark or $verbstar_mark or $verblst_mark
+	# try to find closing delimiter and substitute the complete statement
+	# with $verb_mark or $verbstar_mark or $verblst_mark or $verbmint_mark
+	# or $verbminted_mark
 #	s/(<verb[^\d>]*$id>[\Q$del\E])([^$esc_del\n]*)([\Q$del\E]|$comment_mark(\d+)\n?)/
 	s/(<verb[^\d>]*$id>\Q$del\E)([^$esc_del]*?)(\Q$del\E|$comment_mark(\d+)\n?)/
 	    $contents=$2;
@@ -3226,7 +3249,7 @@ sub read_style_info {
     
     if ($style_names) { $envS = "$style_names" }
     elsif (($envS =~ /^pre$/)&&
-	(/^\\begin.*preform($O|$OP)\d+($C|$CP)$verbatim_mark(\w*[vV]erbatim|lstlisting)(\*?)/))
+	(/^\\begin.*preform($O|$OP)\d+($C|$CP)$verbatim_mark(\w*[vV]erbatim|lstlisting|minted)(\*?)/))
 	    { $envS = $3.($4 ? 'star' : '') };
     $env_style{$envS} = " " unless (($style_names)||($env_style{$envS}));
     $env_id = " ID=\"$env_id\"".(($envS) ? " CLASS=\"$envS\"" : '');
@@ -7643,7 +7666,7 @@ EOF
             print STYLESHEET "SPAN.$env\t\t{ $style }\n";
         } elsif ($env =~ /\./) {
             print STYLESHEET "$env\t\t{ $style }\n";
-        } elsif ($env =~ /^(preform|lstlisting|\w*[Vv]erbatim(star)?)$/) {
+        } elsif ($env =~ /^(preform|lstlisting|minted|\w*[Vv]erbatim(star)?)$/) {
             print STYLESHEET "PRE.$env\t\t{ $style }\n";
         } elsif ($env =~ /figure|table|tabular|equation|$array_env_rx/) {
             print STYLESHEET "TABLE.$env\t\t{ $style }\n";
@@ -8159,7 +8182,7 @@ sub replace_sensitive_markers {
     if (defined &replace_verbatim_hook) {&replace_verbatim_hook;}
     else {&replace_verbatim_marks if /$verbatim_mark/;}
     if (defined &replace_verb_hook) {&replace_verb_hook;}
-    else {&replace_verb_marks if /$verb_mark|$verbstar_mark|$verblst_mark/;}
+    else {&replace_verb_marks if /$verb_mark|$verbstar_mark|$verblst_mark|$verbmint_mark|$verbminted_mark/;}
     s/;SPMdollar;/\$/g; s/;SPMtilde;/\~/g; s/;SPMpct;/\%/g;
     s/;SPM/\&/go;
     s/$percent_mark/%/go;
@@ -9071,6 +9094,8 @@ sub replace_verbatim_marks {
 #	"\n".$tmp.(($tmp =~/\n\s*$/s)? '':"\n")!eg;
     s/(<PRE[^>]*>)?$verbatim_mark(lstlisting|lstset|lststyle|lstfile)(\d+)#(<\/PRE>)?\n?/
         &process_lstlisting($1, $4, $2, $verbatim{$3})/eg;
+    s/(<PRE[^>]*>)?$verbatim_mark(minted|setminted|setmintedinline|usemintedstyle|mintfile)(\d+)#(<\/PRE>)?\n?/
+        &process_minted($1, $4, $2, $verbatim{$3})/eg;
 #    s/$verbatim_mark(rawhtml)(\d+)#/$verbatim{$2}/eg; # Raw HTML
     s/$verbatim_mark(imagesonly)(\d+)#//eg; # imagesonly is *not* replaced
     # Raw HTML, but replacements may have protected characters
@@ -9080,6 +9105,7 @@ sub replace_verbatim_marks {
 }
 
 # Actual lstlisting engine, except initialization, moved to styles/listings.perl
+# Actual minted engine, except initialization, moved to styles/minted.perl
 
 # TeX's special characters may have been escaped with a '\'; remove it.
 sub unprotect_raw_html {
@@ -9102,17 +9128,22 @@ sub remove_verbatim_marks {
     s/$verbatim_mark(\w*[Vv]erbatim\w*\*?)(\d+)#//go;
     s/$verbatim_mark(rawhtml|imagesonly)(\d+)#//go;
     s/$verbatim_mark(lstlisting)(\d+)#//go;
+    s/$verbatim_mark(minted)(\d+)#//go;
     s/$verbatim_mark$keepcomments_rx(\d+)#//go;
     s/$unfinished_mark$keepcomments_rx(\d+)#//go;
 }
 
 sub replace_verb_marks {
     # Modifies $_
-    s/($verb_mark|$verbstar_mark|$verblst_mark)(\d+)$verb_mark/
+    s/($verb_mark|$verbstar_mark|$verblst_mark|$verbmint_mark|$verbminted_mark)(\d+)$verb_mark/
 	$code = $verb{$2};
 	$code = &replace_comments($code) if ($code =~ m:$comment_mark:);
 	if ($1 eq $verblst_mark)
 	{$code=&process_lstinline($verb_lstopt{$2},$code);}
+	elsif ($1 eq $verbmint_mark)
+	{$code=&process_mintinline($verb_mintopt{$2},$verb_mintlang{$2},$code);}
+	elsif ($1 eq $verbminted_mark)
+	{$code=&process_mint($verb_mintopt{$2},$verb_mintlang{$2},$code);}
 	else {$code="<code>$code<\/code>";}
 	$code/eg;
 }
@@ -9126,7 +9157,7 @@ sub replace_comments{
 
 sub remove_verb_marks {
     # Modifies $_
-    s/($verb_mark|$verbstar_mark|$verblst_mark)(\d+)$verb_mark//go;
+    s/($verb_mark|$verbstar_mark|$verblst_mark|$verbmint_mark|$verbminted_mark)(\d+)$verb_mark//go;
 }
 
 # This is used by revert_to_raw_tex
@@ -9135,6 +9166,7 @@ sub revert_verbatim_marks {
 #    s/$verbatim_mark(verbatim)(\d+)#/\\begin{verbatim}$verbatim{$2}\\end{verbatim}\n/go;
     s/$verbatim_mark(\w*[Vv]erbatim)(\d+)#/\\begin{$1}\n$verbatim{$2}\\end{$1}\n/go;
     s/$verbatim_mark(lstlisting)(\d+)#/\\begin{lstlisting}\n$verbatim{$2}\\end{lstlisting}\n/go;
+    s/$verbatim_mark(minted)(\d+)#/\\begin{minted}\n$verbatim{$2}\\end{minted}\n/go;
     s/$verbatim_mark(rawhtml)(\d+)#/\\begin{rawhtml}\n$verbatim{$2}\\end{rawhtml}\n/go;
     s/$verbatim_mark(imagesonly|tex2html_code)(\d+)#\n?/$verbatim{$2}/go;
     s/$verbatim_mark$image_env_rx(\d+)#/\\begin{$1}\n$verbatim{$2}\\end{$1}\n/go;
@@ -9146,6 +9178,8 @@ sub revert_verb_marks {
     s/$verbstar_mark(\d+)$verb_mark/\\verb*$verb_delim{$1}$verb{$1}$verb_delim{$1}/go;
     s/$verb_mark(\d+)$verb_mark/\\verb$verb_delim{$1}$verb{$1}$verb_delim{$1}/go;
     s/$verblst_mark(\d+)$verb_mark/\\lstinline$verb_lstopt{$1}$verb_delim{$1}$verb{$1}$verb_delim{$1}/go;
+    s/$verbmint_mark(\d+)$verb_mark/\\mintinline$verb_mintopt{$1}$verb_mintlang{$1}$verb_delim{$1}$verb{$1}$verb_delim{$1}/go;
+    s/$verbminted_mark(\d+)$verb_mark/\\mint$verb_mintopt{$1}$verb_mintlang{$1}$verb_delim{$1}$verb{$1}$verb_delim{$1}/go;
 }
 
 sub replace_cross_ref_marks {
@@ -10258,7 +10292,7 @@ sub get_last_word {
     local($pre_bit);
     if ($lastbit =~/>([^>]*)$/) { 
 	$word = $1; $pre_bit = $`.'>';
-	if ($pre_bit =~ /($verb_mark|$verbstar_mark|$verblst_mark)$/) {
+	if ($pre_bit =~ /($verb_mark|$verbstar_mark|$verblst_mark|$verbmint_mark|$verbminted_mark)$/) {
 	    $word = $lastbit;
 	} elsif ($pre_bit =~ /<\w+_mark>$/) {
 	    $word = $& . $word;
@@ -16305,6 +16339,8 @@ sub initialise {
     $verb_mark = '<tex2html_verb_mark>';
     $verbstar_mark = '<tex2html_verbstar_mark>';
     $verblst_mark = '<tex2html_verblst_mark>';
+    $verbmint_mark = '<tex2html_verbmint_mark>';
+    $verbminted_mark = '<tex2html_verbminted_mark>';
     $image_mark = '<tex2html_image_mark>';
     $mydb_mark =  '<tex2html_mydb_mark>';
     $percent_mark = '<tex2html_percent_mark>';
@@ -16750,7 +16786,23 @@ sub convert_length { # clean
       'framesep'        => '3pt',
       'framerule'       => '0.4pt',
       'backgroundcolor' => '',
-      'rulecolor'       => '' );
+      'rulecolor'       => '',
+      'language'        => '' );
+    # Languages having different names in lstlisting and source-highlight
+    %lstset_langs = (
+      'assembler'   => 'asm',
+      'c++'         => 'cpp',
+      'command.com' => 'bat',
+      'elisp'       => 'el',
+      'make'        => 'makefile' );
+    # Languages having different names in lstlisting and pygmentize
+    %lstset_pylangs = (
+      'ant'         => 'antlr',
+      'assembler'   => 'asm',
+      'c++'         => 'cpp',
+      'caml'        => 'ocaml',
+      'command.com' => 'bat',
+      'modula-2'    => 'modula2' );
     # Option sets defined by lstdefinestyle
     %lstset_style = ();
     # Placeholder for \lstname
@@ -16758,6 +16810,38 @@ sub convert_length { # clean
     # For line counters
     $lst_last_counter = 1;
     %lst_auto_counter = ();
+
+    # Initializations block for verbatim-like minted environment
+    # Actual minted engine moved to styles/minted.perl
+    # Currently default option values for minted environment
+    %minted_current = (
+      'linenos'         => 'false',
+      'numbers'         => 'none',
+      'stepnumber'      => 1,
+      'numberfirstline' => 'false',
+      'numbersep'       => '12pt',
+      'firstnumber'     => 'auto',
+      'style'           => '',
+      'frame'           => 'none',
+      'framesep'        => '3pt',
+      'framerule'       => '0.4pt',
+      'bgcolor'         => '',
+      'rulecolor'       => '' );
+    # Language specific option values for minted environment
+    %minted_lex = ();
+    # Currently default option values for mintinline environment
+    %mintinline_current = ();
+    # Language specific option values for mintinline environment
+    %mintinline_lex = ();
+    # Languages having different names in minted and source-highlight
+    %mint_langs = (
+      'elisp'       => 'el',
+      'make'        => 'makefile',
+      'ocaml'       => 'caml',
+      'text'        => 'txt' );
+    # Languages in minted and pygmentize share the same names
+    # For line counters
+    $mint_last_counter = 1;
 
 
     # Inclusion in this list will cause a command or an environment to be ignored.
@@ -17392,7 +17476,7 @@ sub make_isolatin1_rx {
 
     # Matches environments that should not be touched during the translation
 #   $verbatim_env_rx = "\\s*{(verbatim|rawhtml|LVerbatim)[*]?}";
-    $verbatim_env_rx = "\\s*(\\w*[Vv]erbatim|lstlisting|rawhtml|imagesonly|tex2html_code)[*]?";
+    $verbatim_env_rx = "\\s*(\\w*[Vv]erbatim|lstlisting|minted|rawhtml|imagesonly|tex2html_code)[*]?";
     $image_env_rx = "\\s*(picture|xy|diagram)[*]?";
     $keepcomments_rx = "\\s*(picture|makeimage|xy|diagram)[*]?";
 
@@ -17709,6 +17793,8 @@ S<[ B<->(B<no>)B<use_dvipng> ]>
 S<[ B<->(B<no>)B<use_pdftex> ]>
 S<[ B<->(B<no>)B<use_luatex> ]>
 S<[ B<->(B<no>)B<use_luadvi> ]>
+S<[ B<->(B<no>)B<use_hilite> ]>
+S<[ B<-hilite_opts> I<hilite_opts> ]>
 S<[ B<->(B<no>)B<show_init> ]>
 S<[ B<-init_file> I<Perl_file> ]>
 S<[ B<-up_url> I<up_URL> ]>
@@ -18095,6 +18181,19 @@ Produced PDF output will then be translated into images with GhostScript.
 
 Generate intermediate images with dvilualatex instead of plain latex.
 Produced DVI output will then be translated into images with dvips or dvipng.
+
+=item B<->(B<no>)B<use_hilite>
+
+Additional support for the listings and minted packages: generate colorized
+syntax highlighting of lstlisting/minted environments and lstinline/mintinline
+snippets via the external pygmentize or source-highlight tool. For this option
+to work, either Pygments or GNU source-highlight package must be installed.
+
+=item B<-hilite_opts> I<hilite_opts>
+
+Additional options to pygmentize or GNU source-highlight. See the appropriate
+manpage for the list of possible options, and the console output for the actual
+source highlighting command lines generated by latex2html.
 
 =item B<->(B<no>)B<show_init>
 
