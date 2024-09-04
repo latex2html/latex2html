@@ -114,7 +114,8 @@
 #
 #
 #		
-#
+#		- remove svg from config for pstoimg
+#		  https://bugs.debian.org/1078535
 #		- new option -use_hilite
 #		- support minted package
 #		- new option -unicase_titles

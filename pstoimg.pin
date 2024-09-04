@@ -310,7 +310,7 @@ my $GS_UNROTATE = 'cw'; # pnmflip switch to undo landscape rotation
 #fi
 #-
 # Supported format(s)
-my @IMAGE_TYPES = qw(@IMAGE_TYPES@);
+my @PSTOIMG_TYPES = qw(@PSTOIMG_TYPES@);
 #-
 # Netpbm
 my $PNMCROP = '@PNMCROP@';
@@ -336,7 +336,7 @@ my $PNMFILE = '@PNMFILE@';
 my $PBMMAKE = '@PBMMAKE@';
 #fi
 #-
-#if @IMAGE_TYPES@ =~ /gif/i
+#if @PSTOIMG_TYPES@ =~ /gif/i
 # GIF support
 my $PPMTOGIF = '@PPMTOGIF@';
 #if @GIFTRANS@
@@ -347,7 +347,7 @@ my $GIFTOOL = '@GIFTOOL@';
 #fi
 #fi
 #-
-#if @IMAGE_TYPES@ =~ /png/i
+#if @PSTOIMG_TYPES@ =~ /png/i
 # PNG support
 my $PNMTOPNG = '@PNMTOPNG@';
 #fi
@@ -805,7 +805,7 @@ if($opt{transparent}) {
 
 Instruct pstoimg to render the bitmap in I<type> format. Depending on 
 the local installation, pstoimg is capable of generating either GIF or
-PNG bitmaps. This site features the following types: @IMAGE_TYPES@
+PNG bitmaps. This site features the following types: @PSTOIMG_TYPES@
 
 If omitted, the first type in this list is taken.
 
@@ -813,18 +813,18 @@ If omitted, the first type in this list is taken.
 
 if($opt{type}) {
   $opt{type} = lc($opt{type});
-  die <<"EOF" unless grep($_ eq $opt{type},@IMAGE_TYPES);
+  die <<"EOF" unless grep($_ eq $opt{type},@PSTOIMG_TYPES);
 $prompt: Error: This version of pstoimg does not support
     "$opt{type}" image format.
 EOF
   }
 else {
-  ($opt{type}) = @IMAGE_TYPES; # default image type
+  ($opt{type}) = @PSTOIMG_TYPES; # default image type
   }
 # Support -gif and -png for a transition period
 if($opt{gif}) {
   print qq{$prompt: Warning: The -gif switch is deprecated. Use "-type gif" instead.\n};
-  if(grep($_ eq 'gif',@IMAGE_TYPES)) {
+  if(grep($_ eq 'gif',@PSTOIMG_TYPES)) {
     $opt{type} = 'gif';
     }
   else {
@@ -835,7 +835,7 @@ EOF
   }
 if($opt{png}) {
   print qq{$prompt: Warning: The -png switch is deprecated. Use "-type png" instead.\n};
-  if(grep($_ eq 'png',@IMAGE_TYPES)) {
+  if(grep($_ eq 'png',@PSTOIMG_TYPES)) {
     $opt{type} = 'png';
     }
   else {
@@ -1497,7 +1497,7 @@ sub crop_scale_etc {
 #fi # can justify
 
   my $pnmtoimg;
-#if @IMAGE_TYPES@ =~ /gif/i
+#if @PSTOIMG_TYPES@ =~ /gif/i
   if($opt{type} eq 'gif') {
     $pnmtoimg = $PPMTOGIF;
 #if @gif_interlace@ eq 'netpbm'
@@ -1512,7 +1512,7 @@ sub crop_scale_etc {
 #fi
   }
 #fi - gif
-#if @IMAGE_TYPES@ =~ /png/i
+#if @PSTOIMG_TYPES@ =~ /png/i
   if($opt{type} eq 'png') {
     $pnmtoimg = $PNMTOPNG;
     if($INTERLACE) {
@@ -1592,7 +1592,7 @@ sub banner {
 }
 
 sub print_version {
-  my $formats = join(',',@IMAGE_TYPES);
+  my $formats = join(',',@PSTOIMG_TYPES);
   print <<"EOM";
 $prompt
 part of LaTeX2HTML Release V$RELEASE.

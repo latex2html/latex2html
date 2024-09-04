@@ -1616,20 +1616,25 @@ if(1) {
 }
 
 
-$newcfg{'IMAGE_TYPES'} = '';
+$newcfg{'IMAGE_TYPES'} = '';	# types for latex2html, subset of svg, png, gif
+$newcfg{'PSTOIMG_TYPES'} = '';	# types for pstoimg, subset of png, gif
 
 if($newcfg{'have_pstoimg'}) {
   my @imgtypes = ();
+  my @pstoimgtypes = ();
   if($opt{'SVG'}) {
     push(@imgtypes,'svg');
   }
   if($opt{'PNG'}) {
     push(@imgtypes,'png');
+    push(@pstoimgtypes,'png');
   }
   if($opt{'GIF'}) {
     push(@imgtypes,'gif');
+    push(@pstoimgtypes,'gif');
   }
   $newcfg{'IMAGE_TYPES'} = join(' ',@imgtypes);
+  $newcfg{'PSTOIMG_TYPES'} = join(' ',@pstoimgtypes);
 }
 
 # --------------------------------------------------------------------------
