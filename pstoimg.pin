@@ -1205,7 +1205,6 @@ EOF
 #fi
     print "GS>$bbx $bby translate\n" if($have_geometry);
     print "GS>($gsfile) run\n";
-    print "GS>showpage\n" if ($epsf);
     print "GS>quit\n";
     }
   open (GS, "|$GS $gs_quiet -dNOSAFER -sDEVICE=$GSDEVICE $gs_size $gs_density $gs_aalias $gs_out $out_redirect");
@@ -1214,7 +1213,6 @@ EOF
 #fi
   print GS "$bbx $bby translate\n" if ($have_geometry);
   print GS "($gsfile) run\n";
-  print GS "showpage\n" if ($epsf);
   print GS "quit\n";
 #if !@texlive@ && @NULLFILE@
   print "\n" if($opt{debug});
