@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- allow "-dir ." and "-rootdir ."
 #		- remove extra "showpage" from pstoimg
 #		  https://bugs.debian.org/1078536
 #		- remove svg from config for pstoimg

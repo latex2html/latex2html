@@ -805,8 +805,8 @@ sub driver {
 	$FILE =~ s/\.[^\.]*$//; ## AYS
 	$DESTDIR = ''; # start at empty
 	if ($FIXEDDIR) {
-	    $DESTDIR = $FIXEDDIR unless ($FIXEDDIR eq '.');
-	    if (($ROOTED)&&!($texfilepath eq $orig_cwd)) {
+	    $DESTDIR = $FIXEDDIR;
+	    if ($ROOTED) {
 		$DESTDIR .= $dd . $FILE unless $NO_SUBDIR;
 	    };
 	} elsif ($texfilepath eq $orig_cwd) {
