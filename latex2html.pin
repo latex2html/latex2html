@@ -805,6 +805,9 @@ sub driver {
 	$FILE =~ s/\.[^\.]*$//; ## AYS
 	$DESTDIR = ''; # start at empty
 	if ($FIXEDDIR) {
+	    # $FIXEDDIR is compared to $DESTDIR later
+	    #  so both need to be absolute paths
+	    $FIXEDDIR = L2hos->Make_directory_absolute($FIXEDDIR);
 	    $DESTDIR = $FIXEDDIR;
 	    if ($ROOTED) {
 		$DESTDIR .= $dd . $FILE unless $NO_SUBDIR;
@@ -1345,7 +1348,8 @@ sub deal_with_texinputs {
 sub absolutize_path {
     my ($path) = @_;
     my $npath = '';
-    foreach $dir (split /$envkey/o, $path) {
+    foreach $dir (split /$envkey+/o, $path) {
+	# split regexp is designed to skip empty fields
         $npath .= L2hos->Make_directory_absolute($dir) . $envkey;
     }
     $npath =~ s/$envkey$//;
