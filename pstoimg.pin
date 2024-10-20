@@ -969,7 +969,7 @@ if everything went all right
 
 =cut
 
-exit $exit ? 1 : 0;
+exit ($exit ? 1 : 0);
 
 ##############################################################################
 # Subroutines

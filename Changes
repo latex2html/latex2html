@@ -112,6 +112,8 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- fix pstoimg operator precedence bug
+#		  https://bugs.debian.org/1085309
 #		- allow "-dir ." and "-rootdir ."
 #		- remove extra "showpage" from pstoimg
 #		  https://bugs.debian.org/1078536
