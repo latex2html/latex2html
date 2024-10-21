@@ -112,6 +112,8 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#--------- v2024.2
+#
 #		- fix pstoimg operator precedence bug
 #		  https://bugs.debian.org/1085309
 #		- allow "-dir ." and "-rootdir ."
