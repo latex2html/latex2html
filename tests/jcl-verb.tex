@@ -64,6 +64,7 @@
 %%	not. Hence the subclasses:
 %%	c11): $del is \w
 %%	c12): $del is \W
+%%	c13): $del is &
 %%
 %%     c2): \\verb[$del][^$del]*
 %%	not a \verb statement
@@ -155,6 +156,7 @@ Test suite for the verb substitution task in pre_process.
 %%	not. Hence the subclasses:
 %%	c11): $del is \w
 %%	c12): $del is \W
+%%	c13): $del is &
 %%
 %%     c2): \\verb[$del][^$del]*
 %%	not a \verb statement
@@ -218,6 +220,8 @@ testc11
 
 testc12 
 
+testc13
+
 testd111 
 
 testd111 
@@ -280,6 +284,9 @@ test2 test3 test4\ \\\ \
 
 %%% c12): correct \W delimiter, should pass
 \verb/testc12/
+
+%%% c13): correct & delimiter, should pass
+\verb&testc13&
 
 %%% c2): no closing delimiter, should fail
 %\verb_testc2

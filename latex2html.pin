@@ -1659,8 +1659,8 @@ sub pre_process {
 	# try to find closing delimiter and substitute the complete statement
 	# with $verb_mark or $verbstar_mark or $verblst_mark or $verbmint_mark
 	# or $verbminted_mark
-#	s/(<verb[^\d>]*$id>[\Q$del\E])([^$esc_del\n]*)([\Q$del\E]|$comment_mark(\d+)\n?)/
-	s/(<verb[^\d>]*$id>\Q$del\E)([^$esc_del]*?)(\Q$del\E|$comment_mark(\d+)\n?)/
+	#	use non-greedy (.*?) to end as soon as we see 2nd delimiter
+	s/(<verb[^\d>]*$id>\Q$del\E)(.*?)(\Q$del\E|$comment_mark(\d+)\n?)/
 	    $contents=$2;
 	    if ($4) { $verb_rerun = 1;
 		join('', "\\verb$del", $contents, $comments{$4})

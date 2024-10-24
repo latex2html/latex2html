@@ -113,6 +113,7 @@
 # the top.
 #
 #
+#		- fix \verb&A&
 #		- avoid processing eqnarray* as one image,
 #                 make layout consistent with eqnarray
 #
