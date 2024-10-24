@@ -112,6 +112,10 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#
+#		- avoid processing eqnarray* as one image,
+#                 make layout consistent with eqnarray
+#
 #--------- v2024.2
 #
 #		- fix pstoimg operator precedence bug

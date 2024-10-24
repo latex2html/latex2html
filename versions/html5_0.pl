@@ -1469,7 +1469,7 @@ sub do_env_eqnarray {
 	if (($DISP_SCALE_FACTOR)&&($DISP_SCALE_FACTOR >= 1.2 ));
     $failed = 1; # simplifies the next call
     ($labels, $comment, $_) = &process_math_env($math_mode,$_);
-    $failed = 0 unless ($no_eqn_numbers);
+    $failed = 0;
     if ((($failed)&&($NO_SIMPLE_MATH))
 	||(/$htmlimage_rx|$htmlimage_pr_rx/)) {
 #	||((/$htmlimage_rx|$htmlimage_pr_rx/)&&($& =~/thumb/))) {
@@ -1544,7 +1544,7 @@ sub do_env_eqnarray {
 	    $return .= $slcell;
 #	    if (s/\\lefteqn$OP(\d+)$CP(.*)$OP\1$CP/ $2 /) {
 	    if (s/\\lefteqn//) {
-		$return .= "\"LEFT\" COLSPAN=\"3\">";
+		$return .= "LEFT\" COLSPAN=\"3\">";
 		s/(^\s*|$html_specials{'&'}|\s*$)//gm;
 		if (($NO_SIMPLE_MATH)||($doimage)||($failed)) {
 		    $_ = (($_)? &process_math_in_latex(
