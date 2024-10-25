@@ -10945,7 +10945,6 @@ sub iso_map {
 	# we need to convert this char to an 8-bit character
 	if ($enc =~ /^\&\#(\d{3});$/ && ($1<=255)) { $enc = chr($1) }
     }
-    if ($USE_ENTITY_NAMES && $enc) { return(";SPM$char$kind;") }
     if ($enc) {
 	$ISOLATIN_CHARS = 1; $enc;
     } elsif (!$image_made{"$char$kind"}) {
@@ -15664,7 +15663,8 @@ sub accent_safe_for_ij {
 	# Accent of this form: "\^{\i}rest" or not an accent on i nor j
 	($arg) =  &get_next_pair_or_char_pr;
     }
-    $arg =~ s/([^\s\\<])/$first_char = $1; ''/eo;
+    # pull out first char of remainder, which may be something like &#305;
+    $arg =~ s/(\&\#\d+\;|[^\s\\<])/$first_char = $1; ''/eo;
 #   print STDOUT "\nACCENT1 type:$type arg:|${arg}| first_char: |$first_char| $ij_cmd 
 #	, $ACCENT_IMAGES\n";
 

@@ -113,6 +113,8 @@
 # the top.
 #
 #
+#		- fix \'{\i}
+#		- switch --entities no longer makes accents like &iacute;
 #		- fix \verb&A&
 #		- avoid processing eqnarray* as one image,
 #                 make layout consistent with eqnarray
