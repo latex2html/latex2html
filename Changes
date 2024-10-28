@@ -113,6 +113,8 @@
 # the top.
 #
 #
+#		- generate a numeric char reference for chars not found in
+#		  the output character encoding.
 #		- fix \'{\i}
 #		- switch --entities no longer makes accents like &iacute;
 #		- fix \verb&A&

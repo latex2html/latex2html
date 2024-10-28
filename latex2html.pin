@@ -9660,23 +9660,12 @@ sub set_depth_levels {
 # Now ignores accents which cannot be translated to ISO-LATIN-1 characters
 # Also replaces ?' and !' ....
 sub replace_strange_accents { 
-    &real_replace_strange_accents(@_); # if ($CHARSET =~ /8859[_\-]1$/);
+    &real_replace_strange_accents(@_);
 }
 sub real_replace_strange_accents {
     # Modifies $_;
     s/\?`/&iso_map("iquest", "")/geo;
     s/!`/&iso_map("iexcl", "")/geo;
-    s/\\\^\\i /&iso_map("icirc", "")/geo;
-    my ($charset) = "${CHARSET}_character_map_inv";
-    $charset =~ s/-/_/g;
-    # convert upper 8-bit characters
-    if (%$charset &&($CHARSET =~ /8859[_\-]1$/)) {
-	s/([\200-\377])/
-	    $tmp = $$charset{'&#'.ord($1).';'};
-	    &mark_string($tmp) if ($tmp =~ m!\{!);
-	    &translate_commands($tmp)
-	/egos
-    }
 };
 
 # Creates a new directory or reuses old, perhaps after deleting its contents
@@ -10928,15 +10917,9 @@ sub iso_map {
     my($character_map,$enc);
     local ($this);
 
-    if (($CHARSET =~ /utf/)&&!$NO_UTF) {
-	# utf8 is default output
-	$enc = $iso_10646_character_map{"$char$kind"};
-	if (!$enc && $iso_10646_combining_character_map{"$kind"}) {
-	    # use combining accents for characters not in main table: \dot{A}
-	    $enc = $char.$iso_10646_combining_character_map{"$kind"};
-	}
-    } else {
-	# see if it is a character in the charset
+    if (($CHARSET !~ /utf/) || $NO_UTF) {
+	# for special char sets selected by \usepackage[latin1]{inputenc}
+	# look for the character in special char set
 	$character_map = $CHARSET;
 	$character_map =~ tr/-/_/;
 	eval "\$enc = \$${character_map}_character_map\{\"$char$kind\"\}";
@@ -10944,6 +10927,16 @@ sub iso_map {
 	# numeric character references in html refer to unicode
 	# we need to convert this char to an 8-bit character
 	if ($enc =~ /^\&\#(\d{3});$/ && ($1<=255)) { $enc = chr($1) }
+    }
+    if (!$enc) {
+	# unicode is default output
+	# this section also generates a numeric char reference
+	# for any char not found in the output char set in the section above
+	$enc = $iso_10646_character_map{"$char$kind"};
+	if (!$enc && $iso_10646_combining_character_map{"$kind"}) {
+	    # use combining accents for characters not in main table: \dot{A}
+	    $enc = $char.$iso_10646_combining_character_map{"$kind"};
+	}
     }
     if ($enc) {
 	$ISOLATIN_CHARS = 1; $enc;
