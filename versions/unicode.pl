@@ -418,7 +418,7 @@ $raw_arg_cmds{'oe'} = $raw_arg_cmds{'OE'} = -1 ;
 	'qubuts', '&#1467;',
 	'dagesh', '&#1468;',
 	'meteg', '&#1469;',
-	'maqaf', '&#1470',
+	'maqaf', '&#1470;',
 	'rafe', '&#1471;',
 	'paseq', '&#1472;',
 	'sofpasuq', '&#1475;',
