@@ -113,6 +113,8 @@
 # the top.
 #
 #
+#--------- v2025
+#
 #		- generate a numeric char reference for chars not found in
 #		  the output character encoding.
 #		- fix \'{\i}
