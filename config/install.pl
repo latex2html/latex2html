@@ -295,11 +295,10 @@ my @icon_types = $cfg{'IMAGE_TYPES'} ?
   split(/\s+/,$cfg{'IMAGE_TYPES'}) : qw(gif);
 my $iconrx = join('|', @icon_types);
 
-my $destdir=$ENV{"DESTDIR"};
+my $destdir = $ENV{"DESTDIR"} || '';
 my $dest1 = "$cfg{'SHLIBDIR'}${dd}icons";
-print STDERR "((( $destdir, $dest1 )))\n";
 if((-d "$destdir$dest1" && !-w _) || (-d "$destdir$cfg{'SHLIBDIR'}" && !-w _)) {
-  print STDERR "Error: Cannot install icons in '$dest1': No write permission.\n";
+  print STDERR "Error: Cannot install icons in '$destdir$dest1': No write permission.\n";
   $dest1 = '';
 }
 my $dest2 = $cfg{'ICONSTORAGE'} || '';
