@@ -1,6 +1,5 @@
 %
-% $Id: html.sty,v 1.39 2001/10/01 22:47:06 RRM Exp $
-% LaTeX2HTML Version 2K.1 : html.sty
+% LaTeX2HTML Version 2025 : html.sty
 % 
 % This file contains definitions of LaTeX commands which are
 % processed in a special way by the translator. 
@@ -602,7 +601,16 @@
 \let\hyperciteno=\hypercitenocite
 \let\hyperciteext=\hypercitenocite
 
-\ifx\pdfunknown\relax
+
+% the integration with hyperref is commented out below because it
+% did not work with examples such as
+%
+%  \htmlref{\$ACCENT\_IMAGES}{\$ACCENT\_IMAGES}
+%
+% found in the latex2html manual.  The escaped chars would produce
+% an error when given as an argument to \hyperref.
+%
+%\ifx\pdfunknown\relax
  \renewcommand{\htmlimage}[2][]{}
  \renewcommand{\htmlref}[2][]{#2{\def\tmp{#1}\ifx\tmp\@empty
   \aftergroup\htmlrefdef\else\aftergroup\htmlrefext\fi}}
@@ -611,17 +619,22 @@
  \renewcommand{\htmlcite}[2][]{#2{\def\tmp{#1}\ifx\tmp\@empty
   \aftergroup\htmlcitedef\else\aftergroup\htmlciteext\fi}}
  \newcommand{\htmlciteext}[2][]{}
-\else
- \renewcommand{\htmlimage}[2][]{\hyperimage{#2}}
- \renewcommand{\htmlref}[1][]{\def\htmp@{#1}\ifx\htmp@\@empty
-  \def\htmp@{\htmlrefdef}\else\def\htmp@{\htmlrefext{#1}}\fi\htmp@}
- \newcommand{\htmlrefdef}[2]{\hyperref[hyper][#2]{#1}}
- \newcommand{\htmlrefext}[3]{%
-  \hypertarget{#1}{\hskip2bp}\hyperref[hyper][#3]{#2}}
- \renewcommand{\htmlcite}[2][]{#2{\def\htmp@{#1}\ifx\htmp@\@empty
-  \aftergroup\htmlcitedef\else\aftergroup\htmlciteext\fi}}
- \newcommand{\htmlciteext}[1][]{\cite}
-\fi
+%\else
+% \renewcommand{\htmlimage}[2][]{\hyperimage{#2}}
+% \renewcommand{\htmlref}[1][]{\def\htmp@{#1}\ifx\htmp@\@empty
+%  \def\htmp@{\htmlrefdef}\else\def\htmp@{\htmlrefext{#1}}\fi\htmp@}
+ %%%% here are two options for defining \htmlrefdef
+ %%%% here is the original definition
+ % \newcommand{\htmlrefdef}[2]{\hyperref[hyper][#2]{#1}}
+ %%%% and here is a definition that handles escaped characters
+ % \newcommand{\htmlrefdef}[2]{\bgroup\escapechar-1 \hyperref[hyper][\detokenize{#2}]{\detokenize{#1}} \egroup}
+ %%%%
+% \newcommand{\htmlrefext}[3]{%
+%  \hypertarget{#1}{\hskip2bp}\hyperref[hyper][#3]{#2}}
+% \renewcommand{\htmlcite}[2][]{#2{\def\htmp@{#1}\ifx\htmp@\@empty
+%  \aftergroup\htmlcitedef\else\aftergroup\htmlciteext\fi}}
+% \newcommand{\htmlciteext}[1][]{\cite}
+%\fi
 \newcommand{\htmlcitedef}[1]{ \nocite{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
