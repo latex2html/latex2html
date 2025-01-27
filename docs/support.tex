@@ -28,7 +28,7 @@ The specific requirements are discussed below.)
 \item \appl{Ghostscript} at version 4.02 or later;
 \item \fn{netpbm} library of graphics utilities, version \textsc{1-mar-94}\\
   (check with \fn{pnmcrop} \Cs{version}).
-\item \fn{pdftocairo}, if you want to produce SVG images
+\item \texttt{pdftocairo}, if you want to produce SVG images
       (available through the poppler-utils package)
 \end{itemize}
 
@@ -108,9 +108,7 @@ GIF conversion.
 If you want PNG images, you need \fn{pnmtopng} (current version is 2.31).
 It is not part of \fn{netpbm} and requires \fn{libpng-0.89c.tar.gz} and
 \fn{libz} (1.0.4) (or later versions).
-\fn{pnmtopng} supports transparency and interlace mode.\\
-\appl{Netscape Navigator} as well as \appl{MS IE} do support inlined
-PNG images.
+\fn{pnmtopng} supports transparency and interlace mode.
 \end{itemize}
 
 
@@ -171,17 +169,14 @@ To install the tools required to run the translator, perform the steps
 below. Thanks to Jens Berger (\texttt{jberger@mail.zedat.fu-berlin.de})
 for providing this list!
 \begin{itemize}
-\item install \fn{WinZip};
+\item install {WinZip};
 \item install \TeX/\LaTeXe{} and \fn{dvips};
 \item install \Perl{};\\
-   E.g.\ \fn{ActivePerl} $509$ or higher from \ActiveStateURL.
-   Windows $95$ users will also need \fn{DCOM}, it is listed on
-   that download page, too.
-\item install \appl{Ghostscript};\\
-    E.g.\ \fn{Aladdin GhostScript} $5.50$.
+   E.g.\ {ActivePerl} from \ActiveStateURL.
+\item install \appl{Ghostscript};
 \item install the \fn{netpbm} tools library from \NetpbmWinURL.
 \item unpack \latextohtml{}, e.g.\ under \verb|C:\TEXMF\LATEX2HTML|;
-\item check that the path to \fn{GSWIN32C.EXE} is added to the
+\item check that the path to \texttt{GSWIN32C.EXE} is added to the
   \texttt{PATH} variable in your \texttt{AUTOEXEC.BAT};
 \item with \latextohtml{} $99.1$ or higher, edit \texttt{l2hconf.pin},
   then run \texttt{CONFIG.BAT} to install the translator;\\
@@ -233,7 +228,7 @@ downloaded from \CVSlatest\,.
 \htmlrule\index{source code!compressed}%
 \medskip\noindent
 Having obtained a compressed \fn{tar} version, save it into a file 
-\fn{latex2html-2019.tar.gz} say,
+\texttt{latex2html-2019.tar.gz} say,
 then extract its contents with 
 %begin{latexonly}
 \begin{small}
