@@ -113,6 +113,11 @@
 # the top.
 #
 #
+#		- config.pl: svg support now works when ghostscript
+#		  not installed.
+#		- comment out the hyperref support for the html.sty
+#		  command \htmlref.  manual now compiles with pdflatex.
+#
 #--------- v2025
 #
 #		- generate a numeric char reference for chars not found in

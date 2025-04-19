@@ -791,10 +791,10 @@ $opt{'GIF'} = &is_true(&get_name('GIF'));
 $opt{'PNG'} = &is_true(&get_name('PNG'));
 $opt{'SVG'} = &is_true(&get_name('SVG'));
 
-unless($opt{'GIF'} || $opt{'PNG'}) {
+unless($opt{'GIF'} || $opt{'PNG'} || $opt{'SVG'}) {
   $opt{'IMAGES'} = 0;
   $opt{'have_pstoimg'} = 0;
-  logit("Warning: Both GIF and PNG support disabled. LaTeX2HTML won't generate any images.\n");
+  logit("Warning: SVG, GIF, and PNG support disabled. LaTeX2HTML won't generate any images.\n");
 }
 
 # --------------------------------------------------------------------------
@@ -1591,12 +1591,13 @@ if($opt{'have_pstoimg'}) {
     $newcfg{'have_pstoimg'} = 1;
   }
   else {
-    $newcfg{'have_images'} = $newcfg{'have_pstoimg'} = 0;
-    &warn_no_images();
+    $newcfg{'have_pstoimg'} = 0;
   }
 }
-else {
-  $newcfg{'have_images'} = $newcfg{'have_pstoimg'} = 0;
+
+if (!$opt{'SVG'} && !$opt{'GIF'} && !$opt{'PNG'}){
+    $newcfg{'have_images'} = 0;
+    &warn_no_images();
 }
 
 # --------------------------------------------------------------------------
@@ -1619,23 +1620,22 @@ if(1) {
 $newcfg{'IMAGE_TYPES'} = '';	# types for latex2html, subset of svg, png, gif
 $newcfg{'PSTOIMG_TYPES'} = '';	# types for pstoimg, subset of png, gif
 
-if($newcfg{'have_pstoimg'}) {
-  my @imgtypes = ();
-  my @pstoimgtypes = ();
-  if($opt{'SVG'}) {
+my @imgtypes = ();
+my @pstoimgtypes = ();
+if($opt{'SVG'}) {
     push(@imgtypes,'svg');
-  }
-  if($opt{'PNG'}) {
+}
+if($newcfg{'have_pstoimg'} && $opt{'PNG'}) {
     push(@imgtypes,'png');
     push(@pstoimgtypes,'png');
-  }
-  if($opt{'GIF'}) {
+}
+if($newcfg{'have_pstoimg'} && $opt{'GIF'}) {
     push(@imgtypes,'gif');
     push(@pstoimgtypes,'gif');
-  }
-  $newcfg{'IMAGE_TYPES'} = join(' ',@imgtypes);
-  $newcfg{'PSTOIMG_TYPES'} = join(' ',@pstoimgtypes);
 }
+$newcfg{'IMAGE_TYPES'} = join(' ',@imgtypes);
+$newcfg{'PSTOIMG_TYPES'} = join(' ',@pstoimgtypes);
+
 
 # --------------------------------------------------------------------------
 # PNMCUT
