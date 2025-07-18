@@ -476,7 +476,7 @@ sub do_env_subequations {
     $align = join('', " ALIGN=\""
 	    , (($EQN_TAGS =~ /L/)? 'LEFT' : 'RIGHT'), "\"")
 	unless ($HTML_VERSION < 2.2);
-
+    $env_style{'subequation'} = "width:100%;";
     $latex_body .= join('', "\n\\setcounter{equation}{"
 		, $global{'eqn_number'} , "}\n");
     $_ .= "%EQNO:".$global{'eqn_number'}."\n";

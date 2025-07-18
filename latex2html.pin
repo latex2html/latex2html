@@ -4364,62 +4364,55 @@ sub extract_image_bitmap { # clean
 		L2hos->Symlink("image.$IMAGE_TYPE", "${PREFIX}T$img");
 		$thumbnail = "${PREFIX}T$img";
 	    }
-    } elsif ($cropmarkheight{$name}) {
-        my $p="$TMPDIR$dd$IMAGE_PREFIX$new_num";
-        die $! unless -f "$p.png";
-        &close_dbm_database if $DJGPP;
-        my $imgpixeloverex=72.27/($pt_per_ex{$name}*$DVIPNG_DPI);
-        $imgpixeloverex *=$EXTRA_IMAGE_SCALE if $EXTRA_IMAGE_SCALE ;
-        print "imgpixeloverex=$imgpixeloverex\n" if ($VERBOSITY > 2);
-        if ( $name =~ /figure|table/ and $FIGURE_SCALE_FACTOR) 
+	} elsif ($cropmarkheight{$name}) {
+	    my $p="$TMPDIR$dd$IMAGE_PREFIX$new_num";
+	    die $! unless -f "$p.png";
+	    &close_dbm_database if $DJGPP;
+	    my $imgpixeloverex=72.27/($pt_per_ex{$name}*$DVIPNG_DPI);
+	    $imgpixeloverex *=$EXTRA_IMAGE_SCALE if $EXTRA_IMAGE_SCALE ;
+	    print "imgpixeloverex=$imgpixeloverex\n" if ($VERBOSITY > 2);
+	    if ( $name =~ /figure|table/ and $FIGURE_SCALE_FACTOR) 
             {$imgpixeloverex*= $FIGURE_SCALE_FACTOR;}
-        if ($name =~ /equation|eqnarray|display/){
-            $imgpixeloverex *= $DISP_SCALE_FACTOR if $DISP_SCALE_FACTOR}
-        my $millimeter=int(.04*$DVIPNG_DPI); 
-        if ($TRANSPARENT_FIGURES) {
-	    my $TRANSPARENT_COLOR=
-		$ENV{'TRANSPARENT_COLOR'} || '#FFFFFF';
-	    # The '=' sign before color value specifies the exact color
-	    # and prevents netpbm from selecting other random color
-	    # if the actual image eventually has no transparency.
-	    $transparent= "-transparent \"=$TRANSPARENT_COLOR\"";
-	} else {
-	    $transparent ='';
-	}
-        my $PPMTO=$IMAGE_TYPE=~m/gif/i? $PPMTOGIF : $PNMTOPNG;
-        if ($name =~ /figure|table/) {
-	  L2hos->syswait("$PNGTOPNM $p.png $color_quant >$p.ppm");
-	  L2hos->syswait("$PPMTO --quiet $transparent $p.ppm >${PREFIX}img$new_num.$IMAGE_TYPE");
-	} else {
-	    L2hos->syswait("$PNGTOPNM $p.png|$PNMCROP -sides $color_quant >$p.ppm");
+	    if ($name =~ /equation|eqnarray|display/){
+		$imgpixeloverex *= $DISP_SCALE_FACTOR if $DISP_SCALE_FACTOR}
+	    my $millimeter=int(.04*$DVIPNG_DPI);
+	    if ($TRANSPARENT_FIGURES) {
+		my $TRANSPARENT_COLOR=
+		    $ENV{'TRANSPARENT_COLOR'} || '#FFFFFF';
+		# The '=' sign before color value specifies the exact color
+		# and prevents netpbm from selecting other random color
+		# if the actual image eventually has no transparency.
+		$transparent= "-transparent \"=$TRANSPARENT_COLOR\"";
+	    } else {
+		$transparent ='';
+	    }
+	    my $PPMTO=$IMAGE_TYPE=~m/gif/i? $PPMTOGIF : $PNMTOPNG;
 
-	    L2hos->syswait("$PNGTOPNM $p.png >$p-full.ppm");
-	    L2hos->syswait("$PNMCROP -sides -bottom $p-full.ppm >$p-bot.ppm");
-	    L2hos->syswait("$PNMCROP -sides $p-full.ppm $color_quant >$p.ppm");
+	    L2hos->syswait("$PNGTOPNM $p.png $color_quant >$p.ppm");
 	    L2hos->syswait("$PPMTO --quiet $transparent $p.ppm >${PREFIX}img$new_num.$IMAGE_TYPE");
-	}
-        $edepth{$name}=$ptdepth{$name}/$pt_per_ex{$name};
-	# extra .5pt in depth is border from latex "preview" package
-        print "edepth{$name}=$edepth{$name}\n" if ($VERBOSITY > 2);
-        open PPM,"<$p-full.ppm"; binmode(PPM); read(PPM,$_,30);close PPM;
-        m/^(\d+) (\d+)$/m; 
-	$ehfull = $2;			# full image height in pixels
-        open PPM,"<$p-bot.ppm"; binmode(PPM); read(PPM,$_,30);close PPM;
-        m/^(\d+) (\d+)$/m; 
-	$ehbot = $2;			# image height cropped at bottom
-	# Image should not be cropped at bottom more than latex-preview border
-	$ehshift = ($ehfull-$ehbot)*$imgpixeloverex-0.5/$pt_per_ex{$name};
-	$ehshift = 0
-	    if ($ehfull-$ehbot <= ceil(0.5/$imgpixeloverex/$pt_per_ex{$name}));
-	# Correct image depth if it was cropped at bottom too much
-	$edepth{$name} -= $ehshift;
-        # open PPM,"<$p.ppm"; read(PPM,$_,30);close PPM;
-	# 2019-12-12 shige: 2-44)
-        open PPM,"<$p.ppm"; binmode(PPM); read(PPM,$_,30);close PPM;
-        m/^(\d+) (\d+)$/m; 
-	$eheight{$name}=$2*$imgpixeloverex;	# image height in ex
-        print "eheight{$name}=$ehieight{$name}\n" if ($VERBOSITY > 2);
-        &open_dbm_database if $DJGPP;
+
+	    $edepth{$name}=$ptdepth{$name}/$pt_per_ex{$name};
+	    # extra .5pt in depth is border from latex "preview" package
+	    print "edepth{$name}=$edepth{$name}\n" if ($VERBOSITY > 2);
+	    open PPM,"<$p-full.ppm"; binmode(PPM); read(PPM,$_,30);close PPM;
+	    m/^(\d+) (\d+)$/m;
+	    $ehfull = $2;			# full image height in pixels
+	    open PPM,"<$p-bot.ppm"; binmode(PPM); read(PPM,$_,30);close PPM;
+	    m/^(\d+) (\d+)$/m;
+	    $ehbot = $2;			# image height cropped at bottom
+	    # Image should not be cropped at bottom more than latex-preview border
+	    $ehshift = ($ehfull-$ehbot)*$imgpixeloverex-0.5/$pt_per_ex{$name};
+	    $ehshift = 0
+		if ($ehfull-$ehbot <= ceil(0.5/$imgpixeloverex/$pt_per_ex{$name}));
+	    # Correct image depth if it was cropped at bottom too much
+	    $edepth{$name} -= $ehshift;
+	    # open PPM,"<$p.ppm"; read(PPM,$_,30);close PPM;
+	    # 2019-12-12 shige: 2-44)
+	    open PPM,"<$p.ppm"; binmode(PPM); read(PPM,$_,30);close PPM;
+	    m/^(\d+) (\d+)$/m;
+	    $eheight{$name}=$2*$imgpixeloverex;	# image height in ex
+	    print "eheight{$name}=$ehieight{$name}\n" if ($VERBOSITY > 2);
+	    &open_dbm_database if $DJGPP;
 	} else {
 	    # RRM: deal with size data
  	    if ($width{$name} < 0) {
