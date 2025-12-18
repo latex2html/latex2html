@@ -2417,6 +2417,7 @@ sub translate {
 	    }
 
 	    if ($MULTIPLE_FILES && $ROOTED) {
+		# add subdir for this file
 	        if ($DESTDIR =~ /^\Q$FIXEDDIR\E[$dd$dd]?([^$dd$dd]+)/)
 	            { $CURRENT_FILE = "$1$dd$CURRENT_FILE" };
 	    }
@@ -8030,6 +8031,7 @@ sub add_link {
 #    local($dummy, $file, $title) = split($delim,$toc_section_info{join(' ',@link)});
 
     if ($MULTIPLE_FILES && $ROOTED && $file) {
+	# remove subdir for this file, added in &translate
         if (!($DESTDIR =~ /\Q$FIXEDDIR\E[$dd$dd]?$/)) { $file = "..$dd$file" }
     }
 #    if ($title && ($file ne $current_file || $icon ne $up_visible_mark)) {
@@ -8394,6 +8396,12 @@ sub add_real_child_links {
 		($next_depth, $file, $title) =
 			split($delim,$section_info{$next});
 	    }
+
+	    if ($MULTIPLE_FILES && $ROOTED && $file) {
+		# remove subdir for this file, added in &translate
+		if (!($DESTDIR =~ /\Q$FIXEDDIR\E[$dd$dd]?$/)) { $file = "..$dd$file" }
+	    }
+	    
 	    $root_file = $file unless $root_file;
 	    if ($root_file && $root_file =~ /_mn\./) { $root_file=$` };
 	    # remove any surrounding braces
