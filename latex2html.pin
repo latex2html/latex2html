@@ -945,7 +945,7 @@ sub driver {
         $TEST_MODE = $DESTDIR if($TEST_MODE); # save path
 	$DESTDIR = '';
 	$OUT_NODE = 0 unless $FIXEDDIR;
-	$STYLESHEET = '' if ($STYLESHEET =~ /^\Q$FILE./);
+	$STYLESHEET = undef if ($STYLESHEET =~ /^\Q$FILE./);
     }
     print "\nUnknown commands: " . join(" ", sort keys %unknown_commands)
 	if %unknown_commands;
@@ -2418,8 +2418,8 @@ sub translate {
 
 	    if ($MULTIPLE_FILES && $ROOTED) {
 		# add subdir for this file
-	        if ($DESTDIR =~ /^\Q$FIXEDDIR\E[$dd$dd]?([^$dd$dd]+)/)
-	            { $CURRENT_FILE = "$1$dd$CURRENT_FILE" };
+#	        if ($DESTDIR =~ /^\Q$FIXEDDIR\E[$dd$dd]?([^$dd$dd]+)/)
+#	            { $CURRENT_FILE = "$1$dd$CURRENT_FILE" };
 	    }
 	}
 	&remove_document_env;
@@ -8032,7 +8032,7 @@ sub add_link {
 
     if ($MULTIPLE_FILES && $ROOTED && $file) {
 	# remove subdir for this file, added in &translate
-        if (!($DESTDIR =~ /\Q$FIXEDDIR\E[$dd$dd]?$/)) { $file = "..$dd$file" }
+#        if (!($DESTDIR =~ /\Q$FIXEDDIR\E[$dd$dd]?$/)) { $file = "..$dd$file" }
     }
 #    if ($title && ($file ne $current_file || $icon ne $up_visible_mark)) {
     if ($title && ($file ne $current_file)) {
@@ -8088,7 +8088,7 @@ sub add_link_tag {
 	unless ($title);
 
     if ($MULTIPLE_FILES && $ROOTED && $file) {
-        if (!($DESTDIR =~ /\Q$FIXEDDIR\E[$dd$dd]?$/)) { $file = "..$dd$file" }
+#        if (!($DESTDIR =~ /\Q$FIXEDDIR\E[$dd$dd]?$/)) { $file = "..$dd$file" }
     }
     if ($file && !($file eq $currentfile) && (!$NO_NAVIGATION)) {
 	#RRM: allow user-customisation of the REL attribute
@@ -8399,7 +8399,7 @@ sub add_real_child_links {
 
 	    if ($MULTIPLE_FILES && $ROOTED && $file) {
 		# remove subdir for this file, added in &translate
-		if (!($DESTDIR =~ /\Q$FIXEDDIR\E[$dd$dd]?$/)) { $file = "..$dd$file" }
+#		if (!($DESTDIR =~ /\Q$FIXEDDIR\E[$dd$dd]?$/)) { $file = "..$dd$file" }
 	    }
 	    
 	    $root_file = $file unless $root_file;
