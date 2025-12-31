@@ -987,7 +987,8 @@ if($opt{'IMAGES'}) {
     foreach $veropt (@tryopts) {
       my ($stat,$msg,$err) = &get_out_err("$dvips $veropt");
       $msg .= $err || '';
-      if(!$stat && $msg =~ /(?:^| )dvips(?:\(k\)|k|)\s*(\d+[.]?\d*[A-Z]?)/is) {
+      if(!$stat && ( $msg =~ /(?:^| )dvips(?:\(k\)|k|)\s*(\d+[.]?\d*[A-Z]?)/is ||
+		     $msg =~ /(?:^| )MiKTeX\s*(\d+[.]?\d*[A-Z]?)/is ) ) {
         $version = $1;
         last;
       }
