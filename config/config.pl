@@ -1164,12 +1164,19 @@ if($opt{'have_pstoimg'}) {
 
       while (<GS>) {
         chomp;
-        if($flag == 0 && /Ghostscript\s*(?:Version|(?:PRE-|BETA |TESTER )RELEASE|)\s*(\d+[.]?\d*)/i) {
+        if($flag == 0 &&
+	   ( /Ghostscript\s*(?:Version|(?:PRE-|BETA |TESTER )RELEASE|)\s*(\d+[.]?\d*)/i ||
+	     /Version:\s*(\d+[.]?\d*)/i	# MikTeX version string
+	   ) ) {
           $gs_version = $1;
           $flag = 1;
         }
         elsif($flag && /^\s*Available devices/i) {
           $flag = 2; # Now look for the devices
+        }
+        elsif($flag && /^\s*Devices: /i) {
+	  $flag = 2; # MikTeX devices section, first line includes devices
+	  push(@gs_devs,split(/\s+/,$1));
         }
         elsif($flag && /^\s*Search path/i) {
           $flag = 3; # Now look for the gs lib path
