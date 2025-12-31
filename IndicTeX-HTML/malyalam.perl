@@ -221,7 +221,6 @@ sub do_cmd_dollar { "\$".@_[0] }
 sub do_env_pre_mmtr {
     local($_) = @_;
     open(MMTR,">mmtr.tmp") || print "\n *** cannot open mmtr.tmp ***" ;
-	binmode MMTR;
     print MMTR "\$\$", &revert_to_raw_tex($_), "\$\$";
     close MMTR;
     &syswait("$PATC -p $MMDIR${dd}mm.pat mmtr.tmp mmtr.tmp1");

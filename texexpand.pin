@@ -558,7 +558,6 @@ sub main {
     if($opt{save_styles}) {
 	open(STYLES,">$opt{save_styles}")
             || die "$prompt Error: Cannot open style file '$opt{save_styles}': $!\n";
-        binmode STYLES;
     }
     my $out_file = $opt{output}||$opt{out};
     if($out_file) {
@@ -568,7 +567,6 @@ sub main {
     else {
 	open(OUT,">&STDOUT");
     }
-    binmode OUT;
 
     &process_file($infile); # the workhorse...
 
@@ -687,7 +685,6 @@ sub process_file {
     $includelevel++;
 
     open(IN,"<$infile") || die "$prompt Cannot open $infile\n";
-    binmode IN;
     print STDERR "$prompt %--- Processing $infile" if ($debug > 1);
 
     # if we don't include this file marker LaTeX2HTML won't split

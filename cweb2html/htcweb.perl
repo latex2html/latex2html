@@ -941,7 +941,6 @@ sub HTCweb_readlabels {
 
     print "\nReading <$_[0]>..." if $DEBUG;
     open(INPUT,"<$_[0]");
-    binmode INPUT;
     while (<INPUT>) {
 	$string{'STRING'} .= $_;
     }
@@ -949,7 +948,6 @@ sub HTCweb_readlabels {
 
     print "\nReading <$_[1]>..." if $DEBUG;
     open(INPUT,"<$_[1]");
-	binmode INPUT;
     while (<INPUT>) {
 	$string{'STRING'} .= $_;
     }
@@ -1030,7 +1028,6 @@ sub HTCweb_texinput  {
 	}
     }
     open(INPUT,"<$file") || die "Could not open $file\n";
-	binmode INPUT;
     while (<INPUT>) {
 	$string{'STRING'} .= $_};
     $_ = delete $string{'STRING'}; # Blow it away and return the result

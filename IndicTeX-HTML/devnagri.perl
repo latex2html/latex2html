@@ -331,7 +331,6 @@ $end_preprocessor{'devnag'} = "\}";
 sub do_env_pre_tr_devnagri { 
     local($_) = @_;
     open(DNTR,">dntr.tmp") || print "\n *** cannot open dntr.tmp ***" ;
-	binmode DNTR;
     print DNTR "\$\$", &revert_to_raw_tex($_), "\$\$";
     close DNTR;
     &syswait("patc -p $PRE_FILTERS${dd}dng.pat dntr.tmp dntr.tmp1");
