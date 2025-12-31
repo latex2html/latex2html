@@ -57,6 +57,10 @@ use AnyDBM_File;
 use POSIX;						# for ceil()
 use Encode qw(decode_utf8 encode_utf8);			# for russian UTF-8 hack
 
+# Override PERL_UNICODE environment variable, so input encoding can be
+# set by \usepackage{inputenc} in latex file.  Allow DOS CRLF input files.
+use open IN  => ':crlf', OUT => ':raw';
+
 # The following are global variables that also appear in some modules
 use vars qw($LATEX2HTMLDIR $LATEX2HTMLPLATDIR $SCRIPT
             %Month %used_icons $inside_tabbing $TABLE_attribs

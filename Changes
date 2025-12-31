@@ -112,6 +112,7 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#		- fix CRLF format input files
 #		- fix child links with -rootdir otpion
 #		- config.pl: svg support now works when ghostscript
 #		  not installed.
