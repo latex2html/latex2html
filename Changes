@@ -112,8 +112,10 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#--------- v2026
+#
 #		- fix CRLF format input files
-#		- fix child links with -rootdir otpion
+#		- fix links with -rootdir otpion
 #		- config.pl: svg support now works when ghostscript
 #		  not installed.
 #		- comment out the hyperref support for the html.sty
