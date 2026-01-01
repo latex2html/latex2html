@@ -17988,7 +17988,7 @@ Put the result in a directory under the directory specified with B<-dir>.
 
 Put the result in this directory, in a subdirectory with the same name
 as the LaTeX file, provided the directory exists, or B<-mkdir> is
-specified.  Same as B<-rooted -dir>.
+specified.  Looks for .aux and .bbl files in the specified directory.
 
 =item B<-dir> I<output_directory>
 
