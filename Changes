@@ -112,6 +112,9 @@
 # A more detailed log history can be found within the particular files, near
 # the top.
 #
+#
+#		- remove <STRONG> markup for author
+#
 #--------- v2026
 #
 #		- fix CRLF format input files

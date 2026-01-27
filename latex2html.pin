@@ -13190,10 +13190,10 @@ sub make_singleauthor_title {
 	if ($t_authorURL) {
 	    local($href) = &translate_commands($t_authorURL);
 	    $href = &make_named_href('author'
-			, $href, "<STRONG>${t_author}</STRONG>");
+			, $href, "${t_author}");
 	    $t_title .= "\n$href";
 	} else {
-	    $t_title .= "\n<STRONG>$t_author</STRONG>";
+	    $t_title .= "\n$t_author";
 	}
     } else { &write_warnings("\nThere is no author for this document."); }
 
