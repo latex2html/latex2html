@@ -113,6 +113,7 @@
 # the top.
 #
 #
+#		- fix collision in anchor ids for section links
 #		- remove <STRONG> markup for author
 #
 #--------- v2026

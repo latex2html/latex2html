@@ -6612,7 +6612,7 @@ sub do_env_theorem_type {
 	$curr_sec_id[$index]++;
 	local($this) = &translate_commands("\\the$ctr");
 	local($hash) = &sanitize($name." $this");
-	local($section_tag) = join('', @curr_sec_id);
+	local($section_tag) = join('+', @curr_sec_id);
 	$encoded_section_number{$hash} = join($;, $section_tag);
 	&reset_dependents($ctr) if ($dependent{$ctr});
 	$thm_num = &translate_commands("\\the$ctr");
@@ -7488,13 +7488,10 @@ sub adjust_textwidth {
 sub new_level {
     local($depth, @curr_sec_id) = @_;
     $depth = $section_commands{$outermost_level} unless $depth;
-    local($i) = 0;
-    grep( do { if ($i == $depth) {$_++ ;}
-	       elsif ($i > $depth) {$_ = 0 ;};
-	       $i++;
-	       0;
-	   },
-	 @curr_sec_id);
+    $#curr_sec_id = $depth + 1;
+    $curr_sec_id[$depth]++;
+    $curr_sec_id[$depth + 1] = 0;
+    # 0 at end sorts section heading before subsections in table of contents
     @curr_sec_id;
 }
 
@@ -8413,7 +8410,7 @@ sub add_real_child_links {
 	    next if (!$exclude && $next_depth > $MAX_LINK_DEPTH + $depth);
 	    print "\n$next :" if ($VERBOSITY > 3);
 	    if ($this_file =~ /^(\Q$prev_file\E|\Q$base_file\E)$/) {
-		$file .= join('', "#SECTION", split(' ', $next));
+		$file .= "#SECTION" . join('+', split(' ', $next));
 	    } else { $prev_file = $file }
 
 	    if (!$next_depth && $MULTIPLE_FILES) { ++$next_depth }
@@ -8629,7 +8626,7 @@ sub make_named_href {
 sub make_section_heading {
     local($text, $level, $anchors) = @_;
     local($elevel) = $level; $elevel =~ s/^(\w+)\s.*$/$1/;
-    local($section_tag) = join('', @curr_sec_id);
+    local($section_tag) = join('+', @curr_sec_id);
     local($align,$pre_anchors);
 
     # separate any invisible anchors or alignment, if this has not already been done
@@ -9990,7 +9987,7 @@ sub make_long_title {
 
 sub make_first_key {
     local($_);
-    $_ = ('0 ' x keys %section_commands);
+    $_ = ("0 " x 7);  # 7 is max value in %section_commands
     s/^0/$THIS_FILE/ if ($MULTIPLE_FILES);  
     chop;
     $_;
