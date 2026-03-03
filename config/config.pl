@@ -1439,6 +1439,19 @@ EOF
       &result('yes');
       $newcfg{'PNMCROP'} = $pnmcrop;
     }
+
+    # checking version number of pnmquant here,
+    # because old versions of pnmquant do not accept -version
+    &checking('if pnmquant accepts -norandom');
+    if ($major_vers > 10) {
+	# -norandom accepted by version 10.82 and higher, using version 11 here
+	$newcfg{'PNMNORANDOMOPT'} = '-norandom';
+	&result('yes');
+    } else {
+	$newcfg{'PNMNORANDOMOPT'} = '';
+	&result('no');
+    }
+
   }
   else {
     $opt{'have_pstoimg'} = 0;
