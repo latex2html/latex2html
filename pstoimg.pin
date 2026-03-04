@@ -7,7 +7,6 @@
 #- The traditional #! line will be inserted automatically
 #-
 ##############################################################################
-# $Id: pstoimg.pin,v 1.19 2004/01/02 08:20:33 RRM Exp $
 #
 # pstoimg
 #
@@ -325,6 +324,13 @@ $PNMCROPOPT = '@PNMCROPOPT@';
 #if @PNMQUANT@
 my $PNMQUANT = '@PNMQUANT@';
 #fi
+
+#if @PNMNORANDOMOPT@
+my $PNMNORANDOMOPT = '@PNMNORANDOMOPT@';
+#else
+my $PNMNORANDOMOPT = '';
+#fi
+
 #-
 #if @PNMFLIP@
 my $PNMFLIP = '@PNMFLIP@';
@@ -888,7 +894,7 @@ if($opt{antialias}) {
   if($opt{depth} == 1) { 
     $gs_aalias = '-dTextAlphaBits=4 ';
 #if @PNMQUANT@
-    $reduce_color = "$PNMQUANT -norandom -floyd 256";
+    $reduce_color = "$PNMQUANT $PNMNORANDOMOPT -floyd 256";
 #fi
     }
   else {
@@ -899,7 +905,7 @@ elsif ($opt{aaliastext}) {
   $GSDEVICE = $GSALIASDEVICE;
     $gs_aalias = '-dTextAlphaBits=4 ';
 #if @PNMQUANT@
-    $reduce_color = "$PNMQUANT -norandom -floyd 256";
+    $reduce_color = "$PNMQUANT $PNMNORANDOMOPT -floyd 256";
 #fi
   }
 #fi

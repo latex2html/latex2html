@@ -34,7 +34,9 @@ $SRCHILITE = '@SRCHILITE@';	# pygmentize or source-highlight
 
 #if @PDFLATEX@
 $USE_PDFTEX = 1;	# use pdflatex unless -nouse_pdftex on command line
-$USE_DVIPNG = 1;
+#fi
+#if @DVIPNG@
+$USE_DVIPNG = 1;	# use dvipng unless -nouse_dvipng on command line
 #fi
 
 #  give these too, to use the  -ldump  feature
