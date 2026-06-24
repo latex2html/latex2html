@@ -113,6 +113,8 @@
 # the top.
 #
 #
+#		- allow configure and make out-of-tree
+#		  Clément FOYER, Université de Reims Champagne-Ardenne, France
 #		- fix collision in anchor ids for section links
 #		- remove <STRONG> markup for author
 #
