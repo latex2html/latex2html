@@ -35,12 +35,16 @@ SCRIPTS = latex2html texexpand pstoimg
 MODULES = l2hconf.pm
 
 # for dependencies
-wrappers = wrapper/dos.pin wrapper/macos.pin wrapper/os2.pin \
-        wrapper/unix.pin wrapper/win32.pin
+wrappers = ${srcdir}/wrapper/dos.pin ${srcdir}/wrapper/macos.pin \
+        ${srcdir}/wrapper/os2.pin ${srcdir}/wrapper/unix.pin \
+        ${srcdir}/wrapper/win32.pin
 
 # Switch for Perl Warnings; should always be on
 # temporary solution until latexhtml is cleaned up
 PERLW =# -w
+
+# Prepend current directory for the search of perl modules
+PERLI = -I.
 
 #### End of system configuration section. ####
 
@@ -49,8 +53,9 @@ ARGS=#
 
 SHELL = /bin/sh
 
+
 # Files that can be generated, but should be up to date for a distribution.
-DISTDEP = configure Makefile MANIFEST
+DISTDEP = ${srcdir}/configure Makefile ${srcdir}/MANIFEST
 
 buildcmd = config/build.pl
 BUILDOPT=# nothing special, but -devel is a good idea!
@@ -65,37 +70,38 @@ devel:
 
 # .SUFFIXES:
 
-pstoimg:  ${cfgfile} ${srcdir}/${buildcmd} pstoimg.pin ${wrappers}
-	${PERL} ${srcdir}/${buildcmd} -x ${BUILDOPT} $@
+pstoimg:  ${cfgfile} ${srcdir}/${buildcmd} ${srcdir}/pstoimg.pin ${wrappers}
+	${PERL} ${PERLI} ${srcdir}/${buildcmd} -x ${BUILDOPT} $@
 	touch pstoimg
 
-latex2html:  ${cfgfile} ${srcdir}/${buildcmd} latex2html.pin ${wrappers}
-	${PERL} ${srcdir}/${buildcmd} -x ${BUILDOPT} $@
+latex2html:  ${cfgfile} ${srcdir}/${buildcmd} ${srcdir}/latex2html.pin ${wrappers}
+	${PERL} ${PERLI} ${srcdir}/${buildcmd} -x ${BUILDOPT} $@
 	touch latex2html
 
-texexpand:  ${cfgfile} ${srcdir}/${buildcmd} texexpand.pin ${wrappers}
-	${PERL} ${srcdir}/${buildcmd} -x ${BUILDOPT} $@
+texexpand:  ${cfgfile} ${srcdir}/${buildcmd} ${srcdir}/texexpand.pin ${wrappers}
+	${PERL} ${PERLI} ${srcdir}/${buildcmd} -x ${BUILDOPT} $@
 	touch texexpand
 
 ${cfgfile}: config.status
 
-l2hconf.pm: ${cfgfile} ${srcdir}/${buildcmd} l2hconf.pin
-	${PERL} ${srcdir}/${buildcmd} ${BUILDOPT} $@
+l2hconf.pm: ${cfgfile} ${srcdir}/${buildcmd} ${srcdir}/l2hconf.pin
+	${PERL} ${PERLI} ${srcdir}/${buildcmd} ${BUILDOPT} $@
 	touch l2hconf.pm
 
 test: all
 	LATEX2HTMLDIR=$(realpath ${srcdir}); export LATEX2HTMLDIR ; \
 	latex2html='' ; \
+	builddir=`pwd` ; \
 	for file in latex2html bin/latex2html* bin/${PLAT}/latex2html*; do \
-	  test -s $$file && latex2html=$$file break ; \
+	  test -s $$builddir/$$file && latex2html=$$builddir/$$file break ; \
 	done ; \
 	if test -n "$$latex2html"; then \
 	  echo "*** Running test on $$latex2html"; \
-	  cd tests; ../$$latex2html -test_mode ${ARGS} ${TESTCASE} ; \
+	  cd ${srcdir}/tests; BUILDDIR="$$builddir" $$latex2html -test_mode ${ARGS} ${TESTCASE} ; \
 	fi
 
 test_clean:
-	cd tests ; \
+	cd ${srcdir}/tests ; \
 	for i in *.tex ; do \
 	  dir=`basename $$i .tex` ; \
 	  rm -rf $$dir ; \
@@ -110,7 +116,7 @@ test_pstoimg: pstoimg
 	done ; \
 	if test -n "$$pstoimg"; then \
 	  echo "*** Running test: $$pstoimg ${ARGS}"; \
-	  ${PERL} $$pstoimg ${ARGS} ; \
+	  ${PERL} ${PERLI} $$pstoimg ${ARGS} ; \
 	fi
 
 texlive: texlive.pm
@@ -119,17 +125,17 @@ texlive: texlive.pm
 
 check: all
 	LATEX2HTMLDIR=${srcdir}; export LATEX2HTMLDIR ; \
-	for file in versions/*.pl styles/*.perl; do \
-	  ${PERL} ${PERLW} -c $$file || exit 1; \
+	for file in ${srcdir}/versions/*.pl ${srcdir}/styles/*.perl; do \
+	  ${PERL} ${PERLI} ${PERLW} -c $$file || exit 1; \
 	done ; \
 	for file in ${SCRIPTS} ${MODULES}; do \
-	  test -s $$file && ( ${PERL} ${PERLW} -c $$file || exit 1 ); \
-	  test -s $$file.pl && ( ${PERL} ${PERLW} -c $$file.pl || exit 1 ); \
+	  test -s $$file && ( ${PERL} ${PERLI} ${PERLW} -c $$file || exit 1 ); \
+	  test -s $$file.pl && ( ${PERL} ${PERLI} ${PERLW} -c $$file.pl || exit 1 ); \
 	done ; \
 	exit 0
 
-install: all
-	${PERL} ${installcmd}
+install: all ${srcdir}/${installcmd}
+	${PERL} ${PERLI} ${srcdir}/${installcmd}
 
 # Don't cd, to avoid breaking install-sh references.
 
@@ -137,10 +143,10 @@ ${srcdir}/configure:
 	cd ${srcdir} && \
 	${AUTOCONF}
 
-Makefile: Makefile.in config.status
+Makefile: ${srcdir}/Makefile.in config.status
 	./config.status
 
-config.status: ${srcdir}/configure config/config.pl
+config.status: ${srcdir}/configure ${srcdir}/config/config.pl
 	./config.status --recheck
 
 clean mostlyclean distclean:: test_clean
@@ -151,22 +157,23 @@ distclean::
 	rm -f Makefile config.status config.cache config.log ${cfgfile}
 	rm -f test.bat install.bat
 
-MANIFEST:
+${srcdir}/MANIFEST:
 	${PERL} make_manifest \
 	  -x configure.in \
 	  -x make_manifest \
-	> MANIFEST
+	> ${srcdir}/MANIFEST
 
 # Create a distribution based on the MANIFEST file
 dist: ${DISTDEP}
 	distname=latex2html-${DISTVER} ; \
 	rm -fr $$distname; \
 	mkdir $$distname; \
-	for item in `cat MANIFEST`; do \
-	  test -d $$item && mkdir $$distname/$$item; \
-	  test -f $$item && ( \
-	    ln $$item $$distname/$$item || \
-	    { echo copying $$item instead; cp -p $$item $$distname/$$item;}; \
+	for item in `cat ${srcdir}/MANIFEST`; do \
+	  test -d "${srcdir}/$$item" && mkdir "$$distname/$$item"; \
+	  test -f "${srcdir}/$$item" && ( \
+	    ln "${srcdir}/$$item" "$$distname/$$item" || \
+	    { echo copying ${srcdir}/$$item instead; \
+	      cp -p "${srcdir}/$$item" "$$distname/$$item"; }; \
 	  ) ; \
 	done; \
 	chmod -R u+rw,go-w+rX $$distname; \

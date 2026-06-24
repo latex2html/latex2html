@@ -1264,6 +1264,7 @@ $PERL $srcdir/config/config.pl \
   PREFIX=$prefix \
   BINDIR=$bindir \
   LIBDIR=$libdir \
+  SRCDIR=$srcdir \
   SHLIBDIR=$shlibdir \
   WRAPPER=$enable_wrapper \
   TEXLIVE=$enable_texlive \

@@ -120,6 +120,9 @@ if($ENV{'PERL5LIB'}) {
 } else {
   $ENV{'PERL5LIB'} = $LATEX2HTMLDIR;
 }
+# include BUILDDIR in the search path in case of out-of-tree build
+push(@INC,$ENV{'BUILDDIR'});
+$ENV{'PERL5LIB'} .= "$envkey$ENV{'BUILDDIR'}";
 
 # Local configuration, read at runtime
 # Read the $CONFIG_FILE  (usually l2hconf.pm )
@@ -463,8 +466,8 @@ if ($opt{version}) {
 }
 if ($opt{test_mode}) {
     $TITLE = 'LaTeX2HTML Test Document';
-    $TEXEXPAND = "$PERL @srcdir@${dd}texexpand@scriptext@";
-    $PSTOIMG   = "$PERL @srcdir@${dd}pstoimg@scriptext@";
+    $TEXEXPAND = "$PERL $ENV{'BUILDDIR'}${dd}texexpand@scriptext@";
+    $PSTOIMG   = "$PERL $ENV{'BUILDDIR'}${dd}pstoimg@scriptext@";
     $ICONSERVER = L2hos->path2URL("@srcdir@${dd}icons");
     $TEST_MODE  = 1;
     $RGBCOLORFILE = "@srcdir@${dd}styles${dd}rgb.txt";

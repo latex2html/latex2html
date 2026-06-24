@@ -231,13 +231,14 @@ exit 0;
 sub build {
   my ($script,$output,$add_header_footer,$executable) = @_;
 
-  print qq{Building "$output" from "$script.pin"\n};
+  my $sourcefilename = "$cfg{'srcdir'}${dd}$script.pin";
+  print qq{Building "$output" from "$sourcefilename"\n};
 
   my @stack = ();
   my $do_include = 1;
 
-  unless(open(IN,"<$script.pin")) {
-    print "$0: Error: Cannot read $script.pin: $!\n";
+  unless(open(IN,"<$sourcefilename")) {
+    print "$0: Error: Cannot read $sourcefilename $!\n";
     exit 1;
   }
 
@@ -268,7 +269,6 @@ sub build {
     }
     print OUT $head;
   }
-  my $sourcefilename = "$script.pin";
   $sourcefilename =~ s:^.*[\\/$dd$dd]::; # strip path
   print OUT qq{# line 1 "$sourcefilename"\n} if($opt{devel});
 

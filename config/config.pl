@@ -508,7 +508,7 @@ $newcfg{'NULLFILE'} = L2hos->nulldev;
 my $cwd = L2hos->Cwd(); # get the current directory
 #$cwd =~ s:/:$dd:g; # beautify the path delimiter(s)
 $cwd = cwd() unless(-d $cwd); # test if it still works :-)
-$newcfg{'srcdir'} = $cwd;
+$newcfg{'srcdir'} = $opt{'SRCDIR'} || $cwd;
 
 # ----------------------------------------------------------------------------
 # win32: Windows 95, Windows NT
@@ -1952,7 +1952,7 @@ if(&is_true(&get_name('PIPES'))) {
     $newcfg{'pipes'} = 0;
   }
   else {
-    my $cmd = "echo 101" .  (" | $newcfg{'PERL'} config${dd}pipetest.pl" x 8);
+    my $cmd = "echo 101" .  (" | $newcfg{'PERL'} $newcfg{'srcdir'}${dd}config${dd}pipetest.pl" x 8);
     my $out = `$cmd`;
     chomp $out;
     if($out == 109) {
@@ -2458,7 +2458,7 @@ sub get_out_err {
   my ($cmd) = @_;
 
   # redir.pl does the redirection for us
-  unless(open(IN,"$newcfg{PERL} config${dd}redir.pl $cmd |")) {
+  unless(open(IN,"$newcfg{'PERL'} $newcfg{'srcdir'}${dd}config${dd}redir.pl $cmd |")) {
     return(255,'',$!);
   }
   my @out = ();

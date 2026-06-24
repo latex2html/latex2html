@@ -227,9 +227,9 @@ my %Install_items = (
   'foilhtml'          => 'lib,recurse',
   # icons are teated specially below
   # the local config is also installed
-  'cfgcache.pm'       => 'plat',
+  'cfgcache.pm'       => 'plat,from=.',
   #'latex2html.config' is now l2hconf.pm
-  'l2hconf.pm'        => 'plat',
+  'l2hconf.pm'        => 'plat,from=.',
   'makemap'           => 'lib',
   'makeseg'           => 'lib,recurse',
   #'prefs.pm'          => 'lib',
@@ -278,7 +278,7 @@ if($cfg{'texlive'}) {
   }
 } else {
   foreach(@scripts) {
-    $Install_items{"$_$cfg{'exec_extension'}"} = 'bin';
+    $Install_items{"$_$cfg{'exec_extension'}"} = 'bin,from=.';
   }
 }
 
@@ -306,7 +306,7 @@ if(-d $dest2 && !-w $dest2) {
   print STDERR "Error: Cannot install icons in '$dest2': No write permission.\n";
   $dest2 = '';
 }
-my $dir = "icons";
+my $dir = "$cfg{'srcdir'}${dd}icons";
 unless(opendir(DIR,$dir)) {
   print STDERR qq{Error: Could not read directory "$dir": $!\n};
 } else {
@@ -334,7 +334,7 @@ foreach $item (sort keys %Install_items) {
     next;
   }
 
-  my $from = '.';
+  my $from = $cfg{'srcdir'} || '.';
   if($Install_items{$item} =~ /(?:^|,)from=([^,]+)(?:,|$)/) {
     $from = $1;
   }
@@ -362,7 +362,7 @@ foreach $item (sort keys %Install_items) {
     $chmod = $1;
   }
   if($Install_items{$item} =~ /recurse/) {
-    &install_recurse($item,$dest,$chmod);
+    &install_recurse("$from/$item",$dest,$chmod);
   }
   else {
     &install_file("$from/$item",$dest,$chmod);
@@ -375,7 +375,7 @@ foreach $item (sort keys %Install_items) {
 
 if($cfg{TEXPATH}) {
     print "\nNote: trying to install LaTeX2HTML style files in TeX directory tree\n     ($cfg{TEXPATH})\n";
-    my $dir = 'texinputs';
+    my $dir = "$cfg{'srcdir'}${dd}texinputs";
     my $dest = $cfg{TEXPATH};
     unless(opendir(DIR,$dir)) {
       print STDERR qq{Error: Could not read directory "$dir": $!\n};
