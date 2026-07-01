@@ -84,6 +84,7 @@
 #  bv = Boris Veytsman <boris@plmsc.psu.edu>
 #  kr = Keith Refson <Keith.Refson@earth.ox.ac.uk>
 #  uw = Uli Wortmann <uli12@bonk.ethz.ch>
+#  cf = Clément Foyer <clement.foyer@univ-reims.fr>
 #
 #
 #------------------- Test Suite Manifest ----------------------------------
@@ -113,8 +114,8 @@
 # the top.
 #
 #
-#		- allow configure and make out-of-tree
-#		  Clément FOYER, Université de Reims Champagne-Ardenne, France
+#	cf	- add support for html color model when declaring new colors.
+#	cf	- allow configure and make out-of-tree
 #		- fix collision in anchor ids for section links
 #		- remove <STRONG> markup for author
 #
