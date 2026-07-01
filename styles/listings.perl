@@ -76,6 +76,8 @@ sub do_cmd_lstset {
   # In preamble this just initializes the defaults
   if ($PREAMBLE) {
     my(%opts) = &lst_parse_options($option);
+    @{$lstset_style{$style}}{keys %{$lstset_style{$opts{'style'}}}} =
+        (values %{$lstset_style{$opts{'style'}}}) if (exists($opts{'style'}));
     @lstset_current{keys %opts} = (values %opts);
     return $outer;
   }
@@ -102,6 +104,8 @@ sub do_cmd_lstdefinestyle {
   # In preamble this just creates the new style
   if ($PREAMBLE) {
     my(%opts) = &lst_parse_options($option);
+    @{$lstset_style{$style}}{keys %{$lstset_style{$opts{'style'}}}} =
+        (values %{$lstset_style{$opts{'style'}}}) if (exists($opts{'style'}));
     @{$lstset_style{$style}}{keys %opts} = (values %opts);
     return $outer;
   }
@@ -178,7 +182,7 @@ sub process_lstlisting {
     } else {
       &replace_html_special_chars;
     }
-    s/\n$//;		# vertical space is contributed by </PRE> already.
+    s/\n*$//;		# vertical space is contributed by </PRE> already.
     $contents = $_;
   }
 
@@ -415,7 +419,7 @@ sub process_lstlisting {
       $_ = `$SRCHILITE $HILITE_OPTS --failsafe $lst_lnum -s $lst_lang -i .$dd${PREFIX}hilite.in`;
     }
     unlink (".$dd${PREFIX}hilite.in");
-    s/\n$//;				# remove trailing vertical space
+    s/\n*$//;				# remove trailing vertical space
   } else {
     # Evtl generate line numbers by builtin engine
     if ($curopts{'numbers'} eq 'left') {
@@ -444,7 +448,7 @@ sub process_lstlisting {
       $lst_last_counter = $counter;
       $lst_auto_counter{$lst_name} = $lst_last_counter
 	if $curopts{'firstnumber'} eq 'auto' && $lst_name ne '';
-      $cline =~ s/\n$//;
+      $cline =~ s/\n*$//;
       $_ = "<TABLE><TR><TD>"
 	.$lst_pre.$_.$lst_post."</TD><TD ALIGN=\"RIGHT\">"
 	.$lst_pre.$cline.$lst_post."</TD></TR></TABLE>";
@@ -574,7 +578,7 @@ sub process_lstinline {
     unlink (".$dd${PREFIX}hilite.in");
     $contents =~ s/^.*?<pre>//s;	# remove obstructive starting stuff
     $contents =~ s/<\/pre>.*?$//s;	# remove obstructive trailing stuff
-    $contents =~ s/\n$//;		# remove trailing vertical space
+    $contents =~ s/\n*$//;		# remove trailing vertical space
   }
 
   # Make the actual lstinline output

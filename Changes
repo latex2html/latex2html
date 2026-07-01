@@ -84,7 +84,7 @@
 #  bv = Boris Veytsman <boris@plmsc.psu.edu>
 #  kr = Keith Refson <Keith.Refson@earth.ox.ac.uk>
 #  uw = Uli Wortmann <uli12@bonk.ethz.ch>
-#  cf = Clément Foyer <clement.foyer@univ-reims.fr>
+#  cf = Clément FOYER <clement.foyer@univ-reims.fr>
 #
 #
 #------------------- Test Suite Manifest ----------------------------------
@@ -114,6 +114,8 @@
 # the top.
 #
 #
+#	cf	- propagate configuration options between the different styles when
+#		  using the listing commands \lstdeclarestyle and \lstset.
 #	cf	- add support for html color model when declaring new colors.
 #	cf	- allow configure and make out-of-tree
 #		- fix collision in anchor ids for section links
