@@ -315,6 +315,18 @@ sub get_GRAY_color {
     $str;
 }
 
+sub get_html_color {
+    # nothing to be done
+    local($_) = @_;
+    $_;
+}
+
+sub get_HTML_color {
+    # nothing to be done
+    local($_) = @_;
+    $_;
+}
+
 sub do_cmd_DefineNamedColor {
     local($_) = @_;
     local($model,$name,$rest);
