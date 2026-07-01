@@ -116,6 +116,7 @@
 #
 #	cf	- propagate configuration options between the different styles when
 #		  using the listing commands \lstdeclarestyle and \lstset.
+#	cf	- add support for html color model when declaring new colors.
 #	cf	- allow configure and make out-of-tree
 #		- fix collision in anchor ids for section links
 #		- remove <STRONG> markup for author
