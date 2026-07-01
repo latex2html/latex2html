@@ -76,6 +76,8 @@ sub do_cmd_lstset {
   # In preamble this just initializes the defaults
   if ($PREAMBLE) {
     my(%opts) = &lst_parse_options($option);
+    @{$lstset_style{$style}}{keys %{$lstset_style{$opts{'style'}}}} =
+        (values %{$lstset_style{$opts{'style'}}}) if (exists($opts{'style'}));
     @lstset_current{keys %opts} = (values %opts);
     return $outer;
   }
@@ -102,6 +104,8 @@ sub do_cmd_lstdefinestyle {
   # In preamble this just creates the new style
   if ($PREAMBLE) {
     my(%opts) = &lst_parse_options($option);
+    @{$lstset_style{$style}}{keys %{$lstset_style{$opts{'style'}}}} =
+        (values %{$lstset_style{$opts{'style'}}}) if (exists($opts{'style'}));
     @{$lstset_style{$style}}{keys %opts} = (values %opts);
     return $outer;
   }
