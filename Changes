@@ -114,11 +114,13 @@
 # the top.
 #
 #
+#	cf	- add support for color mixing from xcolor package, including
+#		  complement color computing, complete and incomplete expressions.
+#		  add support for wave color model from xcolor package.
+#		  add support for html color model when declaring new colors.
 #	cf	- add support for the \ding command from pifont.
-#	cf	- add support for wave color model from xcolor package.
 #	cf	- propagate configuration options between the different styles when
 #		    using the listing commands \lstdeclarestyle and \lstset.
-#	cf	- add support for html color model when declaring new colors.
 #	cf	- allow configure and make out-of-tree
 #		- fix collision in anchor ids for section links
 #		- remove <STRONG> markup for author
