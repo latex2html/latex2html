@@ -273,6 +273,26 @@ sub get_RGB_color {
     $str;
 }
 
+sub get_cmy_color {
+    local($c,$m,$y) = @_;
+    if (!("$m$y")) {($c,$m,$y) = split(',',$c)};
+    local($r,$g,$b);
+    ($r,$g,$b) = (int(1-$c+.5),int(1-$m+.5),int(1-$y+.5));
+    local($str)=sprintf("%2x%2x%2x",$r,$g,$b);
+    $str=~s/\s/0/g;
+    $str;
+}
+
+sub get_CMY_color {
+    local($c,$m,$y) = @_;
+    if (!("$m$y")) {($c,$m,$y) = split(',',$c)};
+    local($r,$g,$b);
+    ($r,$g,$b) = (int(255-$c+.5),int(255-$m+.5),int(255-$y+.5));
+    local($str)=sprintf("%2x%2x%2x",$r,$g,$b);
+    $str=~s/\s/0/g;
+    $str;
+}
+
 sub get_cmyk_color {
     local($c,$m,$y,$k) = @_;
     if (!("$m$y$k")) {($c,$m,$y,$k) = split(',',$c)};
@@ -295,6 +315,40 @@ sub get_CMYK_color {
     $g = 0 unless ($g > 0);
     $b = 0 unless ($b > 0);
     &get_rgb_color($r,$g,$b);
+}
+
+sub get_hsb_color {
+    local($h,$s,$v) = @_;
+    if (!("$s$v")) {($h,$s,$v) = split(',',$h)};
+    local($i) = int(6*$h);
+    local($f) = 6*$h-$i;
+    # HSV to RGB Algorithm (Hexcone Model) (from xcolor package documentation)
+    local($m,$n,$k) = (1-$s, 1-$f*$s, 1-(1-$f)*$s);
+    local($r,$g,$b) = (0, 0, 0); # default value, shouldn't be necessary as i is in [0;6]
+    ($r,$g,$b) = ($v   , $v*$k, $v*$m) if ($i eq 0 || $i eq 6);
+    ($r,$g,$b) = ($v*$n, $v,    $v*$m) if ($i eq 1);
+    ($r,$g,$b) = ($v*$m, $v,    $v*$k) if ($i eq 2);
+    ($r,$g,$b) = ($v*$m, $v*$n, $v   ) if ($i eq 3);
+    ($r,$g,$b) = ($v*$k, $v*$m, $v   ) if ($i eq 4);
+    ($r,$g,$b) = ($v   , $v*$m, $v*$n) if ($i eq 5);
+    # convert rgb to HTML
+    ($r,$g,$b) = (int(255*$r+.5),int(255*$g+.5),int(255*$b+.5));
+    local($str)=sprintf("%2x%2x%2x",$r,$g,$b);
+    $str=~s/\s/0/g;
+    $str;
+}
+
+sub get_Hsb_color {
+    local($h,$s,$v) = @_;
+    if (!("$s$v")) {($h,$s,$v) = split(',',$h)};
+    &get_hsb_color($h/360, $s, $v);
+}
+
+sub get_HSB_color {
+    local($h,$s,$v) = @_;
+    if (!("$s$v")) {($h,$s,$v) = split(',',$h)};
+    local($inv_m) = 1/240; # mult is faster than div, so prefer mult by the inverse
+    &get_hsb_color($h*$inv_m, $s*$inv_m, $v*$inv_m);
 }
 
 sub get_gray_color {
