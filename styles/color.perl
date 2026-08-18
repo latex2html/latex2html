@@ -708,9 +708,13 @@ sub find_color {
 
     if (!(defined &$get_string)) {
 	print "\nno routine for $get_string, trying named color: $color\n";
-	$get_string = "get_named_color";
+	$model = "named";
+	}
+    if ($model =~ /named/) {
+	$get_string = "get_mixed_color";
+	$get_string = "get_named_color" unless ($color =~ /!/ || $color =~ /^-/);
+	@color = ($color)
     }
-    if ($model =~ /named/) { @color = ($color) }
     else { @color = split(/\s+|,\s*/, $color) }
     $color = &$get_string(@color);
     $color_cmd = 'color'. $color_cmd;
