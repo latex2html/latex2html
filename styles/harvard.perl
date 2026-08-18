@@ -5,10 +5,10 @@ package main;
 # Setting $HARVARD makes natbib.perl behave differently
 $HARVARD=1;
 
-foreach $dir (split(/:/,$LATEX2HTMLSTYLES)) {
-    if (-f "$dir/natbib.perl") {
-	print "Loading $dir/natbib.perl\n";
-	require "$dir/natbib.perl";
+foreach $dir (split(/$envkey/,$LATEX2HTMLSTYLES)) {
+    if (-f "$dir${dd}natbib.perl") {
+	print "Loading $dir${dd}natbib.perl\n";
+	require "$dir${dd}natbib.perl";
 	$styles_loaded{"natbib"}=1;
 	last
 	}
