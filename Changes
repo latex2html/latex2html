@@ -114,6 +114,7 @@
 # the top.
 #
 #
+#	cf	- add support for the \ding command from pifont.
 #	cf	- propagate configuration options between the different styles when
 #		  using the listing commands \lstdeclarestyle and \lstset.
 #	cf	- add support for html color model when declaring new colors.
