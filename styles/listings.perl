@@ -164,11 +164,11 @@ sub process_lstlisting {
     }
     my($inputpath) = $curopts{'inputpath'};
     my($found) = 0;
-    foreach $dir ("$texfilepath", split(/:/,$ENV{'TEXINPUTS'})) { 
-      if (-f ($_ = "$dir/$inputpath/$file") ||
-	  -f ($_ = "$dir/$inputpath/$file2") ||
-	  -f ($_ = "$dir/$file") ||
-	  -f ($_ = "$dir/$file2")) {
+    foreach $dir ("$texfilepath", split(/$envkey/,$ENV{'TEXINPUTS'})) {
+      if (-f ($_ = "$dir$dd$inputpath$dd$file") ||
+	  -f ($_ = "$dir$dd$inputpath$dd$file2") ||
+	  -f ($_ = "$dir$dd$file") ||
+	  -f ($_ = "$dir$dd$file2")) {
 	$found = 1;
 	# overread $_ with file contents
 	&slurp_input($_);
