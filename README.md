@@ -164,5 +164,5 @@ Former Authors:
   Munich, Germany
 
   Jens Lippmann 
-  Technische Universit"at Darmstadt.
+  Technische Universit&auml;t Darmstadt.
 
