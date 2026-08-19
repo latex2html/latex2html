@@ -1627,14 +1627,14 @@ sub pre_process {
     ##RRM: can this be speeded up using a list ??
     my $vbmark = $verb_mark;
     while (s/\\verb(\t*\*\t*)(\S)/"<verb$1".++$id.">$2"/e ||
-	    s/\\verb()(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$2"/e ||
-	    s/\\verb(\t\t*)([^*\s])/"<verb$1".++$id.">$2"/e ||
-	    s/\\(lstinline)\s*(\[[^]]*\])?\s*(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$3"/e ||
-	    s/\\(lstinline)\s*(\[[^]]*\])?\s*([^*\s])/"<verb$1".++$id.">$3"/e ||
-	    s/\\(mintinline)\s*(\[[^]]*\])?\s*(\{[^}]*\})\s*(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$4"/e ||
-	    s/\\(mintinline)\s*(\[[^]]*\])?\s*(\{[^}]*\})\s*([^*\s])/"<verb$1".++$id.">$4"/e ||
-	    s/\\(mint)\s*(\[[^]]*\])?\s*(\{[^}]*\})\s*(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$4"/e ||
-	    s/\\(mint)\s*(\[[^]]*\])?\s*(\{[^}]*\})\s*([^*\s])/"<verb$1".++$id.">$4"/e) {
+	    s/\\verb\b()(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$2"/e ||
+	    s/\\verb\b(\t\t*)([^*\s])/"<verb$1".++$id.">$2"/e ||
+	    s/\\(lstinline)\b\s*(\[[^]]*\])?\s*(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$3"/e ||
+	    s/\\(lstinline)\b\s*(\[[^]]*\])?\s*([^*\s])/"<verb$1".++$id.">$3"/e ||
+	    s/\\(mintinline)\b\s*(\[[^]]*\])?\s*(\{[^}]*\})\s*(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$4"/e ||
+	    s/\\(mintinline)\b\s*(\[[^]]*\])?\s*(\{[^}]*\})\s*([^*\s])/"<verb$1".++$id.">$4"/e ||
+	    s/\\(mint)\b\s*(\[[^]]*\])?\s*(\{[^}]*\})\s*(\;SPM\w+\;|[^a-zA-Z*\s])/"<verb$1".++$id.">$4"/e ||
+	    s/\\(mint)\b\s*(\[[^]]*\])?\s*(\{[^}]*\})\s*([^*\s])/"<verb$1".++$id.">$4"/e) {
 
 	if ($1 eq 'lstinline') {
 	    #SGE: retain knowledge and options of \lstinline
