@@ -1658,6 +1658,7 @@ sub pre_process {
 	    #RRM: retain knowledge of whether \verb* or \verb
 	    $vb_mark = ($1 =~/^\s*\*/? $verbstar_mark : $verb_mark);
 	}
+	$del =~ tr/{([/})]/;
 	$esc_del = &escape_rx_chars($del);
 	$esc_del = '' if (length($del) > 2);
 
