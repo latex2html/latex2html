@@ -166,9 +166,9 @@ sub mix_colors {
 sub get_mixed_color {
     local($_) = @_;
     s/^/000000!0!/;
-    s/!\d+$/$&!white/;
+    s/!(?:\d+(?:\.\d*)?|\.\d+)$/$&!white/;
     while (/!/) {
-        s/([0-9A-Fa-f]+)!(\d+)!([^!]+)/&mix_colors($1, $2, $3)/eo;
+        s/([0-9A-Fa-f]+)!((?:\d+(?:\.\d*)?|\.\d+))!([^!]+)/&mix_colors($1, $2, $3)/eo;
     }
     $_;
 }
